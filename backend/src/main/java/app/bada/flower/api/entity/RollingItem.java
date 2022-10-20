@@ -24,4 +24,7 @@ public class RollingItem extends BaseEntity{
 
     @Column
     private Integer price;
+
+    @Column(nullable = false)
+    private String imgUrl;
 }
