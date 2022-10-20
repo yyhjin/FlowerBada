@@ -21,4 +21,10 @@ public class User extends BaseEntity{
 
     @OneToMany(mappedBy = "user")
     private List<FlowerUser> flowerUsers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Bookmark> bookmarks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Delivery> deliveries = new ArrayList<>();
 }

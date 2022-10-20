@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 @Entity
 @Getter
 @NoArgsConstructor
-public class RollingPaperItem extends BaseEntity{
+public class RollingItem extends BaseEntity{
     @Column
     private Integer code;
 

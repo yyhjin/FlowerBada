@@ -8,19 +8,17 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Message extends BaseEntity{
+public class Bookmark extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="rolling_id")
     private RollingPaper rollingPaper;
 
-    @OneToOne
-    @JoinColumn(name = "flower_id")
-    private FlowerItem flowerItem;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
 
-    @Column(nullable = false)
-    private String content;
+    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean isValid;
 
-    @Column(nullable = false)
-    private String writer;
 }
