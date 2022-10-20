@@ -18,7 +18,6 @@ public class RollingPaper extends BaseEntity{
 
     @OneToOne
     @JoinColumn(name="item_id")
-    @OnDelete(action= OnDeleteAction.CASCADE)
     private RollingPaperItem rollingPaperItem;
 
     @Column(nullable = false, length=255)
