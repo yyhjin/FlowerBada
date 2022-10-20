@@ -2,14 +2,11 @@ package app.bada.flower.api.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,20 +15,23 @@ public class RollingPaper extends BaseEntity{
 
     @OneToOne
     @JoinColumn(name="item_id")
-    private RollingPaperItem rollingPaperItem;
+    private RollingItem rollingPaperItem;
 
-    @Column(nullable = false, length=255)
+    @Column(nullable = false)
     private String makerNickname;
 
-    @Column(nullable = false, length=255)
+    @Column(nullable = false)
     private String makerToken;
 
-    @Column(nullable = false, length=255)
+    @Column(nullable = false)
     private String receiverPhone;
 
     @Column(updatable = false)
     private LocalDateTime open_date;
 
-    @Column(nullable = false, length=255)
+    @Column(nullable = false)
     private String url;
+
+    @OneToMany(mappedBy = "rollingPaper")
+    private List<Message> messages = new ArrayList<>();
 }
