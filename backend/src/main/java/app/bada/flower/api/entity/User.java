@@ -1,4 +1,4 @@
-package app.bada.flower.api.repository;
+package app.bada.flower.api.entity;
 
 import javax.persistence.Column;
 

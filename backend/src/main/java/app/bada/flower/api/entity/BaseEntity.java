@@ -1,4 +1,4 @@
-package app.bada.flower.api.repository;
+package app.bada.flower.api.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
