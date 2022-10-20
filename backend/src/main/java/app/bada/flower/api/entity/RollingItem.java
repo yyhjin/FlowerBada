@@ -9,11 +9,11 @@ import javax.persistence.Entity;
 @Entity
 @Getter
 @NoArgsConstructor
-public class RollingPaperItem extends BaseEntity{
+public class RollingItem extends BaseEntity{
     @Column
     private Integer code;
 
-    @Column(nullable = false, length=255)
+    @Column(nullable = false)
     private String name;
 
     @Column
