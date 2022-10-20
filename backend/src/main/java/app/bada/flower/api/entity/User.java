@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class User extends BaseEntity{
-    @Column(nullable = false, length=256)
+    @Column(nullable = false)
     private String token;
 
     @Column(columnDefinition = "INT DEFAULT 0")

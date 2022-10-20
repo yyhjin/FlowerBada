@@ -20,18 +20,18 @@ public class RollingPaper extends BaseEntity{
     @JoinColumn(name="item_id")
     private RollingPaperItem rollingPaperItem;
 
-    @Column(nullable = false, length=255)
+    @Column(nullable = false)
     private String makerNickname;
 
-    @Column(nullable = false, length=255)
+    @Column(nullable = false)
     private String makerToken;
 
-    @Column(nullable = false, length=255)
+    @Column(nullable = false)
     private String receiverPhone;
 
     @Column(updatable = false)
     private LocalDateTime open_date;
 
-    @Column(nullable = false, length=255)
+    @Column(nullable = false)
     private String url;
 }

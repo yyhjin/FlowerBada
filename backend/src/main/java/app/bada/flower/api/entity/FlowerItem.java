@@ -12,15 +12,15 @@ import java.util.List;
 @NoArgsConstructor
 public class FlowerItem extends BaseEntity{
 
-    @Column(nullable = false, length=255)
+    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, length=255)
+    @Column(nullable = false)
     private String flowerLanguage;
 
     private int color;
 
-    @Column(nullable = false, length=255)
+    @Column(nullable = false)
     private String season;
 
     private int point;

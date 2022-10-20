@@ -18,6 +18,6 @@ public class Report extends BaseEntity{
     @JoinColumn(name="message_id")
     private Message message;
 
-    @Column(nullable = false, length=255)
+    @Column(nullable = false)
     private String content;
 }
