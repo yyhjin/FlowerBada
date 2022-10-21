@@ -19,9 +19,6 @@ public class User extends BaseEntity{
     @Column(columnDefinition = "INT DEFAULT 0")
     private int points;
 
-    @Column(nullable = false)
-    private String nickname;
-
     @OneToMany(mappedBy = "user")
     private List<FlowerUser> flowerUsers = new ArrayList<>();
 
