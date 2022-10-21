@@ -32,6 +32,9 @@ public class RollingPaper extends BaseEntity{
     @Column(nullable = false)
     private String url;
 
+    @Column
+    private String imgUrl;
+
     @OneToMany(mappedBy = "rollingPaper")
     private List<Message> messages = new ArrayList<>();
 }
