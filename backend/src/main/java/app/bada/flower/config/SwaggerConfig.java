@@ -39,5 +39,5 @@ public class SwaggerConfig {
 }
 
 /*
-https://localhost:8080/swagger-ui/index.html#/
+http://localhost:8080/api/v1/swagger-ui/index.html#/
  */
