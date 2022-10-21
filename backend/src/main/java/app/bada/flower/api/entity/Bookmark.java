@@ -18,7 +18,4 @@ public class Bookmark extends BaseEntity{
     @JoinColumn(name="user_id")
     private User user;
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private boolean isValid;
-
 }
