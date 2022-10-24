@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface FlowerItemRepository extends JpaRepository<FlowerItem, Integer> {
     @Query(value = "select f from FlowerItem f")
-    List<FlowerItem> findAllFlower();
+    List<FlowerItem> findAllFlowerItem();
 }
