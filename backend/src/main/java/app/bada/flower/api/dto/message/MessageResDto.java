@@ -21,6 +21,15 @@ public class MessageResDto {
             this.writer = message.getWriter();
             this.fontId = message.getFontId();
         }
+
+        // QueryDSL에서 사용하는 생성자
+        public MessageDto(int messageId, int flowerId, String content, String writer, int fontId) {
+            this.messageId = messageId;
+            this.flowerId = flowerId;
+            this.content = content;
+            this.writer = writer;
+            this.fontId = fontId;
+        }
     }
 
 

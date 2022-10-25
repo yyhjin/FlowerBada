@@ -70,4 +70,9 @@ public class MessageController {
         }
     }
 
+    @ApiOperation(value = "*QueryDSL SAMPLE*내용으로 검색", notes="메시지에 포함되는 내용 검색", httpMethod = "GET")
+    @GetMapping("/search/{content}")
+    public ResponseEntity<ResponseDto> searchMsgByContent(@PathVariable String content) {
+        return new ResponseEntity<>(new ResponseDto(messageService.search(content)), HttpStatus.OK);
+    }
 }

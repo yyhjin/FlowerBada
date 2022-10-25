@@ -1,6 +1,7 @@
 package app.bada.flower.api.service;
 
 import app.bada.flower.api.dto.message.MessageReqDto;
+import app.bada.flower.api.dto.message.MessageResDto;
 import app.bada.flower.api.entity.Message;
 import app.bada.flower.api.repository.FlowerItemRepository;
 import app.bada.flower.api.repository.MessageRepository;
@@ -10,6 +11,7 @@ import app.bada.flower.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 
 @Service
@@ -48,5 +50,10 @@ public class MessageServiceImpl implements MessageService{
                 .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         message.idDeleteUpdate(true);
         return messageRepository.save(message);
+    }
+
+    @Override
+    public List<MessageResDto.MessageDto> search(String content) {
+        return messageRepository.searchContent(content);
     }
 }
