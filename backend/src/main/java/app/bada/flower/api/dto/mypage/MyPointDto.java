@@ -14,6 +14,6 @@ import java.time.LocalDateTime;
 @Builder
 public class MyPointDto {
     String name;
-    int point;
-    LocalDateTime createdDate;
+    Integer point;
+    String createdDate;
 }

@@ -10,22 +10,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface FlowerUserRepository extends JpaRepository<FlowerUser, Integer> {
-    @Query(nativeQuery = true,
-            value = "select * from (" +
-                    " select u.id, u.is_deleted, u.updated_date, u.flower_id, u.created_date, u.user_id  from flower_user u join flower_item i on u.flower_id = i.id "+
-                    " where u.user_id = :user "+
-                    " union all " +
-                    " select u.id, u.is_deleted, u.updated_date, u.item_id as \"flower_id\", u.created_date, u.user_id from rolling_user u join rolling_item i on u.item_id = i.id " +
-                    " where u.user_id = :user " +
-                    ") as collect order by created_date desc ",
-            countQuery = "select * from (" +
-                    " select u.id, u.is_deleted, u.updated_date, u.flower_id, u.created_date, u.user_id  from flower_user u join flower_item i on u.flower_id = i.id "+
-                    " where u.user_id = :user "+
-                    " union all " +
-                    " select u.id, u.is_deleted, u.updated_date, u.item_id as \"flower_id\", u.created_date, u.user_id from rolling_user u join rolling_item i on u.item_id = i.id " +
-                    " where u.user_id = :user " +
-                    ") as collect order by created_date desc ")
-    Slice<FlowerUser> findMyPointList(@Param("user") Integer userId, Pageable pageable);
+    @Query(nativeQuery = true, name = "find_pointList")
+    Optional<Slice<MyPointDto>> findMyPointList(@Param("user") Integer userId, Pageable pageable);
 }
