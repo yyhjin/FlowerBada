@@ -32,7 +32,7 @@ public class MyPageController {
 
     @GetMapping("/delivery")
     @ApiOperation(value="배송중 목록", notes="sort = 1(최신순), 2(오래된순)")
-    public ResponseEntity deliveringList(@RequestHeader(value = "X-AUTH-TOKEN") String jwtToken, @RequestParam int sort, @RequestParam int paginationId) {
+    public ResponseEntity deliveringList(@RequestHeader(value = "X-AUTH-TOKEN", required = false) String jwtToken, @RequestParam int sort, @RequestParam int paginationId) {
         PageRequest pageRequest = PageRequest.of(paginationId,10);
 
         // 후에 수정
