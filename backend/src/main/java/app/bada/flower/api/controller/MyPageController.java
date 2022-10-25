@@ -2,7 +2,7 @@ package app.bada.flower.api.controller;
 
 
 import app.bada.flower.api.dto.ResponseDto;
-import app.bada.flower.api.dto.delivery.DeliveryResDto;
+import app.bada.flower.api.dto.mypage.DeliveryResDto;
 import app.bada.flower.api.dto.mypage.MyPointResDto;
 import app.bada.flower.api.service.DeliveryService;
 import app.bada.flower.api.service.MyPageService;

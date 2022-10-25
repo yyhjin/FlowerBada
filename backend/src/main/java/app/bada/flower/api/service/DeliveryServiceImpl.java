@@ -1,7 +1,7 @@
 package app.bada.flower.api.service;
 
 import app.bada.flower.api.converter.DeliveryConverter;
-import app.bada.flower.api.dto.delivery.DeliveryResDto;
+import app.bada.flower.api.dto.mypage.DeliveryResDto;
 import app.bada.flower.api.entity.Delivery;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.DeliveryRepository;

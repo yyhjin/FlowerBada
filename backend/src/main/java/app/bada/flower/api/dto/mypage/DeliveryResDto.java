@@ -1,4 +1,4 @@
-package app.bada.flower.api.dto.delivery;
+package app.bada.flower.api.dto.mypage;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

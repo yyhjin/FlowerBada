@@ -1,6 +1,6 @@
 package app.bada.flower.api.service;
 
-import app.bada.flower.api.dto.delivery.DeliveryResDto;
+import app.bada.flower.api.dto.mypage.DeliveryResDto;
 import app.bada.flower.api.dto.mypage.MyPointResDto;
 import org.springframework.data.domain.Pageable;
 

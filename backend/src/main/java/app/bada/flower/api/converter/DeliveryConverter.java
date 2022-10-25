@@ -1,6 +1,6 @@
 package app.bada.flower.api.converter;
 
-import app.bada.flower.api.dto.delivery.DeliveryResDto;
+import app.bada.flower.api.dto.mypage.DeliveryResDto;
 import app.bada.flower.api.entity.Delivery;
 import org.springframework.stereotype.Component;
 
