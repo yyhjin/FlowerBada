@@ -2,6 +2,8 @@ package app.bada.flower.api.dto.message;
 
 import app.bada.flower.api.entity.Message;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 public class MessageResDto {
 
@@ -25,6 +27,7 @@ public class MessageResDto {
 
 
     @Getter
+    @Setter
     public static class rollingMsgDto {
         private int messageId;
         private int flowerId;

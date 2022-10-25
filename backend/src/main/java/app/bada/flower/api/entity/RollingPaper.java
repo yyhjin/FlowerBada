@@ -1,5 +1,7 @@
 package app.bada.flower.api.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,12 +12,17 @@ import java.util.List;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class RollingPaper extends BaseEntity{
 
     @OneToOne
     @JoinColumn(name="item_id")
     private RollingItem rollingPaperItem;
+
+    @Column(nullable = false)
+    private String title;
 
     @Column(nullable = false)
     private String makerNickname;
@@ -27,7 +34,7 @@ public class RollingPaper extends BaseEntity{
     private String receiverPhone;
 
     @Column(updatable = false)
-    private LocalDateTime open_date;
+    private LocalDateTime openDate;
 
     @Column(nullable = false)
     private String url;
