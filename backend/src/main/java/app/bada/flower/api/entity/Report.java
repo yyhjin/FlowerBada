@@ -1,5 +1,7 @@
 package app.bada.flower.api.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +10,8 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Report extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)

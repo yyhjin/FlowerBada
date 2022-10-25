@@ -30,4 +30,5 @@ public class Message extends BaseEntity{
     private String writer;
 
     private int fontId;
+
 }

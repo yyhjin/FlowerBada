@@ -1,12 +1,18 @@
 package app.bada.flower.api.service;
 
 import app.bada.flower.api.dto.message.MessageReqDto;
+import app.bada.flower.api.dto.message.MessageResDto;
 import app.bada.flower.api.entity.Message;
 import app.bada.flower.api.repository.FlowerItemRepository;
 import app.bada.flower.api.repository.MessageRepository;
 import app.bada.flower.api.repository.RollingPaperRepository;
+import app.bada.flower.exception.CustomException;
+import app.bada.flower.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -15,16 +21,39 @@ public class MessageServiceImpl implements MessageService{
     private final FlowerItemRepository flowerItemRepository;
     private final RollingPaperRepository rollingPaperRepository;
 
-    public Message createMessage(MessageReqDto messageReqDto) {
+    @Override
+    public Message createMessage(MessageReqDto.MessageReq messageReq) {
 
         Message message = Message.builder()
-                .rollingPaper(rollingPaperRepository.getReferenceById(messageReqDto.getRollingId()))
-                .flowerItem(flowerItemRepository.getReferenceById(messageReqDto.getFlowerId()))
-                .content(messageReqDto.getContent())
-                .writer(messageReqDto.getWriter())
-                .fontId(messageReqDto.getFontId())
+                .rollingPaper(rollingPaperRepository.findById(messageReq.getRollingId())
+                        .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND)))
+                .flowerItem(flowerItemRepository.findById(messageReq.getFlowerId())
+                        .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND)))
+                .content(messageReq.getContent())
+                .writer(messageReq.getWriter())
+                .fontId(messageReq.getFontId())
                 .build();
 
         return messageRepository.save(message);
+    }
+
+    @Override
+    public Message getMessage(int msgId) {
+        return messageRepository.findById(msgId)
+                .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+    }
+
+    @Transactional
+    @Override
+    public Message deleteMessage(int msgId) {
+        Message message = messageRepository.findById(msgId)
+                .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        message.idDeleteUpdate(true);
+        return messageRepository.save(message);
+    }
+
+    @Override
+    public List<MessageResDto.MessageDto> search(String content) {
+        return messageRepository.searchContent(content);
     }
 }
