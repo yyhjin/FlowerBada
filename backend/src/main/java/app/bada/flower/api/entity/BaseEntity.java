@@ -29,4 +29,7 @@ public abstract class BaseEntity implements Serializable {
 
     @Column(columnDefinition = "BIT DEFAULT 0")
     private boolean isDeleted;
+
+
+    public void idDeleteUpdate(boolean isdelete) { this.isDeleted = isdelete ; }
 }
