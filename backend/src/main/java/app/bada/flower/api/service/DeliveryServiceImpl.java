@@ -6,6 +6,8 @@ import app.bada.flower.api.entity.Delivery;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.DeliveryRepository;
 import app.bada.flower.api.repository.UserRepository;
+import app.bada.flower.exception.CustomException;
+import app.bada.flower.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -23,21 +25,18 @@ public class DeliveryServiceImpl implements DeliveryService{
     private final DeliveryConverter deliveryConverter;
 
     public List<DeliveryResDto> selectAllDelivery(int userId, int sortNumber, Pageable pageable){
-        if(userRepository.findById(userId).isPresent()){
-            List<DeliveryResDto> deliveryList = new ArrayList<>();
-            User user = userRepository.findById(userId).get();
-            Slice<Delivery> list = null;
-            if(sortNumber==1){
-                list = deliveryRepository.findAllByUserAndIsDeletedFalseOrderByCreatedDateDesc(user,pageable).get();
-            }else if(sortNumber==2) {
-                list = deliveryRepository.findAllByUserAndIsDeletedFalseOrderByCreatedDate(user, pageable).get();
-            }
-            for(Delivery delivery : list){
-                deliveryList.add(deliveryConverter.EntityToDto(delivery));
-            }
-            return deliveryList;
-        }else{
-            return null;
+        User user = userRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        List<DeliveryResDto> deliveryList = new ArrayList<>();
+
+        Slice<Delivery> findAllMyDeliveryList = null;
+        if(sortNumber==1){
+            findAllMyDeliveryList = deliveryRepository.findAllByUserAndIsDeletedFalseOrderByCreatedDateDesc(user,pageable).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        }else if(sortNumber==2) {
+            findAllMyDeliveryList = deliveryRepository.findAllByUserAndIsDeletedFalseOrderByCreatedDate(user, pageable).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
         }
+        for(Delivery delivery : findAllMyDeliveryList){
+            deliveryList.add(deliveryConverter.EntityToDto(delivery));
+        }
+        return deliveryList;
     }
 }
