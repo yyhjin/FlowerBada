@@ -1,4 +1,4 @@
-package app.bada.flower.api.repository;
+package app.bada.flower.api.repository.querydsl.message;
 
 import app.bada.flower.api.dto.message.MessageResDto;
 import com.querydsl.core.types.Projections;
