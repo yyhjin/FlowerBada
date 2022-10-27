@@ -25,4 +25,7 @@ public class Bookmark extends BaseEntity{
     @Column
     private boolean isValid;
 
+    public void setIsValid() {
+        this.isValid = !this.isValid;
+    }
 }
