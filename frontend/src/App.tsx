@@ -4,7 +4,7 @@ import './App.css';
 import Login from './pages/singin';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import KakaoRedirectHandler from './kakao/KakaoRedirectHandler';
-
+import MyPage from './pages/MyPage';
 function App() {
   return (
     <div className="App">
@@ -14,6 +14,7 @@ function App() {
             path="/user/signin/redirect"
             element={<KakaoRedirectHandler />}
           />
+          <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </BrowserRouter>
       <Login />
