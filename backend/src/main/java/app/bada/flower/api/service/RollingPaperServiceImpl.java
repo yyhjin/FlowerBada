@@ -10,6 +10,7 @@ import app.bada.flower.api.entity.Message;
 import app.bada.flower.api.entity.RollingPaper;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.*;
+import app.bada.flower.api.service.jwt.JwtTokenUtil;
 import app.bada.flower.exception.CustomException;
 import app.bada.flower.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -34,16 +35,19 @@ public class RollingPaperServiceImpl implements RollingPaperService {
     private final BookmarkRepository bookmarkRepository;
 
     private final UserRepository userRepository;
+    private final JwtTokenUtil jwtTokenUtil;
 
 
     @Override
     public RollingPaper createRollingPaper(String token, RollingPaperReqDto rollingPaperReqDto) {
+        int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
+        User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
 
         RollingPaper rollingPaper = RollingPaper.builder()
                 .rollingPaperItem(rollingItemRepository.getReferenceById(rollingPaperReqDto.getItemId()))
                 .title(rollingPaperReqDto.getTitle())
-                .makerNickname("임시 닉네임")
-                .makerToken("임시 토큰")
+                .makerNickname(user.getNickname())
+                .user(user)
                 .receiverPhone(rollingPaperReqDto.getReceiverPhone())
                 .openDate(rollingPaperReqDto.getOpenDate())
                 .url("임시 url")
@@ -78,7 +82,8 @@ public class RollingPaperServiceImpl implements RollingPaperService {
 
     @Override
     public BookmarkResDto bookmarkRollingPaper(String token, int paperId) {
-        Optional<User> user = userRepository.findById(1); //나중에 토큰으로 유저 정보 가져와서 userId값 넣기
+        int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
+        Optional<User> user = userRepository.findById(userId); //나중에 토큰으로 유저 정보 가져와서 userId값 넣기
         Optional<RollingPaper> rollingPaper = rollingPaperRepository.findById(paperId);
         BookmarkResDto bookmarkResDto = new BookmarkResDto();
 
