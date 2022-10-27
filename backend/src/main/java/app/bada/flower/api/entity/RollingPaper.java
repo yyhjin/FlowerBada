@@ -27,8 +27,9 @@ public class RollingPaper extends BaseEntity{
     @Column(nullable = false)
     private String makerNickname;
 
-    @Column(nullable = false)
-    private String makerToken;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
     private String receiverPhone;
