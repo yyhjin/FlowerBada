@@ -24,7 +24,7 @@ public class AdminController {
 
     @PatchMapping("/message/delete")
     @ApiOperation(value = "메시지 삭제", notes = "롤링페이퍼의 메시지를 삭제한다.")
-    public ResponseEntity<ResponseDto> deleteMsg(@RequestBody AdminReqDto.MessageReq messageReq) {
+    public ResponseEntity<ResponseDto> deleteMsg(@RequestHeader(value = "X-AUTH-TOKEN") String token, @RequestBody AdminReqDto.MessageReq messageReq) {
 
         Message message = messageService.deleteMessage(messageReq.getMessageId());
         
@@ -39,7 +39,7 @@ public class AdminController {
 
 //    @PatchMapping("/rolling/delete")
 //    @ApiOperation(value = "롤링페이퍼 삭제", notes = "롤링페이퍼를 삭제한다.")
-//    public ResponseEntity<ResponseDto> deleteRolling(@RequestBody AdminReqDto.RollingReq rollingReq) {
+//    public ResponseEntity<ResponseDto> deleteRolling(@RequestHeader(value = "X-AUTH-TOKEN") String token, @RequestBody AdminReqDto.RollingReq rollingReq) {
 //
 //        RollingPaper rollingPaper = rollingPaperService.deleteRolling(rollingReq.getRollingId());
 //
