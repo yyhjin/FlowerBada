@@ -58,9 +58,15 @@ public class RollingPaperServiceImpl implements RollingPaperService {
         RollingPaperResDto rollingPaperResDto = new RollingPaperResDto();
         RollingPaper rollingPaper = rollingPaperRepository.findById(paperId).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
         List<Message> messageList = messageRepository.findAllByRollingPaper(rollingPaper);
+        if((messageList.size()-1)/10<paginationId-1){
+            return null;
+        }
         List<MessageResDto.rollingMsgDto> rollingMsgList = new ArrayList<>();
-        for(Message message : messageList){
-            rollingMsgList.add(messageConverter.toRollingMsgDto(message));
+        int range = paginationId*10;
+        if(messageList.size()<paginationId*10) range = messageList.size();
+
+        for(int i= (paginationId-1)*10; i<range; i++){
+            rollingMsgList.add(messageConverter.toRollingMsgDto(messageList.get(i)));
         }
         rollingPaperResDto.setPaperId(paperId);
         rollingPaperResDto.setTitle(rollingPaper.getTitle());
