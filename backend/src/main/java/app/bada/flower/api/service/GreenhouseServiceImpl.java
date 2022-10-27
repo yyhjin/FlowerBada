@@ -33,13 +33,14 @@ public class GreenhouseServiceImpl implements GreenhouseService {
         int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
         User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         List<GreenhouseResDto> myRollingPapers = new ArrayList<>();
-        GreenhouseResDto myRollingPaper = new GreenhouseResDto();
         List<RollingPaper> rollingPapers  = rollingPaperRepository.findAllByUser(user);
         for(RollingPaper rollingPaper : rollingPapers){
+            GreenhouseResDto myRollingPaper = new GreenhouseResDto();
             myRollingPaper.setDate(rollingPaper.getOpenDate());
             myRollingPaper.setPaperId(rollingPaper.getId());
             myRollingPaper.setTitle(rollingPaper.getTitle());
             myRollingPaper.setImgUrl(rollingPaper.getImgUrl());
+            System.out.println(myRollingPaper.getDate()+" "+myRollingPaper.getPaperId()+" "+myRollingPaper.getTitle()+" "+myRollingPaper.getImgUrl());
             myRollingPapers.add(myRollingPaper);
         }
         return myRollingPapers;
@@ -50,10 +51,9 @@ public class GreenhouseServiceImpl implements GreenhouseService {
         int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
         User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         List<GreenhouseResDto> myRollingPapers = new ArrayList<>();
-        GreenhouseResDto myRollingPaper = new GreenhouseResDto();
         List<Bookmark> bookmarks  = bookmarkRepository.findAllByUserAndIsValid(user,true);
-        System.out.println(bookmarks);
         for(Bookmark bookmark : bookmarks){
+            GreenhouseResDto myRollingPaper = new GreenhouseResDto();
             myRollingPaper.setDate(bookmark.getRollingPaper().getOpenDate());
             myRollingPaper.setPaperId(bookmark.getRollingPaper().getId());
             myRollingPaper.setTitle(bookmark.getRollingPaper().getTitle());
