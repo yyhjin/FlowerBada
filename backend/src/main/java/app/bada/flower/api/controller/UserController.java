@@ -6,8 +6,10 @@ import app.bada.flower.api.dto.auth.OAuthRes;
 import app.bada.flower.api.dto.type.SocialLoginType;
 import app.bada.flower.api.dto.user.SignInResDto;
 import app.bada.flower.api.dto.user.UserInfo;
+import app.bada.flower.api.entity.User;
 import app.bada.flower.api.service.UserService;
 import app.bada.flower.api.service.auth.OAuthService;
+import app.bada.flower.api.service.jwt.JwtTokenUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final OAuthService oAuthService;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @GetMapping("/signin")
     @ApiOperation(value="카카오 소셜 로그인", notes="로그인 요청을 보냄")
@@ -52,6 +55,6 @@ public class UserController {
 
     @PostMapping("/signout")
     public void signOut (@RequestHeader(value = "X-AUTH-TOKEN") String jwt) throws Exception {
-        userService.logout(jwt);
+        userService.logout(jwt.split(" ")[1]);
     }
 }

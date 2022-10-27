@@ -9,6 +9,8 @@ import app.bada.flower.api.repository.UserRepository;
 import app.bada.flower.api.service.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,10 @@ public class OAuthService {
     private final UserRepository userRepository;
     private final KakaoOAuth kakaoOAuth;
     private final JwtTokenUtil jwtTokenUtil;
+//    private final RedisTemplate redisTemplate;
+
+    @Value("${jwt.token.refresh_token_valid_time}")
+    private long refreshTokenValidTime;
 
     public Map<String, String> request(SocialLoginType socialLoginType) throws IOException {
         Map<String, String> resultMap = new HashMap<>();
@@ -37,9 +43,6 @@ public class OAuthService {
                 throw new IllegalArgumentException("알 수 없는 소셜 로그인 형식입니다.");
             }
         }
-
-        System.out.println("소셜 로그인으로 리다이렉트");
-//        response.sendRedirect(redirectURL);
         return resultMap;
     }
 
@@ -76,25 +79,29 @@ public class OAuthService {
                 }else {
 //                    throw new Exception("Account does not exists.");
                     System.out.println("--------소셜 회원가입--------");
-                    User newUser = User.builder()
+                    user = User.builder()
                             .token(String.valueOf(kakaoUser.getId()))
                             .nickname(kakaoUser.getNickname())
-                            .roles(Arrays.asList("USER"))
+                            .roles(Arrays.asList("ROLE_USER"))
                             .build();
                     try {
-                        userRepository.save(newUser);
+                        userRepository.save(user);
                     }catch(Exception e){
                         throw new Exception("유저 회원가입 실패 - DB에 save 실패");
                     }
 
-                    String jwtToken = jwtTokenUtil.createToken(String.valueOf(newUser.getToken()), newUser.getRoles());
+                    String jwtToken = jwtTokenUtil.createToken(String.valueOf(user.getToken()), user.getRoles());
                     res = OAuthRes.builder()
                             .jwtToken(jwtToken)
                             .accessToken(oAuthToken.getAccess_token())
                             .registered(false)
-                            .user(newUser)
+                            .user(user)
                             .build();
                 }
+
+                //refresh token 관련
+//                String refreshToken = jwtTokenUtil.createRefreshToken(user.getToken(), jwtTokenUtil.getUserRoles(user.getToken()));
+//                redisTemplate.opsForValue().set("RT "+refreshToken, refreshToken, refreshTokenValidTime);
                 return res;
             }
             default:{
