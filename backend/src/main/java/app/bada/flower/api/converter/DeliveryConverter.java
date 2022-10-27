@@ -13,7 +13,7 @@ public class DeliveryConverter {
 //                .title(delivery.getRollingPaper().getContent())
                 .imgUrl(delivery.getRollingPaper().getImgUrl())
                 .pageUrl(delivery.getRollingPaper().getUrl())
-                .date(dto.changeDateToString(delivery.getRollingPaper().getOpen_date()))
+                .date(dto.changeDateToString(delivery.getRollingPaper().getOpenDate()))
                 .sender(delivery.getSenderName())
                 .receiver(delivery.getReceiverName())
                 .flowerCount(delivery.getFlowersCount())
