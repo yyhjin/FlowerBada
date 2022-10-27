@@ -83,7 +83,7 @@ public class RollingPaperServiceImpl implements RollingPaperService {
     @Override
     public BookmarkResDto bookmarkRollingPaper(String token, int paperId) {
         int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
-        Optional<User> user = userRepository.findById(userId); //나중에 토큰으로 유저 정보 가져와서 userId값 넣기
+        Optional<User> user = userRepository.findById(userId);
         Optional<RollingPaper> rollingPaper = rollingPaperRepository.findById(paperId);
         BookmarkResDto bookmarkResDto = new BookmarkResDto();
 
