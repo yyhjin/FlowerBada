@@ -14,6 +14,7 @@ const KakaoRedirectHandler = () => {
       user = res.data.response.user;
       register = res.data.response.register;
       console.log(token, user, register);
+      window.sessionStorage.setItem('X-AUTH-TOKEN', token);
     })
     .catch(() => {
       alert('social Callback failed');

@@ -5,6 +5,7 @@ import Login from './pages/singin';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import KakaoRedirectHandler from './kakao/KakaoRedirectHandler';
 import MyPage from './pages/MyPage';
+import MainPage from './pages/MainPage';
 function App() {
   return (
     <div className="App">
@@ -14,6 +15,7 @@ function App() {
             path="/user/signin/redirect"
             element={<KakaoRedirectHandler />}
           />
+          <Route path="/" element={<MainPage />} />
           <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </BrowserRouter>
