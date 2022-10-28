@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import styled from '@emotion/styled';
 
 export default function MyPage() {
   sessionStorage.setItem('url', '/mypage');
@@ -73,16 +74,26 @@ export default function MyPage() {
       </button>
       {myList.map((deliver, index) => {
         return (
-          <ul key={index}>
-            <li>제목 {deliver.title}</li>
-            <li>배송 날짜 {deliver.date}</li>
-            <li>꽃 개수 {deliver.flowerCount}</li>
-            <li>사진 이미지{deliver.imgUrl}</li>
-            <li>가격 {deliver.price}</li>
-            <li>to {deliver.receiver}</li>
-            <li>from {deliver.sender}</li>
-            <li>상태 {deliver.status}</li>
-          </ul>
+          <DevlieryBox key={index}>
+            <ImagBox>
+              <img
+                src={deliver.imgUrl}
+                alt="배송꽃다발이미지"
+                height="100%"
+              ></img>
+            </ImagBox>
+            <InfoBox>
+              결제 날짜 : {deliver.date}
+              <br />
+              <b> {deliver.title}</b>
+              <br />
+              {deliver.flowerCount} 개의 꽃송이 가격: {deliver.price}원 <br />
+              FROM {deliver.sender}
+              <br />
+              TO {deliver.receiver} <br />
+              상태 {deliver.status}
+            </InfoBox>
+          </DevlieryBox>
         );
       })}
       <div>내포인트 : {myPoint}P</div>
@@ -98,3 +109,20 @@ export default function MyPage() {
     </>
   );
 }
+
+const DevlieryBox = styled.div`
+  background-color: white;
+`;
+
+const ImagBox = styled.div`
+  border-radius: 30px;
+  border: 4px solid #ffecec;
+  width: 100px;
+  height: 100px;
+  padding: 20px;
+  float: left;
+`;
+
+const InfoBox = styled.div`
+  margin: 20px;
+`;
