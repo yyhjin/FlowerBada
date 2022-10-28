@@ -10,10 +10,10 @@ public class DeliveryConverter {
         DeliveryResDto dto = new DeliveryResDto();
         dto = DeliveryResDto.builder()
                 .paperId(delivery.getRollingPaper().getId())
-//                .title(delivery.getRollingPaper().getContent())
+                .title(delivery.getRollingPaper().getTitle())
                 .imgUrl(delivery.getRollingPaper().getImgUrl())
                 .pageUrl(delivery.getRollingPaper().getUrl())
-                .date(dto.changeDateToString(delivery.getRollingPaper().getOpenDate()))
+                .date(dto.changeDateToString(delivery.getCreatedDate()))
                 .sender(delivery.getSenderName())
                 .receiver(delivery.getReceiverName())
                 .flowerCount(delivery.getFlowersCount())

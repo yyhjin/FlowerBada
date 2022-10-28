@@ -1,4 +1,4 @@
-package app.bada.flower.api.config;
+package app.bada.flower.config;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;

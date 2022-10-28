@@ -1,4 +1,4 @@
-package app.bada.flower.api.config;
+package app.bada.flower.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

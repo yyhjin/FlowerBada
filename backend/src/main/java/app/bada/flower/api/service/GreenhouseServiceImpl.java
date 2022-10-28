@@ -40,7 +40,6 @@ public class GreenhouseServiceImpl implements GreenhouseService {
             myRollingPaper.setPaperId(rollingPaper.getId());
             myRollingPaper.setTitle(rollingPaper.getTitle());
             myRollingPaper.setImgUrl(rollingPaper.getImgUrl());
-            System.out.println(myRollingPaper.getDate()+" "+myRollingPaper.getPaperId()+" "+myRollingPaper.getTitle()+" "+myRollingPaper.getImgUrl());
             myRollingPapers.add(myRollingPaper);
         }
         return myRollingPapers;

@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface RollingPaperRepository extends JpaRepository<RollingPaper, Integer> {
-//    List<RollingPaper> findAllByMakerToken(String makerToken);
     List<RollingPaper> findAllByUser(User user);
 }

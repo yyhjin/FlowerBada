@@ -1,4 +1,4 @@
-package app.bada.flower.api.config;
+package app.bada.flower.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

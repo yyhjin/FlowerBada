@@ -29,10 +29,7 @@ public class RollingPaperController {
     @PostMapping
     @ApiOperation(value="롤링페이퍼 생성", notes="롤링페이퍼를 생성한다.")
     public ResponseEntity<ResponseDto> createRollingPaper(@RequestHeader(value = "X-AUTH-TOKEN") String token, @RequestBody RollingPaperReqDto rollingPaperReqDto) {
-//        public ResponseEntity<ResponseDto> createRollingPaper(@RequestBody RollingPaperReqDto rollingPaperReqDto) {
-//        String token ="ㅋ";
         RollingPaper rollingPaper = rollingPaperService.createRollingPaper(token, rollingPaperReqDto);
-        System.out.println(rollingPaper);
 
         if (rollingPaper.getId()!= null) {
             return new ResponseEntity<ResponseDto>(new ResponseDto(rollingPaper.getId()), HttpStatus.OK);
@@ -42,12 +39,11 @@ public class RollingPaperController {
         }
     }
 
-    @GetMapping("/{paperId}/{paginationId}")
+    @GetMapping("/{rollingId}/{paginationId}")
     @ApiOperation(value="롤링페이퍼 조회", notes="롤링페이퍼를 조회한다.")
-    public ResponseEntity<ResponseDto> getRollingPaper(@PathVariable("paperId") int paperId,
+    public ResponseEntity<ResponseDto> getRollingPaper(@PathVariable("rollingId") int rollingId,
                                                        @PathVariable("paginationId") int paginationId) {
-        RollingPaperResDto rollingPaperResDto = rollingPaperService.getRollingPaper(paperId, paginationId); // 나중에 paperId 암호화하면 String으로 바꿔보자
-        System.out.println(rollingPaperResDto);
+        RollingPaperResDto rollingPaperResDto = rollingPaperService.getRollingPaper(rollingId, paginationId);
 
         if (rollingPaperResDto!=null) {
             return new ResponseEntity<ResponseDto>(new ResponseDto(rollingPaperResDto), HttpStatus.OK);
@@ -57,11 +53,10 @@ public class RollingPaperController {
         }
     }
 
-    @PatchMapping("/bookmark/{paperId}")
+    @PatchMapping("/bookmark/{rollingId}")
     @ApiOperation(value="롤링페이퍼 즐겨찾기 추가/제거", notes="롤링페이퍼를 즐겨찾기에 추가/제거 한다 (처음일 경우 true로 생성)")
-    public ResponseEntity<ResponseDto> bookmarkRollingPaper(@RequestHeader(value = "X-AUTH-TOKEN") String token, @PathVariable("paperId") int paperId){
-        BookmarkResDto bookmarkResDto = rollingPaperService.bookmarkRollingPaper(token, paperId); // 나중에 paperId 암호화하면 String으로 바꿔보자
-        System.out.println(bookmarkResDto);
+    public ResponseEntity<ResponseDto> bookmarkRollingPaper(@RequestHeader(value = "X-AUTH-TOKEN") String token, @PathVariable("rollingId") int rollingId){
+        BookmarkResDto bookmarkResDto = rollingPaperService.bookmarkRollingPaper(token, rollingId);
         if (bookmarkResDto!=null) {
             return new ResponseEntity<ResponseDto>(new ResponseDto(bookmarkResDto), HttpStatus.OK);
         }

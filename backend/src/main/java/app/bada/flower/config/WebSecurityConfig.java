@@ -1,4 +1,4 @@
-package app.bada.flower.api.config;
+package app.bada.flower.config;
 
 import app.bada.flower.api.service.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;

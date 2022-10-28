@@ -1,4 +1,4 @@
-package app.bada.flower.api.config;
+package app.bada.flower.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
