@@ -58,9 +58,9 @@ public class RollingPaperServiceImpl implements RollingPaperService {
     }
 
     @Override
-    public RollingPaperResDto getRollingPaper(int paperId, int paginationId) {
+    public RollingPaperResDto getRollingPaper(int rollingId, int paginationId) {
         RollingPaperResDto rollingPaperResDto = new RollingPaperResDto();
-        RollingPaper rollingPaper = rollingPaperRepository.findById(paperId).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        RollingPaper rollingPaper = rollingPaperRepository.findById(rollingId).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
         List<Message> messageList = messageRepository.findAllByRollingPaper(rollingPaper);
         if((messageList.size()-1)/10<paginationId-1){
             return null;
@@ -72,7 +72,7 @@ public class RollingPaperServiceImpl implements RollingPaperService {
         for(int i= (paginationId-1)*10; i<range; i++){
             rollingMsgList.add(messageConverter.toRollingMsgDto(messageList.get(i)));
         }
-        rollingPaperResDto.setPaperId(paperId);
+        rollingPaperResDto.setRollingId(rollingId);
         rollingPaperResDto.setTitle(rollingPaper.getTitle());
         rollingPaperResDto.setImgUrl(rollingPaper.getImgUrl());
         rollingPaperResDto.setDate(rollingPaper.getOpenDate());
@@ -81,10 +81,10 @@ public class RollingPaperServiceImpl implements RollingPaperService {
     }
 
     @Override
-    public BookmarkResDto bookmarkRollingPaper(String token, int paperId) {
+    public BookmarkResDto bookmarkRollingPaper(String token, int rollingId) {
         int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
         Optional<User> user = userRepository.findById(userId);
-        Optional<RollingPaper> rollingPaper = rollingPaperRepository.findById(paperId);
+        Optional<RollingPaper> rollingPaper = rollingPaperRepository.findById(rollingId);
         BookmarkResDto bookmarkResDto = new BookmarkResDto();
 
         Bookmark bookmark = bookmarkRepository.findByRollingPaper_IdAndUser_Id(rollingPaper.get().getId(), user.get().getId());
@@ -96,13 +96,13 @@ public class RollingPaperServiceImpl implements RollingPaperService {
                     .build();
 
             bookmarkRepository.save(bookmark1);
-            bookmarkResDto.setPaperId(rollingPaper.get().getId());
+            bookmarkResDto.setRollingId(rollingPaper.get().getId());
             bookmarkResDto.setStatus(true);
         }else{
             bookmark.setIsValid();
 
             bookmarkRepository.save(bookmark);
-            bookmarkResDto.setPaperId(rollingPaper.get().getId());
+            bookmarkResDto.setRollingId(rollingPaper.get().getId());
             bookmarkResDto.setStatus(bookmark.isValid());
         }
         return bookmarkResDto;

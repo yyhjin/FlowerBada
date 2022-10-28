@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookmarkResDto {
-    private int paperId;
+    private int rollingId;
     private boolean status;
 }

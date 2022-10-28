@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 public class RollingPaperResDto {
-    private int paperId;
+    private int rollingId;
     private String title;
     private String imgUrl;
     private LocalDateTime date;
