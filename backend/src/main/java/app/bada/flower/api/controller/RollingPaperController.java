@@ -39,11 +39,12 @@ public class RollingPaperController {
         }
     }
 
-    @GetMapping("/{rollingId}/{paginationId}")
+    @GetMapping("/{url}/{paginationId}")
     @ApiOperation(value="롤링페이퍼 조회", notes="롤링페이퍼를 조회한다.")
-    public ResponseEntity<ResponseDto> getRollingPaper(@PathVariable("rollingId") int rollingId,
+    public ResponseEntity<ResponseDto> getRollingPaper(@RequestHeader(value = "X-AUTH-TOKEN") String token,
+                                                       @PathVariable("url") String url,
                                                        @PathVariable("paginationId") int paginationId) {
-        RollingPaperResDto rollingPaperResDto = rollingPaperService.getRollingPaper(rollingId, paginationId);
+        RollingPaperResDto rollingPaperResDto = rollingPaperService.getRollingPaper(token, url, paginationId);
 
         if (rollingPaperResDto!=null) {
             return new ResponseEntity<ResponseDto>(new ResponseDto(rollingPaperResDto), HttpStatus.OK);
@@ -53,10 +54,10 @@ public class RollingPaperController {
         }
     }
 
-    @PatchMapping("/bookmark/{rollingId}")
+    @PatchMapping("/bookmark/{url}")
     @ApiOperation(value="롤링페이퍼 즐겨찾기 추가/제거", notes="롤링페이퍼를 즐겨찾기에 추가/제거 한다 (처음일 경우 true로 생성)")
-    public ResponseEntity<ResponseDto> bookmarkRollingPaper(@RequestHeader(value = "X-AUTH-TOKEN") String token, @PathVariable("rollingId") int rollingId){
-        BookmarkResDto bookmarkResDto = rollingPaperService.bookmarkRollingPaper(token, rollingId);
+    public ResponseEntity<ResponseDto> bookmarkRollingPaper(@RequestHeader(value = "X-AUTH-TOKEN") String token, @PathVariable("url") String url){
+        BookmarkResDto bookmarkResDto = rollingPaperService.bookmarkRollingPaper(token, url);
         if (bookmarkResDto!=null) {
             return new ResponseEntity<ResponseDto>(new ResponseDto(bookmarkResDto), HttpStatus.OK);
         }
