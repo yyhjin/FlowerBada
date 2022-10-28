@@ -18,8 +18,6 @@ public class FlowerItem extends BaseEntity{
     @Column(nullable = false)
     private String flowerLanguage;
 
-    private int color;
-
     @Column(nullable = false)
     private String season;
 

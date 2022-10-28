@@ -5,4 +5,5 @@ import app.bada.flower.api.entity.User;
 
 public interface UserService {
     void logout(String token);
+    User getUserByToken(String token);
 }

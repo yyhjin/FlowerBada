@@ -1,6 +1,9 @@
 package app.bada.flower.api.entity;
 
+import app.bada.flower.api.dto.flower.FlowerUserDto;
 import app.bada.flower.api.dto.mypage.MyPointDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +11,8 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @NamedNativeQuery(
         name = "find_pointList",
@@ -41,5 +46,12 @@ public class FlowerUser extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="flower_id")
     private FlowerItem flowerItem;
+
+    public static FlowerUser addFlowerUser(User user, FlowerItem request) {
+        return FlowerUser.builder()
+                .flowerItem(request)
+                .user(user)
+                .build();
+    }
 
 }
