@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class RollingPaper extends BaseEntity{
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="item_id")
     private RollingItem rollingPaperItem;
 
