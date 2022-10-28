@@ -7,6 +7,7 @@ import app.bada.flower.api.dto.mypage.MyPointResDto;
 import app.bada.flower.api.service.DeliveryService;
 import app.bada.flower.api.service.MyPageService;
 import app.bada.flower.api.service.jwt.JwtTokenUtil;
+import app.bada.flower.api.util.S3FileUpload;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,9 @@ public class MyPageController {
 
     @Autowired
     private final JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private final S3FileUpload s3FileUpload;
     @GetMapping("/delivery")
     @ApiOperation(value="배송중 목록", notes="sort = 1(최신순), 2(오래된순)")
     public ResponseEntity deliveringList(@RequestHeader(value = "X-AUTH-TOKEN") String jwtToken, @RequestParam Integer sort, @RequestParam Integer paginationId) {
