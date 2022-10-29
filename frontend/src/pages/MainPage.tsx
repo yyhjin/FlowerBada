@@ -12,10 +12,21 @@ export default function MainPage() {
     }
   };
 
+  const handleGreenHouse = async () => {
+    try {
+      navigate('/greenhouse');
+    } catch (err: any) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <button type="button" onClick={handleMyPage}>
         마이페이지
+      </button>
+      <button type="button" onClick={handleGreenHouse}>
+        그린하우스
       </button>
     </>
   );
