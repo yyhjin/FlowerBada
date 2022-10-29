@@ -3,35 +3,41 @@ package app.bada.flower.api.service;
 import app.bada.flower.api.dto.user.SignInResDto;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.UserRepository;
+import app.bada.flower.api.service.jwt.JwtTokenUtil;
+import app.bada.flower.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 
+import static app.bada.flower.exception.ErrorCode.POSTS_NOT_FOUND;
+import static app.bada.flower.exception.ErrorCode.USER_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
     private final RedisTemplate redisTemplate;
-
-    public SignInResDto signIn(String token) {
-        // 로그인 로직 만들고 수정 필요
-        return null;
-    }
+    
+    private final JwtTokenUtil jwtTokenUtil;
+    private final UserRepository userRepository;
 
     @Override
     public User getUserByToken(String userToken) {
-        return null;
+        int userId = jwtTokenUtil.getUserId(userToken.split(" ")[1]);
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 
+    @Value("${jwt.token.access_token_valid_time}")
+    private long tokenValidTime;
     @Override
     public void logout(String token) {
-        long duration = 24* 60 * 60 * 1000L;
-        final String PREFIX = "logout";
+        final String PREFIX = "LOGOUT";
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        Duration exp = Duration.ofSeconds(duration);
+        Duration exp = Duration.ofSeconds(tokenValidTime);
         valueOperations.set(PREFIX + token, token, exp);
     }
 }
