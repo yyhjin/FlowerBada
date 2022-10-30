@@ -54,6 +54,13 @@ export default function GreenHouse() {
       console.log(err);
     }
   };
+  const handleMainPage = async () => {
+    try {
+      navigate('/');
+    } catch (err: any) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     getRollings();
   }, []);
@@ -61,6 +68,7 @@ export default function GreenHouse() {
     <>
       <div>GreenHouse</div>
       <div>
+        <button onClick={handleMainPage}>뒤로 가기</button>
         <button onClick={getRollings}>내가 만든 꽃다발</button>
         <button onClick={getBookmarks}>즐겨찾기</button>
         {loading ? (

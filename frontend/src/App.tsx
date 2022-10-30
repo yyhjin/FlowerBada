@@ -8,6 +8,10 @@ import MyPage from './pages/MyPage';
 import MainPage from './pages/MainPage';
 import GreenHouse from './pages/GreenHouse';
 import RollingPaper from './pages/RollingPaper';
+import SelectItem from './pages/CreateRollingPaper/SelectItem';
+import SetTitle from './pages/CreateRollingPaper/SetTitle';
+import SetOpenDate from './pages/CreateRollingPaper/SetOpenDate';
+import RollingLink from './pages/CreateRollingPaper/RollingLink';
 function App() {
   return (
     <div className="App">
@@ -20,6 +24,10 @@ function App() {
           />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/greenhouse" element={<GreenHouse />} />
+          <Route path="/selectitem" element={<SelectItem />} />
+          <Route path="/settitle" element={<SetTitle />} />
+          <Route path="/setOpenDate" element={<SetOpenDate />} />
+          <Route path="/rollinglink" element={<RollingLink />} />
           <Route
             path="/rollingpaper/:url/:paginationId"
             element={<RollingPaper />}

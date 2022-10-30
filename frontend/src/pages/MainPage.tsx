@@ -20,6 +20,14 @@ export default function MainPage() {
     }
   };
 
+  const handleCreateRolling = async () => {
+    try {
+      navigate('/selectitem');
+    } catch (err: any) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <button type="button" onClick={handleMyPage}>
@@ -27,6 +35,9 @@ export default function MainPage() {
       </button>
       <button type="button" onClick={handleGreenHouse}>
         그린하우스
+      </button>
+      <button type="button" onClick={handleCreateRolling}>
+        새로 만들기
       </button>
     </>
   );
