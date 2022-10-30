@@ -32,7 +32,7 @@ public class RollingPaperController {
         RollingPaper rollingPaper = rollingPaperService.createRollingPaper(token, rollingPaperReqDto);
 
         if (rollingPaper.getId()!= null) {
-            return new ResponseEntity<ResponseDto>(new ResponseDto(rollingPaper.getId()), HttpStatus.OK);
+            return new ResponseEntity<ResponseDto>(new ResponseDto(rollingPaper.getUrl()), HttpStatus.OK);
         }
         else {
             return new ResponseEntity<ResponseDto>(new ResponseDto("롤링페이퍼 등록 실패"), HttpStatus.FORBIDDEN);
