@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from '@emotion/styled';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 export default function MyDeliveryList() {
@@ -11,7 +8,7 @@ export default function MyDeliveryList() {
   const [myList, setMyList] = useState([]);
   const [sortNumber, setSortNumber] = useState(1);
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleChange = (event) => {
     setSortNumber(event.target.value);
     deliveryListFunc(event.target.value);
   };
@@ -39,21 +36,13 @@ export default function MyDeliveryList() {
   }
 
   return (
-    <>
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
-        <Select
-          value={sortNumber}
-          onChange={handleChange}
-          displayEmpty
-          inputProps={{ 'aria-label': 'Without label' }}
-          style={{ float: 'right' }}
-        >
-          <MenuItem value={1}>
-            <em>최신순</em>
-          </MenuItem>
-          <MenuItem value={2}>오래된순</MenuItem>
-        </Select>
-      </FormControl>
+    <div>
+      <form>
+        <DropDown value={sortNumber} onChange={handleChange}>
+          <option value={1}>최신순</option>
+          <option value={2}>오래된순</option>
+        </DropDown>
+      </form>
       {myList.map((deliver, index) => {
         return (
           <DevlieryBox key={index}>
@@ -64,14 +53,19 @@ export default function MyDeliveryList() {
                 height="100%"
               ></img>
             </ImagBox>
-            <Stack direction="row" spacing={1}>
-              <Chip label={deliver.status} variant="outlined" color="success" />
-            </Stack>
             <InfoBox>
               {deliver.date}
               <br />
               <b> {deliver.title}</b>
               <br />
+              <Stack direction="row" spacing={1}>
+                <Chip
+                  label={deliver.status}
+                  variant="outlined"
+                  color="success"
+                  size="small"
+                />
+              </Stack>
               <b>{deliver.flowerCount}</b> 개의 꽃송이 가격: {deliver.price}원{' '}
               <br />
             </InfoBox>
@@ -85,17 +79,16 @@ export default function MyDeliveryList() {
           </DevlieryBox>
         );
       })}
-    </>
+    </div>
   );
 }
 
 const DevlieryBox = styled.div`
   background-color: white;
+  width: 100%;
 `;
 
 const ImagBox = styled.div`
-  border-radius: 30px;
-  border: 4px solid #ffecec;
   width: 100px;
   height: 100px;
   padding: 20px;
@@ -103,6 +96,7 @@ const ImagBox = styled.div`
 `;
 
 const InfoBox = styled.div`
+  padding-top: 30px;
   margin: 20px;
   text-align: left;
 `;
@@ -111,4 +105,12 @@ const FromBox = styled.div`
   margin-left: 50px;
   width: 100px;
   text-align: left;
+`;
+
+const DropDown = styled.select`
+  bacground-color: transparent;
+  border: none;
+  margin-right: 10px;
+  margin-top: 10px;
+  padding: 5px;
 `;

@@ -31,38 +31,43 @@ export default function MyPointList() {
   }
 
   return (
-    <>
+    <WholeBox>
       <InfoBox>
         <b>내 포인트 : {myPoint}P</b>
       </InfoBox>
-      {/* <div>사용내역</div> */}
-      <ListBox>
+      <div>
         <b>사용내역</b>
+      </div>
+      <ListBox>
+        <b>내용</b>
       </ListBox>
       <ListBox>
-        <b>사용포인트</b>
+        <b>포인트</b>
       </ListBox>
       <ListBox>
-        <b>사용날짜</b>
+        <b>날짜</b>
       </ListBox>
+
       {myPointList.map((point, index) => {
         return (
           <PointBox key={index}>
             <ListBox>{point.name} 구매</ListBox>
-            <ListBox> {point.point}P</ListBox>
+            <ListBox> -{point.point}P</ListBox>
             <ListBox>{point.createdDate}</ListBox>
           </PointBox>
         );
       })}
-    </>
+    </WholeBox>
   );
 }
+const WholeBox = styled.div`
+  width: 100%;
+`;
 
 const InfoBox = styled.div`
-  border-radius: 30px;
-  border: 4px solid #ffecec;
   margin-bottom: 100px;
   padding: 20px;
+  text-align: left;
 `;
 
 const PointBox = styled.div`

@@ -1,8 +1,10 @@
 #root {
   max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  margin: 0 auto ;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
   text-align: center;
+  background-color: #F2F0EF;
 }
 
 .logo {
@@ -40,4 +42,5 @@
   color: #888;
 }
 
-button:focus { outline: none !important;;}
+button:focus {box-shadow:none !important;}
+select:focus{ outline: none}
