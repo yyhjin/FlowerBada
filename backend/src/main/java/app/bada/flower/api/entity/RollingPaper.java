@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class RollingPaper extends BaseEntity{
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="item_id")
     private RollingItem rollingPaperItem;
 
@@ -30,9 +30,6 @@ public class RollingPaper extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @Column(nullable = false)
-    private String receiverPhone;
 
     @Column(updatable = false)
     private LocalDateTime openDate;

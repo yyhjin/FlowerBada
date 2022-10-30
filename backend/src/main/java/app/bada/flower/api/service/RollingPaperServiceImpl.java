@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 
 @Service
@@ -43,14 +44,41 @@ public class RollingPaperServiceImpl implements RollingPaperService {
         int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
         User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
 
+        Random random = new Random();
+        int length = random.nextInt(5)+5;
+
+        StringBuffer newWord = new StringBuffer();
+        boolean check = false;
+        while(!check){
+            for (int i = 0; i < length; i++) {
+                int choice = random.nextInt(3);
+                switch(choice) {
+                    case 0:
+                        newWord.append((char)((int)random.nextInt(25)+97));
+                        break;
+                    case 1:
+                        newWord.append((char)((int)random.nextInt(25)+65));
+                        break;
+                    case 2:
+                        newWord.append((char)((int)random.nextInt(10)+48));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if(!rollingPaperRepository.findByUrl(newWord.toString()).isPresent()){
+                check = true;
+            }
+        }
+
+
         RollingPaper rollingPaper = RollingPaper.builder()
                 .rollingPaperItem(rollingItemRepository.getReferenceById(rollingPaperReqDto.getItemId()))
                 .title(rollingPaperReqDto.getTitle())
                 .makerNickname(user.getNickname())
                 .user(user)
-                .receiverPhone(rollingPaperReqDto.getReceiverPhone())
                 .openDate(rollingPaperReqDto.getOpenDate())
-                .url("임시 url")
+                .url(newWord.toString())
                 .imgUrl("임시 이미지 url")
                 .build();
 
@@ -58,9 +86,9 @@ public class RollingPaperServiceImpl implements RollingPaperService {
     }
 
     @Override
-    public RollingPaperResDto getRollingPaper(int rollingId, int paginationId) {
+    public RollingPaperResDto getRollingPaper(String token, String url, int paginationId) {
         RollingPaperResDto rollingPaperResDto = new RollingPaperResDto();
-        RollingPaper rollingPaper = rollingPaperRepository.findById(rollingId).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        RollingPaper rollingPaper = rollingPaperRepository.findByUrl(url).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
         List<Message> messageList = messageRepository.findAllByRollingPaper(rollingPaper);
         if((messageList.size()-1)/10<paginationId-1){
             return null;
@@ -72,19 +100,19 @@ public class RollingPaperServiceImpl implements RollingPaperService {
         for(int i= (paginationId-1)*10; i<range; i++){
             rollingMsgList.add(messageConverter.toRollingMsgDto(messageList.get(i)));
         }
-        rollingPaperResDto.setRollingId(rollingId);
+        rollingPaperResDto.setRollingId(rollingPaper.getId());
         rollingPaperResDto.setTitle(rollingPaper.getTitle());
-        rollingPaperResDto.setImgUrl(rollingPaper.getImgUrl());
+        rollingPaperResDto.setImgUrl(rollingPaper.getRollingPaperItem().getImgUrl());
         rollingPaperResDto.setDate(rollingPaper.getOpenDate());
         rollingPaperResDto.setMessages(rollingMsgList);
         return rollingPaperResDto;
     }
 
     @Override
-    public BookmarkResDto bookmarkRollingPaper(String token, int rollingId) {
+    public BookmarkResDto bookmarkRollingPaper(String token, String url) {
         int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
         Optional<User> user = userRepository.findById(userId);
-        Optional<RollingPaper> rollingPaper = rollingPaperRepository.findById(rollingId);
+        Optional<RollingPaper> rollingPaper = rollingPaperRepository.findByUrl(url);
         BookmarkResDto bookmarkResDto = new BookmarkResDto();
 
         Bookmark bookmark = bookmarkRepository.findByRollingPaper_IdAndUser_Id(rollingPaper.get().getId(), user.get().getId());

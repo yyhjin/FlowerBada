@@ -37,7 +37,7 @@ public class GreenhouseServiceImpl implements GreenhouseService {
         for(RollingPaper rollingPaper : rollingPapers){
             GreenhouseResDto myRollingPaper = new GreenhouseResDto();
             myRollingPaper.setDate(rollingPaper.getOpenDate());
-            myRollingPaper.setRollingId(rollingPaper.getId());
+            myRollingPaper.setUrl(rollingPaper.getUrl());
             myRollingPaper.setTitle(rollingPaper.getTitle());
             myRollingPaper.setImgUrl(rollingPaper.getImgUrl());
             myRollingPapers.add(myRollingPaper);
@@ -54,7 +54,7 @@ public class GreenhouseServiceImpl implements GreenhouseService {
         for(Bookmark bookmark : bookmarks){
             GreenhouseResDto myRollingPaper = new GreenhouseResDto();
             myRollingPaper.setDate(bookmark.getRollingPaper().getOpenDate());
-            myRollingPaper.setRollingId(bookmark.getRollingPaper().getId());
+            myRollingPaper.setUrl(bookmark.getRollingPaper().getUrl());
             myRollingPaper.setTitle(bookmark.getRollingPaper().getTitle());
             myRollingPaper.setImgUrl(bookmark.getRollingPaper().getImgUrl());
             myRollingPapers.add(myRollingPaper);
