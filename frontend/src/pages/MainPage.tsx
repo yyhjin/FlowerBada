@@ -1,22 +1,20 @@
-import React from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-export default function MainPage() {
-  sessionStorage.setItem('url', '/');
-  const navigate = useNavigate();
-  const handleMyPage = async () => {
-    try {
-      navigate('/mypage');
-    } catch (err: any) {
-      console.log(err);
-    }
-  };
+import { css } from '@emotion/react';
 
+const Mainpage = () => {
   return (
-    <>
-      <button type="button" onClick={handleMyPage}>
-        마이페이지
-      </button>
-    </>
+    <div css={TestCSS}>
+      Mainpage
+      <p className="test">얘는 파란색이야</p>
+    </div>
   );
-}
+};
+
+const TestCSS = css`
+  color: red;
+  display: flex;
+  .test {
+    color: blue;
+  }
+`;
+
+export default Mainpage;

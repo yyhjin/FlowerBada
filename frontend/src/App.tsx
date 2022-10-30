@@ -1,26 +1,28 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import './App.css';
-import Login from './pages/singin';
+import '@src/App.css';
+import Login from '@pages/SignIn';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import KakaoRedirectHandler from './kakao/KakaoRedirectHandler';
-import MyPage from './pages/MyPage';
-import MainPage from './pages/MainPage';
+import KakaoRedirectHandler from '@kakao/KakaoRedirectHandler';
+import { RecoilRoot } from 'recoil';
+import MainPage from '@pages/MainPage';
+import MyPage from '@pages/MyPage';
+
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/user/signin/redirect"
-            element={<KakaoRedirectHandler />}
-          />
-          <Route path="/" element={<MainPage />} />
-          <Route path="/mypage" element={<MyPage />} />
-        </Routes>
-      </BrowserRouter>
-      <Login />
-    </div>
+    <RecoilRoot>
+      <div className="App">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Login />}></Route>
+            <Route path="/main" element={<MainPage />}></Route>
+            <Route
+              path="/user/signin/redirect"
+              element={<KakaoRedirectHandler />}
+            />
+            <Route path="/mypage" element={<MyPage />}></Route>
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </RecoilRoot>
   );
 }
 
