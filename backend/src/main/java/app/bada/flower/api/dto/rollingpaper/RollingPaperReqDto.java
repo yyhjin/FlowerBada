@@ -8,6 +8,5 @@ import java.time.LocalDateTime;
 public class RollingPaperReqDto {
     private int itemId;
     private String title;
-    private String receiverPhone;
     private LocalDateTime openDate;
 }

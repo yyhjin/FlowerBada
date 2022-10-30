@@ -77,7 +77,6 @@ public class RollingPaperServiceImpl implements RollingPaperService {
                 .title(rollingPaperReqDto.getTitle())
                 .makerNickname(user.getNickname())
                 .user(user)
-                .receiverPhone(rollingPaperReqDto.getReceiverPhone())
                 .openDate(rollingPaperReqDto.getOpenDate())
                 .url(newWord.toString())
                 .imgUrl("임시 이미지 url")
