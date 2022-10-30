@@ -1,13 +1,16 @@
-import React from 'react';
 import axios from 'axios';
+import Logout from './signout';
+import { userReCoil } from '../recoil/userRecoil';
+import { useRecoilState } from 'recoil';
 
 export default function Login() {
+  const [loginUser] = useRecoilState(userReCoil);
+  // console.log('Login()', loginUser);
   const handleLogin = async () => {
     try {
       const res: any = await axios.get(
         'http://localhost:8080/api/v1/user/signin',
       );
-      console.log(res);
       let url: string = res.data.response.redirectURL;
       window.location.href = url;
     } catch (err: any) {
@@ -17,10 +20,16 @@ export default function Login() {
 
   return (
     <>
-      <div>Login</div>
-      <button type="button" onClick={handleLogin}>
-        Kakao Login
-      </button>
+      {loginUser.jwt === '' ? (
+        <>
+          <div>Login</div>
+          <button type="button" onClick={handleLogin}>
+            Kakao Login
+          </button>
+        </>
+      ) : (
+        <Logout />
+      )}
     </>
   );
 }
