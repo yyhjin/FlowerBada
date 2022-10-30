@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.List;
 
 public interface FlowerUserRepository extends JpaRepository<FlowerUser, Integer> {
-    @Query(value = "select f.id, f.flowerLanguage, f.imgUrl, f.name, f.point, f.price, f.season from FlowerItem f join FlowerUser u on f.id = u.flowerItem.id where u.user.id = :userId and f.isDeleted = false and f.point <> 0")
+    @Query(value = "select f from FlowerItem f join FlowerUser u on f.id = u.flowerItem.id where u.user.id = :userId and f.isDeleted = false and f.point <> 0")
     List<FlowerItem> userPurchasedFlower(@Param("userId") Integer userId);
 
     @Query(nativeQuery = true, name = "find_pointList")
