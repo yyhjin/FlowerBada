@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useRecoilState } from 'recoil';
+import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
 import styled from '@emotion/styled';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
@@ -7,7 +9,7 @@ export default function MyDeliveryList() {
   const [pages, setPages] = useState(0);
   const [myList, setMyList] = useState([]);
   const [sortNumber, setSortNumber] = useState(1);
-
+  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const handleChange = (event) => {
     setSortNumber(event.target.value);
     deliveryListFunc(event.target.value);
@@ -23,7 +25,7 @@ export default function MyDeliveryList() {
         'http://localhost:8080/api/v1/mypage/delivery',
         {
           headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + sessionStorage.getItem('X-AUTH-TOKEN'),
+            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
           },
           params,
         },
@@ -65,6 +67,7 @@ export default function MyDeliveryList() {
                   color="success"
                   size="small"
                 />
+                {/* <ChipBox>deliver.status</ChipBox> */}
               </Stack>
               <b>{deliver.flowerCount}</b> 개의 꽃송이 가격: {deliver.price}원{' '}
               <br />
@@ -113,4 +116,11 @@ const DropDown = styled.select`
   margin-right: 10px;
   margin-top: 10px;
   padding: 5px;
+`;
+
+const ChipBox = styled.div`
+  width: 20px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid pink;
 `;

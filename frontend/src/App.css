@@ -9,6 +9,7 @@ body {
   margin: 0 auto;
   text-align: center;
   overflow-y: hidden;
+  background-color: #F2F0EF;
 }
 
 button:focus {box-shadow:none !important;}

@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from '@emotion/styled';
-
+import { useRecoilState } from 'recoil';
+import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
 export default function MyPointList() {
   const [pages, setPages] = useState(0);
   const [myPoint, setMyPoint] = useState(0);
   const [myPointList, setMyPointList] = useState([]);
+  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
 
   useEffect(() => {
     myPointListFunc();
@@ -17,7 +19,7 @@ export default function MyPointList() {
         'http://localhost:8080/api/v1/mypage/mypoint',
         {
           headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + sessionStorage.getItem('X-AUTH-TOKEN'),
+            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
           },
           params,
         },

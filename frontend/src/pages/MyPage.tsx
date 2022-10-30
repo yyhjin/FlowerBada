@@ -11,7 +11,7 @@ export default function MyPage() {
   }
   return (
     <>
-      <FixBox>
+      <div>
         <div>
           {number === 0 ? (
             <Button onClick={() => handleChange(0)}>배송 목록</Button>
@@ -33,18 +33,10 @@ export default function MyPage() {
         ) : (
           <MyPointList></MyPointList>
         )}
-      </FixBox>
+      </div>
     </>
   );
 }
-
-const FixBox = styled.div`
-  width: 500px;
-  margin-left: -56px;
-  margin-right: -56px;
-  height: 850px;
-  margin: 0 auto;
-`;
 
 const Button = styled.button`
   float: left;
