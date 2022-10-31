@@ -4,6 +4,7 @@ import app.bada.flower.api.dto.ResponseDto;
 import app.bada.flower.api.dto.flower.FlowerReqDto;
 import app.bada.flower.api.dto.flower.FlowerResDto;
 import app.bada.flower.api.dto.rolling.RollingReqDto;
+import app.bada.flower.api.dto.rolling.RollingResDto;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.service.StoreService;
 import app.bada.flower.api.service.UserService;
@@ -25,31 +26,29 @@ public class StoreController {
     private final UserService userService;
 
     @GetMapping("/flower")
-    public ResponseEntity<?> getFlowerList(@RequestHeader(value = "X-AUTH-TOKEN") String token) {
+    public ResponseEntity getFlowerList(@RequestHeader(value = "X-AUTH-TOKEN") String token) {
         User user = userService.getUserByToken(token);
-        return ResponseEntity.ok(storeService.getFlowerList(user));
+        List<FlowerResDto> response = storeService.getFlowerList(user);
+        return new ResponseEntity(new ResponseDto(response), HttpStatus.OK);
     }
 
     @GetMapping("/rolling")
-    public ResponseEntity<?> getRollingItemList(@RequestHeader(value = "X-AUTH-TOKEN") String token) {
+    public ResponseEntity getRollingItemList(@RequestHeader(value = "X-AUTH-TOKEN") String token) {
         User user = userService.getUserByToken(token);
-        return ResponseEntity.ok(storeService.getRollingList(user));
+        List<RollingResDto> response = storeService.getRollingList(user);
+        return new ResponseEntity(new ResponseDto(response), HttpStatus.OK);
     }
 
     @PutMapping("/buy/flower")
-    public ResponseEntity<?> buyFlowerItem(@RequestHeader(value = "X-AUTH-TOKEN") String token, @RequestBody FlowerReqDto flowerReqDto) {
+    public void buyFlowerItem(@RequestHeader(value = "X-AUTH-TOKEN") String token, @RequestBody FlowerReqDto flowerReqDto) {
         User user = userService.getUserByToken(token);
         storeService.buyFlowerItem(user, flowerReqDto);
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/buy/rolling")
-    public ResponseEntity<?> buyRollingItem(@RequestHeader(value = "X-AUTH-TOKEN") String token, @RequestBody RollingReqDto rollingReqDto) {
+    public void buyRollingItem(@RequestHeader(value = "X-AUTH-TOKEN") String token, @RequestBody RollingReqDto rollingReqDto) {
         User user = userService.getUserByToken(token);
         storeService.buyRollingItem(user, rollingReqDto);
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 
