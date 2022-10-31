@@ -75,7 +75,6 @@ export default function SelectItem() {
           <div>
             <div>{selectUrl}</div>
             <div>
-              {/* 코드별로 아이템 나누는거(꽃다발, 꽃바구니..) 나누는 작업 필요*/}
               {items.map((item, index) => {
                 return (
                   <ul key={item.rollingId}>
