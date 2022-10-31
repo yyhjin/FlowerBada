@@ -2,9 +2,12 @@
 /** @jsxImportSource @emotion/react */
 import menuIcon from '../../img/Menu.png';
 import backArrow from '../../img/backArrow.png';
+import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 
 export default function Header() {
+  const navigate = useNavigate();
+
   return (
     <header
       css={css({
@@ -18,7 +21,7 @@ export default function Header() {
     >
       <nav>
         <a
-          href="#"
+          onClick={() => navigate(-1)}
           css={css({
             textDecoration: 'none',
             float: 'left',
