@@ -6,6 +6,7 @@ export default function SetTitle() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
+  const [imgUrl, setImgUrl] = useState(sessionStorage.getItem('selectUrl'));
 
   const getTitle = () => {
     if (sessionStorage.getItem('title') !== null) {
@@ -44,6 +45,7 @@ export default function SetTitle() {
   return (
     <>
       <div>제목 정해</div>
+      <div>{imgUrl}</div>
       <div>
         <input value={title || ''} onChange={changeTitle}></input>
       </div>

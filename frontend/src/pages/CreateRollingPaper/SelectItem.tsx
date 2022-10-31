@@ -64,6 +64,9 @@ export default function SelectItem() {
     setSelectIndex(e.target.id);
     console.log(items[e.target.id].rollingId);
   };
+  const cnatSelect = () => {
+    alert('이건 돈 내고 사서 써야 됨!');
+  };
   useEffect(() => {
     getItems();
   }, []);
@@ -78,12 +81,25 @@ export default function SelectItem() {
               {items.map((item, index) => {
                 return (
                   <ul key={item.rollingId}>
-                    <li onClick={select} id={index}>
-                      {item.imgUrl}
-                    </li>
-                    <li> {item.name}</li>
-                    <li>{item.point}</li>
-                    <li>{item.price}</li>
+                    {item.isOwned === true ? (
+                      <div>
+                        <li onClick={select} id={index}>
+                          {item.imgUrl}
+                        </li>
+                        <li> {item.name}</li>
+                        <li>{item.point}</li>
+                        <li>{item.price}</li>
+                      </div>
+                    ) : (
+                      <div>
+                        <li onClick={cnatSelect} id={index}>
+                          {item.imgUrl}
+                        </li>
+                        <li> {item.name}</li>
+                        <li>{item.point}</li>
+                        <li>{item.price}</li>
+                      </div>
+                    )}
                   </ul>
                 );
               })}
