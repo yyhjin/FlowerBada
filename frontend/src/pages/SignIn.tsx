@@ -1,10 +1,9 @@
-/* eslint-disable react/no-unknown-property */
-/** @jsxImportSource @emotion/react */
 import axios from 'axios';
-import kakaoLogo from '../img/kakaoTalk.png';
-import { userReCoil } from '../recoil/userRecoil';
+import Logout from '@pages/SignOut';
+import { userReCoil } from '@recoil/userRecoil';
 import { useRecoilState } from 'recoil';
 import { css } from '@emotion/react';
+import kakaoLogo from '../img/kakaoTalk.png';
 
 export default function Login() {
   const [loginUser] = useRecoilState(userReCoil);
