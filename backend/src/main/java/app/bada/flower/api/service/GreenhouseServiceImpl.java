@@ -31,6 +31,8 @@ public class GreenhouseServiceImpl implements GreenhouseService {
     private final JwtTokenUtil jwtTokenUtil;
 
     private final BookmarkRepository bookmarkRepository;
+
+    private final GreenhouseResDto greenhouseResDto = new GreenhouseResDto();
     @Override
     public List<GreenhouseResDto> getMyRollingPapers(String token,int sortNumber, Pageable pageable) {
         int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
@@ -44,7 +46,7 @@ public class GreenhouseServiceImpl implements GreenhouseService {
         }
         for(RollingPaper rollingPaper : findAllMyRollingPaperList){
             GreenhouseResDto myRollingPaper = new GreenhouseResDto();
-            myRollingPaper.setDate(rollingPaper.getOpenDate());
+            myRollingPaper.setDate(greenhouseResDto.changeDateToString(rollingPaper.getOpenDate()));
             myRollingPaper.setUrl(rollingPaper.getUrl());
             myRollingPaper.setTitle(rollingPaper.getTitle());
             myRollingPaper.setImgUrl(rollingPaper.getImgUrl());
@@ -55,6 +57,7 @@ public class GreenhouseServiceImpl implements GreenhouseService {
 
     @Override
     public List<GreenhouseResDto> getMyBookmarks(String token, int sortNumber, Pageable pageable) {
+
         int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
         User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         List<GreenhouseResDto> myRollingPapers = new ArrayList<>();
@@ -66,7 +69,7 @@ public class GreenhouseServiceImpl implements GreenhouseService {
         }
         for(Bookmark bookmark : findAllMyBookmarkList){
             GreenhouseResDto myRollingPaper = new GreenhouseResDto();
-            myRollingPaper.setDate(bookmark.getRollingPaper().getOpenDate());
+            myRollingPaper.setDate(greenhouseResDto.changeDateToString(bookmark.getRollingPaper().getOpenDate()));
             myRollingPaper.setUrl(bookmark.getRollingPaper().getUrl());
             myRollingPaper.setTitle(bookmark.getRollingPaper().getTitle());
             myRollingPaper.setImgUrl(bookmark.getRollingPaper().getImgUrl());
