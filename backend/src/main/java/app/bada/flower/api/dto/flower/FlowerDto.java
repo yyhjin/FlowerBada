@@ -16,6 +16,7 @@ public class FlowerDto {
     private int point;
     private int price;
     private String imgUrl;
+    private String imgBud;
 
     public FlowerDto(FlowerItem flowerItem) {
         this.id = flowerItem.getId();
@@ -25,5 +26,6 @@ public class FlowerDto {
         this.point = flowerItem.getPoint();
         this.price = flowerItem.getPrice();
         this.imgUrl = flowerItem.getImgUrl();
+        this.imgBud = flowerItem.getImgBud();
     }
 }

@@ -15,6 +15,8 @@ public class RollingDto {
     private int point;
     private int price;
     private String imgUrl;
+    private String imgFront;
+    private String imgBack;
 
     public RollingDto(RollingItem rollingItem) {
         this.id = rollingItem.getId();
@@ -23,5 +25,7 @@ public class RollingDto {
         this.point = rollingItem.getPoint();
         this.price = rollingItem.getPrice();
         this.imgUrl = rollingItem.getImgUrl();
+        this.imgFront = rollingItem.getImgFront();
+        this.imgBack = rollingItem.getImgBack();
     }
 }
