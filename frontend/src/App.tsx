@@ -27,17 +27,12 @@ function App() {
             </>
           ) : (
             <>
-              <Route path="/main" element={<MainPage />}></Route>
               <Route path="" element={<MainPage />}></Route>
               <Route path="/" element={<Layout />}>
                 <Route path="greenhouse" element={<GreenHouse />}></Route>
                 <Route path="store" element={<Store />}></Route>
                 <Route path="newroll" element={<NewRoll />}></Route>
                 <Route path="mypage" element={<MyPage />}></Route>
-                {/* <Route path="mypage" element={<MyPage />} />
-            <Route path="greenhouse" element={<GreenHouse />} />
-            <Route path="store" element={<Store />} />
-            <Route path="rollingpaper" element={<CreateRolling />} /> */}
               </Route>
             </>
           )}
