@@ -16,4 +16,17 @@ export default defineConfig({
     tsconfigPaths(),
     { ...eslint(), enforce: 'pre' },
   ],
+  resolve: {
+    alias: [
+      { find: '@src', replacement: path.resolve(__dirname, 'src') },
+      { find: '@assets', replacement: path.resolve(__dirname, 'src/assets') },
+      {
+        find: '@components',
+        replacement: path.resolve(__dirname, 'src/components'),
+      },
+      { find: '@kakao', replacement: path.resolve(__dirname, 'src/kakao') },
+      { find: '@pages', replacement: path.resolve(__dirname, 'src/pages') },
+      { find: '@recoil', replacement: path.resolve(__dirname, 'src/recoil') },
+    ],
+  },
 });
