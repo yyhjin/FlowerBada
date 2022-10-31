@@ -9,21 +9,6 @@ export default function SetOpenDate() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
-  const month = [
-    'wow',
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
 
   const changeDate = (datetime) => {
     setDate(datetime);
@@ -41,11 +26,14 @@ export default function SetOpenDate() {
   };
 
   const handleRollingLink = async () => {
-    //Thu Nov 03 2022 17:19:35 GMT+0900 (한국 표준시)
-    // 2022-10-31T08:20
+    if (date === null) {
+      alert('날짜 제대로 입력해');
+      return;
+    }
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     let day = date.getDate();
+
     if (String(month).length === 1) {
       month = '0' + month;
     }
