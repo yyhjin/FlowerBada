@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Logout from './SignOut';
+import Logout from '@pages/SignOut';
 import { userReCoil } from '@recoil/userRecoil';
 import { useRecoilState } from 'recoil';
 

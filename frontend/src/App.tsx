@@ -1,9 +1,9 @@
-import './App.css';
-import Login from './pages/SignIn';
+import '@src/App.css';
+import Login from '@pages/SignIn';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import KakaoRedirectHandler from './kakao/KakaoRedirectHandler';
+import KakaoRedirectHandler from '@kakao/KakaoRedirectHandler';
 import { RecoilRoot } from 'recoil';
-import MainPage from './pages/MainPage';
+import MainPage from '@pages/MainPage';
 
 function App() {
   return (
