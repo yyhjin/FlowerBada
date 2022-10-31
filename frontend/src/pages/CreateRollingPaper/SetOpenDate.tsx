@@ -1,24 +1,38 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+import { ko } from 'date-fns/esm/locale';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function SetOpenDate() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [date, setDate] = useState('2022-10-30T15:26:53.744Z');
+  const [date, setDate] = useState(new Date());
+  const month = [
+    'wow',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
 
-  const getDate = () => {
-    if (sessionStorage.getItem('date') !== null) {
-      setDate(sessionStorage.getItem('date'));
-    }
-  };
-
-  const changeDate = (e) => {
-    setDate(e.target.value);
+  const changeDate = (datetime) => {
+    setDate(datetime);
+    console.log(datetime.getMonth());
+    console.log(datetime.getFullYear());
+    console.log(datetime.getUTCDate());
   };
 
   const handleSetTitle = async () => {
-    sessionStorage.setItem('date', date);
     try {
       navigate('/settitle');
     } catch (err: any) {
@@ -27,12 +41,26 @@ export default function SetOpenDate() {
   };
 
   const handleRollingLink = async () => {
+    //Thu Nov 03 2022 17:19:35 GMT+0900 (한국 표준시)
+    // 2022-10-31T08:20
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    if (String(month).length === 1) {
+      month = '0' + month;
+    }
+    if (String(day).length === 1) {
+      day = '0' + day;
+    }
+    let localDateTime = year + '-' + month + '-' + day + 'T10:00';
+    console.log(localDateTime);
+
     try {
       const res: any = await axios.post(
         'http://localhost:8080/api/v1/rolling',
         {
           itemId: Number(sessionStorage.getItem('selectId')),
-          openDate: date,
+          openDate: localDateTime,
           title: sessionStorage.getItem('title'),
         },
         {
@@ -56,9 +84,16 @@ export default function SetOpenDate() {
     <>
       <div>날짜 선택</div>
       <div>
-        나중에 데이트피커로 바꾸기
-        <input value={date} onChange={changeDate}></input>
-        {/* 현재 날짜보다 뒤로만 가능한 검증 필요, 날짜 선택 안하면 못 만들게 하는 검증도 필요*/}
+        <DatePicker
+          locale={ko} // 언어설정 기본값은 영어
+          dateFormat="yyyy-MM-dd" // 날짜 형식 설정
+          className="input-datepicker" // 클래스 명 지정 css주기 위해
+          minDate={new Date()} // 선택할 수 있는 최소 날짜값 지정 오늘 +1
+          closeOnScroll={true} // 스크롤을 움직였을 때 자동으로 닫히도록 설정 기본값 false
+          placeholderText="롤링페이퍼 개봉 날짜 선택" // placeholder
+          selected={date} // value
+          onChange={(date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
+        />
       </div>
       <button onClick={handleSetTitle}>제목 정하기</button>
       <button onClick={handleRollingLink}>롤페 생성</button>

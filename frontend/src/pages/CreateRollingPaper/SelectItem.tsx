@@ -21,11 +21,11 @@ export default function SelectItem() {
           },
         },
       );
-      console.log(res.data);
-      setItems(res.data);
-      setSelectId(res.data[0].rollingId);
+      console.log(res.data.response);
+      setItems(res.data.response);
+      setSelectId(res.data.response[0].rollingId);
       setSelectIndex(0);
-      setSelectUrl(res.data[0].imgUrl);
+      setSelectUrl(res.data.response[0].imgUrl);
       if (sessionStorage.getItem('selectIndex') !== null) {
         setSelectIndex(sessionStorage.getItem('selectIndex'));
         setSelectId(sessionStorage.getItem('selectId'));
