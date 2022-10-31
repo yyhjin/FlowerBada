@@ -31,5 +31,5 @@ public abstract class BaseEntity implements Serializable {
     private boolean isDeleted;
 
 
-    public void idDeleteUpdate(boolean isdelete) { this.isDeleted = isdelete ; }
+    public void isDeleteUpdate(boolean isdelete) { this.isDeleted = isdelete ; }
 }
