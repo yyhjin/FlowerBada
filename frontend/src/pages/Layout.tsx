@@ -4,7 +4,6 @@ import { useRecoilState } from 'recoil';
 import Header from '../components/header/Header';
 import { userReCoil } from '../recoil/userRecoil';
 import Login from './SignIn';
-import Logout from './SignOut';
 
 export default function Layout() {
   const [loginUser] = useRecoilState(userReCoil);

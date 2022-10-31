@@ -5,7 +5,7 @@ import { useRecoilState } from 'recoil';
 import { css } from '@emotion/react';
 import kakaoLogo from '../img/kakaoTalk.png';
 
-export default function Login() {
+export default function SignIn() {
   const [loginUser] = useRecoilState(userReCoil);
   // console.log('Login()', loginUser);
   const handleLogin = async () => {
@@ -21,48 +21,43 @@ export default function Login() {
   };
 
   return (
-    <div
-      css={css({
-        backgroundColor: '#F2F0EF',
-      })}
-    >
-      <div
-        css={css({
-          // marginTop: '70px',
-          marginBottom: '120px',
-        })}
-      >
+    <div css={DefaultColor}>
+      <div css={Kkotbada}>
         <h1>꽃바다</h1>
       </div>
-      <div
-        css={css({
-          margin: '15px',
-        })}
-      >
+      <div css={LoginParagraph}>
         <p>
           간편하게 로그인하고
           <br />
           다양한 서비스를 이용해보세요
         </p>
       </div>
-      <button
-        css={css({
-          backgroundColor: '#16453E',
-        })}
-        type="button"
-        onClick={handleLogin}
-      >
+      <button css={LoginButtonColor} type="button" onClick={handleLogin}>
         <img width="15px" height="15px" src={kakaoLogo}></img>
-        <span
-          css={css({
-            color: 'white',
-            marginLeft: '30px',
-            marginRight: '30px',
-          })}
-        >
-          카카오 로그인
-        </span>
+        <span css={LoginText}>카카오 로그인</span>
       </button>
     </div>
   );
 }
+
+const DefaultColor = css`
+  background-color: #f2f0ef;
+`;
+
+const Kkotbada = css`
+  margin-top: 120px;
+`;
+
+const LoginParagraph = css`
+  margin: 15px;
+`;
+
+const LoginButtonColor = css`
+  background-color: #16453e;
+`;
+
+const LoginText = css`
+  color: white;
+  margin-left: 30px;
+  margin-right: 30px;
+`;
