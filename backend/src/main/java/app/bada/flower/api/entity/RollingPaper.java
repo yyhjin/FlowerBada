@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ public class RollingPaper extends BaseEntity{
     private User user;
 
     @Column(updatable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime openDate;
 
     @Column(nullable = false)
