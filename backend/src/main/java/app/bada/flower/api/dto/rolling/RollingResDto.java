@@ -1,17 +1,16 @@
-package app.bada.flower.api.dto.flower;
+package app.bada.flower.api.dto.rolling;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class FlowerResDto {
+public class RollingResDto {
 
-    Integer flowerId;
+    Integer rollingId;
     String name;
+    Integer capacity;
     Integer point;
-    String flowerLanguage;
-    String season;
     Integer price;
     String imgUrl;
     Boolean isOwned;
