@@ -9,6 +9,7 @@ export default function MyDeliveryList() {
   const [myList, setMyList] = useState([]);
   const [sortNumber, setSortNumber] = useState(1);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+
   const handleChange = (event) => {
     setSortNumber(event.target.value);
     setPages(0);
@@ -18,10 +19,14 @@ export default function MyDeliveryList() {
 
   const handleScroll = useCallback((): void => {
     const { innerHeight } = window;
-    const { scrollHeight } = document.body;
-    const { scrollTop } = document.documentElement;
+    const scrollHeight = document.querySelector('.mylist')?.scrollHeight;
+    const scrollTop = document.querySelector('.mylist')?.scrollTop;
 
-    if (Math.round(scrollTop + innerHeight) >= scrollHeight) {
+    if (
+      scrollTop &&
+      scrollHeight &&
+      Math.round(scrollTop + innerHeight) >= scrollHeight
+    ) {
       deliveryListFunc(sortNumber);
     }
   }, [pages, myList]);
@@ -32,11 +37,14 @@ export default function MyDeliveryList() {
 
   useEffect(() => {
     // scroll event listener 등록
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      // scroll event listener 해제
-      window.removeEventListener('scroll', handleScroll);
-    };
+    const event = document.querySelector('.mylist');
+    if (event) {
+      event.addEventListener('scroll', handleScroll);
+      return () => {
+        // scroll event listener 해제
+        event.removeEventListener('scroll', handleScroll);
+      };
+    }
   }, [handleScroll]);
 
   async function deliveryListFunc(sortNumber) {
@@ -63,14 +71,14 @@ export default function MyDeliveryList() {
   }
 
   return (
-    <div>
+    <div css={totalCSS}>
       <div css={selectBtn}>
         <DropDown value={sortNumber} onChange={handleChange}>
           <option value={1}>최신순</option>
           <option value={2}>오래된순</option>
         </DropDown>
       </div>
-      <div css={myListCSS}>
+      <div className="mylist">
         {myList.map((deliver, index) => {
           return (
             <DevlieryBox key={index}>
@@ -139,7 +147,15 @@ const selectBtn = css`
   }
 `;
 
-const myListCSS = css``;
+const totalCSS = css`
+  .mylist {
+    height: 80vh;
+    overflow-y: scroll;
+  }
+  .mylist::-webkit-scrollbar {
+    display: none;
+  }
+`;
 
 const DevlieryBox = styled.div`
   background-color: white;

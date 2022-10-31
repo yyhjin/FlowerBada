@@ -65,6 +65,10 @@ const totalCSS = css`
     cursor: pointer;
     transition: border-color 0.25s;
   }
+  .btn,
+  .active_btn {
+    height: 40px;
+  }
   .btn {
     float: left;
     background-color: #16453e;

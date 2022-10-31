@@ -12,10 +12,14 @@ export default function MyPointList() {
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const handleScroll = useCallback((): void => {
     const { innerHeight } = window;
-    const { scrollHeight } = document.body;
-    const { scrollTop } = document.documentElement;
+    const scrollHeight = document.querySelector('.mylist')?.scrollHeight;
+    const scrollTop = document.querySelector('.mylist')?.scrollTop;
 
-    if (Math.round(scrollTop + innerHeight) >= scrollHeight) {
+    if (
+      scrollTop &&
+      scrollHeight &&
+      Math.round(scrollTop + innerHeight) >= scrollHeight
+    ) {
       myPointListFunc();
     }
   }, [pages, myPointList]);
@@ -24,11 +28,14 @@ export default function MyPointList() {
   }, []);
   useEffect(() => {
     // scroll event listener 등록
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      // scroll event listener 해제
-      window.removeEventListener('scroll', handleScroll);
-    };
+    const event = document.querySelector('.mylist');
+    if (event) {
+      event.addEventListener('scroll', handleScroll);
+      return () => {
+        // scroll event listener 해제
+        event.removeEventListener('scroll', handleScroll);
+      };
+    }
   }, [handleScroll]);
   async function myPointListFunc() {
     try {
@@ -55,7 +62,7 @@ export default function MyPointList() {
   }
 
   return (
-    <WholeBox>
+    <div css={totalCSS}>
       <InfoBox>
         <img src={CoinImg} width="25px" css={ImgCss}></img>
         <b>&nbsp;{myPoint}</b>
@@ -67,7 +74,7 @@ export default function MyPointList() {
       <TitleBox>
         <b>사용내역</b>
       </TitleBox>
-      <OutBox>
+      <div className="mylist">
         <PointBox>
           <ListBox>
             <b>내용</b>
@@ -88,22 +95,27 @@ export default function MyPointList() {
             </PointBox>
           );
         })}
-      </OutBox>
-    </WholeBox>
+      </div>
+    </div>
   );
 }
-const WholeBox = styled.div`
-  width: 100%;
-`;
 
+const totalCSS = css`
+  width: 100%;
+  .mylist {
+    height: 80vh;
+    overflow-y: scroll;
+    background-color: white;
+  }
+  .mylist::-webkit-scrollbar {
+    display: none;
+  }
+`;
 const InfoBox = styled.div`
   padding: 20px;
   padding-top: 100px;
   font-size: 30px;
   text-align: left;
-`;
-const OutBox = styled.div`
-  background-color: white;
 `;
 
 const PointBox = styled.div`
