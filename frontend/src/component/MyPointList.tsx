@@ -129,7 +129,7 @@ const ButtonBox = styled.button`
   margin: 3px;
   width: 60px;
   height: 30px;
-  font-size: 12px;
+  font-size: 12px !important;
 `;
 
 const ChargeBox = styled.div`

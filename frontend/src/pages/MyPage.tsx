@@ -15,18 +15,24 @@ export default function MyPage() {
       <div className="main-tab">
         <div>
           {number === 0 ? (
-            <Button onClick={() => handleChange(0)}>배송 목록</Button>
-          ) : (
-            <ActiveButton onClick={() => handleChange(0)}>
+            <button className="btn" onClick={() => handleChange(0)}>
               배송 목록
-            </ActiveButton>
+            </button>
+          ) : (
+            <button className="active_btn" onClick={() => handleChange(0)}>
+              배송 목록
+            </button>
           )}
         </div>
         <div>
           {number === 1 ? (
-            <Button onClick={() => handleChange(1)}>포인트</Button>
+            <button className="btn" onClick={() => handleChange(1)}>
+              포인트
+            </button>
           ) : (
-            <ActiveButton onClick={() => handleChange(1)}>포인트</ActiveButton>
+            <button className="active_btn" onClick={() => handleChange(1)}>
+              포인트
+            </button>
           )}
         </div>
       </div>
@@ -44,36 +50,46 @@ export default function MyPage() {
 const totalCSS = css`
   display: flex;
   flex-direction: column;
+
   .main_tab {
     display: flex;
     flex-direction: row;
   }
-`;
-
-const Button = styled.button`
-  float: left;
-  background-color: #16453e;
-  width: 50%;
-  color: white;
-  border-radius: 0%;
-
-  &:hover {
-    outline: none;
+  button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.25s;
   }
-  &:focus {
-    outline: none;
-  }
-`;
-const ActiveButton = styled.button`
-  float: left;
-  background-color: white;
-  width: 50%;
-  border-radius: 0%;
+  .btn {
+    float: left;
+    background-color: #16453e;
+    width: 50%;
+    color: white;
+    border-radius: 0%;
 
-  &:hover {
-    outline: none;
+    &:hover {
+      outline: none;
+    }
+    &:focus {
+      outline: none;
+    }
   }
-  &:focus {
-    outline: none;
+  .active_btn {
+    float: left;
+    background-color: white;
+    width: 50%;
+    border-radius: 0%;
+
+    &:hover {
+      outline: none;
+    }
+    &:focus {
+      outline: none;
+    }
   }
 `;
