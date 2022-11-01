@@ -10,7 +10,7 @@ export default function RollingLink() {
   const [loading, setLoading] = useState(false);
   const handleMainPage = async () => {
     try {
-      navigate('/');
+      navigate('/main');
     } catch (err: any) {
       console.log(err);
     }

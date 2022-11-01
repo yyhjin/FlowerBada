@@ -43,7 +43,7 @@ export default function SelectItem() {
     sessionStorage.removeItem('title');
     sessionStorage.removeItem('date');
     try {
-      navigate('/');
+      navigate('/main');
     } catch (err: any) {
       console.log(err);
     }
