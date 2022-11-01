@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { useRecoilState } from 'recoil';
-import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+
 export default function MyDeliveryList() {
   const [pages, setPages] = useState<number>(0);
   const [myList, setMyList] = useState([]);
@@ -61,28 +61,27 @@ export default function MyDeliveryList() {
         },
       );
       if (res.data.response.length !== 0) {
-        console.log(res.data.response);
         setMyList(myList.concat(res.data.response));
         setPages(pages + 1);
       }
     } catch (err: any) {
-      console.log(err);
+      // console.log(err);
     }
   }
 
   return (
     <div css={totalCSS}>
       <div css={selectBtn}>
-        <DropDown value={sortNumber} onChange={handleChange}>
+        <select className="dropdown" value={sortNumber} onChange={handleChange}>
           <option value={1}>최신순</option>
           <option value={2}>오래된순</option>
-        </DropDown>
+        </select>
       </div>
       <div className="mylist">
         {myList.map((deliver, index) => {
           return (
-            <DevlieryBox key={index}>
-              <ImagBox>
+            <div className="deliverybox" key={index}>
+              <div className="imgbox">
                 <a href={deliver.pageUrl}>
                   <img
                     src={deliver.imgUrl}
@@ -90,8 +89,8 @@ export default function MyDeliveryList() {
                     height="100%"
                   ></img>
                 </a>
-              </ImagBox>
-              <InfoBox className="infobox">
+              </div>
+              <div className="infobox">
                 {deliver.date}
                 <br />
                 <b> {deliver.title}</b>
@@ -114,21 +113,21 @@ export default function MyDeliveryList() {
                     <span></span>
                   )}
                 </div>
-                <SmallInfoBox>
-                  <FontBox>
+                <div className="smallinfobox">
+                  <div>
                     <b>{deliver.flowerCount}</b> 개의 꽃송이
-                  </FontBox>{' '}
-                  <FontBox>가격: {deliver.price}원</FontBox>
-                </SmallInfoBox>
-              </InfoBox>
-              <FromBox>
+                  </div>
+                  <div>가격: {deliver.price}원</div>
+                </div>
+              </div>
+              <div className="frombox">
                 <b>FROM &nbsp; </b>
                 {deliver.sender}
                 <br />
                 <b>TO &nbsp; </b>
                 {deliver.receiver} <br />
-              </FromBox>
-            </DevlieryBox>
+              </div>
+            </div>
           );
         })}
       </div>
@@ -155,59 +154,51 @@ const totalCSS = css`
   .mylist::-webkit-scrollbar {
     display: none;
   }
-`;
+  .deliverybox {
+    background-color: white;
+    width: 100%;
 
-const DevlieryBox = styled.div`
-  background-color: white;
-  width: 100%;
-
-  &:first-child > .infobox {
-    margin-top: 0px;
+    &:first-child > .infobox {
+      margin-top: 0px;
+    }
   }
-`;
-
-const ImagBox = styled.div`
-  width: 100px;
-  height: 100px;
-  padding: 20px;
-  margin-left: 20px;
-  margin-top: 20px;
-  float: left;
-`;
-
-const InfoBox = styled.div`
-  padding-top: 30px;
-  margin: 20px;
-  margin-left: 200px;
-  text-align: left;
-`;
-
-const SmallInfoBox = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-`;
-
-const FontBox = styled.div``;
-
-const FromBox = styled.div`
-  margin-top: -10px;
-  margin-left: 50px;
-  width: 130px;
-  text-align: left;
-  font-size: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const DropDown = styled.select`
-  background-color: transparent;
-  outline: 0 none;
-  border: none;
-  border-radius: 4px;
-  margin-top: 10px;
-  padding: 5px;
+  .imgbox {
+    width: 100px;
+    height: 100px;
+    padding: 20px;
+    margin-left: 20px;
+    margin-top: 20px;
+    float: left;
+  }
+  .infobox {
+    padding-top: 30px;
+    margin: 20px;
+    margin-left: 200px;
+    text-align: left;
+  }
+  .smallinfobox {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  .frombox {
+    margin-top: -10px;
+    margin-left: 50px;
+    width: 130px;
+    text-align: left;
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dropdown {
+    background-color: transparent;
+    outline: 0 none;
+    border: none;
+    border-radius: 4px;
+    margin-top: 10px;
+    padding: 5px;
+  }
 `;
 
 const ChipCss = css`
@@ -232,9 +223,4 @@ const ChipCss = css`
     color: green;
     border-radius: 0.5rem;
   }
-`;
-
-const DropDownCss = css`
-  display: flex;
-  justify-content: flex-;
 `;

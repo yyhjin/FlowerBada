@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { useRecoilState } from 'recoil';
-import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import CoinImg from '@assets/coin.png';
+
 export default function MyPointList() {
   const [pages, setPages] = useState(0);
   const [myPoint, setMyPoint] = useState(0);
@@ -49,50 +49,53 @@ export default function MyPointList() {
           params,
         },
       );
-      // console.log(res.data.response);
       setMyPoint(res.data.response.myPoint);
       if (res.data.response.myPointList.length !== 0) {
-        console.log(res.data.response.myPointList);
         setMyPointList(myPointList.concat(res.data.response.myPointList));
         setPages(pages + 1);
       }
     } catch (err: any) {
-      console.log(err);
+      // console.log(err);
     }
   }
 
   return (
     <div css={totalCSS}>
-      <InfoBox>
-        <img src={CoinImg} width="25px" css={ImgCss}></img>
+      <div className="infobox">
+        <img
+          src={CoinImg}
+          width="25px"
+          className="
+        imgcss"
+        ></img>
         <b>&nbsp;{myPoint}</b>
-        <ChargeBox>
-          <ButtonBox>적립</ButtonBox>
-          <ButtonBox>충전</ButtonBox>
-        </ChargeBox>
-      </InfoBox>
-      <TitleBox>
+        <div className="chargebox">
+          <button className="buttonbox">적립</button>
+          <button className="buttonbox">충전</button>
+        </div>
+      </div>
+      <div className="titlebox">
         <b>사용내역</b>
-      </TitleBox>
+      </div>
       <div className="mylist">
-        <PointBox>
-          <ListBox>
+        <div className="pointbox">
+          <div className="listbox">
             <b>내용</b>
-          </ListBox>
-          <ListBox>
+          </div>
+          <div className="listbox">
             <b>포인트</b>
-          </ListBox>
-          <ListBox>
+          </div>
+          <div className="listbox">
             <b>날짜</b>
-          </ListBox>
-        </PointBox>
+          </div>
+        </div>
         {myPointList.map((point, index) => {
           return (
-            <PointBox key={index}>
-              <ListBox>{point.name} 구매</ListBox>
-              <ListBox> -{point.point}P</ListBox>
-              <ListBox>{point.createdDate}</ListBox>
-            </PointBox>
+            <div className="pointbox" key={index}>
+              <div className="listbox">{point.name} 구매</div>
+              <div className="listbox"> -{point.point}P</div>
+              <div className="listbox">{point.createdDate}</div>
+            </div>
           );
         })}
       </div>
@@ -110,47 +113,41 @@ const totalCSS = css`
   .mylist::-webkit-scrollbar {
     display: none;
   }
-`;
-const InfoBox = styled.div`
-  padding: 20px;
+  .infobox {
+    padding: 20px;
   padding-top: 100px;
   font-size: 30px;
   text-align: left;
-`;
-
-const PointBox = styled.div`
-  display: flex;
+  }
+  .pointbox {
+    display: flex;
   justify-content: space-between;
   padding: 5px;
-`;
-
-const ListBox = styled.div`
-  text-align: center;
+  }
+  .listbox{
+    text-align: center;
   margin: 10px;
   width: 200px;
   word-break: keep-all;
-`;
-
-const TitleBox = styled.div`
-  padding: 20px;
+  }
+  .titlebox{
+    padding: 20px;
   text-align: left;
-`;
-
-const ButtonBox = styled.button`
-  background-color: #b1bdbb;
+  }
+  .buttonbox {
+    background-color: #b1bdbb;
   margin: 3px;
   width: 60px;
   height: 30px;
   font-size: 12px !important;
-`;
-
-const ChargeBox = styled.div`
-  border: 1px solid
+  }
+  .chargebox {
+    border: 1px solid
   display: flex;
   justify-content: flex-end;
   float: right;
-`;
-
-const ImgCss = css`
-  transform: rotate(30deg);
+  }
+  .imgcss {
+    transform: rotate(30deg);
+  }
 `;
