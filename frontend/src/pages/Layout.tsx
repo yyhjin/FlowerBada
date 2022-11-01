@@ -14,11 +14,6 @@ export default function Layout() {
       ) : (
         <>
           <Header />
-          <div>
-            <h2>
-              <strong>Main Page</strong>
-            </h2>
-          </div>
           <Outlet />
         </>
       )}
