@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import Header from '../components/header/Header';
@@ -19,7 +18,6 @@ export default function Layout() {
             <h2>
               <strong>Main Page</strong>
             </h2>
-            <Link to="/signout">로그아웃 하기</Link>
           </div>
           <Outlet />
         </>
