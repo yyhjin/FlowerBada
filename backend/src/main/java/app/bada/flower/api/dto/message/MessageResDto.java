@@ -11,6 +11,7 @@ public class MessageResDto {
     public static class MessageDto {
         private int messageId;
         private int flowerId;
+        private String imgUrl;
         private String content;
         private String writer;
         private int fontId;
@@ -19,15 +20,17 @@ public class MessageResDto {
         public MessageDto(Message message) {
             this.messageId = message.getId();
             this.flowerId = message.getFlowerItem().getId();
+            this.imgUrl = message.getFlowerItem().getImgUrl();
             this.content = message.getContent();
             this.writer = message.getWriter();
             this.fontId = message.getFontId();
         }
 
         // QueryDSL에서 사용하는 생성자
-        public MessageDto(int messageId, int flowerId, String content, String writer, int fontId) {
+        public MessageDto(int messageId, int flowerId, String imgUrl, String content, String writer, int fontId) {
             this.messageId = messageId;
             this.flowerId = flowerId;
+            this.imgUrl = imgUrl;
             this.content = content;
             this.writer = writer;
             this.fontId = fontId;

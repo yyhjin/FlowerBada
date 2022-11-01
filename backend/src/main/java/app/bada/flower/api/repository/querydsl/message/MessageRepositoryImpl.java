@@ -21,7 +21,7 @@ public class MessageRepositoryImpl implements MessageRepositoryCustom{
         return queryFactory
                 // DTO 매핑하는 부분 -> DTO 생성자의 매개변수 순서대로 매핑됨
                 .select(Projections.constructor(MessageResDto.MessageDto.class,
-                        message.id, message.flowerItem.id, message.content, message.writer, message.fontId
+                        message.id, message.flowerItem.id, message.flowerItem.imgUrl, message.content, message.writer, message.fontId
                 ))
                 .from(message)
                 .where(message.content.contains(searchName))
