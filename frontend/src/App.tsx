@@ -21,10 +21,16 @@ function App() {
           <Route path="signout" element={<Logout />} />
           <Route path="/" element={<Layout />}>
             <Route path="" element={<MainPage />} />
-            {/* <Route path="mypage" element={<MyPage />} />
-            <Route path="greenhouse" element={<GreenHouse />} />
-            <Route path="store" element={<Store />} />
-            <Route path="rollingpaper" element={<CreateRolling />} /> */}
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/greenhouse" element={<GreenHouse />} />
+            <Route path="/selectitem" element={<SelectItem />} />
+            <Route path="/settitle" element={<SetTitle />} />
+            <Route path="/setOpenDate" element={<SetOpenDate />} />
+            <Route path="/rollinglink" element={<RollingLink />} />
+            <Route
+              path="/rollingpaper/:url/:paginationId"
+              element={<RollingPaper />}
+            />
           </Route>
           <Route
             path="/user/signin/redirect"
