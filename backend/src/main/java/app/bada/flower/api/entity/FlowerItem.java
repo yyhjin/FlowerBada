@@ -27,4 +27,7 @@ public class FlowerItem extends BaseEntity{
     @Column(nullable = false)
     private String imgUrl;
 
+    @Column(nullable = false)
+    private String imgBud;
+
 }
