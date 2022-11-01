@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { css } from '@emotion/react';
 
 export default function RollingLink() {
   const { state } = useLocation();
@@ -14,7 +15,7 @@ export default function RollingLink() {
       console.log(err);
     }
   };
-  const handleRollingPaper = async (e) => {
+  const handleRollingPaper = async () => {
     try {
       navigate(`/rollingpaper/${state}/1`);
     } catch (err: any) {
@@ -23,7 +24,8 @@ export default function RollingLink() {
   };
   return (
     <>
-      <div>롤페 링크</div>
+      <div css={DefaultColor}>링크를 복사해</div>
+      <div>롤링페이퍼를 공유하세요</div>
       <div onClick={handleRollingPaper}>
         {root}
         {state}/1
@@ -32,3 +34,8 @@ export default function RollingLink() {
     </>
   );
 }
+
+const DefaultColor = css`
+  background-color: #f2f0ef;
+  color: red;
+`;
