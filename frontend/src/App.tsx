@@ -4,8 +4,9 @@ import PaymentSuccess from '@pages/Payment/PaymentSuccess';
 import PaymentFail from '@pages/Payment/PaymentFail';
 import PaymentCancel from '@pages/Payment/PaymentCancel';
 import '@src/App.css';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userReCoil } from '@recoil/userRecoil';
+import { userSelector } from '@recoil/states/userState';
 import KakaoRedirectHandler from '@kakao/KakaoRedirectHandler';
 import MainPage from '@pages/MainPage';
 import GreenHouse from '@pages/GreenHouse';
@@ -17,6 +18,7 @@ import SignIn from '@pages/SignIn';
 
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
+  const user = useRecoilValue(userSelector);
   return (
     <div className="App">
       <BrowserRouter>
