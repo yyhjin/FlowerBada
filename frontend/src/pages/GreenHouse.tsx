@@ -16,6 +16,7 @@ export default function GreenHouse() {
   const [sort, setSort] = useState(1);
   const [paginationId, setPaginationId] = useState(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+  console.log(userState.jwt);
   async function getRollings(sort) {
     setLoading(false);
     setTab('내가 만든 꽃다발'); //내가 만든 쿠키
@@ -46,7 +47,7 @@ export default function GreenHouse() {
         `http://localhost:8080/api/v1/greenhouse/bookmark`,
         {
           headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + sessionStorage.getItem('X-AUTH-TOKEN'),
+            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
           },
           params,
         },
@@ -65,17 +66,9 @@ export default function GreenHouse() {
       console.log(err);
     }
   }
-  const handleMainPage = async () => {
-    try {
-      navigate('/main');
-    } catch (err: any) {
-      console.log(err);
-    }
-  };
   return (
     <>
       <div>
-        <button onClick={handleMainPage}>뒤로 가기</button>
         <button onClick={() => getRollings(1)}>
           내가 만든 꽃다발( 최신순)
         </button>

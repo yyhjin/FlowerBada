@@ -1,35 +1,36 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useRecoilState } from 'recoil';
+import { IuserRecoil, userReCoil } from '../../recoil/userRecoil';
+import {
+  IcreateRollingRecoil,
+  createRollingRecoil,
+} from '../../recoil/createRollingRecoil';
 
 export default function SetOpenDate() {
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+  const [createRollingState, setCreateRollingState] =
+    useRecoilState<IcreateRollingRecoil>(createRollingRecoil);
+  const [date, setDate] = useState(tomorrow);
 
-  const changeDate = (datetime) => {
-    setDate(datetime);
-    console.log(datetime.getMonth());
-    console.log(datetime.getFullYear());
-    console.log(datetime.getUTCDate());
+  const changeDate = (date) => {
+    setDate(date);
   };
 
-  const handleSetTitle = async () => {
-    try {
-      navigate('/settitle');
-    } catch (err: any) {
-      console.log(err);
-    }
-  };
-
-  const handleRollingLink = async () => {
+  const handleRollingLink = async (e) => {
     if (date === null) {
       alert('날짜 제대로 입력해');
       return;
     }
+    e.target.disabled = true;
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     let day = date.getDate();
@@ -42,27 +43,38 @@ export default function SetOpenDate() {
     }
     let localDateTime = year + '-' + month + '-' + day + 'T10:00';
     console.log(localDateTime);
-
+    // if (
+    //   createRollingState.itemId === undefined ||
+    //   createRollingState.itemId === null ||
+    //   createRollingState.title === ''
+    // ) {
+    //   alert('제대로 입력하고 와');
+    //   return;
+    // }
     try {
       const res: any = await axios.post(
         'http://localhost:8080/api/v1/rolling',
         {
-          itemId: Number(sessionStorage.getItem('selectId')),
+          itemId: createRollingState.itemId,
           openDate: localDateTime,
-          title: sessionStorage.getItem('title'),
+          title: createRollingState.title,
         },
         {
           headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + sessionStorage.getItem('X-AUTH-TOKEN'),
+            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
           },
         },
       );
       console.log(res.data.response);
-      sessionStorage.removeItem('selectId');
-      sessionStorage.removeItem('selectIndex');
-      sessionStorage.removeItem('selectUrl');
-      sessionStorage.removeItem('title');
-      sessionStorage.removeItem('date');
+      setCreateRollingState((prev: IcreateRollingRecoil) => {
+        const variable = { ...prev };
+        variable.itemId = 0;
+        variable.itemIndex = 0;
+        variable.url = '';
+        variable.title = '';
+        return variable;
+      });
+
       navigate('/rollinglink', { state: res.data.response });
     } catch (err: any) {
       console.log(err);
@@ -76,14 +88,13 @@ export default function SetOpenDate() {
           locale={ko} // 언어설정 기본값은 영어
           dateFormat="yyyy-MM-dd" // 날짜 형식 설정
           className="input-datepicker" // 클래스 명 지정 css주기 위해
-          minDate={new Date()} // 선택할 수 있는 최소 날짜값 지정 오늘 +1
+          minDate={tomorrow} // 선택할 수 있는 최소 날짜값 지정 오늘 +1
           closeOnScroll={true} // 스크롤을 움직였을 때 자동으로 닫히도록 설정 기본값 false
           placeholderText="롤링페이퍼 개봉 날짜 선택" // placeholder
           selected={date} // value
           onChange={(date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
         />
       </div>
-      <button onClick={handleSetTitle}>제목 정하기</button>
       <button onClick={handleRollingLink}>롤페 생성</button>
     </>
   );

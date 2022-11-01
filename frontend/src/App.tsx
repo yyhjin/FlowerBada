@@ -6,13 +6,13 @@ import { RecoilRoot } from 'recoil';
 import MainPage from '@pages/MainPage';
 import Logout from '@pages/SignOut';
 import Layout from '@pages/Layout';
-import MyPage from './pages/MyPage';
-import GreenHouse from './pages/GreenHouse';
-import RollingPaper from './pages/RollingPaper';
-import SelectItem from './pages/CreateRollingPaper/SelectItem';
-import SetTitle from './pages/CreateRollingPaper/SetTitle';
-import SetOpenDate from './pages/CreateRollingPaper/SetOpenDate';
-import RollingLink from './pages/CreateRollingPaper/RollingLink';
+import MyPage from '@pages/MyPage';
+import GreenHouse from '@pages/GreenHouse';
+import RollingPaper from '@pages/RollingPaper';
+import SelectItem from '@pages/CreateRollingPaper/SelectItem';
+import SetTitle from '@pages/CreateRollingPaper/SetTitle';
+import SetOpenDate from '@pages/CreateRollingPaper/SetOpenDate';
+import RollingLink from '@pages/CreateRollingPaper/RollingLink';
 function App() {
   return (
     <div className="App">

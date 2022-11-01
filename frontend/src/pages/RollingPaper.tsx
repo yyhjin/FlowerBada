@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
 
 export default function RollingPaper() {
   const [loading, setLoading] = useState(false);
   const [rolling, setRolling] = useState({});
+  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const [paginationId, setPaginationId] = useState();
   let paramCopy: any = {};
   paramCopy = useParams();
-  // 이 부분은 타입스크립트 공부를 좀 해봐야 할듯??
 
   async function getRolling() {
     setLoading(false);
@@ -20,7 +22,7 @@ export default function RollingPaper() {
         `http://localhost:8080/api/v1/rolling/${url}/${paramCopy.paginationId}`,
         {
           headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + sessionStorage.getItem('X-AUTH-TOKEN'),
+            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
           },
         },
       );

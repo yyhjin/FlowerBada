@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
+import { useRecoilState } from 'recoil';
+import { IuserRecoil, userReCoil } from '../../recoil/userRecoil';
 
 export default function RollingLink() {
   const { state } = useLocation();
@@ -10,7 +12,7 @@ export default function RollingLink() {
   const [loading, setLoading] = useState(false);
   const handleMainPage = async () => {
     try {
-      navigate('/main');
+      navigate('/');
     } catch (err: any) {
       console.log(err);
     }

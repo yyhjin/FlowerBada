@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { IuserRecoil, userReCoil } from '../../recoil/userRecoil';
+import {
+  IcreateRollingRecoil,
+  createRollingRecoil,
+} from '../../recoil/createRollingRecoil';
 
 export default function SelectItem() {
   sessionStorage.setItem('url', '/selectitem');
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [items, setItems] = useState([]);
-  const [selectId, setSelectId] = useState();
-  const [selectIndex, setSelectIndex] = useState();
-  const [selectUrl, setSelectUrl] = useState();
+  const [loading, setLoading] = useState(false);
+  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+  const [createRollingState, setCreateRollingState] =
+    useRecoilState<IcreateRollingRecoil>(createRollingRecoil);
   async function getItems() {
     setLoading(false);
     try {
@@ -17,41 +23,28 @@ export default function SelectItem() {
         'http://localhost:8080/api/v1/store/rolling',
         {
           headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + sessionStorage.getItem('X-AUTH-TOKEN'),
+            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
           },
         },
       );
       console.log(res.data.response);
       setItems(res.data.response);
-      setSelectId(res.data.response[0].rollingId);
-      setSelectIndex(0);
-      setSelectUrl(res.data.response[0].imgUrl);
-      if (sessionStorage.getItem('selectIndex') !== null) {
-        setSelectIndex(sessionStorage.getItem('selectIndex'));
-        setSelectId(sessionStorage.getItem('selectId'));
-        setSelectUrl(sessionStorage.getItem('selectUrl'));
+      if (createRollingState.url === '') {
+        setCreateRollingState((prev: IcreateRollingRecoil) => {
+          const variable = { ...prev };
+          variable.itemId = res.data.response[0].rollingId;
+          variable.itemIndex = 0;
+          variable.url = res.data.response[0].imgUrl;
+          return variable;
+        });
       }
       setLoading(true);
     } catch (err: any) {
       console.log(err);
     }
   }
-  const handleMainPage = async () => {
-    sessionStorage.removeItem('selectId');
-    sessionStorage.removeItem('selectIndex');
-    sessionStorage.removeItem('selectUrl');
-    sessionStorage.removeItem('title');
-    sessionStorage.removeItem('date');
-    try {
-      navigate('/main');
-    } catch (err: any) {
-      console.log(err);
-    }
-  };
   const handleSetTitle = async () => {
-    sessionStorage.setItem('selectId', selectId);
-    sessionStorage.setItem('selectIndex', selectIndex);
-    sessionStorage.setItem('selectUrl', selectUrl);
+    console.log(createRollingState);
     try {
       navigate('/settitle');
     } catch (err: any) {
@@ -59,10 +52,13 @@ export default function SelectItem() {
     }
   };
   const select = (e) => {
-    setSelectId(items[e.target.id].rollingId);
-    setSelectUrl(items[e.target.id].imgUrl);
-    setSelectIndex(e.target.id);
-    console.log(items[e.target.id].rollingId);
+    setCreateRollingState((prev: IcreateRollingRecoil) => {
+      const variable = { ...prev };
+      variable.itemId = items[e.target.id].rollingId;
+      variable.itemIndex = e.target.id;
+      variable.url = items[e.target.id].imgUrl;
+      return variable;
+    });
   };
   const cnatSelect = () => {
     alert('이건 돈 내고 사서 써야 됨!');
@@ -76,7 +72,7 @@ export default function SelectItem() {
       <div>
         {loading ? (
           <div>
-            <div>{selectUrl}</div>
+            <div>{createRollingState.url}</div>
             <div>
               {items.map((item, index) => {
                 return (
@@ -86,18 +82,12 @@ export default function SelectItem() {
                         <li onClick={select} id={index}>
                           {item.imgUrl}
                         </li>
-                        <li> {item.name}</li>
-                        <li>{item.point}</li>
-                        <li>{item.price}</li>
                       </div>
                     ) : (
                       <div>
                         <li onClick={cnatSelect} id={index}>
                           {item.imgUrl}
                         </li>
-                        <li> {item.name}</li>
-                        <li>{item.point}</li>
-                        <li>{item.price}</li>
                       </div>
                     )}
                   </ul>
@@ -109,7 +99,6 @@ export default function SelectItem() {
           '로딩중'
         )}
       </div>
-      <button onClick={handleMainPage}>메인 가기</button>
       <button onClick={handleSetTitle}>제목 정하기</button>
     </>
   );

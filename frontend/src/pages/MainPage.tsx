@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 export default function MainPage() {
-  sessionStorage.setItem('url', '/');
   const navigate = useNavigate();
   const handleMyPage = async () => {
     try {

@@ -1,37 +1,26 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import {
+  IcreateRollingRecoil,
+  createRollingRecoil,
+} from '../../recoil/createRollingRecoil';
 
 export default function SetTitle() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState('');
-  const [imgUrl, setImgUrl] = useState(sessionStorage.getItem('selectUrl'));
-
-  const getTitle = () => {
-    if (sessionStorage.getItem('title') !== null) {
-      setTitle(sessionStorage.getItem('title'));
-    }
-  };
-
+  const [createRollingState, setCreateRollingState] =
+    useRecoilState<IcreateRollingRecoil>(createRollingRecoil);
   const changeTitle = (e) => {
-    setTitle(e.target.value);
-  };
-
-  const handleSelectItem = async () => {
-    sessionStorage.setItem('title', title);
-    try {
-      navigate('/selectitem');
-    } catch (err: any) {
-      console.log(err);
-    }
+    setCreateRollingState((prev: IcreateRollingRecoil) => {
+      const variable = { ...prev };
+      variable.title = e.target.value;
+      return variable;
+    });
   };
 
   const handleSetOpenDate = async () => {
-    if (title === '') {
-      console.log('제목 입력해라');
+    if (createRollingState.title === '') {
+      alert('제목 입력해라');
     } else {
-      sessionStorage.setItem('title', title);
       try {
         navigate('/setopendate');
       } catch (err: any) {
@@ -39,17 +28,16 @@ export default function SetTitle() {
       }
     }
   };
-  useEffect(() => {
-    getTitle();
-  }, []);
   return (
     <>
       <div>제목 정해</div>
-      <div>{imgUrl}</div>
+      <div>{createRollingState.url}</div>
       <div>
-        <input value={title || ''} onChange={changeTitle}></input>
+        <input
+          value={createRollingState.title || ''}
+          onChange={changeTitle}
+        ></input>
       </div>
-      <button onClick={handleSelectItem}>꽃다발 선택</button>
       <button onClick={handleSetOpenDate}>날짜 선택</button>
     </>
   );
