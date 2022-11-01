@@ -33,10 +33,11 @@ public class GreenhouseServiceImpl implements GreenhouseService {
     private final BookmarkRepository bookmarkRepository;
 
     private final GreenhouseResDto greenhouseResDto = new GreenhouseResDto();
+
+    private final UserService userService;
     @Override
     public List<GreenhouseResDto> getMyRollingPapers(String token,int sortNumber, Pageable pageable) {
-        int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
-        User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        User user = userService.getUserByToken(token);
         List<GreenhouseResDto> myRollingPapers = new ArrayList<>();
         Slice<RollingPaper> findAllMyRollingPaperList = null;
         if(sortNumber==1){
@@ -57,9 +58,7 @@ public class GreenhouseServiceImpl implements GreenhouseService {
 
     @Override
     public List<GreenhouseResDto> getMyBookmarks(String token, int sortNumber, Pageable pageable) {
-
-        int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
-        User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        User user = userService.getUserByToken(token);
         List<GreenhouseResDto> myRollingPapers = new ArrayList<>();
         Slice<Bookmark> findAllMyBookmarkList = null;
         if(sortNumber==1){
