@@ -1,22 +1,12 @@
 import { Outlet } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import Header from '../components/header/Header';
-import { userReCoil } from '../recoil/userRecoil';
-import Login from './SignIn';
+
+import Header from '@components/header/Header';
 
 export default function Layout() {
-  const [loginUser] = useRecoilState(userReCoil);
-
   return (
     <>
-      {loginUser.jwt === '' ? (
-        <Login />
-      ) : (
-        <>
-          <Header />
-          <Outlet />
-        </>
-      )}
+      <Header />
+      <Outlet />
     </>
   );
 }
