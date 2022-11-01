@@ -27,6 +27,7 @@
         "endOfLine": "auto"
       }
     ],
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
     "no-param-reassign": ["off", { "props": false }],
     "react/state-in-constructor": "off",
     "react/react-in-jsx-scope": "off",
