@@ -11,5 +11,7 @@ public interface RollingPaperService {
 
     RollingPaperResDto getRollingPaper(String token, String url, int paginationId);
 
-    BookmarkResDto bookmarkRollingPaper(String token, String url);
+    BookmarkResDto bookmarkRollingPaper(String token, int rollingId);
+
+    RollingPaper deleteRolling(int rollingId);
 }

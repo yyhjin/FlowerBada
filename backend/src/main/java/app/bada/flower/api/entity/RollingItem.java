@@ -10,9 +10,6 @@ import javax.persistence.Entity;
 @Getter
 @NoArgsConstructor
 public class RollingItem extends BaseEntity{
-    @Column
-    private Integer code;
-
     @Column(nullable = false)
     private String name;
 
