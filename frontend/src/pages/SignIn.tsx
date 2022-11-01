@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Logout from '@pages/SignOut';
 import { userReCoil } from '@recoil/userRecoil';
 import { useRecoilState } from 'recoil';
 import { css } from '@emotion/react';
