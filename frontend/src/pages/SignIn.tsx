@@ -28,7 +28,7 @@ export default function SignIn() {
         </p>
       </div>
       <button css={LoginButton} type="button" onClick={handleLogin}>
-        <img width="15px" height="15px" src={kakaoLogo}></img>
+        <img width="20px" height="17px" src={kakaoLogo}></img>
         <span css={LoginText}>카카오 로그인</span>
       </button>
     </div>
@@ -40,11 +40,19 @@ const DefaultColor = css`
 `;
 
 const Kkotbada = css`
-  margin-top: 120px;
+  margin-top: 200px;
+  h1 {
+    font-family: 'GowunDodum-Regular';
+    font-size: 3rem;
+  }
 `;
 
 const LoginParagraph = css`
-  margin: 15px;
+  margin: 120px 0 30px 0;
+  color: black;
+  font-size: 1rem;
+  font-family: SeoulNamsanM;
+  font-weight: bolder;
 `;
 
 const LoginButton = css`
