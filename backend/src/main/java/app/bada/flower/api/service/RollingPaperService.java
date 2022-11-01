@@ -9,9 +9,9 @@ public interface RollingPaperService {
 
     RollingPaper createRollingPaper(String token, RollingPaperReqDto rollingPaperReqDto);
 
-    RollingPaperResDto getRollingPaper(int rollingId, int paginationId);
+    RollingPaperResDto getRollingPaper(String token, String url, int paginationId);
 
-    BookmarkResDto bookmarkRollingPaper(String token, int rollingId);
+    BookmarkResDto bookmarkRollingPaper(String token, String url);
 
     RollingPaper deleteRolling(int rollingId);
 }
