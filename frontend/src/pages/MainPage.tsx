@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -43,25 +42,3 @@ export default function MainPage() {
     </>
   );
 }
-=======
-import { css } from '@emotion/react';
-
-const Mainpage = () => {
-  return (
-    <div css={TestCSS}>
-      Mainpage
-      <p className="test">얘는 파란색이야</p>
-    </div>
-  );
-};
-
-const TestCSS = css`
-  color: red;
-  display: flex;
-  .test {
-    color: blue;
-  }
-`;
-
-export default Mainpage;
->>>>>>> ae5ac83c1b57fdf9bd389292f261e3302721e8ae
