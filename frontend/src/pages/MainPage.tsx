@@ -1,5 +1,8 @@
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useRecoilState } from 'recoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import MainGreenHouse from '@assets/main_greenhouse.png';
 import MainMyPage from '@assets/main_mypage.png';
 import MainNewRoll from '@assets/main_newroll.png';
@@ -8,9 +11,36 @@ import LogoutBtn from '@assets/logout_btn.png';
 
 const Mainpage = () => {
   const navigate = useNavigate();
-  const signOut = () => {
-    navigate('/');
+  const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
+
+  // 로그아웃
+  const signOut = async () => {
+    try {
+      await axios.post(
+        'http://localhost:8080/api/v1/user/signout',
+        {},
+        {
+          headers: {
+            'X-AUTH-TOKEN': `Bearer ${loginUser.jwt}`,
+          },
+        },
+      );
+      setLoginUser((prev: IuserRecoil) => {
+        const variable = { ...prev };
+        variable.id = 0;
+        variable.userToken = '';
+        variable.nickname = '';
+        variable.points = 0;
+        variable.jwt = '';
+        return variable;
+      });
+      window.location.href = '/';
+    } catch (err: any) {
+      console.log(err);
+    }
   };
+
+  // 페이지 이동 핸들러
   const moveGreenHouse = () => {
     navigate('/greenhouse');
   };
