@@ -8,8 +8,8 @@ import {
   createRollingRecoil,
 } from '../../recoil/createRollingRecoil';
 
-export default function SelectItem() {
-  sessionStorage.setItem('url', '/selectitem');
+export default function NewRoll() {
+  sessionStorage.setItem('url', '/newroll');
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);

@@ -6,7 +6,7 @@ import KakaoRedirectHandler from '@kakao/KakaoRedirectHandler';
 import MainPage from '@pages/MainPage';
 import GreenHouse from '@pages/GreenHouse';
 import Store from '@pages/Store';
-import NewRoll from '@pages/NewRoll';
+import NewRoll from '@pages/CreateRollingPaper/NewRoll';
 import MyPage from '@pages/MyPage';
 import Layout from '@pages/Layout';
 import Login from '@pages/SignIn';
