@@ -1,41 +1,41 @@
 import '@src/App.css';
-import Login from '@pages/SignIn';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { userReCoil } from '@recoil/userRecoil';
 import KakaoRedirectHandler from '@kakao/KakaoRedirectHandler';
-import { RecoilRoot } from 'recoil';
 import MainPage from '@pages/MainPage';
-import Logout from '@pages/SignOut';
-import Layout from '@pages/Layout';
-import MyPage from '@pages/MyPage';
 import GreenHouse from '@pages/GreenHouse';
-import RollingPaper from '@pages/RollingPaper';
-import SelectItem from '@pages/CreateRollingPaper/SelectItem';
-import SetTitle from '@pages/CreateRollingPaper/SetTitle';
-import SetOpenDate from '@pages/CreateRollingPaper/SetOpenDate';
-import RollingLink from '@pages/CreateRollingPaper/RollingLink';
+import Store from '@pages/Store';
+import NewRoll from '@pages/NewRoll';
+import MyPage from '@pages/MyPage';
+import Layout from '@pages/Layout';
+import Login from '@pages/SignIn';
+
 function App() {
+  const [loginUser] = useRecoilState(userReCoil);
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="signout" element={<Logout />} />
-          <Route path="/" element={<Layout />}>
-            <Route path="" element={<MainPage />} />
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/greenhouse" element={<GreenHouse />} />
-            <Route path="/selectitem" element={<SelectItem />} />
-            <Route path="/settitle" element={<SetTitle />} />
-            <Route path="/setOpenDate" element={<SetOpenDate />} />
-            <Route path="/rollinglink" element={<RollingLink />} />
-            <Route
-              path="/rollingpaper/:url/:paginationId"
-              element={<RollingPaper />}
-            />
-          </Route>
-          <Route
-            path="/user/signin/redirect"
-            element={<KakaoRedirectHandler />}
-          />
+          {loginUser.jwt === '' ? (
+            <>
+              <Route path="/*" element={<Login />}></Route>
+              <Route
+                path="/user/signin/redirect"
+                element={<KakaoRedirectHandler />}
+              ></Route>
+            </>
+          ) : (
+            <>
+              <Route path="" element={<MainPage />}></Route>
+              <Route path="/" element={<Layout />}>
+                <Route path="greenhouse" element={<GreenHouse />}></Route>
+                <Route path="store" element={<Store />}></Route>
+                <Route path="newroll" element={<NewRoll />}></Route>
+                <Route path="mypage" element={<MyPage />}></Route>
+              </Route>
+            </>
+          )}
         </Routes>
       </BrowserRouter>
     </div>

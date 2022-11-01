@@ -38,13 +38,14 @@ public class RollingPaperServiceImpl implements RollingPaperService {
 
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
+    private final UserService userService;
 
 
     @Override
     public RollingPaper createRollingPaper(String token, RollingPaperReqDto rollingPaperReqDto) {
-        int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
-        User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
-
+//        int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
+//        User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        User user = userService.getUserByToken(token);
         Random random = new Random();
         int length = random.nextInt(5)+5;
 
@@ -104,23 +105,22 @@ public class RollingPaperServiceImpl implements RollingPaperService {
         rollingPaperResDto.setRollingId(rollingPaper.getId());
         rollingPaperResDto.setTitle(rollingPaper.getTitle());
         rollingPaperResDto.setImgUrl(rollingPaper.getRollingPaperItem().getImgUrl());
-        rollingPaperResDto.setDate(rollingPaper.getOpenDate());
+        rollingPaperResDto.setDate(rollingPaperResDto.changeDateToString(rollingPaper.getOpenDate()));
         rollingPaperResDto.setMessages(rollingMsgList);
         return rollingPaperResDto;
     }
 
     @Override
     public BookmarkResDto bookmarkRollingPaper(String token, String url) {
-        int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
-        Optional<User> user = userRepository.findById(userId);
+        User user = userService.getUserByToken(token);
         Optional<RollingPaper> rollingPaper = rollingPaperRepository.findByUrl(url);
         BookmarkResDto bookmarkResDto = new BookmarkResDto();
 
-        Bookmark bookmark = bookmarkRepository.findByRollingPaper_IdAndUser_Id(rollingPaper.get().getId(), user.get().getId());
+        Bookmark bookmark = bookmarkRepository.findByRollingPaper_IdAndUser_Id(rollingPaper.get().getId(), user.getId());
         if(bookmark==null){
             Bookmark bookmark1 = Bookmark.builder()
                     .rollingPaper(rollingPaper.get())
-                    .user(user.get())
+                    .user(user)
                     .isValid(true)
                     .build();
 

@@ -51,6 +51,7 @@ public class StoreServiceImpl implements StoreService {
             flowerResDto.setSeason(f.getSeason());
             flowerResDto.setPrice(f.getPrice());
             flowerResDto.setImgUrl(f.getImgUrl());
+            flowerResDto.setImgBud(f.getImgBud());
             if(f.getPoint() == 0) {
                 flowerResDto.setIsOwned(true);
             } else {
@@ -76,6 +77,8 @@ public class StoreServiceImpl implements StoreService {
             rollingResDto.setPoint(r.getPoint());
             rollingResDto.setPrice(r.getPrice());
             rollingResDto.setImgUrl(r.getImgUrl());
+            rollingResDto.setImgFront(r.getImgFront());
+            rollingResDto.setImgBack(r.getImgBack());
             if(r.getPoint() == 0) {
                 rollingResDto.setIsOwned(true);
             } else {

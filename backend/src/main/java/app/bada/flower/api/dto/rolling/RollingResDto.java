@@ -13,6 +13,8 @@ public class RollingResDto {
     Integer point;
     Integer price;
     String imgUrl;
+    String imgFront;
+    String imgBack;
     Boolean isOwned;
 
 }

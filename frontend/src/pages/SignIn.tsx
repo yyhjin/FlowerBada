@@ -1,13 +1,8 @@
 import axios from 'axios';
-import Logout from '@pages/SignOut';
-import { userReCoil } from '@recoil/userRecoil';
-import { useRecoilState } from 'recoil';
 import { css } from '@emotion/react';
 import kakaoLogo from '../img/kakaoTalk.png';
 
 export default function SignIn() {
-  const [loginUser] = useRecoilState(userReCoil);
-  // console.log('Login()', loginUser);
   const handleLogin = async () => {
     try {
       const res: any = await axios.get(
@@ -32,8 +27,8 @@ export default function SignIn() {
           다양한 서비스를 이용해보세요
         </p>
       </div>
-      <button css={LoginButtonColor} type="button" onClick={handleLogin}>
-        <img width="15px" height="15px" src={kakaoLogo}></img>
+      <button css={LoginButton} type="button" onClick={handleLogin}>
+        <img width="20px" height="17px" src={kakaoLogo}></img>
         <span css={LoginText}>카카오 로그인</span>
       </button>
     </div>
@@ -45,14 +40,31 @@ const DefaultColor = css`
 `;
 
 const Kkotbada = css`
-  margin-top: 120px;
+  margin-top: 200px;
+  h1 {
+    font-family: 'GowunDodum-Regular';
+    font-size: 3rem;
+  }
 `;
 
 const LoginParagraph = css`
-  margin: 15px;
+  margin: 120px 0 30px 0;
+  color: black;
+  font-size: 1rem;
+  font-family: SeoulNamsanM;
+  font-weight: bolder;
 `;
 
-const LoginButtonColor = css`
+const LoginButton = css`
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
   background-color: #16453e;
 `;
 
