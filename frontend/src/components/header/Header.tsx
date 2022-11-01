@@ -5,6 +5,7 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@src/recoil/userRecoil';
+import SideBar from './SideBar';
 import axios from 'axios';
 
 import './Header.css';
@@ -66,7 +67,7 @@ export default function Header() {
   };
 
   return (
-    <header css={HeaderNav}>
+    <header css={HeaderNav} id="outer-container">
       <nav>
         <a onClick={() => navigate(-1)} css={BackArrow}>
           <img height="20px" width="20px" id="back" src={backArrow}></img>
@@ -74,7 +75,11 @@ export default function Header() {
         <span css={InlineBlock}>
           <h3>꽃바다</h3>
         </span>
-        <a
+        <SideBar
+          pageWrapId={'page-wrap'}
+          outerContainerId={'outer-container'}
+        />
+        {/* <a
           href="#"
           className="dropdown"
           css={Menu}
@@ -111,7 +116,7 @@ export default function Header() {
               </li>
             </ul>
           ) : null}
-        </a>
+        </a> */}
       </nav>
     </header>
   );
