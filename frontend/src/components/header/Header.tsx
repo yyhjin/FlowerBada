@@ -2,7 +2,7 @@ import menuIcon from '../../img/Menu.png';
 import backArrow from '../../img/backArrow.png';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@src/recoil/userRecoil';
 import axios from 'axios';
@@ -13,7 +13,6 @@ export default function Header() {
   const navigate = useNavigate();
   const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
   const [open, setOpen] = useState<boolean>(false);
-  const el = useRef<HTMLDivElement>();
 
   const handleOpen = (e: any) => {
     setOpen(!open);
@@ -50,10 +49,26 @@ export default function Header() {
     }
   };
 
+  const linkToNewRoll = () => {
+    navigate('/newroll');
+  };
+
+  const linkToGreenHouse = () => {
+    navigate('/greenhouse');
+  };
+
+  const linkToStore = () => {
+    navigate('/store');
+  };
+
+  const linkToMyPage = () => {
+    navigate('/mypage');
+  };
+
   return (
     <header css={HeaderNav}>
       <nav>
-        <a href="#" onClick={() => navigate(-1)} css={BackArrow}>
+        <a onClick={() => navigate(-1)} css={BackArrow}>
           <img height="20px" width="20px" id="back" src={backArrow}></img>
         </a>
         <span css={InlineBlock}>
@@ -70,22 +85,22 @@ export default function Header() {
           {open ? (
             <ul className="menu" onMouseDown={preventFocusMove}>
               <li className="menu-item">
-                <button>
+                <button onClick={linkToNewRoll}>
                   <span css={BlackText}>새로만들기</span>
                 </button>
               </li>
               <li className="menu-item">
-                <button>
+                <button onClick={linkToGreenHouse}>
                   <span css={BlackText}>그린하우스</span>
                 </button>
               </li>
               <li className="menu-item">
-                <button>
+                <button onClick={linkToStore}>
                   <span css={BlackText}>상점</span>
                 </button>
               </li>
               <li className="menu-item">
-                <button>
+                <button onClick={linkToMyPage}>
                   <span css={BlackText}>마이페이지</span>
                 </button>
               </li>

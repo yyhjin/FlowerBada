@@ -27,7 +27,7 @@ export default function SignIn() {
           다양한 서비스를 이용해보세요
         </p>
       </div>
-      <button css={LoginButtonColor} type="button" onClick={handleLogin}>
+      <button css={LoginButton} type="button" onClick={handleLogin}>
         <img width="15px" height="15px" src={kakaoLogo}></img>
         <span css={LoginText}>카카오 로그인</span>
       </button>
@@ -47,7 +47,16 @@ const LoginParagraph = css`
   margin: 15px;
 `;
 
-const LoginButtonColor = css`
+const LoginButton = css`
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
   background-color: #16453e;
 `;
 
