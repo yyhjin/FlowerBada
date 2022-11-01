@@ -48,7 +48,7 @@ public class MessageServiceImpl implements MessageService{
     public Message deleteMessage(int msgId) {
         Message message = messageRepository.findById(msgId)
                 .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
-        message.idDeleteUpdate(true);
+        message.isDeleteUpdate(true);
         return messageRepository.save(message);
     }
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
-import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 
 export default function Logout() {
   const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);

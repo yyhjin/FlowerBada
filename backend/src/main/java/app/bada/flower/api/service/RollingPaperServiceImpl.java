@@ -15,6 +15,7 @@ import app.bada.flower.exception.CustomException;
 import app.bada.flower.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,4 +107,14 @@ public class RollingPaperServiceImpl implements RollingPaperService {
         }
         return bookmarkResDto;
     }
+
+    @Transactional
+    @Override
+    public RollingPaper deleteRolling(int rollingId) {
+        RollingPaper rollingPaper = rollingPaperRepository.findById(rollingId)
+                .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        rollingPaper.isDeleteUpdate(true);
+        return rollingPaperRepository.save(rollingPaper);
+    }
+
 }
