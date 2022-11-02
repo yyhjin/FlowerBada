@@ -1,4 +1,4 @@
-import backArrow from '../../img/backArrow.png';
+import backArrow from '@src/img/backArrow.png';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { useState } from 'react';
