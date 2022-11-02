@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
-import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 
-export default function Logout() {
+export default function SignOut() {
   const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
   const handleLogout = async () => {
     try {

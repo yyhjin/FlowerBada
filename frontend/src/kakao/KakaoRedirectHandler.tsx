@@ -30,6 +30,7 @@ const KakaoRedirectHandler = () => {
           return variable;
         });
         // alert('login success!!!');
+        window.location.href = '/';
       })
       .catch((err) => {
         console.log(err);

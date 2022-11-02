@@ -24,4 +24,10 @@ public class RollingItem extends BaseEntity{
 
     @Column(nullable = false)
     private String imgUrl;
+
+    @Column(nullable = false)
+    private String imgFront;
+
+    @Column(nullable = false)
+    private String imgBack;
 }
