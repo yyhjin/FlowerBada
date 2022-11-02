@@ -2,27 +2,17 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
-import { useRecoilState } from 'recoil';
-import { IuserRecoil, userReCoil } from '../../recoil/userRecoil';
 
 export default function RollingLink() {
   const { state } = useLocation();
   const root = 'localhost:5173/rollingpaper/';
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const handleMainPage = async () => {
-    try {
-      navigate('/');
-    } catch (err: any) {
-      console.log(err);
-    }
+  const handleMainPage = () => {
+    navigate('/');
   };
-  const handleRollingPaper = async () => {
-    try {
-      navigate(`/rolling/${state}/1`);
-    } catch (err: any) {
-      console.log(err);
-    }
+  const handleRollingPaper = () => {
+    navigate(`/rolling/${state}/1`);
   };
   return (
     <>

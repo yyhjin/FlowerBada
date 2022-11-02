@@ -16,7 +16,7 @@ export default function GreenHouse() {
   const [sort, setSort] = useState(1);
   const [paginationId, setPaginationId] = useState(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
-  console.log(userState.jwt);
+  // console.log(userState.jwt);
   async function getRollings(sort) {
     setLoading(false);
     setTab('내가 만든 꽃다발'); //내가 만든 쿠키
@@ -31,11 +31,11 @@ export default function GreenHouse() {
           params,
         },
       );
-      console.log(res.data.response);
+      // console.log(res.data.response);
       setRollings(res.data.response);
       setLoading(true);
     } catch (err: any) {
-      console.log(err);
+      // console.log(err);
     }
   }
   async function getBookmarks(sort) {
@@ -52,19 +52,15 @@ export default function GreenHouse() {
           params,
         },
       );
-      console.log(res.data.response);
+      // console.log(res.data.response);
       setRollings(res.data.response);
       setLoading(true);
     } catch (err: any) {
-      console.log(err);
+      // console.log(err);
     }
   }
   function handleRollingPaper(url) {
-    try {
-      navigate(`/rolling/${url}/1`);
-    } catch (err: any) {
-      console.log(err);
-    }
+    navigate(`/rolling/${url}/1`);
   }
   return (
     <>

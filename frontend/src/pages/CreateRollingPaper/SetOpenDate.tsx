@@ -5,11 +5,11 @@ import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useRecoilState } from 'recoil';
-import { IuserRecoil, userReCoil } from '../../recoil/userRecoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import {
   IcreateRollingRecoil,
   createRollingRecoil,
-} from '../../recoil/createRollingRecoil';
+} from '@recoil/createRollingRecoil';
 
 export default function SetOpenDate() {
   const today = new Date();
@@ -42,15 +42,6 @@ export default function SetOpenDate() {
       day = '0' + day;
     }
     let localDateTime = year + '-' + month + '-' + day + 'T10:00';
-    console.log(localDateTime);
-    // if (
-    //   createRollingState.itemId === undefined ||
-    //   createRollingState.itemId === null ||
-    //   createRollingState.title === ''
-    // ) {
-    //   alert('제대로 입력하고 와');
-    //   return;
-    // }
     try {
       const res: any = await axios.post(
         'http://localhost:8080/api/v1/rolling',
@@ -65,7 +56,7 @@ export default function SetOpenDate() {
           },
         },
       );
-      console.log(res.data.response);
+      // console.log(res.data.response);
       setCreateRollingState((prev: IcreateRollingRecoil) => {
         const variable = { ...prev };
         variable.itemId = 0;
@@ -77,7 +68,7 @@ export default function SetOpenDate() {
 
       navigate('/newroll/link', { state: res.data.response });
     } catch (err: any) {
-      console.log(err);
+      // console.log(err);
     }
   };
   return (

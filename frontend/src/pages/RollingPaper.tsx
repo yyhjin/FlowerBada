@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 
 export default function RollingPaper() {
   const [loading, setLoading] = useState(false);
@@ -15,7 +15,7 @@ export default function RollingPaper() {
   async function getRolling() {
     setLoading(false);
     let url = paramCopy.url;
-    console.log(paramCopy);
+    // console.log(paramCopy);
 
     setPaginationId(paramCopy.paginationId);
     try {
@@ -27,11 +27,11 @@ export default function RollingPaper() {
           },
         },
       );
-      console.log(res.data.response);
+      // console.log(res.data.response);
       setRolling(res.data.response);
       setLoading(true);
     } catch (err: any) {
-      console.log(err);
+      // console.log(err);
     }
   }
 

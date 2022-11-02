@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { IuserRecoil, userReCoil } from '../../recoil/userRecoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import {
   IcreateRollingRecoil,
   createRollingRecoil,
-} from '../../recoil/createRollingRecoil';
+} from '@recoil/createRollingRecoil';
 
 export default function SelectItem() {
   sessionStorage.setItem('url', '/newroll');
@@ -27,7 +27,7 @@ export default function SelectItem() {
           },
         },
       );
-      console.log(res.data.response);
+      // console.log(res.data.response);
       setItems(res.data.response);
       if (createRollingState.url === '') {
         setCreateRollingState((prev: IcreateRollingRecoil) => {
@@ -40,16 +40,11 @@ export default function SelectItem() {
       }
       setLoading(true);
     } catch (err: any) {
-      console.log(err);
+      // console.log(err);
     }
   }
-  const handleSetTitle = async () => {
-    console.log(createRollingState);
-    try {
-      navigate('/newroll/title');
-    } catch (err: any) {
-      console.log(err);
-    }
+  const handleSetTitle = () => {
+    navigate('/newroll/title');
   };
   const select = (e) => {
     setCreateRollingState((prev: IcreateRollingRecoil) => {

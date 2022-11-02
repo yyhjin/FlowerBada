@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 import {
   IcreateRollingRecoil,
   createRollingRecoil,
-} from '../../recoil/createRollingRecoil';
+} from '@recoil/createRollingRecoil';
 
 export default function SetTitle() {
   const navigate = useNavigate();
@@ -17,16 +17,12 @@ export default function SetTitle() {
     });
   };
 
-  const handleSetOpenDate = async () => {
+  const handleSetOpenDate = () => {
     if (createRollingState.title === '') {
       alert('제목 입력해라');
-    } else {
-      try {
-        navigate('/newroll/date');
-      } catch (err: any) {
-        console.log(err);
-      }
+      return;
     }
+    navigate('/newroll/date');
   };
   return (
     <>
