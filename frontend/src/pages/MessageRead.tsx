@@ -7,6 +7,8 @@ import { styled } from '@mui/material/styles';
 import SendIcon from '@mui/icons-material/Send';
 import WbTwilight from '@mui/icons-material/WbTwilight';
 import CloseIcon from '@mui/icons-material/Close';
+import { createTheme } from '@mui/material/styles';
+import Alert from '@mui/material/Alert';
 
 import {
   Dialog,
@@ -17,6 +19,49 @@ import {
   Button,
   IconButton,
 } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  status: {
+    danger: '#e53e3e',
+  },
+  palette: {
+    primary: {
+      main: '#16453E',
+    },
+    neutral: {
+      main: '#B1BDBB',
+    },
+  },
+});
+
+declare module '@mui/material/styles' {
+  interface Theme {
+    status: {
+      danger: React.CSSProperties['color'];
+    };
+  }
+
+  interface Palette {
+    neutral: Palette['primary'];
+  }
+
+  interface PaletteOptions {
+    neutral: PaletteOptions['primary'];
+  }
+
+  interface PaletteColor {
+    darker?: string;
+  }
+  interface SimplePaletteColorOptions {
+    darker?: string;
+  }
+  interface ThemeOptions {
+    status: {
+      danger: React.CSSProperties['color'];
+    };
+  }
+}
 
 interface IMsg {
   messageId?: number;
@@ -72,22 +117,27 @@ export default function MessageRead() {
   };
 
   const sendReport = () => {
-    const url = `http://localhost:8080/api/v1/message/report`;
-    axios
-      .post(url, {
-        messageId: msg.messageId,
-        userId: loginUser.id,
-        content: reportContent,
-      })
-      .then((res) => {
-        setMsg(res.data.response);
-        console.log(res.data.response);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    changeReportModal(false);
-    changeModal(false);
+    if (reportContent == '') {
+      alert('내용을 입력해주세요');
+    } else {
+      const url = `http://localhost:8080/api/v1/message/report`;
+      axios
+        .post(url, {
+          messageId: msg.messageId,
+          userId: loginUser.id,
+          content: reportContent,
+        })
+        .then((res) => {
+          setMsg(res.data.response);
+          console.log(res.data.response);
+          alert('신고가 접수되었습니다');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      changeReportModal(false);
+      changeModal(false);
+    }
   };
 
   return (
@@ -106,43 +156,43 @@ export default function MessageRead() {
             <DialogCustom open={openModal}>
               {/* 신고 Modal */}
               <Dialog open={openReportModal}>
-                <DialogTitle>Report</DialogTitle>
+                <DialogTitle>신고하기</DialogTitle>
                 <DialogContent>
-                  <DialogContentText color={'grey'}>
+                  <br />
+                  <DialogContentText color={'black'}>
                     신고자 : {loginUser.nickname}
                   </DialogContentText>
                   <br />
                   내용
                   <br />
-                  {/* <input
-                    type={'textarea'}
-                    value={reportContent}
-                    onChange={(e) => setReportContent(e.target.value)}
-                  ></input> */}
                   <textarea
                     style={{ resize: 'none' }}
                     value={reportContent}
                     onChange={(e) => setReportContent(e.target.value)}
                   ></textarea>
                 </DialogContent>
-                <DialogActions>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    size="small"
-                    endIcon={<SendIcon />}
-                    onClick={sendReport}
-                  >
-                    send
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    size="small"
-                    onClick={(e) => changeReportModal(false)}
-                  >
-                    close
-                  </Button>
+                <DialogActions style={{ margin: '10px' }}>
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      // endIcon={<SendIcon />}
+                      onClick={sendReport}
+                    >
+                      신고
+                    </Button>
+                  </ThemeProvider>
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="contained"
+                      color="neutral"
+                      size="small"
+                      onClick={(e) => changeReportModal(false)}
+                    >
+                      취소
+                    </Button>
+                  </ThemeProvider>
                 </DialogActions>
               </Dialog>
 
