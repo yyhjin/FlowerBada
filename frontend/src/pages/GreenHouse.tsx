@@ -113,6 +113,7 @@ export default function GreenHouse() {
 }
 const BoxList = styled.div`
   display: flex;
+  overflow-x: scroll;
 `;
 const Box = styled.div`
   justify-content: space-between;

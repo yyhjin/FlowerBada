@@ -41,7 +41,7 @@ export default function RollingPaper() {
           },
         },
       );
-      // console.log(res.data.response);
+      console.log(res.data.response);
       setRolling(res.data.response);
       setLoading(true);
     } catch (err: any) {
