@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import SideBar from './SideBar';
+import hamburgerBtn from '@assets/hamburger.png';
 
 import './Header.css';
 
@@ -23,11 +24,7 @@ export default function Header() {
         <span css={InlineBlock}>
           <h3>꽃바다</h3>
         </span>
-        <img
-          src="src\assets\hamburger.png"
-          css={hamburger}
-          onClick={slideLeft}
-        />
+        <img src={hamburgerBtn} css={hamburger} onClick={slideLeft} />
         <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
         <div css={coverUp}></div>
       </nav>

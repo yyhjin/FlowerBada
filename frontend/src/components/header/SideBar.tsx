@@ -2,12 +2,12 @@ import { css } from '@emotion/react';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@src/recoil/userRecoil';
 import axios from 'axios';
+import closeBtn from '@assets/close.png';
 
 const SideBar = (props: any) => {
   const { isOpen } = props;
   const { setIsOpen } = props;
   const test = () => {
-    console.log(isOpen);
     setIsOpen(!isOpen);
   };
 
@@ -43,7 +43,7 @@ const SideBar = (props: any) => {
   return (
     <div id="sideblock">
       <div css={sideBlock(isOpen)}>
-        <img src="src\assets\close.png" css={close} onClick={test} />
+        <img src={closeBtn} css={close} onClick={test} />
         <div css={menus}>
           <a css={menuBtn} href="/mypage">
             마이페이지
