@@ -71,7 +71,7 @@ export default function Header() {
         <a onClick={() => navigate(-1)} css={BackArrow}>
           <img height="20px" width="20px" id="back" src={backArrow}></img>
         </a>
-        <span css={InlineBlock}>
+        <span css={LogoName}>
           <h3>꽃바다</h3>
         </span>
         <a
@@ -134,8 +134,9 @@ const BackArrow = css`
   float: left;
 `;
 
-const InlineBlock = css`
+const LogoName = css`
   display: inline-block;
+  font-family: 'GowunDodum-Regular';
 `;
 
 const Menu = css`
