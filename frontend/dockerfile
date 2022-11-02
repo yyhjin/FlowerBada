@@ -2,12 +2,13 @@ FROM node:16
 
 WORKDIR /app
 
-COPY package*.json ./
-copy yarn.lock ./
+COPY package.json .
+copy package-lock.json .
+copy yarn.lock .
 
 RUN yarn
 
-COPY . ./
+COPY . .
 
 RUN yarn build
 
