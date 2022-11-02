@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { css } from '@emotion/react';
 import Header from '@components/header/Header';
-import { css } from '@emotion/react';
+
 export default function Layout() {
   return (
     <>
