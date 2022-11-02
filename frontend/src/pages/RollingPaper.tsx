@@ -15,8 +15,9 @@ export default function RollingPaper() {
   async function getRolling() {
     setLoading(false);
     let url = paramCopy.url;
+    console.log(paramCopy);
+
     setPaginationId(paramCopy.paginationId);
-    sessionStorage.setItem('url', `/rollingpaper/${url}/${paginationId}`);
     try {
       const res: any = await axios.get(
         `http://localhost:8080/api/v1/rolling/${url}/${paramCopy.paginationId}`,

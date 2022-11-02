@@ -61,7 +61,7 @@ export default function GreenHouse() {
   }
   function handleRollingPaper(url) {
     try {
-      navigate(`/rollingpaper/${url}/1`);
+      navigate(`/rolling/${url}/1`);
     } catch (err: any) {
       console.log(err);
     }

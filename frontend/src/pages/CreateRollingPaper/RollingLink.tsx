@@ -19,7 +19,7 @@ export default function RollingLink() {
   };
   const handleRollingPaper = async () => {
     try {
-      navigate(`/rollingpaper/${state}/1`);
+      navigate(`/rolling/${state}/1`);
     } catch (err: any) {
       console.log(err);
     }

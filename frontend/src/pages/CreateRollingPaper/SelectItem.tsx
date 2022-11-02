@@ -8,7 +8,7 @@ import {
   createRollingRecoil,
 } from '../../recoil/createRollingRecoil';
 
-export default function NewRoll() {
+export default function SelectItem() {
   sessionStorage.setItem('url', '/newroll');
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
@@ -46,7 +46,7 @@ export default function NewRoll() {
   const handleSetTitle = async () => {
     console.log(createRollingState);
     try {
-      navigate('/settitle');
+      navigate('/newroll/title');
     } catch (err: any) {
       console.log(err);
     }

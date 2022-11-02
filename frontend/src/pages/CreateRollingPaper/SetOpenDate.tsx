@@ -75,7 +75,7 @@ export default function SetOpenDate() {
         return variable;
       });
 
-      navigate('/rollinglink', { state: res.data.response });
+      navigate('/newroll/link', { state: res.data.response });
     } catch (err: any) {
       console.log(err);
     }

@@ -22,7 +22,7 @@ export default function SetTitle() {
       alert('제목 입력해라');
     } else {
       try {
-        navigate('/setopendate');
+        navigate('/newroll/date');
       } catch (err: any) {
         console.log(err);
       }
