@@ -12,3 +12,6 @@ body {
   overflow-y: hidden;
   background-color: #F2F0EF;
 }
+
+button:focus {box-shadow:none !important;}
+select:focus{ outline: none}
