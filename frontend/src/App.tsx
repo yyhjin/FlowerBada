@@ -1,5 +1,15 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import KakaoPaymentTest from '@pages/KakaoPaymentTest';
+import PaymentSuccess from '@pages/Payment/PaymentSuccess';
+import PaymentFail from '@pages/Payment/PaymentFail';
+import PaymentCancel from '@pages/Payment/PaymentCancel';
 import '@src/App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+<<<<<<<<< Temporary merge branch 1
+import KakaoRedirectHandler from './kakao/KakaoRedirectHandler';
+import MyPage from './pages/MyPage';
+import MainPage from './pages/MainPage';
+=========
 import { useRecoilState } from 'recoil';
 import { userReCoil } from '@recoil/userRecoil';
 import KakaoRedirectHandler from '@kakao/KakaoRedirectHandler';
@@ -12,8 +22,7 @@ import Title from '@pages/CreateRollingPaper/SetTitle';
 import Date from '@pages/CreateRollingPaper/SetOpenDate';
 import Link from '@pages/CreateRollingPaper/RollingLink';
 import Layout from '@pages/Layout';
-import Login from '@pages/SignIn';
-import RollingPaper from '@pages/RollingPaper';
+import SignIn from '@pages/SignIn';
 
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
@@ -23,7 +32,7 @@ function App() {
         <Routes>
           {loginUser.jwt === '' ? (
             <>
-              <Route path="/*" element={<Login />}></Route>
+              <Route path="/*" element={<SignIn />}></Route>
               <Route
                 path="/user/signin/redirect"
                 element={<KakaoRedirectHandler />}
@@ -40,16 +49,6 @@ function App() {
                 <Route path="greenhouse" element={<GreenHouse />}></Route>
                 <Route path="store" element={<Store />}></Route>
                 <Route path="mypage" element={<MyPage />}></Route>
-                <Route path="newroll/">
-                  <Route path="item" element={<Item />}></Route>
-                  <Route path="title" element={<Title />}></Route>
-                  <Route path="date" element={<Date />}></Route>
-                  <Route path="link" element={<Link />}></Route>
-                </Route>
-                <Route
-                  path="/rolling/:url/:paginationId"
-                  element={<RollingPaper />}
-                ></Route>
               </Route>
             </>
           )}
