@@ -1,8 +1,20 @@
-import { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { css } from '@emotion/react';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+
+interface IDeliver {
+  pageUrl?: string;
+  imgUrl?: string;
+  date?: string;
+  title?: string;
+  status?: string;
+  flowerCount?: number;
+  price?: number;
+  sender?: string;
+  receiver?: string;
+}
 
 export default function MyDeliveryList() {
   const [pages, setPages] = useState<number>(0);
@@ -10,11 +22,11 @@ export default function MyDeliveryList() {
   const [sortNumber, setSortNumber] = useState(1);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
 
-  const handleChange = (event) => {
-    setSortNumber(event.target.value);
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortNumber(+event.target.value);
     setPages(0);
     setMyList([]);
-    deliveryListFunc(event.target.value);
+    deliveryListFunc(+event.target.value);
   };
 
   const handleScroll = useCallback((): void => {
@@ -47,7 +59,7 @@ export default function MyDeliveryList() {
     }
   }, [handleScroll]);
 
-  async function deliveryListFunc(sortNumber) {
+  async function deliveryListFunc(sortNumber: number) {
     try {
       setSortNumber(sortNumber);
       const params = { sort: sortNumber, paginationId: pages };
@@ -78,7 +90,7 @@ export default function MyDeliveryList() {
         </select>
       </div>
       <div className="mylist">
-        {myList.map((deliver, index) => {
+        {myList.map((deliver: IDeliver, index: number) => {
           return (
             <div className="deliverybox" key={index}>
               <div className="imgbox">

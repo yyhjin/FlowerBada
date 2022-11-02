@@ -7,7 +7,7 @@ import MyPointList from '@components/mypage/MyPointList';
 export default function MyPage() {
   sessionStorage.setItem('url', '/mypage');
   const [number, setNumber] = useState(0);
-  function handleChange(number) {
+  function handleChange(number: number) {
     setNumber(number);
   }
   return (
