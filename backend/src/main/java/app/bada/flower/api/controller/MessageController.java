@@ -4,10 +4,12 @@ package app.bada.flower.api.controller;
 import app.bada.flower.api.dto.ResponseDto;
 import app.bada.flower.api.dto.message.MessageReqDto;
 import app.bada.flower.api.dto.message.MessageResDto;
+import app.bada.flower.api.dto.rollingpaper.RollingPaperResDto;
 import app.bada.flower.api.entity.Message;
 import app.bada.flower.api.entity.Report;
 import app.bada.flower.api.service.MessageService;
 import app.bada.flower.api.service.ReportService;
+import app.bada.flower.api.service.RollingPaperService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class MessageController {
 
     private final MessageService messageService;
     private final ReportService reportService;
+    private final RollingPaperService rollingPaperService;
 
     @PostMapping
     @ApiOperation(value = "메시지 등록", notes = "롤링페이퍼에 새로운 메시지를 생성한다.")
@@ -74,5 +77,20 @@ public class MessageController {
     @GetMapping("/search/{content}")
     public ResponseEntity<ResponseDto> searchMsgByContent(@PathVariable String content) {
         return new ResponseEntity<>(new ResponseDto(messageService.search(content)), HttpStatus.OK);
+    }
+
+    @GetMapping("/{url}/{paginationId}")
+    @ApiOperation(value="롤링페이퍼 조회", notes="롤링페이퍼를 조회한다.")
+    public ResponseEntity<ResponseDto> getRollingPaper(@RequestHeader(value = "X-AUTH-TOKEN") String token,
+                                                       @PathVariable("url") String url,
+                                                       @PathVariable("paginationId") int paginationId) {
+        RollingPaperResDto rollingPaperResDto = rollingPaperService.getRollingPaper(token, url, paginationId);
+
+        if (rollingPaperResDto!=null) {
+            return new ResponseEntity<ResponseDto>(new ResponseDto(rollingPaperResDto), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<ResponseDto>(new ResponseDto("롤링페이퍼 조회 실패"), HttpStatus.FORBIDDEN);
+        }
     }
 }

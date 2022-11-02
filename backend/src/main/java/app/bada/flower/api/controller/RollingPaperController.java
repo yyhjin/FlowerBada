@@ -39,21 +39,6 @@ public class RollingPaperController {
         }
     }
 
-    @GetMapping("/{url}/{paginationId}")
-    @ApiOperation(value="롤링페이퍼 조회", notes="롤링페이퍼를 조회한다.")
-    public ResponseEntity<ResponseDto> getRollingPaper(@RequestHeader(value = "X-AUTH-TOKEN") String token,
-                                                       @PathVariable("url") String url,
-                                                       @PathVariable("paginationId") int paginationId) {
-        RollingPaperResDto rollingPaperResDto = rollingPaperService.getRollingPaper(token, url, paginationId);
-
-        if (rollingPaperResDto!=null) {
-            return new ResponseEntity<ResponseDto>(new ResponseDto(rollingPaperResDto), HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<ResponseDto>(new ResponseDto("롤링페이퍼 조회 실패"), HttpStatus.FORBIDDEN);
-        }
-    }
-
     @PatchMapping("/bookmark/{url}")
     @ApiOperation(value="롤링페이퍼 즐겨찾기 추가/제거", notes="롤링페이퍼를 즐겨찾기에 추가/제거 한다 (처음일 경우 true로 생성)")
     public ResponseEntity<ResponseDto> bookmarkRollingPaper(@RequestHeader(value = "X-AUTH-TOKEN") String token, @PathVariable("url") String url){
