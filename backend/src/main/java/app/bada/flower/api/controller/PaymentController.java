@@ -1,6 +1,8 @@
 package app.bada.flower.api.controller;
 
 import app.bada.flower.api.dto.ResponseDto;
+import app.bada.flower.api.dto.payment.PaymentSuccessReqDto;
+import app.bada.flower.api.dto.payment.PaymentSuccessResDto;
 import app.bada.flower.api.service.PaymentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,7 +21,15 @@ public class PaymentController {
 
     @PostMapping("/{rollingId}")
     @ApiOperation(value="결제요청", notes="결제 요청을 보냄")
-    public ResponseEntity<ResponseDto> signIn(@PathVariable Integer rollingId) {
-        return new ResponseEntity<>(new ResponseDto(rollingId + "결제 실패"), HttpStatus.FORBIDDEN);
+    public ResponseEntity<ResponseDto> requestPayment(@PathVariable Integer rollingId) {
+        String res = paymentService.paymentReady(rollingId);
+        return new ResponseEntity<>(new ResponseDto(res), HttpStatus.OK);
+    }
+
+    @PostMapping("/success")
+    @ApiOperation(value="결제완료", notes="결제 완료 결과를 보냄")
+    public ResponseEntity<ResponseDto> successPayment(@RequestBody PaymentSuccessReqDto paymentSuccessReqDto) {
+        PaymentSuccessResDto res = paymentService.paymentApproval(paymentSuccessReqDto.getPgToken(), paymentSuccessReqDto.getOrderId());
+        return new ResponseEntity<>(new ResponseDto(res), HttpStatus.OK);
     }
 }
