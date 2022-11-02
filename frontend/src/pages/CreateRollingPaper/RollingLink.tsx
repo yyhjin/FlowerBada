@@ -8,10 +8,10 @@ export default function RollingLink() {
   const root = 'localhost:5173/rollingpaper/';
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const handleMainPage = () => {
+  const handleMainPage = (): void => {
     navigate('/');
   };
-  const handleRollingPaper = () => {
+  const handleRollingPaper = (): void => {
     navigate(`/rolling/${state}/1`);
   };
   return (

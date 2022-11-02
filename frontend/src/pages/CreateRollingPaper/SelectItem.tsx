@@ -8,15 +8,20 @@ import {
   createRollingRecoil,
 } from '@recoil/createRollingRecoil';
 
+interface IItem {
+  rollingId: number;
+  imgUrl: string;
+  isOwned: boolean;
+}
+
 export default function SelectItem() {
-  sessionStorage.setItem('url', '/newroll');
   const navigate = useNavigate();
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState<IItem[]>([]);
+  const [loading, setLoading] = useState<Boolean>(false);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const [createRollingState, setCreateRollingState] =
     useRecoilState<IcreateRollingRecoil>(createRollingRecoil);
-  async function getItems() {
+  async function getItems(): Promise<void> {
     setLoading(false);
     try {
       const res: any = await axios.get(
@@ -43,11 +48,11 @@ export default function SelectItem() {
       // console.log(err);
     }
   }
-  const handleSetTitle = () => {
+  const handleSetTitle = (): void => {
     navigate('/newroll/title');
   };
-  const select = (e) => {
-    setCreateRollingState((prev: IcreateRollingRecoil) => {
+  const select = (e: any): void => {
+    setCreateRollingState((prev: IcreateRollingRecoil): any => {
       const variable = { ...prev };
       variable.itemId = items[e.target.id].rollingId;
       variable.itemIndex = e.target.id;
@@ -55,7 +60,7 @@ export default function SelectItem() {
       return variable;
     });
   };
-  const cnatSelect = () => {
+  const cnatSelect = (): void => {
     alert('이건 돈 내고 사서 써야 됨!');
   };
   useEffect(() => {
@@ -69,18 +74,18 @@ export default function SelectItem() {
           <div>
             <div>{createRollingState.url}</div>
             <div>
-              {items.map((item, index) => {
+              {items.map((item: IItem, index) => {
                 return (
                   <ul key={item.rollingId}>
                     {item.isOwned === true ? (
                       <div>
-                        <li onClick={select} id={index}>
+                        <li onClick={select} id={String(index)}>
                           {item.imgUrl}
                         </li>
                       </div>
                     ) : (
                       <div>
-                        <li onClick={cnatSelect} id={index}>
+                        <li onClick={cnatSelect} id={String(index)}>
                           {item.imgUrl}
                         </li>
                       </div>

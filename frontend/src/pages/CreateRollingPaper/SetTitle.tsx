@@ -9,7 +9,7 @@ export default function SetTitle() {
   const navigate = useNavigate();
   const [createRollingState, setCreateRollingState] =
     useRecoilState<IcreateRollingRecoil>(createRollingRecoil);
-  const changeTitle = (e) => {
+  const changeTitle = (e: any) => {
     setCreateRollingState((prev: IcreateRollingRecoil) => {
       const variable = { ...prev };
       variable.title = e.target.value;

@@ -4,20 +4,28 @@ import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
+
+interface IRolling {
+  url: string;
+  imgUrl: string;
+  title: string;
+  date: string;
+}
+
 export default function GreenHouse() {
   sessionStorage.setItem('url', '/greenhouse');
   useEffect(() => {
     getRollings(1);
   }, []);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [rollings, setRollings] = useState([]);
-  const [tab, setTab] = useState('내가 만든 꽃다발');
-  const [sort, setSort] = useState(1);
-  const [paginationId, setPaginationId] = useState(0);
+  const [loading, setLoading] = useState<Boolean>(false);
+  const [rollings, setRollings] = useState<IRolling[]>([]);
+  const [tab, setTab] = useState<String>('내가 만든 꽃다발');
+  const [sort, setSort] = useState<Number>(1);
+  const [paginationId, setPaginationId] = useState<Number>(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   // console.log(userState.jwt);
-  async function getRollings(sort) {
+  async function getRollings(sort: number): Promise<void> {
     setLoading(false);
     setTab('내가 만든 꽃다발'); //내가 만든 쿠키
     try {
@@ -38,7 +46,7 @@ export default function GreenHouse() {
       // console.log(err);
     }
   }
-  async function getBookmarks(sort) {
+  async function getBookmarks(sort: number): Promise<void> {
     setLoading(false);
     setTab('즐겨찾기한 꽃다발');
     try {
@@ -59,7 +67,7 @@ export default function GreenHouse() {
       // console.log(err);
     }
   }
-  function handleRollingPaper(url) {
+  function handleRollingPaper(url: string): void {
     navigate(`/rolling/${url}/1`);
   }
   return (
@@ -74,12 +82,16 @@ export default function GreenHouse() {
         <button onClick={() => getBookmarks(1)}>즐겨찾기(최신순)</button>
         <button onClick={() => getBookmarks(2)}>즐겨찾기(오래된순)</button>
         {loading ? (
-          <div>{rollings.length === 0 ? `${tab}이 없습니다` : ''}</div>
+          <div>
+            {rollings && rollings.length && rollings.length === 0
+              ? `${tab}이 없습니다`
+              : ''}
+          </div>
         ) : (
           <div> 로딩중 </div>
         )}
         <BoxList>
-          {rollings.map((rolling) => {
+          {rollings.map((rolling: IRolling, index: number) => {
             return (
               <Box key={rolling.url}>
                 <ImageBox>

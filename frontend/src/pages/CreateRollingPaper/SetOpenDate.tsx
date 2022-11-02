@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
@@ -19,21 +19,21 @@ export default function SetOpenDate() {
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const [createRollingState, setCreateRollingState] =
     useRecoilState<IcreateRollingRecoil>(createRollingRecoil);
-  const [date, setDate] = useState(tomorrow);
+  const [date, setDate] = useState<Date>(tomorrow);
 
-  const changeDate = (date) => {
+  const changeDate = (date: Date): void => {
     setDate(date);
   };
 
-  const handleRollingLink = async (e) => {
+  const handleRollingLink = async (e: any): Promise<void> => {
     if (date === null) {
       alert('날짜 제대로 입력해');
       return;
     }
     e.target.disabled = true;
     let year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
+    let month = String(date.getMonth() + 1);
+    let day = String(date.getDate());
 
     if (String(month).length === 1) {
       month = '0' + month;
@@ -57,7 +57,7 @@ export default function SetOpenDate() {
         },
       );
       // console.log(res.data.response);
-      setCreateRollingState((prev: IcreateRollingRecoil) => {
+      setCreateRollingState((prev: IcreateRollingRecoil): any => {
         const variable = { ...prev };
         variable.itemId = 0;
         variable.itemIndex = 0;
@@ -83,7 +83,7 @@ export default function SetOpenDate() {
           closeOnScroll={true} // 스크롤을 움직였을 때 자동으로 닫히도록 설정 기본값 false
           placeholderText="롤링페이퍼 개봉 날짜 선택" // placeholder
           selected={date} // value
-          onChange={(date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
+          onChange={(date: Date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
         />
       </div>
       <button onClick={handleRollingLink}>롤페 생성</button>
