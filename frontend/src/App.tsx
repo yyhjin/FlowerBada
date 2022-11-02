@@ -1,5 +1,9 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import KakaoPaymentTest from '@pages/KakaoPaymentTest';
+import PaymentSuccess from '@pages/Payment/PaymentSuccess';
+import PaymentFail from '@pages/Payment/PaymentFail';
+import PaymentCancel from '@pages/Payment/PaymentCancel';
 import '@src/App.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { userReCoil } from '@recoil/userRecoil';
 import KakaoRedirectHandler from '@kakao/KakaoRedirectHandler';
@@ -9,7 +13,7 @@ import Store from '@pages/Store';
 import NewRoll from '@pages/NewRoll';
 import MyPage from '@pages/MyPage';
 import Layout from '@pages/Layout';
-import Login from '@pages/SignIn';
+import SignIn from '@pages/SignIn';
 
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
@@ -19,7 +23,7 @@ function App() {
         <Routes>
           {loginUser.jwt === '' ? (
             <>
-              <Route path="/*" element={<Login />}></Route>
+              <Route path="/*" element={<SignIn />}></Route>
               <Route
                 path="/user/signin/redirect"
                 element={<KakaoRedirectHandler />}
@@ -33,6 +37,10 @@ function App() {
                 <Route path="store" element={<Store />}></Route>
                 <Route path="newroll" element={<NewRoll />}></Route>
                 <Route path="mypage" element={<MyPage />}></Route>
+                <Route path="/payment" element={<KakaoPaymentTest />} />
+                <Route path="/payment/success" element={<PaymentSuccess />} />
+                <Route path="/payment/fail" element={<PaymentFail />} />
+                <Route path="/payment/cancel" element={<PaymentCancel />} />
               </Route>
             </>
           )}
