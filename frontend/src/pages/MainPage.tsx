@@ -48,7 +48,7 @@ const Mainpage = () => {
     navigate('/store');
   };
   const moveNewRoll = () => {
-    navigate('/newroll');
+    navigate('/newroll/item');
   };
   const moveMyPage = () => {
     navigate('/mypage');
