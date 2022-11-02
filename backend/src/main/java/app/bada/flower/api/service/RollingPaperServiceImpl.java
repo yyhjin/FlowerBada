@@ -107,6 +107,7 @@ public class RollingPaperServiceImpl implements RollingPaperService {
             rollingMsgList.add(messageConverter.toRollingMsgDto(messageList.get(i)));
         }
         rollingPaperResDto.setRollingId(rollingPaper.getId());
+        rollingPaperResDto.setItemId(rollingPaper.getRollingPaperItem().getId());
         rollingPaperResDto.setTitle(rollingPaper.getTitle());
         rollingPaperResDto.setImgUrl(s3FileUpload.File_Server_Url+rollingPaper.getRollingPaperItem().getImgUrl());
         rollingPaperResDto.setDate(rollingPaperResDto.changeDateToString(rollingPaper.getOpenDate()));
