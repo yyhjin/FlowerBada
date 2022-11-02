@@ -1,11 +1,12 @@
 import { css } from '@emotion/react';
 import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import Modal from '@src/components/store/BuyModal';
 import Receipt from '@src/components/store/Receipt';
-import { Grid, Box } from '@mui/material';
+import { Grid } from '@mui/material';
+import itemLocked from '@src/img/itemLocked.png';
 
 interface FlowerItem {
   flowerId: number;
@@ -42,13 +43,8 @@ const Store = () => {
   const [flowerName, setFlowerName] = useState<string>();
   const [flowerLanguage, setFlowerLanguage] = useState<string>();
 
-  const imgRef = useRef();
-
   const handleBuying = () => {
     setBuying(true);
-  };
-  const handleList = () => {
-    setIsFlower(!isFlower);
   };
   const setRolling = () => {
     setIsFlower(false);
@@ -66,6 +62,14 @@ const Store = () => {
       setFlowerName('');
       setFlowerLanguage('');
     }
+  };
+  const isOwned = (index: number): boolean => {
+    if (isFlower && flowerItemList && flowerItemList[index]) {
+      if (flowerItemList[index].isOwned) return true;
+    } else if (!isFlower && rollingItemList && rollingItemList[index]) {
+      if (rollingItemList[index].isOwned) return true;
+    }
+    return false;
   };
 
   function updateImgList() {
@@ -131,12 +135,36 @@ const Store = () => {
           </div>
         ) : null}
       </div>
-      <button onClick={handleList}>toggle</button>
+      <div css={SelectBtn}>
+        <button onClick={setRolling}>꽃다발</button>
+        <button onClick={setFlower}>꽃</button>
+      </div>
       <div css={TEMP}></div>
-      <Grid container columns={12}>
-        {imgList.map((image, index) => (
+      <Grid container columns={12} css={GridContainer}>
+        {imgList.map((image: string, index: number) => (
           <Grid xs={4} item key={index}>
-            <img css={ItemImage} src={image} onClick={() => toggleImg(index)} />
+            {isOwned(index) ? (
+              <img
+                css={ItemImage}
+                src={image}
+                onClick={() => toggleImg(index)}
+              />
+            ) : (
+              <img
+                css={ItemImageNotOwned}
+                src={image}
+                onClick={() => toggleImg(index)}
+              />
+              // <img
+              //   css={ItemImage}
+              //   src={image}
+              //   onClick={() => toggleImg(index)}
+              // />
+              // <img
+              //   css={ItemImage}
+              //   src={itemLocked}}
+              // />
+            )}
           </Grid>
         ))}
       </Grid>
@@ -168,14 +196,39 @@ const SelectedImgDiv = css`
   }
 `;
 
-const SelectedImg = css`
-  width: 160px;
-  height: 160px;
+const SelectBtn = css`
+  button {
+    position: relative;
+    top: 25px;
+    border-radius: 15px;
+    border: 1px solid transparent;
+    background-color: white;
+    width: 170px;
+    height: 40px;
+    z-index: 0;
+  }
+`;
+
+const GridContainer = css`
+  width: 340px;
+  height: 300px;
+  overflow: scroll;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 15px;
 `;
 
 const ItemImage = css`
   width: 80px;
   height: 80px;
+`;
+
+const ItemImageNotOwned = css`
+  width: 80px;
+  height: 80px;
+  background-color: gray;
+  // background-image: url('@src/img/itemLocked.png');
+  // background-size: cover;
 `;
 
 const StoreDiv = css`
