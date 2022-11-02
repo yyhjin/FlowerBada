@@ -7,8 +7,6 @@ import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@src/recoil/userRecoil';
 import axios from 'axios';
 
-import './Header.css';
-
 export default function Header() {
   const navigate = useNavigate();
   const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
@@ -118,15 +116,53 @@ export default function Header() {
 }
 
 const HeaderNav = css`
-  align-itmes: center;
+  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   width: 450px;
   max-width: 1280px;
+  height: 60px;
   margin: 0 auto;
   background-color: #f2f0ef;
+
+  .dropdown {
+    position: relative;
+  }
+
+  .menu {
+    position: absolute;
+    list-style-type: none;
+    margin: 5px 0 0 0;
+    padding: 0;
+    border: 1px solid grey;
+    width: 100px;
+    right: 0px;
+  }
+
+  .menu > li {
+    margin: 0;
+    background-color: white;
+  }
+
+  .menu > li:hover {
+    background-color: lightgray;
+  }
+
+  .menu > li > button {
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 5px;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+  }
 `;
 
 const BackArrow = css`
