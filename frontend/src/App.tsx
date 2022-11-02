@@ -10,8 +10,12 @@ import KakaoRedirectHandler from '@kakao/KakaoRedirectHandler';
 import MainPage from '@pages/MainPage';
 import GreenHouse from '@pages/GreenHouse';
 import Store from '@pages/Store';
-import NewRoll from '@pages/NewRoll';
-import MyPage from '@pages/MyPage';
+import MyPage from './pages/MyPage';
+import Item from '@pages/CreateRollingPaper/SelectItem';
+import Title from '@pages/CreateRollingPaper/SetTitle';
+import Date from '@pages/CreateRollingPaper/SetOpenDate';
+import Link from '@pages/CreateRollingPaper/RollingLink';
+import RollingPaper from '@pages/RollingPaper';
 import Layout from '@pages/Layout';
 import SignIn from '@pages/SignIn';
 
@@ -28,6 +32,10 @@ function App() {
                 path="/user/signin/redirect"
                 element={<KakaoRedirectHandler />}
               ></Route>
+              <Route
+                path="/rolling/:url/:paginationId"
+                element={<RollingPaper />}
+              ></Route>
             </>
           ) : (
             <>
@@ -35,12 +43,17 @@ function App() {
               <Route path="/" element={<Layout />}>
                 <Route path="greenhouse" element={<GreenHouse />}></Route>
                 <Route path="store" element={<Store />}></Route>
-                <Route path="newroll" element={<NewRoll />}></Route>
                 <Route path="mypage" element={<MyPage />}></Route>
-                <Route path="/payment" element={<KakaoPaymentTest />} />
-                <Route path="/payment/success" element={<PaymentSuccess />} />
-                <Route path="/payment/fail" element={<PaymentFail />} />
-                <Route path="/payment/cancel" element={<PaymentCancel />} />
+                <Route path="newroll/">
+                  <Route path="item" element={<Item />}></Route>
+                  <Route path="title" element={<Title />}></Route>
+                  <Route path="date" element={<Date />}></Route>
+                  <Route path="link" element={<Link />}></Route>
+                </Route>
+                <Route
+                  path="rolling/:url/:paginationId"
+                  element={<RollingPaper />}
+                ></Route>
               </Route>
             </>
           )}
