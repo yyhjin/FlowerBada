@@ -81,10 +81,9 @@ public class MessageController {
 
     @GetMapping("/{url}/{paginationId}")
     @ApiOperation(value="롤링페이퍼 조회", notes="롤링페이퍼를 조회한다.")
-    public ResponseEntity<ResponseDto> getRollingPaper(@RequestHeader(value = "X-AUTH-TOKEN") String token,
-                                                       @PathVariable("url") String url,
+    public ResponseEntity<ResponseDto> getRollingPaper(@PathVariable("url") String url,
                                                        @PathVariable("paginationId") int paginationId) {
-        RollingPaperResDto rollingPaperResDto = rollingPaperService.getRollingPaper(token, url, paginationId);
+        RollingPaperResDto rollingPaperResDto = rollingPaperService.getRollingPaper(url, paginationId);
 
         if (rollingPaperResDto!=null) {
             return new ResponseEntity<ResponseDto>(new ResponseDto(rollingPaperResDto), HttpStatus.OK);

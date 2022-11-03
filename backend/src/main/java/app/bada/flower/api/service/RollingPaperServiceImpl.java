@@ -92,7 +92,7 @@ public class RollingPaperServiceImpl implements RollingPaperService {
     }
 
     @Override
-    public RollingPaperResDto getRollingPaper(String token, String url, int paginationId) {
+    public RollingPaperResDto getRollingPaper(String url, int paginationId) {
         RollingPaperResDto rollingPaperResDto = new RollingPaperResDto();
         RollingPaper rollingPaper = rollingPaperRepository.findByUrl(url).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
         List<Message> messageList = messageRepository.findAllByRollingPaper(rollingPaper);
