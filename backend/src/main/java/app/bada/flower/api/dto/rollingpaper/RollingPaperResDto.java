@@ -18,6 +18,8 @@ public class RollingPaperResDto {
     private int capacity;
     private int totalMessages;
     private String title;
+    private String imgFront;
+    private String imgBack;
     private String imgUrl;
     private String date;
     private List<MessageResDto.rollingMsgDto> messages = new ArrayList<>();
