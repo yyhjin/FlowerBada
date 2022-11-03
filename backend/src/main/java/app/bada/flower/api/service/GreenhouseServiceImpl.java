@@ -9,9 +9,11 @@ import app.bada.flower.api.repository.BookmarkRepository;
 import app.bada.flower.api.repository.RollingPaperRepository;
 import app.bada.flower.api.repository.UserRepository;
 import app.bada.flower.api.service.jwt.JwtTokenUtil;
+import app.bada.flower.api.util.S3FileUpload;
 import app.bada.flower.exception.CustomException;
 import app.bada.flower.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,10 @@ public class GreenhouseServiceImpl implements GreenhouseService {
     private final GreenhouseResDto greenhouseResDto = new GreenhouseResDto();
 
     private final UserService userService;
+
+
+    @Autowired
+    S3FileUpload s3FileUpload;
     @Override
     public List<GreenhouseResDto> getMyRollingPapers(String token,int sortNumber, Pageable pageable) {
         User user = userService.getUserByToken(token);
@@ -50,7 +56,7 @@ public class GreenhouseServiceImpl implements GreenhouseService {
             myRollingPaper.setDate(greenhouseResDto.changeDateToString(rollingPaper.getOpenDate()));
             myRollingPaper.setUrl(rollingPaper.getUrl());
             myRollingPaper.setTitle(rollingPaper.getTitle());
-            myRollingPaper.setImgUrl(rollingPaper.getImgUrl());
+            myRollingPaper.setImgUrl(s3FileUpload.File_Server_Url+rollingPaper.getImgUrl());
             myRollingPapers.add(myRollingPaper);
         }
         return myRollingPapers;
@@ -71,7 +77,7 @@ public class GreenhouseServiceImpl implements GreenhouseService {
             myRollingPaper.setDate(greenhouseResDto.changeDateToString(bookmark.getRollingPaper().getOpenDate()));
             myRollingPaper.setUrl(bookmark.getRollingPaper().getUrl());
             myRollingPaper.setTitle(bookmark.getRollingPaper().getTitle());
-            myRollingPaper.setImgUrl(bookmark.getRollingPaper().getImgUrl());
+            myRollingPaper.setImgUrl(s3FileUpload.File_Server_Url+bookmark.getRollingPaper().getImgUrl());
             myRollingPapers.add(myRollingPaper);
         }
         return myRollingPapers;

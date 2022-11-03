@@ -9,7 +9,7 @@ public interface RollingPaperService {
 
     RollingPaper createRollingPaper(String token, RollingPaperReqDto rollingPaperReqDto);
 
-    RollingPaperResDto getRollingPaper(String token, String url, int paginationId);
+    RollingPaperResDto getRollingPaper(String url, int paginationId);
 
     BookmarkResDto bookmarkRollingPaper(String token, String url);
 
