@@ -7,10 +7,7 @@ import app.bada.flower.api.dto.rolling.RollingDto;
 import app.bada.flower.api.dto.rolling.RollingReqDto;
 import app.bada.flower.api.dto.rolling.RollingResDto;
 import app.bada.flower.api.entity.*;
-import app.bada.flower.api.repository.FlowerItemRepository;
-import app.bada.flower.api.repository.FlowerUserRepository;
-import app.bada.flower.api.repository.RollingItemRepository;
-import app.bada.flower.api.repository.RollingUserRepository;
+import app.bada.flower.api.repository.*;
 import app.bada.flower.api.util.S3FileUpload;
 import app.bada.flower.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +32,7 @@ public class StoreServiceImpl implements StoreService {
     private final FlowerUserRepository flowerUserRepository;
     private final RollingItemRepository rollingItemRepository;
     private final RollingUserRepository rollingUserRepository;
-    private final S3FileUpload s3FileUpload;
+    private final UserRepository userRepository;
 
     /* 꽃 아이템 조회 */
     public List<FlowerResDto> getFlowerList(User user) {
@@ -53,8 +50,8 @@ public class StoreServiceImpl implements StoreService {
             flowerResDto.setFlowerLanguage(f.getFlowerLanguage());
             flowerResDto.setSeason(f.getSeason());
             flowerResDto.setPrice(f.getPrice());
-            flowerResDto.setImgUrl(s3FileUpload.File_Server_Url+f.getImgUrl());
-            flowerResDto.setImgBud(s3FileUpload.File_Server_Url+f.getImgBud());
+            flowerResDto.setImgUrl(f.getImgUrl());
+            flowerResDto.setImgBud(f.getImgBud());
             if(f.getPoint() == 0) {
                 flowerResDto.setIsOwned(true);
             } else {
@@ -79,9 +76,9 @@ public class StoreServiceImpl implements StoreService {
             rollingResDto.setCapacity(r.getCapacity());
             rollingResDto.setPoint(r.getPoint());
             rollingResDto.setPrice(r.getPrice());
-            rollingResDto.setImgUrl(s3FileUpload.File_Server_Url+r.getImgUrl());
-            rollingResDto.setImgFront(s3FileUpload.File_Server_Url+r.getImgFront());
-            rollingResDto.setImgBack(s3FileUpload.File_Server_Url+r.getImgBack());
+            rollingResDto.setImgUrl(r.getImgUrl());
+            rollingResDto.setImgFront(r.getImgFront());
+            rollingResDto.setImgBack(r.getImgBack());
             if(r.getPoint() == 0) {
                 rollingResDto.setIsOwned(true);
             } else {
@@ -98,7 +95,7 @@ public class StoreServiceImpl implements StoreService {
     public void buyFlowerItem(User user, FlowerReqDto flowerReqDto) {
         FlowerItem flowerItem = flowerItemRepository.findById(flowerReqDto.getFlowerId())
                 .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-
+        user.updatePoint(user.getPoints() - flowerItem.getPoint());
         flowerUserRepository.save(FlowerUser.addFlowerUser(user, flowerItem));
     }
 
@@ -107,7 +104,7 @@ public class StoreServiceImpl implements StoreService {
     public void buyRollingItem(User user, RollingReqDto rollingReqDto) {
         RollingItem rollingItem = rollingItemRepository.findById(rollingReqDto.getRollingId())
                 .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-
+        user.updatePoint(user.getPoints() - rollingItem.getPoint());
         rollingUserRepository.save(RollingUser.addRollingUser(user, rollingItem));
     }
 }
