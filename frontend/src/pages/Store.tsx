@@ -6,8 +6,10 @@ import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import Modal from '@src/components/store/BuyModal';
 import Receipt from '@src/components/store/Receipt';
 import { Grid } from '@mui/material';
-import itemLocked from '@src/img/itemLocked.png';
+import itemLocked from '@assets/itemLocked.png';
 import coin from '@assets/coin.png';
+import rollingImgItem from '@assets/fixed-size/rolling/rollingImgItem';
+import flowerImgItem from '@assets/fixed-size/flower/flowerImgItem';
 
 interface FlowerItem {
   flowerId: number;
@@ -60,7 +62,7 @@ const Store = () => {
   const toggleImg = (index: number) => {
     if (isFlower && flowerItemList) {
       setIsFlowerSelected(true);
-      setSelectedImg(flowerItemList[index].imgUrl);
+      setSelectedImg(flowerImgItem[index].img);
       setFlowerName(flowerItemList[index].name);
       setFlowerLanguage(flowerItemList[index].flowerLanguage);
       setPrice(flowerItemList[index].price);
@@ -68,7 +70,7 @@ const Store = () => {
       setOwned(flowerItemList[index].isOwned);
     } else if (!isFlower && rollingItemList) {
       setIsFlowerSelected(false);
-      setSelectedImg(rollingItemList[index].imgUrl);
+      setSelectedImg(rollingImgItem[index].img);
       setFlowerName('');
       setFlowerLanguage('');
       setPrice(rollingItemList[index].price);
@@ -88,12 +90,12 @@ const Store = () => {
   function updateImgList() {
     let tmp: string[] = [];
     if (isFlower && flowerItemList) {
-      flowerItemList.map((item: FlowerItem): void => {
-        tmp.push(item.imgUrl);
+      flowerItemList.map((item: FlowerItem, index): void => {
+        tmp.push(flowerImgItem[index].img);
       });
     } else if (rollingItemList) {
-      rollingItemList.map((item: RollingItem): void => {
-        tmp.push(item.imgUrl);
+      rollingItemList.map((item: RollingItem, index): void => {
+        tmp.push(rollingImgItem[index].img);
       });
     }
     setImgList(tmp);
@@ -137,9 +139,11 @@ const Store = () => {
 
   return (
     <div css={StoreDiv}>
-      <div className="points">
-        <img src={coin} className="coin" />
-        <span>{loginUser.points}</span>
+      <div css={points}>
+        <span className="points">
+          <img src={coin} className="coinImg" />
+          {loginUser.points}
+        </span>
       </div>
       <div css={SelectedImgDiv}>
         {selectedImg ? (
@@ -218,15 +222,30 @@ const Store = () => {
 };
 
 const StoreDiv = css`
-  // margin-top: 70px;
-  .points {
-    float: right;
-    margin-right: 20px;
+  width: 100vw;
+`;
+
+const points = css`
+  width: 30%;
+  position: relative;
+  float: right;
+  text-align: auto;
+  margin: auto;
+  .coinImg {
+    height: 15px;
+    display: flex;
+    text-align: auto;
+    justify-content: center;
+    padding-bottom: 2px;
+    padding-right: 5px;
   }
-  .coin {
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
+  .points {
+    display: flex;
+    position: relative;
+    float: right;
+    right: 20px;
+    text-align: left;
+    font-size: 15px;
   }
 `;
 
@@ -287,7 +306,7 @@ const GridStyle = css`
     height: 80px;
     position: absolute;
     z-index: 0;
-    opapcity: 35%;
+    opacity: 35%;
   }
 `;
 
@@ -310,9 +329,9 @@ const BuyButton = css`
 
 const BuyText = css`
   color: white;
-  font-size: 10px
-  margin-left: 30px;
-  margin-right: 30px;
+  font-size: 10px;
+  /* margin-left: 30px;
+  margin-right: 30px; */
 `;
 
 export default Store;
