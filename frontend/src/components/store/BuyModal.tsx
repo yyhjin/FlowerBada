@@ -5,7 +5,6 @@ import { useRecoilState } from 'recoil';
 
 export default function Modal(props: any) {
   const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
-  console.log(props.isFlower);
 
   function closeModal() {
     props.closeModal();

@@ -97,7 +97,6 @@ const Store = () => {
       });
     }
     setImgList(tmp);
-    console.log(tmp);
   }
 
   // 탭 바뀔 때마다 해당하는 품목 리스트 가져오기
@@ -129,7 +128,6 @@ const Store = () => {
           console.log(err);
         });
     }
-    console.log(isFlower);
   }, [isFlower]);
 
   // 품목 리스트 가져오면 이미지 배열 갱신
