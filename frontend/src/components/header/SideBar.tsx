@@ -81,6 +81,7 @@ const sideBlock = (isOpen: boolean) => css`
   right: -50%;
   transition: 0.5s;
   transform: ${isOpen ? 'translateX(-100%)' : ''};
+  z-index: 500;
 `;
 
 const close = css`
@@ -97,6 +98,7 @@ const menus = css`
   justify-content: center;
   flex-direction: column;
   margin-top: 5pc;
+  z-index: 600;
 `;
 
 const menuBtn = css`
