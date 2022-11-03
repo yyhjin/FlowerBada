@@ -18,7 +18,6 @@ public class FlowerItem extends BaseEntity{
     @Column(nullable = false)
     private String flowerLanguage;
 
-    @Column(nullable = false)
     private String season;
 
     private int point;
@@ -27,5 +26,8 @@ public class FlowerItem extends BaseEntity{
 
     @Column(nullable = false)
     private String imgUrl;
+
+    @Column(nullable = false)
+    private String imgBud;
 
 }

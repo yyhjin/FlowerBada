@@ -11,9 +11,11 @@ import app.bada.flower.api.entity.RollingPaper;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.*;
 import app.bada.flower.api.service.jwt.JwtTokenUtil;
+import app.bada.flower.api.util.S3FileUpload;
 import app.bada.flower.exception.CustomException;
 import app.bada.flower.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,11 +42,12 @@ public class RollingPaperServiceImpl implements RollingPaperService {
     private final JwtTokenUtil jwtTokenUtil;
     private final UserService userService;
 
+    @Autowired
+    S3FileUpload s3FileUpload;
+
 
     @Override
     public RollingPaper createRollingPaper(String token, RollingPaperReqDto rollingPaperReqDto) {
-//        int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
-//        User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         User user = userService.getUserByToken(token);
         Random random = new Random();
         int length = random.nextInt(5)+5;
@@ -73,7 +76,6 @@ public class RollingPaperServiceImpl implements RollingPaperService {
             }
         }
 
-
         RollingPaper rollingPaper = RollingPaper.builder()
                 .rollingPaperItem(rollingItemRepository.getReferenceById(rollingPaperReqDto.getItemId()))
                 .title(rollingPaperReqDto.getTitle())
@@ -81,30 +83,36 @@ public class RollingPaperServiceImpl implements RollingPaperService {
                 .user(user)
                 .openDate(rollingPaperReqDto.getOpenDate())
                 .url(newWord.toString())
-                .imgUrl("임시 이미지 url")
+                .imgUrl(rollingItemRepository.getReferenceById(rollingPaperReqDto.getItemId()).getImgUrl())
                 .build();
 
         return rollingPaperRepository.save(rollingPaper);
     }
 
     @Override
-    public RollingPaperResDto getRollingPaper(String token, String url, int paginationId) {
+    public RollingPaperResDto getRollingPaper(String url, int paginationId) {
         RollingPaperResDto rollingPaperResDto = new RollingPaperResDto();
         RollingPaper rollingPaper = rollingPaperRepository.findByUrl(url).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
         List<Message> messageList = messageRepository.findAllByRollingPaper(rollingPaper);
-        if((messageList.size()-1)/10<paginationId-1){
+        int capacity = rollingPaper.getRollingPaperItem().getCapacity();
+        if((messageList.size()-1)/capacity<paginationId-1){
             return null;
         }
         List<MessageResDto.rollingMsgDto> rollingMsgList = new ArrayList<>();
-        int range = paginationId*10;
-        if(messageList.size()<paginationId*10) range = messageList.size();
+        int range = paginationId*capacity;
+        if(messageList.size()<paginationId*capacity) range = messageList.size();
 
-        for(int i= (paginationId-1)*10; i<range; i++){
+        for(int i= (paginationId-1)*capacity; i<range; i++){
             rollingMsgList.add(messageConverter.toRollingMsgDto(messageList.get(i)));
         }
         rollingPaperResDto.setRollingId(rollingPaper.getId());
+        rollingPaperResDto.setItemId(rollingPaper.getRollingPaperItem().getId());
+        rollingPaperResDto.setCapacity(capacity);
+        rollingPaperResDto.setTotalMessages(messageList.size());
         rollingPaperResDto.setTitle(rollingPaper.getTitle());
-        rollingPaperResDto.setImgUrl(rollingPaper.getRollingPaperItem().getImgUrl());
+        rollingPaperResDto.setImgFront(rollingPaper.getRollingPaperItem().getImgFront());
+        rollingPaperResDto.setImgBack(rollingPaper.getRollingPaperItem().getImgBack());
+        rollingPaperResDto.setImgUrl(s3FileUpload.File_Server_Url+rollingPaper.getRollingPaperItem().getImgUrl());
         rollingPaperResDto.setDate(rollingPaperResDto.changeDateToString(rollingPaper.getOpenDate()));
         rollingPaperResDto.setMessages(rollingMsgList);
         return rollingPaperResDto;
