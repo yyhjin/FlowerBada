@@ -57,4 +57,16 @@ public class UserController {
     public void signOut (@RequestHeader(value = "X-AUTH-TOKEN") String jwt) throws Exception {
         userService.logout(jwt.split(" ")[1]);
     }
+
+    @GetMapping("/points")
+    public ResponseEntity getPoints(@RequestHeader(value = "X-AUTH-TOKEN") String jwt) {
+        try {
+            User user = userService.getUserByToken(jwt);
+            Map<String, Integer> map = new HashMap<>();
+            map.put("points", user.getPoints());
+            return new ResponseEntity(new ResponseDto(map), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity("해당 유저가 없습니다.", HttpStatus.BAD_REQUEST);
+        }
+    }
 }
