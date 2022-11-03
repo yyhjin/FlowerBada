@@ -7,6 +7,7 @@ import {
   IcreateRollingRecoil,
   createRollingRecoil,
 } from '@recoil/createRollingRecoil';
+import rollingImgItem from '@assets/fixed-size/rolling/rollingImgItem';
 
 interface IItem {
   rollingId: number;
@@ -21,6 +22,7 @@ export default function SelectItem() {
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const [createRollingState, setCreateRollingState] =
     useRecoilState<IcreateRollingRecoil>(createRollingRecoil);
+  const [rollingImg, setRollingImg] = useState<String>(rollingImgItem[0].img);
   async function getItems(): Promise<void> {
     setLoading(false);
     try {
@@ -72,7 +74,7 @@ export default function SelectItem() {
       <div>
         {loading ? (
           <div>
-            <div>{createRollingState.url}</div>
+            <div>{rollingImg}</div>
             <div>
               {items.map((item: IItem, index) => {
                 return (
