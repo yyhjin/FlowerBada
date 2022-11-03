@@ -7,10 +7,7 @@ import app.bada.flower.api.dto.rolling.RollingDto;
 import app.bada.flower.api.dto.rolling.RollingReqDto;
 import app.bada.flower.api.dto.rolling.RollingResDto;
 import app.bada.flower.api.entity.*;
-import app.bada.flower.api.repository.FlowerItemRepository;
-import app.bada.flower.api.repository.FlowerUserRepository;
-import app.bada.flower.api.repository.RollingItemRepository;
-import app.bada.flower.api.repository.RollingUserRepository;
+import app.bada.flower.api.repository.*;
 import app.bada.flower.api.util.S3FileUpload;
 import app.bada.flower.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +32,7 @@ public class StoreServiceImpl implements StoreService {
     private final FlowerUserRepository flowerUserRepository;
     private final RollingItemRepository rollingItemRepository;
     private final RollingUserRepository rollingUserRepository;
+    private final UserRepository userRepository;
     private final S3FileUpload s3FileUpload;
 
     /* 꽃 아이템 조회 */
@@ -98,7 +96,7 @@ public class StoreServiceImpl implements StoreService {
     public void buyFlowerItem(User user, FlowerReqDto flowerReqDto) {
         FlowerItem flowerItem = flowerItemRepository.findById(flowerReqDto.getFlowerId())
                 .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-
+        user.updatePoint(user.getPoints() - flowerItem.getPoint());
         flowerUserRepository.save(FlowerUser.addFlowerUser(user, flowerItem));
     }
 
@@ -107,7 +105,7 @@ public class StoreServiceImpl implements StoreService {
     public void buyRollingItem(User user, RollingReqDto rollingReqDto) {
         RollingItem rollingItem = rollingItemRepository.findById(rollingReqDto.getRollingId())
                 .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-
+        user.updatePoint(user.getPoints() - rollingItem.getPoint());
         rollingUserRepository.save(RollingUser.addRollingUser(user, rollingItem));
     }
 }
