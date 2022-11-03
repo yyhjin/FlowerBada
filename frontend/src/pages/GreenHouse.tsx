@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import styled from '@emotion/styled';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
 import { css } from '@emotion/react';
+import { Grid } from '@mui/material';
 
 interface IRolling {
   url: string;
@@ -71,6 +71,28 @@ export default function GreenHouse() {
       // console.log(err);
     }
   }
+  async function addRollings(sort: number): Promise<void> {
+    setLoading(false);
+    setTab('내가 만든 꽃다발'); //내가 만든 쿠키
+    setTabNum(1);
+    try {
+      const params = { sort: sort, paginationId: paginationId };
+      const res: any = await axios.get(
+        `http://localhost:8080/api/v1/greenhouse/sent`,
+        {
+          headers: {
+            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
+          },
+          params,
+        },
+      );
+      console.log(rollings.concat(res.data.response));
+      setRollings(res.data.response);
+      setLoading(true);
+    } catch (err: any) {
+      // console.log(err);
+    }
+  }
 
   function handleRollingPaper(url: string): void {
     navigate(`/rolling/${url}/1`);
@@ -78,13 +100,43 @@ export default function GreenHouse() {
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSort(+event.target.value);
-    setPaginationId(1);
+    setPaginationId(0);
     if (tabNum === 1) {
       getRollings(+event.target.value);
     } else {
       getBookmarks(+event.target.value);
     }
   };
+
+  const handleScroll = useCallback((): void => {
+    const { innerHeight } = window;
+    const scrollHeight = document.querySelector('.gridlist')?.scrollHeight;
+    const scrollTop = document.querySelector('.gridlist')?.scrollTop;
+
+    if (
+      scrollTop &&
+      scrollHeight &&
+      Math.round(scrollTop + innerHeight) >= scrollHeight
+    ) {
+      if (tabNum === 1) {
+        getRollings(sort);
+      } else {
+        getBookmarks(sort);
+      }
+    }
+  }, [paginationId, rollings]);
+
+  useEffect(() => {
+    // scroll event listener 등록
+    const event = document.querySelector('.gridlist');
+    if (event) {
+      event.addEventListener('scroll', handleScroll);
+      return () => {
+        // scroll event listener 해제
+        event.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [handleScroll]);
 
   return (
     <>
@@ -124,7 +176,7 @@ export default function GreenHouse() {
       ) : (
         <div> 로딩중 </div>
       )}
-      <div css={BoxList}>
+      {/* <div css={BoxList}>
         {rollings.map((rolling: IRolling, index: number) => {
           return (
             <div css={Box} key={rolling.url}>
@@ -140,7 +192,18 @@ export default function GreenHouse() {
             </div>
           );
         })}
-      </div>
+      </div> */}
+      <Grid container columns={8} css={GridList} className="gridlist">
+        {rollings.map((rolling: IRolling, index: number) => (
+          <Grid xs={4} item key={index}>
+            <div css={GridItem} onClick={() => handleRollingPaper(rolling.url)}>
+              <img className="rolling_img" src={rolling.imgUrl} />
+              <div className="rolling_title">{rolling.title}</div>
+              <div className="rolling_date">({rolling.date})</div>
+            </div>
+          </Grid>
+        ))}
+      </Grid>
     </>
   );
 }
@@ -184,6 +247,27 @@ const MainTab = css`
   }
 `;
 
+const GridList = css`
+  width: 80%;
+  height: 60%;
+  overflow: scroll;
+  margin: 30px auto;
+  border-radius: 15px;
+`;
+
+const GridItem = css`
+  position: relative;
+
+  .rolling_title {
+    font-size: 10px;
+    font-family: 'GowunDodum-Regular';
+  }
+  .rolling_date {
+    font-size: 10px;
+    font-family: 'GowunDodum-Regular';
+  }
+`;
+
 const SelectBtn = css`
   display: flex;
   justify-content: end;
@@ -193,25 +277,4 @@ const SelectBtn = css`
     margin-top: 0;
     border: 1px solid black;
   }
-`;
-
-const BoxList = css`
-  display: flex;
-`;
-
-const Box = css`
-  justify-content: space-between;
-  margin-left: auto;
-  margin-right: auto;
-  width: 600px;
-  height: 300px;
-`;
-
-const ImageBox = css`
-  width: 100px;
-`;
-
-const InfoBox = css`
-  width: 100px;
-  text-align: center;
 `;
