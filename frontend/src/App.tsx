@@ -18,6 +18,8 @@ import Link from '@pages/CreateRollingPaper/RollingLink';
 import RollingPaper from '@pages/RollingPaper';
 import Layout from '@pages/Layout';
 import SignIn from '@pages/SignIn';
+import MessageRead from '@pages/MessageRead';
+import MessageCreate from '@pages/MessageCreate';
 
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
@@ -54,6 +56,19 @@ function App() {
                   path="rolling/:url/:paginationId"
                   element={<RollingPaper />}
                 ></Route>
+
+                <Route path="/payment" element={<KakaoPaymentTest />} />
+                <Route path="/payment/success" element={<PaymentSuccess />} />
+                <Route path="/payment/fail" element={<PaymentFail />} />
+                <Route path="/payment/cancel" element={<PaymentCancel />} />
+                <Route
+                  path="/rollingpaper/message/read"
+                  element={<MessageRead />}
+                />
+                <Route
+                  path="/rollingpaper/message/create"
+                  element={<MessageCreate />}
+                />
               </Route>
             </>
           )}
