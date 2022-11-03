@@ -1,5 +1,5 @@
-import menuIcon from '../../img/Menu.png';
-import backArrow from '../../img/backArrow.png';
+import menuIcon from '@assets/Menu.png';
+import backArrow from '@assets/backArrow.png';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { useState } from 'react';

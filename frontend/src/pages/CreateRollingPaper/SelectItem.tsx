@@ -32,7 +32,7 @@ export default function SelectItem() {
           },
         },
       );
-      // console.log(res.data.response);
+      console.log(res.data.response);
       setItems(res.data.response);
       if (createRollingState.url === '') {
         setCreateRollingState((prev: IcreateRollingRecoil) => {
@@ -60,7 +60,7 @@ export default function SelectItem() {
       return variable;
     });
   };
-  const cnatSelect = (): void => {
+  const cantSelect = (): void => {
     alert('이건 돈 내고 사서 써야 됨!');
   };
   useEffect(() => {
@@ -72,7 +72,7 @@ export default function SelectItem() {
       <div>
         {loading ? (
           <div>
-            <div>{createRollingState.url}</div>
+            <img src={createRollingState.url} />
             <div>
               {items.map((item: IItem, index) => {
                 return (
@@ -85,7 +85,7 @@ export default function SelectItem() {
                       </div>
                     ) : (
                       <div>
-                        <li onClick={cnatSelect} id={String(index)}>
+                        <li onClick={cantSelect} id={String(index)}>
                           {item.imgUrl}
                         </li>
                       </div>

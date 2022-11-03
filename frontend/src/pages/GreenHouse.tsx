@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useRecoilState } from 'recoil';
-import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 
 interface IRolling {
   url: string;

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { css } from '@emotion/react';
-import kakaoLogo from '../img/kakaoTalk.png';
+import kakaoLogo from '@assets/kakaoTalk.png';
 
 export default function SignIn() {
   const handleLogin = async () => {
