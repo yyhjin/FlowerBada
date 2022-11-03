@@ -10,6 +10,7 @@ import {
   IcreateRollingRecoil,
   createRollingRecoil,
 } from '@recoil/createRollingRecoil';
+import { css } from '@emotion/react';
 
 export default function SetOpenDate() {
   const today = new Date();
@@ -73,20 +74,54 @@ export default function SetOpenDate() {
   };
   return (
     <>
-      <div>날짜 선택</div>
       <div>
-        <DatePicker
-          locale={ko} // 언어설정 기본값은 영어
-          dateFormat="yyyy-MM-dd" // 날짜 형식 설정
-          className="input-datepicker" // 클래스 명 지정 css주기 위해
-          minDate={tomorrow} // 선택할 수 있는 최소 날짜값 지정 오늘 +1
-          closeOnScroll={true} // 스크롤을 움직였을 때 자동으로 닫히도록 설정 기본값 false
-          placeholderText="롤링페이퍼 개봉 날짜 선택" // placeholder
-          selected={date} // value
-          onChange={(date: Date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
-        />
+        <div css={Info}>
+          롤링페이퍼 개봉 날짜를 <br />
+          선택해주세요
+        </div>
+        <div css={Background}>
+          <DatePicker
+            css={Calendar}
+            locale={ko} // 언어설정 기본값은 영어
+            dateFormat="yyyy-MM-dd" // 날짜 형식 설정
+            className="input-datepicker" // 클래스 명 지정 css주기 위해
+            minDate={tomorrow} // 선택할 수 있는 최소 날짜값 지정 오늘 +1        \
+            popperPlacement="auto" // 화면 중앙에 팝업이 뜨도록
+            closeOnScroll={true} // 스크롤을 움직였을 때 자동으로 닫히도록 설정 기본값 false
+            placeholderText="롤링페이퍼 개봉 날짜 선택" // placeholder
+            selected={date} // value
+            onChange={(date: Date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
+          />
+        </div>
+        <button onClick={handleRollingLink} css={CreateButton}>
+          롤페 생성
+        </button>
       </div>
-      <button onClick={handleRollingLink}>롤페 생성</button>
     </>
   );
 }
+
+const Background = css`
+  width: 100vw;
+`;
+
+const Info = css`
+  margin-top: 30vh;
+  font-size: 6vw;
+  font-weight: bold;
+`;
+
+const Calendar = css`
+  margin-top: 5vh;
+  text-align: center;
+`;
+
+const CreateButton = css`
+  margin-top: 43vh;
+  height: 7vh;
+  width: 94vw;
+  border-radius: 3vw;
+  color: white;
+  font-size: 4vw;
+  background-color: #16453e;
+`;

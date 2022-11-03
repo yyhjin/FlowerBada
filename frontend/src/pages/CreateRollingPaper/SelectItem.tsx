@@ -8,6 +8,7 @@ import {
   createRollingRecoil,
 } from '@recoil/createRollingRecoil';
 import rollingImgItem from '@assets/fixed-size/rolling/rollingImgItem';
+import ItemLocked from '@assets/itemLocked.png';
 import { css } from '@emotion/react';
 import Coin from '@assets/coin.png';
 
@@ -24,7 +25,7 @@ export default function SelectItem() {
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const [createRollingState, setCreateRollingState] =
     useRecoilState<IcreateRollingRecoil>(createRollingRecoil);
-  const [rollingImg, setRollingImg] = useState<string>(rollingImgItem[0].img);
+  const [rollingImg, setRollingImg] = useState<string>(createRollingState.url);
   async function getItems(): Promise<void> {
     setLoading(false);
     try {
@@ -39,11 +40,12 @@ export default function SelectItem() {
       // console.log(res.data.response);
       setItems(res.data.response);
       if (createRollingState.url === '') {
+        setRollingImg(rollingImgItem[0].img);
         setCreateRollingState((prev: IcreateRollingRecoil) => {
           const variable = { ...prev };
           variable.itemId = res.data.response[0].rollingId;
           variable.itemIndex = 0;
-          variable.url = res.data.response[0].imgUrl;
+          variable.url = rollingImgItem[0].img;
           return variable;
         });
       }
@@ -60,9 +62,10 @@ export default function SelectItem() {
       const variable = { ...prev };
       variable.itemId = items[e.target.id].rollingId;
       variable.itemIndex = e.target.id;
-      variable.url = items[e.target.id].imgUrl;
+      variable.url = rollingImgItem[e.target.id].img;
       return variable;
     });
+    setRollingImg(rollingImgItem[e.target.id].img);
   };
   const cantSelect = (): void => {
     alert('이건 돈 내고 사서 써야 됨!');
@@ -95,11 +98,16 @@ export default function SelectItem() {
                         </div>
                       ) : (
                         <div css={NotOwnedItem}>
-                          <div></div>
+                          <img
+                            src={ItemLocked}
+                            css={Locked}
+                            onClick={cantSelect}
+                          ></img>
                           <img
                             src={rollingImgItem[index].img}
                             onClick={cantSelect}
                             id={String(index)}
+                            css={NotOwnedItemImg}
                           />
                         </div>
                       )}
@@ -113,7 +121,9 @@ export default function SelectItem() {
           '로딩중'
         )}
       </div>
-      <button onClick={handleSetTitle}>제목 정하기</button>
+      <button onClick={handleSetTitle} css={NextButton}>
+        다음
+      </button>
     </>
   );
 }
@@ -149,11 +159,29 @@ const ItemZone = css`
 const OwnedItem = css`
   background-color: white;
   width: 25vw;
+  padding: 2vw;
 `;
 
 const NotOwnedItem = css`
-  img {
-    background-color: black;
-    width: 25vw;
-  }
+  padding: 2vw;
+`;
+
+const NotOwnedItemImg = css`
+  width: 25vw;
+  background-color: white;
+`;
+
+const NextButton = css`
+  margin-top: 3vh;
+  height: 7vh;
+  width: 94vw;
+  border-radius: 3vw;
+  color: white;
+  font-size: 4vw;
+  background-color: #16453e;
+`;
+
+const Locked = css`
+  position: absolute;
+  width: 25vw;
 `;
