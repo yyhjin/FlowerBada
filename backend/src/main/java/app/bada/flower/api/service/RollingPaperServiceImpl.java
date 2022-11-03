@@ -48,8 +48,6 @@ public class RollingPaperServiceImpl implements RollingPaperService {
 
     @Override
     public RollingPaper createRollingPaper(String token, RollingPaperReqDto rollingPaperReqDto) {
-//        int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
-//        User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         User user = userService.getUserByToken(token);
         Random random = new Random();
         int length = random.nextInt(5)+5;
@@ -110,7 +108,10 @@ public class RollingPaperServiceImpl implements RollingPaperService {
         rollingPaperResDto.setRollingId(rollingPaper.getId());
         rollingPaperResDto.setItemId(rollingPaper.getRollingPaperItem().getId());
         rollingPaperResDto.setCapacity(capacity);
+        rollingPaperResDto.setTotalMessages(messageList.size());
         rollingPaperResDto.setTitle(rollingPaper.getTitle());
+        rollingPaperResDto.setImgFront(rollingPaper.getRollingPaperItem().getImgFront());
+        rollingPaperResDto.setImgBack(rollingPaper.getRollingPaperItem().getImgBack());
         rollingPaperResDto.setImgUrl(s3FileUpload.File_Server_Url+rollingPaper.getRollingPaperItem().getImgUrl());
         rollingPaperResDto.setDate(rollingPaperResDto.changeDateToString(rollingPaper.getOpenDate()));
         rollingPaperResDto.setMessages(rollingMsgList);
