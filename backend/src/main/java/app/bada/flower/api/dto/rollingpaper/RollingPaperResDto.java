@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 public class RollingPaperResDto {
     private int rollingId;
+    private int itemId;
     private String title;
     private String imgUrl;
     private String date;
