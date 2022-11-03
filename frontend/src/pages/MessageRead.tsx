@@ -157,7 +157,7 @@ export default function MessageRead() {
               <div>
                 <DialogContent>
                   <div style={{ textAlign: 'center' }}>
-                    <img src={msg.imgUrl} width="60%"></img>
+                    <img src={'/src/assets/' + msg.imgUrl} width="60%"></img>
                   </div>
                   <DialogContentTextCustom>
                     <IconButton

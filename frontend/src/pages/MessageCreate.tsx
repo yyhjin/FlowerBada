@@ -64,7 +64,10 @@ export default function MessageCreate() {
       <div css={DetailBox}>
         {flowerId != 0 ? (
           <>
-            <img src={flowerList[flowerId - 1].imgUrl} height="60%"></img>
+            <img
+              src={'/src/assets/' + flowerList[flowerId - 1].imgUrl}
+              height="60%"
+            ></img>
             <div className={'FlowerContent'}>
               <div className="FlowerName">
                 <b>{flowerList[flowerId - 1].name}</b>
@@ -85,7 +88,7 @@ export default function MessageCreate() {
           <div css={FlowerItemBox}>
             {flowerList.map((flower, i) => (
               <img
-                src={flowerList[i].imgUrl}
+                src={'/src/assets/' + flowerList[i].imgUrl}
                 className="FlowerItem"
                 key={flower.flowerId}
                 onClick={() => changeFlower(flower.flowerId)}
