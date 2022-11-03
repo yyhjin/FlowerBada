@@ -47,18 +47,18 @@ export default function Header() {
     }
   };
 
+  const linkToMain = () => {
+    navigate('/');
+  };
   const linkToNewRoll = () => {
     navigate('/newroll');
   };
-
   const linkToGreenHouse = () => {
     navigate('/greenhouse');
   };
-
   const linkToStore = () => {
     navigate('/store');
   };
-
   const linkToMyPage = () => {
     navigate('/mypage');
   };
@@ -66,11 +66,21 @@ export default function Header() {
   return (
     <header css={HeaderNav}>
       <nav>
-        <a onClick={() => navigate(-1)} css={BackArrow}>
-          <img height="20px" width="20px" id="back" src={backArrow}></img>
-        </a>
+        {loginUser.jwt === '' ? null : (
+          <a onClick={() => navigate(-1)} css={BackArrow}>
+            <img height="20px" width="20px" id="back" src={backArrow}></img>
+          </a>
+        )}
         <span css={LogoName}>
-          <h3>꽃바다</h3>
+          {loginUser.jwt === '' ? (
+            <a href="#" css={MainLogo}>
+              <h3>꽃바다</h3>
+            </a>
+          ) : (
+            <a href="#" onClick={linkToMain} css={MainLogo}>
+              <h3>꽃바다</h3>
+            </a>
+          )}
         </span>
         <a
           href="#"
@@ -163,6 +173,10 @@ const HeaderNav = css`
     font: inherit;
     cursor: pointer;
   }
+`;
+
+const MainLogo = css`
+  text-decoration: none;
 `;
 
 const BackArrow = css`
