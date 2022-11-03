@@ -75,7 +75,7 @@ export default function MessageWrite(props: { flower: number }) {
   };
 
   return (
-    <>
+    <div css={Background}>
       <div css={WriteBox}>
         <div className="content-css">
           <textarea
@@ -97,12 +97,12 @@ export default function MessageWrite(props: { flower: number }) {
               onChange={changeWriter}
             ></input>
           </span>
-          <span style={{ float: 'right', fontSize: '11px' }}>
+          <div style={{ float: 'right', fontSize: '11px' }}>
             {msgLength}/200
-          </span>
+          </div>
         </div>
       </div>
-      <span style={{ fontSize: '2vh' }}>마음에 드는 글씨체를 선택하세요!</span>
+      <div style={{ fontSize: '2vh' }}>마음에 드는 글씨체를 선택하세요!</div>
       <div css={FontBox}>
         <ColorButton
           variant="contained"
@@ -195,7 +195,7 @@ export default function MessageWrite(props: { flower: number }) {
           </Button>
         </ThemeProvider>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -316,7 +316,7 @@ const WriteBox = css`
     .writer-input {
       border: 0px;
       width: 50%;
-      font-size: 1vh;
+      font-size: 1.5vh;
     }
   }
 `;
@@ -327,4 +327,9 @@ const FontBox = css`
   overflow-x: scroll;
   display: flex;
   flex-flow: nowrap;
+`;
+
+const Background = css`
+  width: 100vw;
+  height: 100%;
 `;
