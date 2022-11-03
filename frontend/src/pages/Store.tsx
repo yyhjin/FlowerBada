@@ -286,7 +286,7 @@ const GridStyle = css`
     width: 80px;
     height: 80px;
     position: absolute;
-    z-index: 1;
+    z-index: 0;
     opapcity: 35%;
   }
 `;
