@@ -14,7 +14,7 @@ public class MessageResDto {
         private String imgUrl;
         private String content;
         private String writer;
-        private int fontId;
+        private String font;
 
         // Entity -> DTO
         public MessageDto(Message message) {
@@ -23,17 +23,17 @@ public class MessageResDto {
             this.imgUrl = message.getFlowerItem().getImgUrl();
             this.content = message.getContent();
             this.writer = message.getWriter();
-            this.fontId = message.getFontId();
+            this.font = message.getFont();
         }
 
         // QueryDSL에서 사용하는 생성자
-        public MessageDto(int messageId, int flowerId, String imgUrl, String content, String writer, int fontId) {
+        public MessageDto(int messageId, int flowerId, String imgUrl, String content, String writer, String font) {
             this.messageId = messageId;
             this.flowerId = flowerId;
             this.imgUrl = imgUrl;
             this.content = content;
             this.writer = writer;
-            this.fontId = fontId;
+            this.font = font;
         }
     }
 

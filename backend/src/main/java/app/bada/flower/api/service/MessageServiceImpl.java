@@ -31,7 +31,7 @@ public class MessageServiceImpl implements MessageService{
                         .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND)))
                 .content(messageReq.getContent())
                 .writer(messageReq.getWriter())
-                .fontId(messageReq.getFontId())
+                .font(messageReq.getFont())
                 .build();
 
         return messageRepository.save(message);
