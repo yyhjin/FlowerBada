@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
-import MainGreenHouse from '@assets/main_greenhouse.png';
-import MainMyPage from '@assets/main_mypage.png';
-import MainNewRoll from '@assets/main_newroll.png';
-import MainStore from '@assets/main_store.png';
+import MainGreenHouse from '@assets/main_menu/main_greenhouse.png';
+import MainMyPage from '@assets/main_menu/main_mypage.png';
+import MainNewRoll from '@assets/main_menu/main_newroll.png';
+import MainStore from '@assets/main_menu/main_store.png';
 import LogoutBtn from '@assets/logout_btn.png';
 
 const Mainpage = () => {
@@ -92,8 +92,9 @@ const TestCSS = css`
 
   .main_title {
     font-family: 'GowunDodum-Regular';
-    height: 30vh;
-    margin: 0;
+    height: 100%;
+    margin-top: 30%;
+    padding: 4vh;
     font-size: 2rem;
     display: flex;
     align-items: center;
@@ -115,7 +116,7 @@ const TestCSS = css`
   }
 
   .main_menu {
-    overflow-y: auto;
+    /* overflow-y: auto; */
     height: 70vh;
 
     .first_row,
@@ -123,12 +124,13 @@ const TestCSS = css`
       display: flex;
       flex-direction: row;
       justify-content: center;
-      height: 200px;
-      padding: 1rem;
+      /* height: 50%; */
+      /* margin-top: 0; */
+      /* padding: 1rem; */
 
       img {
-        width: 100px;
-        height: 120px;
+        width: 70%;
+        height: 80%;
       }
 
       p {
@@ -145,36 +147,36 @@ const TestCSS = css`
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        width: 130px;
-        height: 200px;
+        /* width: 130px;
+        height: 200px; */
         padding: 1rem;
       }
 
       .greenhouse {
         img {
-          width: 120px;
-          height: 116px;
+          /* width: 120px;
+          height: 116px; */
         }
       }
 
       .store {
         img {
-          width: 125px;
-          height: 116px;
+          /* width: 125px;
+          height: 116px; */
         }
       }
 
       .newroll {
         img {
-          width: 90px;
-          height: 120px;
+          /* width: 90px;
+          height: 120px; */
         }
       }
 
       .mypage {
         img {
-          width: 77px;
-          height: 120px;
+          /* width: 77px;
+          height: 120px; */
         }
       }
 
