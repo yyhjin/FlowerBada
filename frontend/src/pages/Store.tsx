@@ -7,6 +7,7 @@ import Modal from '@src/components/store/BuyModal';
 import Receipt from '@src/components/store/Receipt';
 import { Grid } from '@mui/material';
 import itemLocked from '@src/img/itemLocked.png';
+import coin from '@assets/coin.png';
 
 interface FlowerItem {
   flowerId: number;
@@ -37,11 +38,15 @@ const Store = () => {
   const [buying, setBuying] = useState(false); // 구매하기 버튼 눌렀는지 여부
   const [flowerItemList, setFlowerItemList] = useState<FlowerItem[]>();
   const [rollingItemList, setRollingItemList] = useState<RollingItem[]>();
-  const [isFlower, setIsFlower] = useState(false); // 꽃다발이면 false, 꽃이면 true
+  const [isFlower, setIsFlower] = useState(false); // 탭이 꽃다발이면 false, 꽃이면 true
+  const [isFlowerSelected, setIsFlowerSelected] = useState<boolean>(false);
   const [imgList, setImgList] = useState<string[]>([]);
   const [selectedImg, setSelectedImg] = useState<string>();
   const [flowerName, setFlowerName] = useState<string>();
   const [flowerLanguage, setFlowerLanguage] = useState<string>();
+  const [price, setPrice] = useState<number>(0);
+  const [itemId, setItemId] = useState<number>(0);
+  const [owned, setOwned] = useState<boolean>(false);
 
   const handleBuying = () => {
     setBuying(true);
@@ -54,13 +59,21 @@ const Store = () => {
   };
   const toggleImg = (index: number) => {
     if (isFlower && flowerItemList) {
+      setIsFlowerSelected(true);
       setSelectedImg(flowerItemList[index].imgUrl);
       setFlowerName(flowerItemList[index].name);
       setFlowerLanguage(flowerItemList[index].flowerLanguage);
+      setPrice(flowerItemList[index].price);
+      setItemId(flowerItemList[index].flowerId);
+      setOwned(flowerItemList[index].isOwned);
     } else if (!isFlower && rollingItemList) {
+      setIsFlowerSelected(false);
       setSelectedImg(rollingItemList[index].imgUrl);
       setFlowerName('');
       setFlowerLanguage('');
+      setPrice(rollingItemList[index].price);
+      setItemId(rollingItemList[index].rollingId);
+      setOwned(rollingItemList[index].isOwned);
     }
   };
   const isOwned = (index: number): boolean => {
@@ -126,6 +139,10 @@ const Store = () => {
 
   return (
     <div css={StoreDiv}>
+      <div className="points">
+        <img src={coin} className="coin" />
+        <span>{loginUser.points}</span>
+      </div>
       <div css={SelectedImgDiv}>
         {selectedImg ? (
           <div>
@@ -136,51 +153,84 @@ const Store = () => {
         ) : null}
       </div>
       <div css={SelectBtn}>
-        <button onClick={setRolling}>꽃다발</button>
-        <button onClick={setFlower}>꽃</button>
+        {isFlower ? (
+          <div>
+            <button className="btn" onClick={setRolling}>
+              꽃다발
+            </button>
+            <button className="active_btn" onClick={setFlower}>
+              꽃
+            </button>
+          </div>
+        ) : (
+          <div>
+            <button className="active_btn" onClick={setRolling}>
+              꽃다발
+            </button>
+            <button className="btn" onClick={setFlower}>
+              꽃
+            </button>
+          </div>
+        )}
       </div>
       <div css={TEMP}></div>
       <Grid container columns={12} css={GridContainer}>
         {imgList.map((image: string, index: number) => (
           <Grid xs={4} item key={index}>
             {isOwned(index) ? (
-              <img
-                css={ItemImage}
-                src={image}
-                onClick={() => toggleImg(index)}
-              />
+              <div css={GridStyle}>
+                <img
+                  className="item_image"
+                  src={image}
+                  onClick={() => toggleImg(index)}
+                />
+              </div>
             ) : (
-              <img
-                css={ItemImageNotOwned}
-                src={image}
-                onClick={() => toggleImg(index)}
-              />
-              // <img
-              //   css={ItemImage}
-              //   src={image}
-              //   onClick={() => toggleImg(index)}
-              // />
-              // <img
-              //   css={ItemImage}
-              //   src={itemLocked}}
-              // />
+              <div css={GridStyle}>
+                <img className="item_image" src={image} />
+                <img
+                  className="locked_image"
+                  src={itemLocked}
+                  onClick={() => toggleImg(index)}
+                />
+              </div>
             )}
           </Grid>
         ))}
       </Grid>
       <div>
-        <button css={BuyButton} type="button" onClick={handleBuying}>
-          <span css={BuyText}>구매하기</span>
-        </button>
+        {selectedImg && !owned ? (
+          <button css={BuyButton} type="button" onClick={handleBuying}>
+            <span css={BuyText}>구매하기</span>
+          </button>
+        ) : null}
         {buying && (
-          <Modal closeModal={() => setBuying(!buying)} isFlower={isFlower}>
-            <Receipt />
+          <Modal
+            closeModal={() => setBuying(!buying)}
+            isFlower={isFlowerSelected}
+            itemId={itemId}
+            price={price}
+          >
+            <Receipt points={loginUser.points} price={price} />
           </Modal>
         )}
       </div>
     </div>
   );
 };
+
+const StoreDiv = css`
+  // margin-top: 70px;
+  .points {
+    float: right;
+    margin-right: 20px;
+  }
+  .coin {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+`;
 
 const TEMP = css`
   margin: 20px;
@@ -197,7 +247,16 @@ const SelectedImgDiv = css`
 `;
 
 const SelectBtn = css`
-  button {
+  .btn {
+    position: relative;
+    top: 25px;
+    border-radius: 15px;
+    border: 1px solid transparent;
+    background-color: #f2f0ef;
+    width: 170px;
+    height: 40px;
+  }
+  .active_btn {
     position: relative;
     top: 25px;
     border-radius: 15px;
@@ -205,7 +264,6 @@ const SelectBtn = css`
     background-color: white;
     width: 170px;
     height: 40px;
-    z-index: 0;
   }
 `;
 
@@ -218,21 +276,21 @@ const GridContainer = css`
   border-radius: 15px;
 `;
 
-const ItemImage = css`
-  width: 80px;
-  height: 80px;
-`;
+const GridStyle = css`
+  position: relative;
 
-const ItemImageNotOwned = css`
-  width: 80px;
-  height: 80px;
-  background-color: gray;
-  // background-image: url('@src/img/itemLocked.png');
-  // background-size: cover;
-`;
-
-const StoreDiv = css`
-  // margin-top: 70px;
+  .item_image {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+  }
+  .locked_image {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    z-index: 1;
+    opapcity: 35%;
+  }
 `;
 
 const BuyButton = css`

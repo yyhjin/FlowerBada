@@ -1,11 +1,10 @@
+import { css } from '@emotion/react';
 import { IuserRecoil, userReCoil } from '@src/recoil/userRecoil';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
 
-import './BuyModal.css';
-
 export default function Modal(props: any) {
-  const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
+  const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
   console.log(props.isFlower);
 
   function closeModal() {
@@ -15,14 +14,18 @@ export default function Modal(props: any) {
   const buyFunction = async () => {
     try {
       if (props.isFlower) {
-        const data: any = [];
+        const data: any = {
+          flowerId: props.itemId,
+        };
         await axios.put('http://localhost:8080/api/v1/store/buy/flower', data, {
           headers: {
             'X-AUTH-TOKEN': `Bearer ${loginUser.jwt}`,
           },
         });
       } else {
-        const data: any = [];
+        const data: any = {
+          rollingId: props.itemId,
+        };
         await axios.put(
           'http://localhost:8080/api/v1/store/buy/rolling',
           data,
@@ -33,20 +36,84 @@ export default function Modal(props: any) {
           },
         );
       }
+
+      const res = await axios.get('http://localhost:8080/api/v1/user/points', {
+        headers: {
+          'X-AUTH-TOKEN': `Bearer ${loginUser.jwt}`,
+        },
+      });
+      const points: number = res.data.response.points;
+      setLoginUser((prev: IuserRecoil) => {
+        const variable = { ...prev };
+        variable.points = points;
+        return variable;
+      });
+      alert('결제 완료!');
+      window.location.href = '/store';
     } catch (err: any) {
       console.log(err);
     }
   };
 
   return (
-    <div className="Modal" onClick={closeModal}>
-      <div className="modalBody" onClick={(e) => e.stopPropagation()}>
-        <button id="modalCloseBtn" onClick={closeModal}>
-          ✖
-        </button>
-        {props.children}
-        <button onClick={buyFunction}>확인</button>
+    <div css={ModalCss}>
+      <div className="Modal" onClick={closeModal}>
+        <div className="modalBody" onClick={(e) => e.stopPropagation()}>
+          <button id="modalCloseBtn" onClick={closeModal}>
+            ✖
+          </button>
+          {props.children}
+          {loginUser.points >= props.price ? (
+            <button onClick={buyFunction}>구매</button>
+          ) : (
+            <div>
+              <strong>포인트가 부족합니다!</strong>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 }
+
+const ModalCss = css`
+  /* modal창 외부화면 */
+  .Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* modal창 */
+  .modalBody {
+    position: absolute;
+    width: 300px;
+    height: 400px;
+    padding: 40px;
+    text-align: center;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+    z-index: 3;
+  }
+
+  #modalCloseBtn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border: none;
+    color: rgba(0, 0, 0, 0.7);
+    background-color: transparent;
+    font-size: 20px;
+  }
+
+  #modalCloseBtn:hover {
+    cursor: pointer;
+  }
+`;

@@ -1,7 +1,10 @@
-export default function Receipt() {
+export default function Receipt(props: any) {
   return (
     <div>
-      <strong>결제 정보 화면입니다.</strong>
+      <div>보유 포인트 : {props.points}</div>
+      <div>결제 금액 : {props.price}</div>
+      <div>------------------</div>
+      <div>결제 후 포인트 : {props.points - props.price}</div>
     </div>
   );
 }
