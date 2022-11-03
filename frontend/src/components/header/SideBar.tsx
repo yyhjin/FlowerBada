@@ -45,23 +45,20 @@ const SideBar = (props: any) => {
       <div css={sideBlock(isOpen)}>
         <img src={closeBtn} css={close} onClick={test} />
         <div css={menus}>
-          <a css={menuBtn} href="/mypage">
-            마이페이지
-          </a>
-          <a css={menuBtn} href="/">
-            홈
+          <a css={menuBtn} href="/newroll">
+            새로 만들기
           </a>
           <a css={menuBtn} href="/greenhouse">
             그린하우스
           </a>
           <a css={menuBtn} href="/store">
-            상점
+            꽃가게
           </a>
-          <a css={menuBtn} href="/newroll">
-            새로 만들기
+          <a css={menuBtn} href="/mypage">
+            마이페이지
           </a>
           <a css={menuBtn} href="#" onClick={logout}>
-            로그아웃
+            <span className="logout_text">로그아웃</span>
           </a>
         </div>
       </div>
@@ -78,7 +75,7 @@ const sideBlock = (isOpen: boolean) => css`
   top: 0px;
   height: 100pc;
   float: right;
-  right: -50%;
+  left: 100%;
   transition: 0.5s;
   transform: ${isOpen ? 'translateX(-100%)' : ''};
   z-index: 500;
@@ -99,6 +96,10 @@ const menus = css`
   flex-direction: column;
   margin-top: 5pc;
   z-index: 600;
+
+  .logout_text {
+    color: red;
+  }
 `;
 
 const menuBtn = css`
