@@ -48,8 +48,6 @@ public class RollingPaperServiceImpl implements RollingPaperService {
 
     @Override
     public RollingPaper createRollingPaper(String token, RollingPaperReqDto rollingPaperReqDto) {
-//        int userId = jwtTokenUtil.getUserId(token.split(" ")[1]);
-//        User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         User user = userService.getUserByToken(token);
         Random random = new Random();
         int length = random.nextInt(5)+5;
@@ -96,19 +94,24 @@ public class RollingPaperServiceImpl implements RollingPaperService {
         RollingPaperResDto rollingPaperResDto = new RollingPaperResDto();
         RollingPaper rollingPaper = rollingPaperRepository.findByUrl(url).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
         List<Message> messageList = messageRepository.findAllByRollingPaper(rollingPaper);
-        if((messageList.size()-1)/10<paginationId-1){
+        int capacity = rollingPaper.getRollingPaperItem().getCapacity();
+        if((messageList.size()-1)/capacity<paginationId-1){
             return null;
         }
         List<MessageResDto.rollingMsgDto> rollingMsgList = new ArrayList<>();
-        int range = paginationId*10;
-        if(messageList.size()<paginationId*10) range = messageList.size();
+        int range = paginationId*capacity;
+        if(messageList.size()<paginationId*capacity) range = messageList.size();
 
-        for(int i= (paginationId-1)*10; i<range; i++){
+        for(int i= (paginationId-1)*capacity; i<range; i++){
             rollingMsgList.add(messageConverter.toRollingMsgDto(messageList.get(i)));
         }
         rollingPaperResDto.setRollingId(rollingPaper.getId());
         rollingPaperResDto.setItemId(rollingPaper.getRollingPaperItem().getId());
+        rollingPaperResDto.setCapacity(capacity);
+        rollingPaperResDto.setTotalMessages(messageList.size());
         rollingPaperResDto.setTitle(rollingPaper.getTitle());
+        rollingPaperResDto.setImgFront(rollingPaper.getRollingPaperItem().getImgFront());
+        rollingPaperResDto.setImgBack(rollingPaper.getRollingPaperItem().getImgBack());
         rollingPaperResDto.setImgUrl(s3FileUpload.File_Server_Url+rollingPaper.getRollingPaperItem().getImgUrl());
         rollingPaperResDto.setDate(rollingPaperResDto.changeDateToString(rollingPaper.getOpenDate()));
         rollingPaperResDto.setMessages(rollingMsgList);

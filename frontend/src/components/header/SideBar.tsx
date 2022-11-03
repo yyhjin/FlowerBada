@@ -75,7 +75,7 @@ const sideBlock = (isOpen: boolean) => css`
   top: 0px;
   height: 100pc;
   float: right;
-  right: -50%;
+  left: 100%;
   transition: 0.5s;
   transform: ${isOpen ? 'translateX(-100%)' : ''};
   z-index: 500;
