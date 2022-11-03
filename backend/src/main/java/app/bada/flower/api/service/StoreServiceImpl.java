@@ -11,9 +11,11 @@ import app.bada.flower.api.repository.FlowerItemRepository;
 import app.bada.flower.api.repository.FlowerUserRepository;
 import app.bada.flower.api.repository.RollingItemRepository;
 import app.bada.flower.api.repository.RollingUserRepository;
+import app.bada.flower.api.util.S3FileUpload;
 import app.bada.flower.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,7 @@ public class StoreServiceImpl implements StoreService {
     private final FlowerUserRepository flowerUserRepository;
     private final RollingItemRepository rollingItemRepository;
     private final RollingUserRepository rollingUserRepository;
+    private final S3FileUpload s3FileUpload;
 
     /* 꽃 아이템 조회 */
     public List<FlowerResDto> getFlowerList(User user) {
@@ -50,8 +53,8 @@ public class StoreServiceImpl implements StoreService {
             flowerResDto.setFlowerLanguage(f.getFlowerLanguage());
             flowerResDto.setSeason(f.getSeason());
             flowerResDto.setPrice(f.getPrice());
-            flowerResDto.setImgUrl(f.getImgUrl());
-            flowerResDto.setImgBud(f.getImgBud());
+            flowerResDto.setImgUrl(s3FileUpload.File_Server_Url+f.getImgUrl());
+            flowerResDto.setImgBud(s3FileUpload.File_Server_Url+f.getImgBud());
             if(f.getPoint() == 0) {
                 flowerResDto.setIsOwned(true);
             } else {
@@ -76,9 +79,9 @@ public class StoreServiceImpl implements StoreService {
             rollingResDto.setCapacity(r.getCapacity());
             rollingResDto.setPoint(r.getPoint());
             rollingResDto.setPrice(r.getPrice());
-            rollingResDto.setImgUrl(r.getImgUrl());
-            rollingResDto.setImgFront(r.getImgFront());
-            rollingResDto.setImgBack(r.getImgBack());
+            rollingResDto.setImgUrl(s3FileUpload.File_Server_Url+r.getImgUrl());
+            rollingResDto.setImgFront(s3FileUpload.File_Server_Url+r.getImgFront());
+            rollingResDto.setImgBack(s3FileUpload.File_Server_Url+r.getImgBack());
             if(r.getPoint() == 0) {
                 rollingResDto.setIsOwned(true);
             } else {
