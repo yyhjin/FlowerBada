@@ -37,6 +37,7 @@ export default function SignIn() {
 
 const DefaultColor = css`
   background-color: #f2f0ef;
+  width: 100vw;
 `;
 
 const Kkotbada = css`

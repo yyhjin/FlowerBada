@@ -8,6 +8,8 @@ import {
   createRollingRecoil,
 } from '@recoil/createRollingRecoil';
 import rollingImgItem from '@assets/fixed-size/rolling/rollingImgItem';
+import { css } from '@emotion/react';
+import Coin from '@assets/coin.png';
 
 interface IItem {
   rollingId: number;
@@ -18,11 +20,11 @@ interface IItem {
 export default function SelectItem() {
   const navigate = useNavigate();
   const [items, setItems] = useState<IItem[]>([]);
-  const [loading, setLoading] = useState<Boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const [createRollingState, setCreateRollingState] =
     useRecoilState<IcreateRollingRecoil>(createRollingRecoil);
-  const [rollingImg, setRollingImg] = useState<String>(rollingImgItem[0].img);
+  const [rollingImg, setRollingImg] = useState<string>(rollingImgItem[0].img);
   async function getItems(): Promise<void> {
     setLoading(false);
     try {
@@ -62,7 +64,7 @@ export default function SelectItem() {
       return variable;
     });
   };
-  const cnatSelect = (): void => {
+  const cantSelect = (): void => {
     alert('이건 돈 내고 사서 써야 됨!');
   };
   useEffect(() => {
@@ -70,33 +72,43 @@ export default function SelectItem() {
   }, []);
   return (
     <>
-      <div>템 선택</div>
-      <div>
+      <div css={Background}>
         {loading ? (
-          <div>
-            <div>{rollingImg}</div>
-            <div>
-              {items.map((item: IItem, index) => {
-                return (
-                  <ul key={item.rollingId}>
-                    {item.isOwned === true ? (
-                      <div>
-                        <li onClick={select} id={String(index)}>
-                          {item.imgUrl}
-                        </li>
-                      </div>
-                    ) : (
-                      <div>
-                        <li onClick={cnatSelect} id={String(index)}>
-                          {item.imgUrl}
-                        </li>
-                      </div>
-                    )}
-                  </ul>
-                );
-              })}
+          <>
+            <div css={Point}>
+              <img src={Coin} css={PointImg} /> {userState.points}P
             </div>
-          </div>
+            <div>
+              <img src={rollingImg} alt="선택한 꽃 사진" css={SelectImage} />
+              <div css={ItemZone}>
+                {items.map((item: IItem, index) => {
+                  return (
+                    <div key={item.rollingId}>
+                      {item.isOwned === true ? (
+                        <div>
+                          <img
+                            src={rollingImgItem[index].img}
+                            onClick={select}
+                            id={String(index)}
+                            css={OwnedItem}
+                          />
+                        </div>
+                      ) : (
+                        <div css={NotOwnedItem}>
+                          <div></div>
+                          <img
+                            src={rollingImgItem[index].img}
+                            onClick={cantSelect}
+                            id={String(index)}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </>
         ) : (
           '로딩중'
         )}
@@ -105,3 +117,43 @@ export default function SelectItem() {
     </>
   );
 }
+
+const Background = css`
+  width: 100vw;
+`;
+
+const Point = css`
+  text-align: right;
+  margin-top: 6vh;
+  margin-right: 6vw;
+`;
+
+const PointImg = css`
+  width: 3vw;
+`;
+
+const SelectImage = css`
+  margin-top: 2vh;
+  margin-bottom: 3vh;
+  width: 40vw;
+`;
+
+const ItemZone = css`
+  background-color: white;
+  margin: 3vw;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`;
+
+const OwnedItem = css`
+  background-color: white;
+  width: 25vw;
+`;
+
+const NotOwnedItem = css`
+  img {
+    background-color: black;
+    width: 25vw;
+  }
+`;

@@ -37,9 +37,9 @@ const HeaderNav = css`
   top: 0;
   left: 0;
   right: 0;
-  width: 450px;
-  max-width: 1280px;
-  height: 60px;
+  width: 100%;
+  max-width: 500px;
+  /* height: 10vh; */
   margin: 0 auto;
   background-color: #f2f0ef;
 
@@ -105,6 +105,6 @@ const coverUp = css`
   width: 50%;
   height: 100pc;
   float: right;
-  right: -50%;
+  left: 100%;
   z-index: 1000;
 `;
