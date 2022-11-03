@@ -14,7 +14,6 @@ public class FlowerResDto {
     String season;
     Integer price;
     String imgUrl;
-
     String imgBud;
     Boolean isOwned;
 

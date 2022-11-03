@@ -5,6 +5,12 @@ import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import CoinImg from '@assets/coin.png';
 
+interface IPoint {
+  name: string;
+  point: number;
+  createdDate: string;
+}
+
 export default function MyPointList() {
   const [pages, setPages] = useState(0);
   const [myPoint, setMyPoint] = useState(0);
@@ -89,7 +95,7 @@ export default function MyPointList() {
             <b>날짜</b>
           </div>
         </div>
-        {myPointList.map((point, index) => {
+        {myPointList.map((point: IPoint, index: number) => {
           return (
             <div className="pointbox" key={index}>
               <div className="listbox">{point.name} 구매</div>
@@ -115,37 +121,37 @@ const totalCSS = css`
   }
   .infobox {
     padding: 20px;
-  padding-top: 100px;
-  font-size: 30px;
-  text-align: left;
+    padding-top: 100px;
+    font-size: 30px;
+    text-align: left;
   }
   .pointbox {
     display: flex;
-  justify-content: space-between;
-  padding: 5px;
+    justify-content: space-between;
+    padding: 5px;
   }
-  .listbox{
+  .listbox {
     text-align: center;
-  margin: 10px;
-  width: 200px;
-  word-break: keep-all;
+    margin: 10px;
+    width: 200px;
+    word-break: keep-all;
   }
-  .titlebox{
+  .titlebox {
     padding: 20px;
-  text-align: left;
+    text-align: left;
   }
   .buttonbox {
     background-color: #b1bdbb;
-  margin: 3px;
-  width: 60px;
-  height: 30px;
-  font-size: 12px !important;
+    margin: 3px;
+    width: 60px;
+    height: 30px;
+    font-size: 12px !important;
   }
   .chargebox {
-    border: 1px solid
-  display: flex;
-  justify-content: flex-end;
-  float: right;
+    border: 1px solid;
+    display: flex;
+    justify-content: flex-end;
+    float: right;
   }
   .imgcss {
     transform: rotate(30deg);
