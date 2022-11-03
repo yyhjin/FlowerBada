@@ -99,7 +99,7 @@ const ModalCss = css`
     background-color: rgb(255, 255, 255);
     border-radius: 10px;
     box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
-    z-index: 3;
+    z-index: 1;
   }
 
   #modalCloseBtn {
