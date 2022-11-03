@@ -1,7 +1,318 @@
-import React from 'react';
+import { css } from '@emotion/react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import Modal from '@src/components/store/BuyModal';
+import Receipt from '@src/components/store/Receipt';
+import { Grid } from '@mui/material';
+import itemLocked from '@src/img/itemLocked.png';
+import coin from '@assets/coin.png';
+
+interface FlowerItem {
+  flowerId: number;
+  name: string;
+  point: number;
+  flowerLanguage: string;
+  season: string;
+  price: number;
+  imgUrl: string;
+  imgBud: string;
+  isOwned: boolean;
+}
+
+interface RollingItem {
+  rollingId: number;
+  name: string;
+  capacity: number;
+  point: number;
+  price: number;
+  imgUrl: string;
+  imgFront: string;
+  imgBack: string;
+  isOwned: boolean;
+}
 
 const Store = () => {
-  return <div>Store</div>;
+  const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
+  const [buying, setBuying] = useState(false); // 구매하기 버튼 눌렀는지 여부
+  const [flowerItemList, setFlowerItemList] = useState<FlowerItem[]>();
+  const [rollingItemList, setRollingItemList] = useState<RollingItem[]>();
+  const [isFlower, setIsFlower] = useState(false); // 탭이 꽃다발이면 false, 꽃이면 true
+  const [isFlowerSelected, setIsFlowerSelected] = useState<boolean>(false);
+  const [imgList, setImgList] = useState<string[]>([]);
+  const [selectedImg, setSelectedImg] = useState<string>();
+  const [flowerName, setFlowerName] = useState<string>();
+  const [flowerLanguage, setFlowerLanguage] = useState<string>();
+  const [price, setPrice] = useState<number>(0);
+  const [itemId, setItemId] = useState<number>(0);
+  const [owned, setOwned] = useState<boolean>(false);
+
+  const handleBuying = () => {
+    setBuying(true);
+  };
+  const setRolling = () => {
+    setIsFlower(false);
+  };
+  const setFlower = () => {
+    setIsFlower(true);
+  };
+  const toggleImg = (index: number) => {
+    if (isFlower && flowerItemList) {
+      setIsFlowerSelected(true);
+      setSelectedImg(flowerItemList[index].imgUrl);
+      setFlowerName(flowerItemList[index].name);
+      setFlowerLanguage(flowerItemList[index].flowerLanguage);
+      setPrice(flowerItemList[index].price);
+      setItemId(flowerItemList[index].flowerId);
+      setOwned(flowerItemList[index].isOwned);
+    } else if (!isFlower && rollingItemList) {
+      setIsFlowerSelected(false);
+      setSelectedImg(rollingItemList[index].imgUrl);
+      setFlowerName('');
+      setFlowerLanguage('');
+      setPrice(rollingItemList[index].price);
+      setItemId(rollingItemList[index].rollingId);
+      setOwned(rollingItemList[index].isOwned);
+    }
+  };
+  const isOwned = (index: number): boolean => {
+    if (isFlower && flowerItemList && flowerItemList[index]) {
+      if (flowerItemList[index].isOwned) return true;
+    } else if (!isFlower && rollingItemList && rollingItemList[index]) {
+      if (rollingItemList[index].isOwned) return true;
+    }
+    return false;
+  };
+
+  function updateImgList() {
+    let tmp: string[] = [];
+    if (isFlower && flowerItemList) {
+      flowerItemList.map((item: FlowerItem): void => {
+        tmp.push(item.imgUrl);
+      });
+    } else if (rollingItemList) {
+      rollingItemList.map((item: RollingItem): void => {
+        tmp.push(item.imgUrl);
+      });
+    }
+    setImgList(tmp);
+  }
+
+  // 탭 바뀔 때마다 해당하는 품목 리스트 가져오기
+  useEffect(() => {
+    if (isFlower) {
+      axios
+        .get('http://localhost:8080/api/v1/store/flower', {
+          headers: {
+            'X-AUTH-TOKEN': `Bearer ${loginUser.jwt}`,
+          },
+        })
+        .then((res: any) => {
+          setFlowerItemList(res.data.response);
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
+    } else {
+      axios
+        .get('http://localhost:8080/api/v1/store/rolling', {
+          headers: {
+            'X-AUTH-TOKEN': `Bearer ${loginUser.jwt}`,
+          },
+        })
+        .then((res: any) => {
+          setRollingItemList(res.data.response);
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
+    }
+  }, [isFlower]);
+
+  // 품목 리스트 가져오면 이미지 배열 갱신
+  useEffect(() => {
+    updateImgList();
+  }, [flowerItemList, rollingItemList]);
+
+  return (
+    <div css={StoreDiv}>
+      <div className="points">
+        <img src={coin} className="coin" />
+        <span>{loginUser.points}</span>
+      </div>
+      <div css={SelectedImgDiv}>
+        {selectedImg ? (
+          <div>
+            <img src={selectedImg} />
+            <div>{flowerName}</div>
+            <div>{flowerLanguage}</div>
+          </div>
+        ) : null}
+      </div>
+      <div css={SelectBtn}>
+        {isFlower ? (
+          <div>
+            <button className="btn" onClick={setRolling}>
+              꽃다발
+            </button>
+            <button className="active_btn" onClick={setFlower}>
+              꽃
+            </button>
+          </div>
+        ) : (
+          <div>
+            <button className="active_btn" onClick={setRolling}>
+              꽃다발
+            </button>
+            <button className="btn" onClick={setFlower}>
+              꽃
+            </button>
+          </div>
+        )}
+      </div>
+      <div css={TEMP}></div>
+      <Grid container columns={12} css={GridContainer}>
+        {imgList.map((image: string, index: number) => (
+          <Grid xs={4} item key={index}>
+            {isOwned(index) ? (
+              <div css={GridStyle}>
+                <img
+                  className="item_image"
+                  src={image}
+                  onClick={() => toggleImg(index)}
+                />
+              </div>
+            ) : (
+              <div css={GridStyle}>
+                <img className="item_image" src={image} />
+                <img
+                  className="locked_image"
+                  src={itemLocked}
+                  onClick={() => toggleImg(index)}
+                />
+              </div>
+            )}
+          </Grid>
+        ))}
+      </Grid>
+      <div>
+        {selectedImg && !owned ? (
+          <button css={BuyButton} type="button" onClick={handleBuying}>
+            <span css={BuyText}>구매하기</span>
+          </button>
+        ) : null}
+        {buying && (
+          <Modal
+            closeModal={() => setBuying(!buying)}
+            isFlower={isFlowerSelected}
+            itemId={itemId}
+            price={price}
+          >
+            <Receipt points={loginUser.points} price={price} />
+          </Modal>
+        )}
+      </div>
+    </div>
+  );
 };
+
+const StoreDiv = css`
+  // margin-top: 70px;
+  .points {
+    float: right;
+    margin-right: 20px;
+  }
+  .coin {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+`;
+
+const TEMP = css`
+  margin: 20px;
+`;
+
+const SelectedImgDiv = css`
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  div img {
+    width: 160px;
+    height: 160px;
+  }
+`;
+
+const SelectBtn = css`
+  .btn {
+    position: relative;
+    top: 25px;
+    border-radius: 15px;
+    border: 1px solid transparent;
+    background-color: #f2f0ef;
+    width: 170px;
+    height: 40px;
+  }
+  .active_btn {
+    position: relative;
+    top: 25px;
+    border-radius: 15px;
+    border: 1px solid transparent;
+    background-color: white;
+    width: 170px;
+    height: 40px;
+  }
+`;
+
+const GridContainer = css`
+  width: 340px;
+  height: 300px;
+  overflow: scroll;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 15px;
+`;
+
+const GridStyle = css`
+  position: relative;
+
+  .item_image {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+  }
+  .locked_image {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    z-index: 0;
+    opapcity: 35%;
+  }
+`;
+
+const BuyButton = css`
+  position: absolute;
+  left: 220px;
+  top: 560px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  background-color: #16453e;
+  width: 300px;
+`;
+
+const BuyText = css`
+  color: white;
+  font-size: 10px
+  margin-left: 30px;
+  margin-right: 30px;
+`;
 
 export default Store;

@@ -5,27 +5,47 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import SideBar from './SideBar';
 import hamburgerBtn from '@assets/hamburger.png';
+import { IuserRecoil, userReCoil } from '@src/recoil/userRecoil';
+import { useRecoilState } from 'recoil';
 
 export default function Header() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
 
   const slideLeft = () => {
     setIsOpen(!isOpen);
+  };
+  const linkToMain = () => {
+    navigate('/');
   };
 
   return (
     <header css={HeaderNav}>
       <nav>
-        <a onClick={() => navigate(-1)} css={BackArrow}>
-          <img height="20px" width="20px" id="back" src={backArrow}></img>
-        </a>
-        <span css={InlineBlock}>
-          <h3>꽃바다</h3>
+        {loginUser.jwt === '' ? null : (
+          <a onClick={() => navigate(-1)} css={BackArrow}>
+            <img id="back" src={backArrow}></img>
+          </a>
+        )}
+        <span css={LogoName}>
+          {loginUser.jwt === '' ? (
+            <a href="#" css={MainLogo}>
+              <h3>꽃바다</h3>
+            </a>
+          ) : (
+            <a href="#" onClick={linkToMain} css={MainLogo}>
+              <h3>꽃바다</h3>
+            </a>
+          )}
         </span>
-        <img src={hamburgerBtn} css={hamburger} onClick={slideLeft} />
-        <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
-        <div css={coverUp}></div>
+        {loginUser.jwt === '' ? null : (
+          <span>
+            <img src={hamburgerBtn} css={hamburger} onClick={slideLeft} />
+            <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
+            <div css={coverUp}></div>
+          </span>
+        )}
       </nav>
     </header>
   );
@@ -79,15 +99,28 @@ const HeaderNav = css`
     font: inherit;
     cursor: pointer;
   }
+
+  #back {
+    position: relative;
+    height: 20px;
+    width: 20px;
+    top: 15px;
+    left: 20px;
+  }
+`;
+
+const LogoName = css`
+  display: inline-block;
+  font-family: 'GowunDodum-Regular';
+`;
+
+const MainLogo = css`
+  text-decoration: none;
 `;
 
 const BackArrow = css`
   text-decoration: none;
   float: left;
-`;
-
-const InlineBlock = css`
-  display: inline-block;
 `;
 
 const hamburger = css`

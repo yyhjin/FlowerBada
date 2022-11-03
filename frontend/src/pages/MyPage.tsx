@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import MyDeliveryList from '@components/mypage/MyDeliveryList';
 import MyPointList from '@components/mypage/MyPointList';
