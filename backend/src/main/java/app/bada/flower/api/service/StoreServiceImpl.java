@@ -33,7 +33,6 @@ public class StoreServiceImpl implements StoreService {
     private final RollingItemRepository rollingItemRepository;
     private final RollingUserRepository rollingUserRepository;
     private final UserRepository userRepository;
-    private final S3FileUpload s3FileUpload;
 
     /* 꽃 아이템 조회 */
     public List<FlowerResDto> getFlowerList(User user) {
@@ -51,8 +50,8 @@ public class StoreServiceImpl implements StoreService {
             flowerResDto.setFlowerLanguage(f.getFlowerLanguage());
             flowerResDto.setSeason(f.getSeason());
             flowerResDto.setPrice(f.getPrice());
-            flowerResDto.setImgUrl(s3FileUpload.File_Server_Url+f.getImgUrl());
-            flowerResDto.setImgBud(s3FileUpload.File_Server_Url+f.getImgBud());
+            flowerResDto.setImgUrl(f.getImgUrl());
+            flowerResDto.setImgBud(f.getImgBud());
             if(f.getPoint() == 0) {
                 flowerResDto.setIsOwned(true);
             } else {
@@ -77,9 +76,9 @@ public class StoreServiceImpl implements StoreService {
             rollingResDto.setCapacity(r.getCapacity());
             rollingResDto.setPoint(r.getPoint());
             rollingResDto.setPrice(r.getPrice());
-            rollingResDto.setImgUrl(s3FileUpload.File_Server_Url+r.getImgUrl());
-            rollingResDto.setImgFront(s3FileUpload.File_Server_Url+r.getImgFront());
-            rollingResDto.setImgBack(s3FileUpload.File_Server_Url+r.getImgBack());
+            rollingResDto.setImgUrl(r.getImgUrl());
+            rollingResDto.setImgFront(r.getImgFront());
+            rollingResDto.setImgBack(r.getImgBack());
             if(r.getPoint() == 0) {
                 rollingResDto.setIsOwned(true);
             } else {
