@@ -15,6 +15,7 @@ import java.util.List;
 public class RollingPaperResDto {
     private int rollingId;
     private int itemId;
+    private int capacity;
     private String title;
     private String imgUrl;
     private String date;
