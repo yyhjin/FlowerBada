@@ -18,7 +18,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class S3FileUpload {
 
-    public final String File_Server_Url = "https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/";
+    @Value("${cloud.aws.s3.baseUrl}")
+    public String File_Server_Url;
     private final AmazonS3Client amazonS3Client;
     // 버킷 이름 동적 할당
     @Value("${cloud.aws.s3.bucket}")
