@@ -278,13 +278,6 @@ const MainButton = css`
   transform: translate(0, 50%);
 `;
 
-// const MainButton = css`
-//   width: 90%;
-//   margin-top: 15px;
-//   margin-bottom: 15px;
-//   border-radius: 10px;
-// `;
-
 const WriteBox = css`
   margin: 0 10vw 2vh 10vw;
   height: 30%;

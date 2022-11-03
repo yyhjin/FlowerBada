@@ -4,11 +4,11 @@ import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
 import { useRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
-import SendIcon from '@mui/icons-material/Send';
 import WbTwilight from '@mui/icons-material/WbTwilight';
 import CloseIcon from '@mui/icons-material/Close';
 import { createTheme } from '@mui/material/styles';
-import Alert from '@mui/material/Alert';
+import { ThemeProvider } from '@mui/material/styles';
+import { css } from '@emotion/react';
 
 import {
   Dialog,
@@ -19,56 +19,13 @@ import {
   Button,
   IconButton,
 } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-
-const theme = createTheme({
-  status: {
-    danger: '#e53e3e',
-  },
-  palette: {
-    primary: {
-      main: '#16453E',
-    },
-    neutral: {
-      main: '#B1BDBB',
-    },
-  },
-});
-
-declare module '@mui/material/styles' {
-  interface Theme {
-    status: {
-      danger: React.CSSProperties['color'];
-    };
-  }
-
-  interface Palette {
-    neutral: Palette['primary'];
-  }
-
-  interface PaletteOptions {
-    neutral: PaletteOptions['primary'];
-  }
-
-  interface PaletteColor {
-    darker?: string;
-  }
-  interface SimplePaletteColorOptions {
-    darker?: string;
-  }
-  interface ThemeOptions {
-    status: {
-      danger: React.CSSProperties['color'];
-    };
-  }
-}
 
 interface IMsg {
   messageId?: number;
   flowerId?: number;
   content?: string;
   writer?: string;
-  fontId?: number;
+  font?: string;
   imgUrl?: string;
 }
 
@@ -87,6 +44,8 @@ export default function MessageRead() {
       .then((res) => {
         setMsg(res.data.response);
         console.log(res.data.response);
+        document.getElementById('content')!.style.fontFamily =
+          res.data.response.font;
       })
       .catch((err) => {
         console.log(err);
@@ -177,7 +136,6 @@ export default function MessageRead() {
                       variant="contained"
                       color="primary"
                       size="small"
-                      // endIcon={<SendIcon />}
                       onClick={sendReport}
                     >
                       신고
@@ -199,31 +157,33 @@ export default function MessageRead() {
               <div>
                 <DialogContent>
                   <div style={{ textAlign: 'center' }}>
-                    <img src={msg.imgUrl} width="200px"></img>
+                    <img src={msg.imgUrl} width="60%"></img>
                   </div>
                   <DialogContentTextCustom>
                     <IconButton
+                      css={ReportButton}
                       color="error"
                       aria-aria-label="report"
-                      style={{ float: 'right' }}
                       onClick={(e) => changeReportModal(true)}
                     >
                       <WbTwilight />
                     </IconButton>
                     <br />
                     {/* 개행문자 적용 */}
-                    {String(msg.content)
-                      .split('\n')
-                      .map((line, index) => {
-                        return (
-                          <span key={index}>
-                            {line}
-                            <br />
-                          </span>
-                        );
-                      })}
-                    <br />
-                    FROM. {msg.writer}
+                    <div id="content">
+                      {String(msg.content)
+                        .split('\n')
+                        .map((line, index) => {
+                          return (
+                            <span key={index}>
+                              {line}
+                              <br />
+                            </span>
+                          );
+                        })}
+                      <br />
+                      FROM. {msg.writer}
+                    </div>
                   </DialogContentTextCustom>
                   <div style={{ float: 'right' }}>
                     <IconButton onClick={(e) => changeModal(false)}>
@@ -259,3 +219,49 @@ const DialogContentTextCustom = styled(DialogContentText)(() => ({
   width: '70%',
   margin: 'auto',
 }));
+
+const theme = createTheme({
+  status: {
+    danger: '#e53e3e',
+  },
+  palette: {
+    primary: {
+      main: '#16453E',
+    },
+    neutral: {
+      main: '#B1BDBB',
+    },
+  },
+});
+
+declare module '@mui/material/styles' {
+  interface Theme {
+    status: {
+      danger: React.CSSProperties['color'];
+    };
+  }
+
+  interface Palette {
+    neutral: Palette['primary'];
+  }
+
+  interface PaletteOptions {
+    neutral: PaletteOptions['primary'];
+  }
+
+  interface PaletteColor {
+    darker?: string;
+  }
+  interface SimplePaletteColorOptions {
+    darker?: string;
+  }
+  interface ThemeOptions {
+    status: {
+      danger: React.CSSProperties['color'];
+    };
+  }
+}
+
+const ReportButton = css`
+  float: right;
+`;
