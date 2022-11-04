@@ -46,7 +46,7 @@ const Store = () => {
   const [selectedImg, setSelectedImg] = useState<string>();
   const [flowerName, setFlowerName] = useState<string>();
   const [flowerLanguage, setFlowerLanguage] = useState<string>();
-  const [price, setPrice] = useState<number>(0);
+  const [point, setPoint] = useState<number>(0);
   const [itemId, setItemId] = useState<number>(0);
   const [owned, setOwned] = useState<boolean>(false);
 
@@ -65,7 +65,7 @@ const Store = () => {
       setSelectedImg(flowerImgItem[index].img);
       setFlowerName(flowerItemList[index].name);
       setFlowerLanguage(flowerItemList[index].flowerLanguage);
-      setPrice(flowerItemList[index].price);
+      setPoint(flowerItemList[index].point);
       setItemId(flowerItemList[index].flowerId);
       setOwned(flowerItemList[index].isOwned);
     } else if (!isFlower && rollingItemList) {
@@ -73,7 +73,7 @@ const Store = () => {
       setSelectedImg(rollingImgItem[index].img);
       setFlowerName('');
       setFlowerLanguage('');
-      setPrice(rollingItemList[index].price);
+      setPoint(rollingItemList[index].point);
       setItemId(rollingItemList[index].rollingId);
       setOwned(rollingItemList[index].isOwned);
     }
@@ -211,9 +211,9 @@ const Store = () => {
             closeModal={() => setBuying(!buying)}
             isFlower={isFlowerSelected}
             itemId={itemId}
-            price={price}
+            price={point}
           >
-            <Receipt points={loginUser.points} price={price} />
+            <Receipt points={loginUser.points} price={point} />
           </Modal>
         )}
       </div>
