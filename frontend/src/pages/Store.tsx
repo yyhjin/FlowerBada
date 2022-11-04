@@ -240,7 +240,7 @@ const Store = () => {
             closeModal={() => setBuying(!buying)}
             isFlower={isFlowerSelected}
             itemId={itemId}
-            price={point}}
+            price={point}
             css={modal}
           >
             <Receipt points={loginUser.points} price={point} />
