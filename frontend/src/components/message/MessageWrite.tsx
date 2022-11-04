@@ -1,6 +1,6 @@
 import { IuserRecoil, userReCoil } from '../../recoil/userRecoil';
 import { useRecoilState } from 'recoil';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
