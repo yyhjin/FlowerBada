@@ -228,6 +228,7 @@ declare module '@mui/material/styles' {
 
 const outerBox = css`
   width: 100vw;
+  height: 100%;
 `;
 
 const innerBox = css`
