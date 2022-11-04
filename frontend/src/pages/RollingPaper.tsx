@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import messageAPI from '@api/messageAPI';
 
 interface IRolling {
   imgUrl?: string;
@@ -33,14 +33,7 @@ export default function RollingPaper() {
 
     setPaginationId(paramCopy.paginationId);
     try {
-      const res: any = await axios.get(
-        `http://localhost:8080/api/v1/message/${url}/${paramCopy.paginationId}`,
-        {
-          headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
-          },
-        },
-      );
+      const res: any = await messageAPI.getRolling(url, paramCopy.paginationId);
       console.log(res.data.response);
       setRolling(res.data.response);
       setLoading(true);

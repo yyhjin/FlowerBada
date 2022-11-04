@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import greenhouseAPI from '@src/api/greenhouseAPI';
 
 interface IRolling {
   url: string;
@@ -18,11 +18,11 @@ export default function GreenHouse() {
     getRollings(1);
   }, []);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState<Boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [rollings, setRollings] = useState<IRolling[]>([]);
-  const [tab, setTab] = useState<String>('내가 만든 꽃다발');
-  const [sort, setSort] = useState<Number>(1);
-  const [paginationId, setPaginationId] = useState<Number>(0);
+  const [tab, setTab] = useState<string>('내가 만든 꽃다발');
+  const [sort, setSort] = useState<number>(1);
+  const [paginationId, setPaginationId] = useState<number>(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   // console.log(userState.jwt);
   async function getRollings(sort: number): Promise<void> {
@@ -30,15 +30,7 @@ export default function GreenHouse() {
     setTab('내가 만든 꽃다발'); //내가 만든 쿠키
     try {
       const params = { sort: sort, paginationId: paginationId };
-      const res: any = await axios.get(
-        `http://localhost:8080/api/v1/greenhouse/sent`,
-        {
-          headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
-          },
-          params,
-        },
-      );
+      const res: any = await greenhouseAPI.sentRolling(userState.jwt, params);
       // console.log(res.data.response);
       setRollings(res.data.response);
       setLoading(true);
@@ -51,15 +43,7 @@ export default function GreenHouse() {
     setTab('즐겨찾기한 꽃다발');
     try {
       const params = { sort: sort, paginationId: paginationId };
-      const res: any = await axios.get(
-        `http://localhost:8080/api/v1/greenhouse/bookmark`,
-        {
-          headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
-          },
-          params,
-        },
-      );
+      const res: any = await greenhouseAPI.bookmark(userState.jwt, params);
       // console.log(res.data.response);
       setRollings(res.data.response);
       setLoading(true);

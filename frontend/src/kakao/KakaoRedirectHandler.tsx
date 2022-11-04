@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
+import userAPI from '@src/api/userAPI';
 
 const KakaoRedirectHandler = () => {
   // console.log('KakaoRedirectHandler');
@@ -12,8 +12,8 @@ const KakaoRedirectHandler = () => {
   let register: boolean = false;
 
   useEffect(() => {
-    axios
-      .post('http://localhost:8080/api/v1/user/signin/callback', { code })
+    userAPI
+      .signInCallback({ code })
       .then((res) => {
         token = res.data.response.jwt;
         user = res.data.response.user;

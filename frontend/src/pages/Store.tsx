@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
@@ -10,6 +9,7 @@ import itemLocked from '@assets/itemLocked.png';
 import coin from '@assets/coin.png';
 import rollingImgItem from '@assets/fixed-size/rolling/rollingImgItem';
 import flowerImgItem from '@assets/fixed-size/flower/flowerImgItem';
+import storeAPI from '@src/api/storeAPI';
 
 interface FlowerItem {
   flowerId: number;
@@ -104,12 +104,8 @@ const Store = () => {
   // 탭 바뀔 때마다 해당하는 품목 리스트 가져오기
   useEffect(() => {
     if (isFlower) {
-      axios
-        .get('http://localhost:8080/api/v1/store/flower', {
-          headers: {
-            'X-AUTH-TOKEN': `Bearer ${loginUser.jwt}`,
-          },
-        })
+      storeAPI
+        .getFlowers(loginUser.jwt)
         .then((res: any) => {
           setFlowerItemList(res.data.response);
         })
@@ -117,12 +113,8 @@ const Store = () => {
           console.log(err);
         });
     } else {
-      axios
-        .get('http://localhost:8080/api/v1/store/rolling', {
-          headers: {
-            'X-AUTH-TOKEN': `Bearer ${loginUser.jwt}`,
-          },
-        })
+      storeAPI
+        .getRollings(loginUser.jwt)
         .then((res: any) => {
           setRollingItemList(res.data.response);
         })
