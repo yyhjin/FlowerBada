@@ -1,4 +1,4 @@
-const dateFormatter = (originalDatetime: number): String => {
+const dateFormatter = (originalDatetime: number): string => {
   let str = '';
   const date = new Date(originalDatetime);
 
