@@ -67,8 +67,8 @@ export default function SetOpenDate() {
     <>
       <div>
         <div css={Info}>
-          롤링페이퍼 개봉 날짜를 <br />
-          선택해주세요
+          <div css={Writing}>롤링페이퍼 개봉 날짜를</div>
+          <div css={Writing}> 선택해주세요</div>
         </div>
         <div css={Background}>
           <DatePicker
@@ -100,6 +100,14 @@ const Info = css`
   margin-top: 30vh;
   font-size: 6vw;
   font-weight: bold;
+  @media screen and (min-width: 400px) {
+    font-size: 4vw;
+  }
+`;
+
+const Writing = css`
+  margin-top: 1vh;
+  padding: 1vw;
 `;
 
 const Calendar = css`
@@ -108,7 +116,7 @@ const Calendar = css`
 `;
 
 const CreateButton = css`
-  margin-top: 43vh;
+  margin-top: 40vh;
   height: 7vh;
   width: 94vw;
   border-radius: 3vw;
