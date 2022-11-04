@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { css } from '@emotion/react';
 import Message from '@src/components/mypage/Message';
 import DotSlice from '@components/paging/DotSlice';
@@ -26,7 +24,6 @@ interface IMessage {
 export default function RollingPaper() {
   const [loading, setLoading] = useState<Boolean>(false);
   const [rolling, setRolling] = useState<IRolling>({});
-  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const [paginationId, setPaginationId] = useState<number>(1);
   const [valid, setValid] = useState<Boolean>(false);
   const [stepNumber, setStepNumber] = useState<number>(1);
@@ -38,7 +35,7 @@ export default function RollingPaper() {
     setLoading(false);
     let url = paramCopy.url;
     try {
-      const res: any = await messageAPI.getRolling(url, paginationId);
+      const res: any = await messageAPI.getRolling(url, '' + paginationId);
 
       const curr = new Date();
       const open = new Date(res.data.response.date.replaceAll('.', '-'));
@@ -63,13 +60,13 @@ export default function RollingPaper() {
       setStepNumber(
         Math.floor(
           Number(res.data.response.totalMessages) /
-            Number(res.data.response.capacity) ==
+            Number(res.data.response.capacity) ===
             0
             ? Number(res.data.response.totalMessages) /
-                Number(res.data.response.capacity) +
-                1
+                Number(res.data.response.capacity)
             : Number(res.data.response.totalMessages) /
-                Number(res.data.response.capacity),
+                Number(res.data.response.capacity) +
+                1,
         ),
       );
 

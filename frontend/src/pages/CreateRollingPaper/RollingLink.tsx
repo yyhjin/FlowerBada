@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import copy from '@assets/copy.png';
