@@ -26,7 +26,7 @@ export default function MessageWrite(props: { flower: number }) {
     console.log(props.flower);
   }, []);
 
-  const changeContent = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const changeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMsgContent(e.target.value);
     setMsgLength(e.target.value.length);
   };

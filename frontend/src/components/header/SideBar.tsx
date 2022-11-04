@@ -45,7 +45,7 @@ const SideBar = (props: any) => {
       <div css={sideBlock(isOpen)}>
         <img src={closeBtn} css={close} onClick={test} />
         <div css={menus}>
-          <a css={menuBtn} href="/newroll">
+          <a css={menuBtn} href="/newroll/item">
             새로 만들기
           </a>
           <a css={menuBtn} href="/greenhouse">

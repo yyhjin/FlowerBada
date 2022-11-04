@@ -63,7 +63,9 @@ export default function Modal(props: any) {
           </button>
           {props.children}
           {loginUser.points >= props.price ? (
-            <button onClick={buyFunction}>구매</button>
+            <button css={buyBtn} onClick={buyFunction}>
+              구매
+            </button>
           ) : (
             <div>
               <strong>포인트가 부족합니다!</strong>
@@ -87,19 +89,19 @@ const ModalCss = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 3;
   }
 
   /* modal창 */
   .modalBody {
     position: absolute;
-    width: 300px;
-    height: 400px;
+    width: 70%;
+    height: 25vh;
     padding: 40px;
     text-align: center;
     background-color: rgb(255, 255, 255);
     border-radius: 10px;
     box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
-    z-index: 1;
   }
 
   #modalCloseBtn {
@@ -115,4 +117,21 @@ const ModalCss = css`
   #modalCloseBtn:hover {
     cursor: pointer;
   }
+`;
+
+const buyBtn = css`
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  color: white;
+  cursor: pointer;
+  /* transition: border-color 0.25s; */
+  background-color: #16453e;
+  width: 30%;
+  height: 40px;
+  bottom: 10%;
+  left: 35%;
+  position: absolute;
 `;
