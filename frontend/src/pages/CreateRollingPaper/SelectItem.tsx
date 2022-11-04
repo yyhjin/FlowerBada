@@ -11,6 +11,8 @@ import rollingImgItem from '@assets/fixed-size/rolling/rollingImgItem';
 import ItemLocked from '@assets/itemLocked.png';
 import { css } from '@emotion/react';
 import Coin from '@assets/coin.png';
+import MySwal from '@components/SweetAlert';
+import '@components/SweetAlert.css';
 
 interface IItem {
   rollingId: number;
@@ -68,7 +70,12 @@ export default function SelectItem() {
     setRollingImg(rollingImgItem[e.target.id].img);
   };
   const cantSelect = (): void => {
-    alert('상점에서 구매 후 사용 가능합니다!');
+    MySwal.fire({
+      title: '상점에서 구매 후<br/>사용 가능합니다!',
+      icon: 'warning',
+      confirmButtonColor: '#16453e',
+      confirmButtonText: '확인',
+    });
   };
   useEffect(() => {
     getItems();
@@ -120,10 +127,10 @@ export default function SelectItem() {
         ) : (
           '로딩중'
         )}
+        <button onClick={handleSetTitle} css={NextButton}>
+          다음
+        </button>
       </div>
-      <button onClick={handleSetTitle} css={NextButton}>
-        다음
-      </button>
     </>
   );
 }
@@ -201,6 +208,9 @@ const NextButton = css`
   color: white;
   font-size: 4vw;
   background-color: #16453e;
+  @media screen and (min-width: 1000px) {
+    font-size: 20pt;
+  }
 `;
 
 const Locked = css`

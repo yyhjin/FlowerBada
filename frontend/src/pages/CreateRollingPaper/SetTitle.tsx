@@ -5,6 +5,7 @@ import {
   createRollingRecoil,
 } from '@recoil/createRollingRecoil';
 import { css } from '@emotion/react';
+import MySwal from '@components/SweetAlert';
 
 export default function SetTitle() {
   const navigate = useNavigate();
@@ -20,7 +21,12 @@ export default function SetTitle() {
 
   const handleSetOpenDate = () => {
     if (createRollingState.title === '') {
-      alert('제목을 입력해주세요!');
+      MySwal.fire({
+        title: '제목을 입력하세요!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
       return;
     }
     navigate('/newroll/date');

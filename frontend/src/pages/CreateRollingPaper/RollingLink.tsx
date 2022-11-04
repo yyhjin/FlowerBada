@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import copy from '@assets/copy.png';
+import MySwal from '@components/SweetAlert';
 
 export default function RollingLink() {
   const { state } = useLocation();
@@ -13,14 +14,19 @@ export default function RollingLink() {
   };
   const copyUrl = (): void => {
     navigator.clipboard.writeText(root + state + '/1');
-    alert('링크가 복사되었습니다.');
+    MySwal.fire({
+      title: '링크가 복사되었습니다.',
+      icon: 'success',
+      confirmButtonColor: '#16453e',
+      confirmButtonText: '확인',
+    });
   };
   return (
     <>
       <div css={Background}>
         <div css={Info}>
-          링크를 복사해 <br />
-          롤링페이퍼를 공유하세요
+          <div css={Writing}>링크를 복사해</div>
+          <div css={Writing}>롤링페이퍼를 공유하세요</div>
         </div>
         <div css={Link}>
           <div css={Url}>
@@ -52,6 +58,10 @@ const Info = css`
   font-size: 6vw;
 `;
 
+const Writing = css`
+  margin-bottom: 3vh;
+`;
+
 const Link = css`
   display: flex;
   margin-right: 4vw;
@@ -59,11 +69,11 @@ const Link = css`
 
 const Url = css`
   margin-top: 5vh;
-  margin-left: 5vw;
+  margin-left: 10vw;
   margin-right: 2vw;
   font-size: 4.5vw;
   background-color: white;
-  padding: 1vh 12vw 1vh 4vw;
+  padding: 1vh 4vw 1vh 4vw;
   border-radius: 2vw;
   overflow: scroll;
   display: flex;
