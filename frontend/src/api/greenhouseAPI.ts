@@ -15,7 +15,7 @@ interface IBookmark {
 const greenhouseAPI = {
   sentRolling(jwt: string, params: ISentRolling) {
     return api({
-      method: 'post',
+      method: 'get',
       url: `${END_POINT}/sent`,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
@@ -26,7 +26,7 @@ const greenhouseAPI = {
 
   bookmark(jwt: string, params: IBookmark) {
     return api({
-      method: 'post',
+      method: 'get',
       url: `${END_POINT}/bookmark`,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
