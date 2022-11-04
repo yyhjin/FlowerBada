@@ -20,7 +20,7 @@ export default function SetTitle() {
 
   const handleSetOpenDate = () => {
     if (createRollingState.title === '') {
-      alert('제목 입력해라');
+      alert('제목을 입력해주세요!');
       return;
     }
     navigate('/newroll/date');
@@ -64,7 +64,11 @@ const TitleInput = css`
 
 const SelectImage = css`
   margin-top: 15vw;
-  width: 100vw;
+  width: 85vw;
+  @media screen and (min-width: 400px) {
+    margin-top: 20px;
+    width: 250px;
+  }
 `;
 
 const NextButton = css`
