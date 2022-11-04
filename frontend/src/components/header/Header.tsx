@@ -103,9 +103,9 @@ const HeaderNav = css`
 
   #back {
     position: relative;
-    height: 20px;
-    width: 20px;
-    top: 15px;
+    height: 30px;
+    width: 30px;
+    top: 12px;
     left: 20px;
   }
 `;
@@ -117,6 +117,7 @@ const LogoName = css`
 
 const MainLogo = css`
   text-decoration: none;
+  color: black;
 `;
 
 const BackArrow = css`

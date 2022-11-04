@@ -13,8 +13,9 @@
     "@emotion/babel-preset-css-prop": "^11.10.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.11",
-    "@types/node": "^18.11.8",
+    "@types/node": "^18.11.9",
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^5.40.1",
     "@typescript-eslint/parser": "^5.40.1",
@@ -33,6 +34,8 @@
     "react-router-dom": "^6.4.2",
     "recoil": "^0.7.6",
     "recoil-persist": "^4.2.0",
+    "sweetalert2": "^11.6.5",
+    "sweetalert2-react-content": "^5.0.7",
     "vite-tsconfig-paths": "^3.5.1"
   },
   "devDependencies": {

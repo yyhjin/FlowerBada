@@ -1,0 +1,16 @@
+.swal2-title {
+  font-size: 15pt;
+}
+/* 아이패드 미니 */
+@media screen and (min-width: 768px) {
+  .swal2-container {
+    left: 17.5%;
+  }
+}
+
+/* 아이패드 에어 */
+@media screen and (min-width: 820px) {
+  .swal2-container {
+    left: 19.5%;
+  }
+}

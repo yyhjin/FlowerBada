@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@src/recoil/userRecoil';
-import axios from 'axios';
+import userAPI from '@api/userAPI';
 import closeBtn from '@assets/close.png';
 
 const SideBar = (props: any) => {
@@ -15,15 +15,7 @@ const SideBar = (props: any) => {
 
   const logout = async () => {
     try {
-      const res: any = await axios.post(
-        'http://localhost:8080/api/v1/user/signout',
-        {},
-        {
-          headers: {
-            'X-AUTH-TOKEN': `Bearer ${loginUser.jwt}`,
-          },
-        },
-      );
+      await userAPI.signOut(loginUser.jwt);
       setLoginUser((prev: IuserRecoil) => {
         const variable = { ...prev };
         variable.id = 0;
@@ -45,7 +37,7 @@ const SideBar = (props: any) => {
       <div css={sideBlock(isOpen)}>
         <img src={closeBtn} css={close} onClick={test} />
         <div css={menus}>
-          <a css={menuBtn} href="/newroll">
+          <a css={menuBtn} href="/newroll/item">
             새로 만들기
           </a>
           <a css={menuBtn} href="/greenhouse">

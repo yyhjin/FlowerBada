@@ -1,14 +1,13 @@
-import axios from 'axios';
-import React from 'react';
 import { IuserRecoil, userReCoil } from '../../recoil/userRecoil';
 import { useRecoilState } from 'recoil';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
 import Button, { ButtonProps } from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import '@src/index.css';
+import messageAPI from '@src/api/messageAPI';
 
 export default function MessageWrite(props: { flower: number }) {
   const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
@@ -26,7 +25,7 @@ export default function MessageWrite(props: { flower: number }) {
     console.log(props.flower);
   }, []);
 
-  const changeContent = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const changeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMsgContent(e.target.value);
     setMsgLength(e.target.value.length);
   };
@@ -55,9 +54,8 @@ export default function MessageWrite(props: { flower: number }) {
     //   alert('폰트를 선택해주세요');
     // }
     else {
-      const url = `http://localhost:8080/api/v1/message`;
-      axios
-        .post(url, {
+      messageAPI
+        .messageWrite({
           content: msgContent,
           writer: msgWriter,
           flowerId: props.flower,

@@ -1,13 +1,11 @@
-import axios from 'axios';
 import { css } from '@emotion/react';
 import kakaoLogo from '@assets/kakaoTalk.png';
+import userAPI from '@src/api/userAPI';
 
 export default function SignIn() {
   const handleLogin = async () => {
     try {
-      const res: any = await axios.get(
-        'http://localhost:8080/api/v1/user/signin',
-      );
+      const res: any = await userAPI.signIn();
       let url: string = res.data.response.redirectURL;
       window.location.href = url;
     } catch (err: any) {

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import messageAPI from '@src/api/messageAPI';
 import React from 'react';
 import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
 import { useRecoilState } from 'recoil';
@@ -37,10 +37,9 @@ export default function MessageRead() {
   let [reportContent, setReportContent] = useState<string>('');
   const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
 
-  const getMessage = async (): Promise<void> => {
-    const url = `http://localhost:8080/api/v1/message/${messageId}`;
-    axios
-      .get(url)
+  const getMessage = (): void => {
+    messageAPI
+      .messageCreate(messageId)
       .then((res) => {
         setMsg(res.data.response);
         console.log(res.data.response);
@@ -79,23 +78,24 @@ export default function MessageRead() {
     if (reportContent == '') {
       alert('내용을 입력해주세요');
     } else {
-      const url = `http://localhost:8080/api/v1/message/report`;
-      axios
-        .post(url, {
-          messageId: msg.messageId,
-          userId: loginUser.id,
-          content: reportContent,
-        })
-        .then((res) => {
-          setMsg(res.data.response);
-          console.log(res.data.response);
-          alert('신고가 접수되었습니다');
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      changeReportModal(false);
-      changeModal(false);
+      if (msg.messageId) {
+        messageAPI
+          .report({
+            messageId: msg.messageId,
+            userId: loginUser.id,
+            content: reportContent,
+          })
+          .then((res) => {
+            setMsg(res.data.response);
+            console.log(res.data.response);
+            alert('신고가 접수되었습니다');
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        changeReportModal(false);
+        changeModal(false);
+      }
     }
   };
 
@@ -259,6 +259,12 @@ declare module '@mui/material/styles' {
     status: {
       danger: React.CSSProperties['color'];
     };
+  }
+}
+
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    neutral: true;
   }
 }
 
