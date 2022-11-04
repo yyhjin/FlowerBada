@@ -37,7 +37,7 @@ const messageAPI = {
       data: data,
     });
   },
-  getRolling(url: string, paginationId: number) {
+  getRolling(url: string, paginationId: string) {
     return api({
       method: 'get',
       url: `${END_POINT}/${url}/${paginationId}`,

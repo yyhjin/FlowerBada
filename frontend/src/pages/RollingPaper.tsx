@@ -4,6 +4,9 @@ import { css } from '@emotion/react';
 import Message from '@src/components/mypage/Message';
 import DotSlice from '@components/paging/DotSlice';
 import messageAPI from '@api/messageAPI';
+import Star from '@assets/Star.png';
+import EmptyStar from '@assets/EmptyStar.png';
+import Delivery from '@assets/Delivery.png';
 
 interface IRolling {
   imgUrl?: string;
@@ -48,7 +51,7 @@ export default function RollingPaper() {
       const rollingDate = new Date(utcOpen);
 
       if (rollingDate <= nowDate) {
-        // console.log(res.data.response);
+        console.log(res.data.response.messages.length);
         setValid(true);
       } else {
         alert(res.data.response.date + '일 이후 개봉 가능');
@@ -59,7 +62,7 @@ export default function RollingPaper() {
       setLoading(true);
       setStepNumber(
         Math.floor(
-          Number(res.data.response.totalMessages) /
+          Number(res.data.response.totalMessages + 1) /
             Number(res.data.response.capacity) ===
             0
             ? Number(res.data.response.totalMessages) /
@@ -91,6 +94,7 @@ export default function RollingPaper() {
     <>
       {loading && rolling && rolling.messages && type ? (
         <div css={DetailCss}>
+          <div className="title">{rolling.title}</div>
           <div className="fixbox">
             <div className={`imgbox_${type}`}>
               <img src={'/src/assets/' + rolling.imgBack}></img>
@@ -122,7 +126,7 @@ export default function RollingPaper() {
           </div>
         </div>
       ) : (
-        <div>로딩중</div>
+        <div css={Loading}>로딩중</div>
       )}
     </>
   );
@@ -132,7 +136,11 @@ const DetailCss = css`
   width: 100%;
   position: relative;
   transform: translate(0%, -15%);
-
+  .title {
+    margin-top: 50vw;
+    margin-bottom: -20vw;
+    font-size: 5vw;
+  }
   .imgbox_1,
   .imgbox_2,
   .imgbox_3 {
@@ -362,4 +370,8 @@ const DetailCss = css`
     bottom: 10vw;
     pointer-events: none;
   }
+`;
+
+const Loading = css`
+  width: 100vw;
 `;

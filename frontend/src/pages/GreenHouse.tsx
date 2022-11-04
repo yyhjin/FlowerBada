@@ -70,7 +70,7 @@ export default function GreenHouse() {
   }
 
   function handleRollingPaper(url: string): void {
-    navigate(`/rolling/${url}/1`);
+    navigate(`/rolling/${url}`);
   }
 
   // 드랍다운 필터 관련
