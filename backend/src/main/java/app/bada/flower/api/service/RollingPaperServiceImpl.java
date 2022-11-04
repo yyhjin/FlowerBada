@@ -42,10 +42,6 @@ public class RollingPaperServiceImpl implements RollingPaperService {
     private final JwtTokenUtil jwtTokenUtil;
     private final UserService userService;
 
-    @Autowired
-    S3FileUpload s3FileUpload;
-
-
     @Override
     public RollingPaper createRollingPaper(String token, RollingPaperReqDto rollingPaperReqDto) {
         User user = userService.getUserByToken(token);
@@ -112,7 +108,7 @@ public class RollingPaperServiceImpl implements RollingPaperService {
         rollingPaperResDto.setTitle(rollingPaper.getTitle());
         rollingPaperResDto.setImgFront(rollingPaper.getRollingPaperItem().getImgFront());
         rollingPaperResDto.setImgBack(rollingPaper.getRollingPaperItem().getImgBack());
-        rollingPaperResDto.setImgUrl(s3FileUpload.File_Server_Url+rollingPaper.getRollingPaperItem().getImgUrl());
+        rollingPaperResDto.setImgUrl(rollingPaper.getRollingPaperItem().getImgUrl());
         rollingPaperResDto.setDate(rollingPaperResDto.changeDateToString(rollingPaper.getOpenDate()));
         rollingPaperResDto.setMessages(rollingMsgList);
         return rollingPaperResDto;

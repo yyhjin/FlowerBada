@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import axios from 'axios';
 import { css } from '@emotion/react';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import mypageAPI from '@src/api/mypageAPI';
 
 interface IDeliver {
   pageUrl?: string;
@@ -63,16 +63,10 @@ export default function MyDeliveryList() {
     try {
       setSortNumber(sortNumber);
       const params = { sort: sortNumber, paginationId: pages };
-      const res: any = await axios.get(
-        'http://localhost:8080/api/v1/mypage/delivery',
-        {
-          headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
-          },
-          params,
-        },
-      );
+      const res: any = await mypageAPI.getDelivery(userState.jwt, params);
       if (res.data.response.length !== 0) {
+        // console.log(res.data.response.length);
+
         setMyList(myList.concat(res.data.response));
         setPages(pages + 1);
       }
@@ -170,7 +164,7 @@ const totalCSS = css`
     background-color: white;
     width: 100%;
 
-    &:first-child > .infobox {
+    &:first-of-type > .infobox {
       margin-top: 0px;
     }
   }

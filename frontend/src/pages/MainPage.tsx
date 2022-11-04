@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import {
@@ -13,6 +12,7 @@ import MainNewRoll from '@assets/main_menu/main_newroll.png';
 import MainStore from '@assets/main_menu/main_store.png';
 import LogoutBtn from '@assets/logout_btn.png';
 import { useEffect } from 'react';
+import userAPI from '@src/api/userAPI';
 
 const Mainpage = () => {
   const navigate = useNavigate();
@@ -23,15 +23,7 @@ const Mainpage = () => {
   // 로그아웃
   const signOut = async () => {
     try {
-      await axios.post(
-        'http://localhost:8080/api/v1/user/signout',
-        {},
-        {
-          headers: {
-            'X-AUTH-TOKEN': `Bearer ${loginUser.jwt}`,
-          },
-        },
-      );
+      await userAPI.signOut(loginUser.jwt);
       setLoginUser((prev: IuserRecoil) => {
         const variable = { ...prev };
         variable.id = 0;

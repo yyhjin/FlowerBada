@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
-import axios from 'axios';
 import { css } from '@emotion/react';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import CoinImg from '@assets/coin.png';
+import mypageAPI from '@src/api/mypageAPI';
 
 interface IPoint {
   name: string;
@@ -46,15 +46,7 @@ export default function MyPointList() {
   async function myPointListFunc() {
     try {
       const params = { paginationId: pages };
-      const res: any = await axios.get(
-        'http://localhost:8080/api/v1/mypage/mypoint',
-        {
-          headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
-          },
-          params,
-        },
-      );
+      const res: any = await mypageAPI.getPointList(userState.jwt, params);
       setMyPoint(res.data.response.myPoint);
       if (res.data.response.myPointList.length !== 0) {
         setMyPointList(myPointList.concat(res.data.response.myPointList));
@@ -148,12 +140,8 @@ const totalCSS = css`
     font-size: 12px !important;
   }
   .chargebox {
-    border: 1px solid;
     display: flex;
     justify-content: flex-end;
     float: right;
-  }
-  .imgcss {
-    transform: rotate(30deg);
   }
 `;

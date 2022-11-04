@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import greenhouseAPI from '@api/greenhouseAPI';
 import { css } from '@emotion/react';
 import { Grid } from '@mui/material';
 
@@ -44,19 +45,11 @@ export default function GreenHouse() {
     setTab('내가 만든 꽃다발');
     try {
       const params = { sort: sort, paginationId: paginationId };
-      const res: any = await axios.get(
-        `http://localhost:8080/api/v1/greenhouse/sent`,
-        {
-          headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
-          },
-          params,
-        },
-      );
-      console.log(res.data.response.length);
+      const res: any = await greenhouseAPI.sentRolling(userState.jwt, params);
+
+      setLoading(true);
       setRollings(rollings.concat(res.data.response));
       setPaginationId(paginationId + 1);
-      // setLoading(true);
     } catch (err: any) {
       // console.log(err);
     }
@@ -66,19 +59,11 @@ export default function GreenHouse() {
     setTab('즐겨찾기한 꽃다발');
     try {
       const params = { sort: sort, paginationId: paginationId };
-      const res: any = await axios.get(
-        `http://localhost:8080/api/v1/greenhouse/bookmark`,
-        {
-          headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
-          },
-          params,
-        },
-      );
-      console.log(res.data.response.length);
-      setRollings(rollings.concat(res.data.response));
+      const res: any = await greenhouseAPI.bookmark(userState.jwt, params);
+      // console.log(res.data.response);
+      setRollings(res.data.response);
+      setLoading(true);
       setPaginationId(paginationId + 1);
-      // setLoading(true);
     } catch (err: any) {
       // console.log(err);
     }
