@@ -68,7 +68,7 @@ export default function SelectItem() {
     setRollingImg(rollingImgItem[e.target.id].img);
   };
   const cantSelect = (): void => {
-    alert('이건 돈 내고 사서 써야 됨!');
+    alert('상점에서 구매 후 사용 가능합니다!');
   };
   useEffect(() => {
     getItems();
