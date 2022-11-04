@@ -19,7 +19,7 @@ export default function GreenHouse() {
     getRollings(1);
   }, []);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState<Boolean>(false);
+  const [loading, setLoading] = useState<Boolean>(true);
   const [rollings, setRollings] = useState<IRolling[]>([]);
   const [tab, setTab] = useState<String>('내가 만든 꽃다발');
   const [tabNum, setTabNum] = useState<number>(1);
@@ -27,10 +27,21 @@ export default function GreenHouse() {
   const [paginationId, setPaginationId] = useState<number>(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
 
-  async function getRollings(sort: number): Promise<void> {
-    setLoading(false);
-    setTab('내가 만든 꽃다발'); //내가 만든 쿠키
+  function initRollings() {
+    setPaginationId(0);
+    setRollings([]);
     setTabNum(1);
+  }
+
+  function initBookmarks() {
+    setPaginationId(0);
+    setRollings([]);
+    setTabNum(2);
+  }
+
+  async function getRollings(sort: number): Promise<void> {
+    // setLoading(false);
+    setTab('내가 만든 꽃다발');
     try {
       const params = { sort: sort, paginationId: paginationId };
       const res: any = await axios.get(
@@ -42,17 +53,17 @@ export default function GreenHouse() {
           params,
         },
       );
-      console.log(res.data.response);
-      setRollings(res.data.response);
-      setLoading(true);
+      console.log(res.data.response.length);
+      setRollings(rollings.concat(res.data.response));
+      setPaginationId(paginationId + 1);
+      // setLoading(true);
     } catch (err: any) {
       // console.log(err);
     }
   }
   async function getBookmarks(sort: number): Promise<void> {
-    setLoading(false);
+    // setLoading(false);
     setTab('즐겨찾기한 꽃다발');
-    setTabNum(2);
     try {
       const params = { sort: sort, paginationId: paginationId };
       const res: any = await axios.get(
@@ -64,31 +75,10 @@ export default function GreenHouse() {
           params,
         },
       );
-      console.log(res.data.response);
-      setRollings(res.data.response);
-      setLoading(true);
-    } catch (err: any) {
-      // console.log(err);
-    }
-  }
-  async function addRollings(sort: number): Promise<void> {
-    setLoading(false);
-    setTab('내가 만든 꽃다발'); //내가 만든 쿠키
-    setTabNum(1);
-    try {
-      const params = { sort: sort, paginationId: paginationId };
-      const res: any = await axios.get(
-        `http://localhost:8080/api/v1/greenhouse/sent`,
-        {
-          headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
-          },
-          params,
-        },
-      );
-      console.log(rollings.concat(res.data.response));
-      setRollings(res.data.response);
-      setLoading(true);
+      console.log(res.data.response.length);
+      setRollings(rollings.concat(res.data.response));
+      setPaginationId(paginationId + 1);
+      // setLoading(true);
     } catch (err: any) {
       // console.log(err);
     }
@@ -98,14 +88,11 @@ export default function GreenHouse() {
     navigate(`/rolling/${url}/1`);
   }
 
+  // 드랍다운 필터 관련
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSort(+event.target.value);
     setPaginationId(0);
-    if (tabNum === 1) {
-      getRollings(+event.target.value);
-    } else {
-      getBookmarks(+event.target.value);
-    }
+    setRollings([]);
+    setSort(+event.target.value);
   };
 
   const handleScroll = useCallback((): void => {
@@ -138,26 +125,30 @@ export default function GreenHouse() {
     }
   }, [handleScroll]);
 
+  useEffect(() => {
+    if (tabNum === 1) {
+      getRollings(sort);
+    } else {
+      getBookmarks(sort);
+    }
+  }, [sort, tabNum]);
+
   return (
     <>
       <div>
         {tabNum === 1 ? (
           <div css={MainTab}>
-            <button className="active_btn" onClick={() => getRollings(1)}>
-              내가 만든 꽃다발
-            </button>
-            <button className="btn" onClick={() => getBookmarks(1)}>
+            <button className="active_btn">내가 만든 꽃다발</button>
+            <button className="btn" onClick={() => initBookmarks()}>
               즐겨찾기
             </button>
           </div>
         ) : (
           <div css={MainTab}>
-            <button className="btn" onClick={() => getRollings(1)}>
+            <button className="btn" onClick={() => initRollings()}>
               내가 만든 꽃다발
             </button>
-            <button className="active_btn" onClick={() => getBookmarks(1)}>
-              즐겨찾기
-            </button>
+            <button className="active_btn">즐겨찾기</button>
           </div>
         )}
       </div>
@@ -176,23 +167,6 @@ export default function GreenHouse() {
       ) : (
         <div> 로딩중 </div>
       )}
-      {/* <div css={BoxList}>
-        {rollings.map((rolling: IRolling, index: number) => {
-          return (
-            <div css={Box} key={rolling.url}>
-              <div css={ImageBox}>
-                <a onClick={() => handleRollingPaper(rolling.url)}>
-                  <img src={rolling.imgUrl} alt="롤링페이퍼 이미지" />
-                </a>
-              </div>
-              <div css={InfoBox}>
-                {rolling.title}
-                {rolling.date}
-              </div>
-            </div>
-          );
-        })}
-      </div> */}
       <Grid container columns={8} css={GridList} className="gridlist">
         {rollings.map((rolling: IRolling, index: number) => (
           <Grid xs={4} item key={index}>
@@ -209,6 +183,8 @@ export default function GreenHouse() {
 }
 
 const MainTab = css`
+  width: 100vw;
+
   button {
     border-radius: 8px;
     border: 1px solid transparent;
@@ -249,10 +225,12 @@ const MainTab = css`
 
 const GridList = css`
   width: 80%;
-  height: 60%;
+  height: 30%;
   overflow: scroll;
   margin: 30px auto;
   border-radius: 15px;
+  overflow-y: scroll;
+  margin-top: 10vh;
 `;
 
 const GridItem = css`
