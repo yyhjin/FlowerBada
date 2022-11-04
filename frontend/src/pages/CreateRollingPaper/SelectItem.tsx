@@ -130,6 +130,7 @@ export default function SelectItem() {
 
 const Background = css`
   width: 100vw;
+  position: relative;
 `;
 
 const Point = css`
