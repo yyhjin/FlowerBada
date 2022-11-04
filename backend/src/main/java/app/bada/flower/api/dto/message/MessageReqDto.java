@@ -18,6 +18,6 @@ public class MessageReqDto {
         private String content;
         private String writer;
         private int flowerId;
-        private int fontId;
+        private String font;
     }
 }
