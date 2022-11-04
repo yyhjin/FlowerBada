@@ -13,7 +13,7 @@
     "@emotion/babel-preset-css-prop": "^11.10.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@mui/material": "^5.10.11",
+    "@mui/material": "^5.10.12",
     "@types/node": "^18.11.8",
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^5.40.1",
