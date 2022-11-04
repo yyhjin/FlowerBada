@@ -4,6 +4,7 @@ import {
   IcreateRollingRecoil,
   createRollingRecoil,
 } from '@recoil/createRollingRecoil';
+import { css } from '@emotion/react';
 
 export default function SetTitle() {
   const navigate = useNavigate();
@@ -25,16 +26,53 @@ export default function SetTitle() {
     navigate('/newroll/date');
   };
   return (
-    <>
-      <div>제목 정해</div>
-      <div>{createRollingState.url}</div>
+    <div css={Background}>
       <div>
         <input
           value={createRollingState.title || ''}
           onChange={changeTitle}
+          css={TitleInput}
+          placeholder="제목을 입력하세요"
         ></input>
       </div>
-      <button onClick={handleSetOpenDate}>날짜 선택</button>
-    </>
+      <img
+        src={createRollingState.url}
+        alt="선택한 꽃 사진"
+        css={SelectImage}
+      />
+
+      <button onClick={handleSetOpenDate} css={NextButton}>
+        날짜 선택
+      </button>
+    </div>
   );
 }
+
+const Background = css`
+  width: 100vw;
+`;
+
+const TitleInput = css`
+  padding-left: 10vw;
+  font-size: 5vw;
+  margin-top: 10vh;
+  width: 50vw;
+  border-radius: 2vw;
+  border: 0;
+  height: 5vh;
+`;
+
+const SelectImage = css`
+  margin-top: 15vw;
+  width: 100vw;
+`;
+
+const NextButton = css`
+  margin-top: 7.3vh;
+  height: 7vh;
+  width: 94vw;
+  border-radius: 3vw;
+  color: white;
+  font-size: 4vw;
+  background-color: #16453e;
+`;
