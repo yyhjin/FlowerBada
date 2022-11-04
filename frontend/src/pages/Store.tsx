@@ -233,6 +233,7 @@ const Store = () => {
             isFlower={isFlowerSelected}
             itemId={itemId}
             price={price}
+            location={'store'}
           >
             <Receipt points={loginUser.points} price={price} />
           </Modal>

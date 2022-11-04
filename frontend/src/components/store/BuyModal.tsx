@@ -47,8 +47,18 @@ export default function Modal(props: any) {
         variable.points = points;
         return variable;
       });
-      alert('결제 완료!');
-      window.location.href = '/store';
+      alert('구매 완료!');
+
+      switch (props.location) {
+        case 'message':
+          window.location.href = '/rollingpaper/message/create';
+          break;
+        case 'store':
+          window.location.href = '/store';
+          break;
+        case 'rolling':
+          break;
+      }
     } catch (err: any) {
       console.log(err);
     }
