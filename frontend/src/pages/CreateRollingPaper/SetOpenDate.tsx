@@ -1,5 +1,4 @@
-import { ChangeEvent, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
@@ -11,6 +10,7 @@ import {
   createRollingRecoil,
 } from '@recoil/createRollingRecoil';
 import { css } from '@emotion/react';
+import rollingAPI from '@api/rollingAPI';
 
 export default function SetOpenDate() {
   const today = new Date();
@@ -44,20 +44,11 @@ export default function SetOpenDate() {
     }
     let localDateTime = year + '-' + month + '-' + day + 'T10:00';
     try {
-      const res: any = await axios.post(
-        'http://localhost:8080/api/v1/rolling',
-        {
-          itemId: createRollingState.itemId,
-          openDate: localDateTime,
-          title: createRollingState.title,
-        },
-        {
-          headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
-          },
-        },
-      );
-      // console.log(res.data.response);
+      const res: any = await rollingAPI.makeRolling(userState.jwt, {
+        itemId: createRollingState.itemId,
+        openDate: localDateTime,
+        title: createRollingState.title,
+      });
       setCreateRollingState((prev: IcreateRollingRecoil): any => {
         const variable = { ...prev };
         variable.itemId = 0;

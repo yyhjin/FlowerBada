@@ -1,18 +1,8 @@
-import React from 'react';
-import axios from 'axios';
+import paymentAPI from '@src/api/paymentAPI';
 
 const KakaoPaymentTest = () => {
   const payment = async () => {
-    const res = await axios.post(
-      'http://localhost:8080/api/v1/payment/1',
-      null,
-      {
-        headers: {
-          'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
-          'Access-Control-Allow-Origin': '*',
-        },
-      },
-    );
+    const res = await paymentAPI.requestPayment();
     window.location.href = res.data.response;
   };
 

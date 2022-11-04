@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
@@ -11,6 +10,7 @@ import rollingImgItem from '@assets/fixed-size/rolling/rollingImgItem';
 import ItemLocked from '@assets/itemLocked.png';
 import { css } from '@emotion/react';
 import Coin from '@assets/coin.png';
+import storeAPI from '@src/api/storeAPI';
 import MySwal from '@components/SweetAlert';
 import '@components/SweetAlert.css';
 
@@ -31,15 +31,7 @@ export default function SelectItem() {
   async function getItems(): Promise<void> {
     setLoading(false);
     try {
-      const res: any = await axios.get(
-        'http://localhost:8080/api/v1/store/rolling',
-        {
-          headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
-          },
-        },
-      );
-      // console.log(res.data.response);
+      const res: any = await storeAPI.getRollings(userState.jwt);
       setItems(res.data.response);
       if (createRollingState.url === '') {
         setRollingImg(rollingImgItem[0].img);
