@@ -70,7 +70,6 @@ const Link = css`
 const Url = css`
   margin-top: 5vh;
   margin-left: 10vw;
-  margin-right: 2vw;
   font-size: 4.5vw;
   background-color: white;
   padding: 1vh 4vw 1vh 4vw;
@@ -81,7 +80,8 @@ const Url = css`
 
 const Copy = css`
   margin-top: 5vh;
-  width: 9vw;
+  margin-left: 1vw;
+  width: 8vw;
   border-radius: 2vw;
 `;
 
