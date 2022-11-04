@@ -51,7 +51,7 @@ export default function Modal(props: any) {
 
       switch (props.location) {
         case 'message':
-          window.location.href = '/rollingpaper/message/create';
+          window.location.href = '/rolling/message/create';
           break;
         case 'store':
           window.location.href = '/store';
