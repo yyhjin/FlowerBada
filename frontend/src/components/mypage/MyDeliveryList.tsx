@@ -65,6 +65,8 @@ export default function MyDeliveryList() {
       const params = { sort: sortNumber, paginationId: pages };
       const res: any = await mypageAPI.getDelivery(userState.jwt, params);
       if (res.data.response.length !== 0) {
+        // console.log(res.data.response.length);
+
         setMyList(myList.concat(res.data.response));
         setPages(pages + 1);
       }
@@ -162,7 +164,7 @@ const totalCSS = css`
     background-color: white;
     width: 100%;
 
-    &:first-child > .infobox {
+    &:first-of-type > .infobox {
       margin-top: 0px;
     }
   }
