@@ -48,7 +48,7 @@ const Store = () => {
   const [flowerLanguage, setFlowerLanguage] = useState<string>();
   const [price, setPrice] = useState<number>(0);
   const [itemId, setItemId] = useState<number>(0);
-  const [owned, setOwned] = useState<boolean>(false);
+  const [owned, setOwned] = useState<boolean>(true);
 
   const handleBuying = () => {
     setBuying(true);
@@ -71,7 +71,7 @@ const Store = () => {
     } else if (!isFlower && rollingItemList) {
       setIsFlowerSelected(false);
       setSelectedImg(rollingImgItem[index].img);
-      setFlowerName('');
+      setFlowerName(rollingItemList[index].name);
       setFlowerLanguage('');
       setPrice(rollingItemList[index].price);
       setItemId(rollingItemList[index].rollingId);
@@ -149,11 +149,14 @@ const Store = () => {
         {selectedImg ? (
           <div>
             <img src={selectedImg} />
-            <div>{flowerName}</div>
-            <div>{flowerLanguage}</div>
+            <div css={flowerInfo}>
+              <div>{flowerName}</div>
+              <div>{flowerLanguage}</div>
+            </div>
           </div>
         ) : null}
       </div>
+      <div css={empty}></div>
       <div css={selectBox}>
         <Grid container columns={12} css={GridContainer}>
           {imgList.map((image: string, index: number) => (
@@ -218,12 +221,17 @@ const Store = () => {
         </div>
       </div>
       <div>
-        {selectedImg ? (
+        {selectedImg && !owned ? (
           <button css={BuyButton(owned)} type="button" onClick={handleBuying}>
             <span css={BuyText}>구매하기</span>
           </button>
         ) : (
-          <button css={BuyButton(!owned)} type="button" onClick={handleBuying}>
+          <button
+            disabled
+            css={BuyButton(owned)}
+            type="button"
+            onClick={handleBuying}
+          >
             <span css={BuyText}>구매하기</span>
           </button>
         )}
@@ -233,6 +241,7 @@ const Store = () => {
             isFlower={isFlowerSelected}
             itemId={itemId}
             price={price}
+            css={modal}
           >
             <Receipt points={loginUser.points} price={price} />
           </Modal>
@@ -242,19 +251,25 @@ const Store = () => {
   );
 };
 
+const modal = css`
+  z-index: 800;
+`;
+
 const StoreDiv = css`
   width: 100vw;
   height: 100vw;
 `;
 
 const points = css`
-  width: 30%;
+  /* width: 30%; */
+  height: 30px;
   position: relative;
   float: right;
   text-align: auto;
   margin: auto;
+  padding-top: 10px;
   .coinImg {
-    height: 15px;
+    height: 20px;
     display: flex;
     text-align: auto;
     justify-content: center;
@@ -267,7 +282,8 @@ const points = css`
     float: right;
     right: 20px;
     text-align: left;
-    font-size: 15px;
+    font-size: 20px;
+    /* padding-top: 5px; */
   }
 `;
 
@@ -280,6 +296,15 @@ const SelectedImgDiv = css`
     height: 160px;
   }
   padding-top: 3vh;
+`;
+
+const flowerInfo = css`
+  /* display: flex; */
+  margin-top: 3vh;
+`;
+const empty = css`
+  position: relative;
+  padding: 10vw;
 `;
 
 const selectBox = css`
@@ -352,6 +377,7 @@ const BuyButton = (isOwned: boolean) => css`
   /* transition: border-color 0.25s; */
   background-color: ${!isOwned ? '#16453e' : '#9c9c9c'};
   width: 90%;
+  height: 50px;
 `;
 
 const BuyText = css`
