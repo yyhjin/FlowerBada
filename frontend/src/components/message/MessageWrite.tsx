@@ -26,7 +26,7 @@ export default function MessageWrite(props: { flower: number }) {
     console.log(props.flower);
   }, []);
 
-  const changeContent = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const changeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMsgContent(e.target.value);
     setMsgLength(e.target.value.length);
   };
@@ -50,11 +50,7 @@ export default function MessageWrite(props: { flower: number }) {
     } else if (msgWriter == '') {
       alert('작성자를 입력해주세요');
       document.getElementById('writer')?.focus();
-    }
-    // else if (fontId == 0) {
-    //   alert('폰트를 선택해주세요');
-    // }
-    else {
+    } else {
       const url = `http://localhost:8080/api/v1/message`;
       axios
         .post(url, {

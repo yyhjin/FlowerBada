@@ -114,23 +114,23 @@ export default function MessageRead() {
             {/* 메시지 조회 Modal */}
             <DialogCustom open={openModal}>
               {/* 신고 Modal */}
-              <Dialog open={openReportModal}>
-                <DialogTitle>신고하기</DialogTitle>
+              <Dialog open={openReportModal} css={ReportDialog}>
+                <DialogTitle className="title">신고하기</DialogTitle>
                 <DialogContent>
-                  <br />
-                  <DialogContentText color={'black'}>
+                  {/* <br /> */}
+                  <DialogContentText className="content">
                     신고자 : {loginUser.nickname}
+                    <br />
+                    신고 사유
                   </DialogContentText>
-                  <br />
-                  내용
-                  <br />
+                  {/* <br /> */}
                   <textarea
-                    style={{ resize: 'none' }}
+                    className="inputContent"
                     value={reportContent}
                     onChange={(e) => setReportContent(e.target.value)}
                   ></textarea>
                 </DialogContent>
-                <DialogActions style={{ margin: '10px' }}>
+                <DialogActions className="action">
                   <ThemeProvider theme={theme}>
                     <Button
                       variant="contained"
@@ -157,11 +157,11 @@ export default function MessageRead() {
               <div>
                 <DialogContent>
                   <div style={{ textAlign: 'center' }}>
-                    <img src={'/src/assets/' + msg.imgUrl} width="60%"></img>
+                    <img src={'/src/assets/' + msg.imgUrl} width="70%"></img>
                   </div>
                   <DialogContentTextCustom>
                     <IconButton
-                      css={ReportButton}
+                      css={ReportIcon}
                       color="error"
                       aria-aria-label="report"
                       onClick={(e) => changeReportModal(true)}
@@ -185,7 +185,7 @@ export default function MessageRead() {
                       FROM. {msg.writer}
                     </div>
                   </DialogContentTextCustom>
-                  <div style={{ float: 'right' }}>
+                  <div css={ReportIcon}>
                     <IconButton onClick={(e) => changeModal(false)}>
                       <CloseIcon />
                     </IconButton>
@@ -262,6 +262,40 @@ declare module '@mui/material/styles' {
   }
 }
 
-const ReportButton = css`
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    neutral: true;
+  }
+}
+
+const ReportDialog = css`
+  font-family: 'SeoulNamsanM';
+
+  .title {
+    font-family: 'SeoulNamsanM';
+    float: left;
+    padding: 20px;
+    color: red;
+  }
+
+  .content {
+    font-family: 'SeoulNamsanM';
+    color: rgba(0, 0, 0, 0.87);
+    line-height: 2em;
+  }
+
+  .inputContent {
+    font-family: 'SeoulNamsanM';
+    resize: none;
+    padding: 20px;
+    margin-left: 2px;
+  }
+
+  .action {
+    margin-bottom: 20px;
+  }
+`;
+
+const ReportIcon = css`
   float: right;
 `;
