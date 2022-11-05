@@ -205,8 +205,8 @@ export default function RollingPaper() {
     <>
       {loading && rolling && rolling.messages && type ? (
         <div css={DetailCss}>
-          <div css={TitleZone}>
-            <div css={Title}>{rolling.title}</div>
+          <div className={`titlezone_${type}`}>
+            <div>{rolling.title}</div>
             {bookmark ? (
               <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
             ) : (
@@ -255,6 +255,43 @@ const DetailCss = css`
   width: 100%;
   position: relative;
   transform: translate(0%, -15%);
+  .titlezone_1 {
+    padding-top: 23vh;
+    margin-bottom: -16vh;
+    justify-content: center;
+    font-size: 7.5vw;
+    display: flex;
+    @media screen and (min-height: 700px) {
+      padding-top: 27vh;
+      margin-bottom: -7vh;
+    }
+    @media screen and (min-height: 800px) {
+      padding-top: 27vh;
+      margin-bottom: -7vh;
+    }
+    @media screen and (min-height: 900px) {
+      padding-top: 27vh;
+      margin-bottom: -7vh;
+    }
+    @media screen and (max-height: 660px) and (max-width: 290px) {
+      padding-top: 20vh;
+      margin-bottom: -16vw;
+    }
+  }
+  .titlezone_2 {
+    padding-top: 25vh;
+    margin-bottom: -10vw;
+    justify-content: center;
+    font-size: 7.5vw;
+    display: flex;
+  }
+  .titlezone_3 {
+    padding-top: 23vh;
+    margin-bottom: -10vh;
+    justify-content: center;
+    font-size: 7.5vw;
+    display: flex;
+  }
   .imgbox_1,
   .imgbox_2,
   .imgbox_3 {
@@ -273,6 +310,9 @@ const DetailCss = css`
     width: 75%;
     left: 0vw;
     top: 10vw;
+    @media screen and (max-height: 700px) {
+      width: 62.5%;
+    }
   }
   .imgbox_3 img {
     position: relative;
@@ -340,48 +380,80 @@ const DetailCss = css`
         left: -15vw;
         top: 60vw;
         transform: rotate(0deg);
+        @media screen and (max-height: 700px) {
+          left: -12vw;
+          top: 52vw;
+        }
       }
       &:nth-of-type(2) {
         z-index: 9;
         left: -2vw;
         top: 54vw;
         transform: rotate(0deg);
+        @media screen and (max-height: 700px) {
+          left: -1vw;
+          top: 48vw;
+        }
       }
       &:nth-of-type(3) {
         z-index: 8;
         left: -32vw;
         top: 57vw;
         transform: rotate(-10deg);
+        @media screen and (max-height: 700px) {
+          left: -28vw;
+          top: 50vw;
+        }
       }
       &:nth-of-type(4) {
         z-index: 7;
         left: -12vw;
         top: 40vw;
         transform: rotate(10deg);
+        @media screen and (max-height: 700px) {
+          left: -10vw;
+          top: 35vw;
+        }
       }
       &:nth-of-type(5) {
         z-index: 6;
         left: 16vw;
         top: 37vw;
         transform: rotate(25deg);
+        @media screen and (max-height: 700px) {
+          left: 13vw;
+          top: 32vw;
+        }
       }
       &:nth-of-type(6) {
         z-index: 5;
         left: -40vw;
         top: 45vw;
         transform: rotate(-20deg);
+        @media screen and (max-height: 700px) {
+          left: -35vw;
+          top: 39vw;
+        }
       }
       &:nth-of-type(7) {
         z-index: 4;
         left: -24vw;
         top: 32vw;
         transform: rotate(-10deg);
+        @media screen and (max-height: 700px) {
+          left: -20vw;
+          top: 28vw;
+        }
       }
       &:nth-of-type(8) {
         z-index: 3;
         left: -4vw;
         top: 29vw;
         transform: rotate(5deg);
+        @media screen and (max-height: 700px) {
+          left: -2vw;
+          top: 25vw;
+        }
       }
     }
     .flowerbox_3 {
@@ -398,11 +470,11 @@ const DetailCss = css`
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: 0vw;
+        left: -2vw;
         top: 80vw;
         transform: rotate(0deg);
         @media screen and (max-height: 700px) {
-          left: 0vw;
+          left: -1.5vw;
           top: 68vw;
         }
       }
@@ -418,12 +490,12 @@ const DetailCss = css`
       }
       &:nth-of-type(4) {
         z-index: 7;
-        left: 13vw;
+        left: 15vw;
         top: 75vw;
         transform: rotate(15deg);
         @media screen and (max-height: 700px) {
-          left: 13vw;
-          top: 64vw;
+          left: 13.5vw;
+          top: 63vw;
         }
       }
       &:nth-of-type(5) {
@@ -490,24 +562,23 @@ const DetailCss = css`
   }
   .dot_1,
   .dot_2 {
-    margin-top: 1vh;
+    margin-top: 6vh;
     bottom: 0%;
     @media screen and (min-height: 700px) {
-      margin-top: 12vh;
+      margin-top: 6vh;
     }
     @media screen and (min-height: 800px) {
-      margin-top: 18vh;
+      margin-top: 12vh;
     }
     @media screen and (min-height: 900px) {
-      margin-top: 22vh;
+      margin-top: 15vh;
     }
     @media screen and (max-height: 660px) and (max-width: 290px) {
-      margin-top: 17vh;
+      margin-top: 18vh;
     }
   }
-
   .dot_3 {
-    margin-top: 2vh;
+    margin-top: 0vh;
     bottom: 0%;
     @media screen and (min-height: 800px) {
       margin-top: 7vh;
@@ -539,6 +610,9 @@ const DetailCss = css`
     top: 10vw;
     bottom: 10vw;
     pointer-events: none;
+    @media screen and (max-height: 700px) {
+      width: 62.5%;
+    }
   }
   .imgbox_front_3 img {
     z-index: 12;
@@ -563,16 +637,6 @@ const DeliveryIcon = css`
   width: 10vw;
   margin-left: 75vw;
 `;
-
-const TitleZone = css`
-  padding-top: 22vh;
-  margin-bottom: -20vw;
-  justify-content: center;
-  font-size: 7.5vw;
-  display: flex;
-`;
-
-const Title = css``;
 
 const BookmarkImg = css`
   position: absolute;
