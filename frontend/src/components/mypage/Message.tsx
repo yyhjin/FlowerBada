@@ -46,12 +46,19 @@ const FlowerCss = css`
     position: absolute;
     width: 30vw;
     vertical-align: middle;
+    @media screen and (max-height: 700px) {
+      width: 25vw;
+    }
   }
   .f-inner {
     position: absolute;
-    left: 63vw;
+    left: 51vw;
     top: 5vw;
     color: white;
     text-shadow: 2px 2px 2px gray;
+    font-size: 4.5vw;
+    @media screen and (max-height: 700px) {
+      font-size: 4vw;
+    }
   }
 `;

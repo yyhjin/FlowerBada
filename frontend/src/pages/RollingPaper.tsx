@@ -4,15 +4,20 @@ import { css } from '@emotion/react';
 import Message from '@src/components/mypage/Message';
 import DotSlice from '@components/paging/DotSlice';
 import messageAPI from '@api/messageAPI';
+import rollingAPI from '@api/rollingAPI';
 import Star from '@assets/Star.png';
 import EmptyStar from '@assets/EmptyStar.png';
 import Delivery from '@assets/Delivery.png';
+import { useRecoilState } from 'recoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import MySwal from '@components/SweetAlert';
 
 interface IRolling {
   imgUrl?: string;
   imgFront?: string;
   imgBack?: string;
   title?: string;
+  bookmark?: boolean;
   date?: string;
   messages?: IMessage[];
 }
@@ -31,60 +36,166 @@ export default function RollingPaper() {
   const [valid, setValid] = useState<Boolean>(false);
   const [stepNumber, setStepNumber] = useState<number>(1);
   const [type, setType] = useState<number>(1);
+  const [bookmark, setBookmark] = useState<Boolean>(false);
+  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   let paramCopy: any = {};
   paramCopy = useParams();
 
   async function getRolling() {
     setLoading(false);
     let url = paramCopy.url;
-    try {
-      const res: any = await messageAPI.getRolling(url, '' + paginationId);
+    //로그인 안 했을 때
+    if (userState.jwt === '') {
+      try {
+        const res: any = await messageAPI.getRolling(url, paginationId);
 
-      const curr = new Date();
-      const open = new Date(res.data.response.date.replaceAll('.', '-'));
+        const curr = new Date();
+        const open = new Date(res.data.response.date.replaceAll('.', '-'));
 
-      const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
-      const utcOpen = open.getTime() + open.getTimezoneOffset() * 60 * 1000;
-      const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+        const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+        const utcOpen = open.getTime() + open.getTimezoneOffset() * 60 * 1000;
+        const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
 
-      const nowDate = new Date(utc + KR_TIME_DIFF);
-      const rollingDate = new Date(utcOpen);
+        const nowDate = new Date(utc + KR_TIME_DIFF);
+        const rollingDate = new Date(utcOpen);
 
-      if (rollingDate <= nowDate) {
-        console.log(res.data.response.messages.length);
-        setValid(true);
-      } else {
-        alert(res.data.response.date + '일 이후 개봉 가능');
-        setValid(false);
+        if (rollingDate <= nowDate) {
+          setValid(true);
+        } else {
+          MySwal.fire({
+            title: `${res.data.response.date} 일 이후 개봉 가능`,
+            icon: 'info',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
+          setValid(false);
+        }
+        console.log(res.data.response);
+
+        setRolling(res.data.response);
+        setLoading(true);
+        setStepNumber(
+          Math.floor(
+            res.data.response.totalMessages <= res.data.response.capacity
+              ? 1
+              : Number(res.data.response.totalMessages - 1) /
+                  Number(res.data.response.capacity) +
+                  1,
+          ),
+          // Math.floor(
+          //   Number(res.data.response.totalMessages + 1) /
+          //     Number(res.data.response.capacity) ===
+          //     0
+          //     ? Number(res.data.response.totalMessages) /
+          //         Number(res.data.response.capacity)
+          //     : Number(res.data.response.totalMessages) /
+          //         Number(res.data.response.capacity) +
+          //         1,
+          // ),
+        );
+
+        const tmpType = res.data.response.imgFront.split('_')[2];
+        if (Number(tmpType) >= 1 && Number(tmpType) <= 4) {
+          setType(1);
+        } else if (Number(tmpType) >= 5 && Number(tmpType) <= 7) {
+          setType(2);
+        } else {
+          setType(3);
+        }
+      } catch (err: any) {
+        // console.log(err);
       }
+    }
+    //로그인 했을 때
+    else {
+      try {
+        const res: any = await messageAPI.loginGetRolling(
+          userState.jwt,
+          url,
+          paginationId,
+        );
 
-      setRolling(res.data.response);
-      setLoading(true);
-      setStepNumber(
-        Math.floor(
-          Number(res.data.response.totalMessages + 1) /
-            Number(res.data.response.capacity) ===
-            0
-            ? Number(res.data.response.totalMessages) /
-                Number(res.data.response.capacity)
-            : Number(res.data.response.totalMessages) /
-                Number(res.data.response.capacity) +
-                1,
-        ),
-      );
+        const curr = new Date();
+        const open = new Date(res.data.response.date.replaceAll('.', '-'));
 
-      const tmpType = res.data.response.imgFront.split('_')[2];
-      if (Number(tmpType) >= 1 && Number(tmpType) <= 4) {
-        setType(1);
-      } else if (Number(tmpType) >= 5 && Number(tmpType) <= 7) {
-        setType(2);
-      } else {
-        setType(3);
+        const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+        const utcOpen = open.getTime() + open.getTimezoneOffset() * 60 * 1000;
+        const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+
+        const nowDate = new Date(utc + KR_TIME_DIFF);
+        const rollingDate = new Date(utcOpen);
+
+        if (rollingDate <= nowDate) {
+          setValid(true);
+        } else {
+          MySwal.fire({
+            title: `${res.data.response.date} 일 이후 개봉 가능`,
+            icon: 'info',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
+          setValid(false);
+        }
+        console.log(res.data.response);
+        setRolling(res.data.response);
+        setLoading(true);
+        setStepNumber(
+          Math.floor(
+            res.data.response.totalMessages <= res.data.response.capacity
+              ? 1
+              : Number(res.data.response.totalMessages - 1) /
+                  Number(res.data.response.capacity) +
+                  1,
+          ),
+          // Math.floor(
+          //   Number(res.data.response.totalMessages + 1) /
+          //     Number(res.data.response.capacity) ===
+          //     0
+          //     ? Number(res.data.response.totalMessages) /
+          //         Number(res.data.response.capacity)
+          //     : Number(res.data.response.totalMessages) /
+          //         Number(res.data.response.capacity) +
+          //         1,
+          // ),
+        );
+        if (res.data.response.bookmark) {
+          setBookmark(true);
+        }
+        const tmpType = res.data.response.imgFront.split('_')[2];
+        if (Number(tmpType) >= 1 && Number(tmpType) <= 4) {
+          setType(1);
+        } else if (Number(tmpType) >= 5 && Number(tmpType) <= 7) {
+          setType(2);
+        } else {
+          setType(3);
+        }
+      } catch (err: any) {
+        // console.log(err);
       }
-    } catch (err: any) {
-      // console.log(err);
     }
   }
+  const bookmarkSwitch = async () => {
+    //비 로그인시
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    }
+    //로그인시
+    else {
+      try {
+        let url = paramCopy.url;
+        const res: any = await rollingAPI.bookmarkRolling(userState.jwt, url);
+        setBookmark(!bookmark);
+        console.log('북마크 스위치 성공!');
+      } catch (err: any) {
+        // console.log(err);
+      }
+    }
+  };
 
   useEffect(() => {
     getRolling();
@@ -94,7 +205,14 @@ export default function RollingPaper() {
     <>
       {loading && rolling && rolling.messages && type ? (
         <div css={DetailCss}>
-          <div className="title">{rolling.title}</div>
+          <div css={TitleZone}>
+            <div css={Title}>{rolling.title}</div>
+            {bookmark ? (
+              <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
+            ) : (
+              <img src={EmptyStar} css={BookmarkImg} onClick={bookmarkSwitch} />
+            )}
+          </div>
           <div className="fixbox">
             <div className={`imgbox_${type}`}>
               <img src={'/src/assets/' + rolling.imgBack}></img>
@@ -124,6 +242,7 @@ export default function RollingPaper() {
               stepNumber={stepNumber}
             ></DotSlice>
           </div>
+          <img src={Delivery} css={DeliveryIcon} />
         </div>
       ) : (
         <div css={Loading}>로딩중</div>
@@ -136,11 +255,6 @@ const DetailCss = css`
   width: 100%;
   position: relative;
   transform: translate(0%, -15%);
-  .title {
-    margin-top: 50vw;
-    margin-bottom: -20vw;
-    font-size: 5vw;
-  }
   .imgbox_1,
   .imgbox_2,
   .imgbox_3 {
@@ -166,6 +280,9 @@ const DetailCss = css`
     width: 90%;
     left: 0vw;
     top: 10vw;
+    @media screen and (max-height: 700px) {
+      width: 75%;
+    }
   }
   .flowerlist {
     /* width: 100%; */
@@ -280,65 +397,114 @@ const DetailCss = css`
         left: -15vw;
         top: 80vw;
         transform: rotate(0deg);
+        @media screen and (max-height: 700px) {
+          left: -12vw;
+          top: 68vw;
+        }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: -2vw;
+        left: 0vw;
         top: 80vw;
         transform: rotate(0deg);
+        @media screen and (max-height: 700px) {
+          left: 0vw;
+          top: 68vw;
+        }
       }
       &:nth-of-type(3) {
         z-index: 8;
-        left: -32vw;
-        top: 85vw;
+        left: -34vw;
+        top: 83vw;
         transform: rotate(-10deg);
+        @media screen and (max-height: 700px) {
+          left: -28vw;
+          top: 70vw;
+        }
       }
       &:nth-of-type(4) {
         z-index: 7;
-        left: 15vw;
+        left: 13vw;
         top: 75vw;
         transform: rotate(15deg);
+        @media screen and (max-height: 700px) {
+          left: 13vw;
+          top: 64vw;
+        }
       }
       &:nth-of-type(5) {
         z-index: 6;
         left: -45vw;
         top: 80vw;
         transform: rotate(-5deg);
+        @media screen and (max-height: 700px) {
+          left: -36vw;
+          top: 68vw;
+        }
       }
       &:nth-of-type(6) {
         z-index: 5;
         left: -15vw;
         top: 65vw;
         transform: rotate(-5deg);
+        @media screen and (max-height: 700px) {
+          left: -12vw;
+          top: 55vw;
+        }
       }
       &:nth-of-type(7) {
         z-index: 5;
-        left: -30vw;
-        top: 70vw;
+        left: -32vw;
+        top: 68vw;
         transform: rotate(-10deg);
+        @media screen and (max-height: 700px) {
+          left: -27vw;
+          top: 57vw;
+        }
       }
       &:nth-of-type(8) {
         z-index: 5;
         left: 2vw;
         top: 65vw;
         transform: rotate(5deg);
+        @media screen and (max-height: 700px) {
+          left: 2vw;
+          top: 55vw;
+        }
       }
       &:nth-of-type(9) {
         z-index: 2;
         left: -45vw;
         top: 70vw;
         transform: rotate(-20deg);
+        @media screen and (max-height: 700px) {
+          left: -40vw;
+          top: 60vw;
+        }
       }
       &:nth-of-type(10) {
         z-index: 1;
-        left: 13vw;
+        left: 15vw;
         top: 65vw;
         transform: rotate(0deg);
+        @media screen and (max-height: 700px) {
+          left: 13vw;
+          top: 55vw;
+        }
       }
     }
   }
   .dot {
-    margin-bottom: 0;
+    margin-top: 1vh;
+    @media screen and (min-height: 800px) {
+      margin-top: 7vh;
+    }
+    @media screen and (min-height: 900px) {
+      margin-top: 10vh;
+    }
+    @media screen and (max-height: 660px) and (max-width: 290px) {
+      margin-top: 15vh;
+    }
   }
   .imgbox_front_1 img {
     z-index: 12;
@@ -369,9 +535,34 @@ const DetailCss = css`
     top: 10vw;
     bottom: 10vw;
     pointer-events: none;
+    @media screen and (max-height: 700px) {
+      width: 75%;
+    }
   }
 `;
 
 const Loading = css`
   width: 100vw;
+`;
+
+const DeliveryIcon = css`
+  width: 10vw;
+  margin-left: 75vw;
+`;
+
+const TitleZone = css`
+  padding-top: 22vh;
+  margin-bottom: -20vw;
+  justify-content: center;
+  font-size: 7.5vw;
+  display: flex;
+`;
+
+const Title = css``;
+
+const BookmarkImg = css`
+  position: absolute;
+  left: 85%;
+  width: 10vw;
+  z-index: 1;
 `;
