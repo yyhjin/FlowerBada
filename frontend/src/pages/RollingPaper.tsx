@@ -235,7 +235,7 @@ export default function RollingPaper() {
           <div className={`imgbox_front_${type}`}>
             <img src={'/src/assets/' + rolling.imgFront}></img>
           </div>
-          <div className="dot">
+          <div className={`dot_${type}`}>
             <DotSlice
               paginationId={paginationId}
               setPaginationId={setPaginationId}
@@ -292,14 +292,8 @@ const DetailCss = css`
       position: relative;
       &:first-of-type {
         z-index: 10;
-
         left: -10vw;
         top: 46vw;
-        /* @media screen and (min-width: 500px) {
-          left: 0px;
-          top: 0;
-        } */
-
         transform: rotate(0deg);
       }
       &:nth-of-type(2) {
@@ -494,8 +488,27 @@ const DetailCss = css`
       }
     }
   }
-  .dot {
+  .dot_1,
+  .dot_2 {
     margin-top: 1vh;
+    bottom: 0%;
+    @media screen and (min-height: 700px) {
+      margin-top: 12vh;
+    }
+    @media screen and (min-height: 800px) {
+      margin-top: 18vh;
+    }
+    @media screen and (min-height: 900px) {
+      margin-top: 22vh;
+    }
+    @media screen and (max-height: 660px) and (max-width: 290px) {
+      margin-top: 17vh;
+    }
+  }
+
+  .dot_3 {
+    margin-top: 2vh;
+    bottom: 0%;
     @media screen and (min-height: 800px) {
       margin-top: 7vh;
     }
@@ -503,9 +516,10 @@ const DetailCss = css`
       margin-top: 10vh;
     }
     @media screen and (max-height: 660px) and (max-width: 290px) {
-      margin-top: 15vh;
+      margin-top: 18vh;
     }
   }
+
   .imgbox_front_1 img {
     z-index: 12;
     position: relative;

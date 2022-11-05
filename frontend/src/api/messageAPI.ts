@@ -38,13 +38,13 @@ const messageAPI = {
       data: data,
     });
   },
-  getRolling(url: string, paginationId: string) {
+  getRolling(url: string, paginationId: number) {
     return api({
       method: 'get',
       url: `${END_POINT}/${url}/${paginationId}`,
     });
   },
-  loginGetRolling(jwt: string, url: string, paginationId: string) {
+  loginGetRolling(jwt: string, url: string, paginationId: number) {
     return api({
       method: 'get',
       url: `${END_POINT}/${LOGIN}/${url}/${paginationId}`,
