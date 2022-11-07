@@ -82,16 +82,6 @@ export default function RollingPaper() {
                   Number(res.data.response.capacity) +
                   1,
           ),
-          // Math.floor(
-          //   Number(res.data.response.totalMessages + 1) /
-          //     Number(res.data.response.capacity) ===
-          //     0
-          //     ? Number(res.data.response.totalMessages) /
-          //         Number(res.data.response.capacity)
-          //     : Number(res.data.response.totalMessages) /
-          //         Number(res.data.response.capacity) +
-          //         1,
-          // ),
         );
 
         const tmpType = res.data.response.imgFront.split('_')[2];
@@ -147,16 +137,6 @@ export default function RollingPaper() {
                   Number(res.data.response.capacity) +
                   1,
           ),
-          // Math.floor(
-          //   Number(res.data.response.totalMessages + 1) /
-          //     Number(res.data.response.capacity) ===
-          //     0
-          //     ? Number(res.data.response.totalMessages) /
-          //         Number(res.data.response.capacity)
-          //     : Number(res.data.response.totalMessages) /
-          //         Number(res.data.response.capacity) +
-          //         1,
-          // ),
         );
         if (res.data.response.bookmark) {
           setBookmark(true);
