@@ -1,7 +1,6 @@
 import api from './api';
 
 const END_POINT = 'message';
-const LOGIN = 'login';
 
 interface IReportData {
   messageId: number;
@@ -38,21 +37,24 @@ const messageAPI = {
       data: data,
     });
   },
-  getRolling(url: string, paginationId: number) {
+  getRolling(jwt: string, url: string, paginationId: number) {
     return api({
       method: 'get',
       url: `${END_POINT}/${url}/${paginationId}`,
-    });
-  },
-  loginGetRolling(jwt: string, url: string, paginationId: number) {
-    return api({
-      method: 'get',
-      url: `${END_POINT}/${LOGIN}/${url}/${paginationId}`,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
       },
     });
   },
+  // loginGetRolling(jwt: string, url: string, paginationId: number) {
+  //   return api({
+  //     method: 'get',
+  //     url: `${END_POINT}/${LOGIN}/${url}/${paginationId}`,
+  //     headers: {
+  //       'X-AUTH-TOKEN': `Bearer ` + jwt,
+  //     },
+  //   });
+  // },
 };
 
 export default messageAPI;

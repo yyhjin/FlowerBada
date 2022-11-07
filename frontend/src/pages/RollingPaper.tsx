@@ -44,114 +44,113 @@ export default function RollingPaper() {
   async function getRolling() {
     setLoading(false);
     let url = paramCopy.url;
-    //로그인 안 했을 때
-    if (userState.jwt === '') {
-      try {
-        const res: any = await messageAPI.getRolling(url, paginationId);
+    try {
+      const res: any = await messageAPI.getRolling(
+        userState.jwt,
+        url,
+        paginationId,
+      );
 
-        const curr = new Date();
-        const open = new Date(res.data.response.date.replaceAll('.', '-'));
+      const curr = new Date();
+      const open = new Date(res.data.response.date.replaceAll('.', '-'));
 
-        const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
-        const utcOpen = open.getTime() + open.getTimezoneOffset() * 60 * 1000;
-        const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+      const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+      const utcOpen = open.getTime() + open.getTimezoneOffset() * 60 * 1000;
+      const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
 
-        const nowDate = new Date(utc + KR_TIME_DIFF);
-        const rollingDate = new Date(utcOpen);
+      const nowDate = new Date(utc + KR_TIME_DIFF);
+      const rollingDate = new Date(utcOpen);
 
-        if (rollingDate <= nowDate) {
-          setValid(true);
-        } else {
-          MySwal.fire({
-            title: `${res.data.response.date} 일 이후 개봉 가능`,
-            icon: 'info',
-            confirmButtonColor: '#16453e',
-            confirmButtonText: '확인',
-          });
-          setValid(false);
-        }
-        console.log(res.data.response);
-
-        setRolling(res.data.response);
-        setLoading(true);
-        setStepNumber(
-          Math.floor(
-            res.data.response.totalMessages <= res.data.response.capacity
-              ? 1
-              : Number(res.data.response.totalMessages - 1) /
-                  Number(res.data.response.capacity) +
-                  1,
-          ),
-        );
-
-        const tmpType = res.data.response.imgFront.split('_')[2];
-        if (Number(tmpType) >= 1 && Number(tmpType) <= 4) {
-          setType(1);
-        } else if (Number(tmpType) >= 5 && Number(tmpType) <= 7) {
-          setType(2);
-        } else {
-          setType(3);
-        }
-      } catch (err: any) {
-        // console.log(err);
+      if (rollingDate <= nowDate) {
+        setValid(true);
+      } else {
+        MySwal.fire({
+          title: `${res.data.response.date} 일 이후 개봉 가능`,
+          icon: 'info',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        });
+        setValid(false);
       }
+      console.log(res.data.response);
+
+      setRolling(res.data.response);
+      setLoading(true);
+      setStepNumber(
+        Math.floor(
+          res.data.response.totalMessages <= res.data.response.capacity
+            ? 1
+            : Number(res.data.response.totalMessages - 1) /
+                Number(res.data.response.capacity) +
+                1,
+        ),
+      );
+
+      const tmpType = res.data.response.imgFront.split('_')[2];
+      if (Number(tmpType) >= 1 && Number(tmpType) <= 4) {
+        setType(1);
+      } else if (Number(tmpType) >= 5 && Number(tmpType) <= 7) {
+        setType(2);
+      } else {
+        setType(3);
+      }
+    } catch (err: any) {
+      // console.log(err);
     }
     //로그인 했을 때
-    else {
-      try {
-        const res: any = await messageAPI.loginGetRolling(
-          userState.jwt,
-          url,
-          paginationId,
-        );
+    try {
+      const res: any = await messageAPI.getRolling(
+        userState.jwt,
+        url,
+        paginationId,
+      );
 
-        const curr = new Date();
-        const open = new Date(res.data.response.date.replaceAll('.', '-'));
+      const curr = new Date();
+      const open = new Date(res.data.response.date.replaceAll('.', '-'));
 
-        const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
-        const utcOpen = open.getTime() + open.getTimezoneOffset() * 60 * 1000;
-        const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+      const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+      const utcOpen = open.getTime() + open.getTimezoneOffset() * 60 * 1000;
+      const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
 
-        const nowDate = new Date(utc + KR_TIME_DIFF);
-        const rollingDate = new Date(utcOpen);
+      const nowDate = new Date(utc + KR_TIME_DIFF);
+      const rollingDate = new Date(utcOpen);
 
-        if (rollingDate <= nowDate) {
-          setValid(true);
-        } else {
-          MySwal.fire({
-            title: `${res.data.response.date} 일 이후 개봉 가능`,
-            icon: 'info',
-            confirmButtonColor: '#16453e',
-            confirmButtonText: '확인',
-          });
-          setValid(false);
-        }
-        console.log(res.data.response);
-        setRolling(res.data.response);
-        setLoading(true);
-        setStepNumber(
-          Math.floor(
-            res.data.response.totalMessages <= res.data.response.capacity
-              ? 1
-              : Number(res.data.response.totalMessages - 1) /
-                  Number(res.data.response.capacity) +
-                  1,
-          ),
-        );
-        if (res.data.response.bookmark) {
-          setBookmark(true);
-        }
-        const tmpType = res.data.response.imgFront.split('_')[2];
-        if (Number(tmpType) >= 1 && Number(tmpType) <= 4) {
-          setType(1);
-        } else if (Number(tmpType) >= 5 && Number(tmpType) <= 7) {
-          setType(2);
-        } else {
-          setType(3);
-        }
-      } catch (err: any) {
-        // console.log(err);
+      if (rollingDate <= nowDate) {
+        setValid(true);
+      } else {
+        MySwal.fire({
+          title: `${res.data.response.date} 일 이후 개봉 가능`,
+          icon: 'info',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        });
+        setValid(false);
       }
+      console.log(res.data.response);
+      setRolling(res.data.response);
+      setLoading(true);
+      setStepNumber(
+        Math.floor(
+          res.data.response.totalMessages <= res.data.response.capacity
+            ? 1
+            : Number(res.data.response.totalMessages - 1) /
+                Number(res.data.response.capacity) +
+                1,
+        ),
+      );
+      if (res.data.response.bookmark) {
+        setBookmark(true);
+      }
+      const tmpType = res.data.response.imgFront.split('_')[2];
+      if (Number(tmpType) >= 1 && Number(tmpType) <= 4) {
+        setType(1);
+      } else if (Number(tmpType) >= 5 && Number(tmpType) <= 7) {
+        setType(2);
+      } else {
+        setType(3);
+      }
+    } catch (err: any) {
+      // console.log(err);
     }
   }
   const bookmarkSwitch = async () => {
