@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import copy from '@assets/copy.png';
@@ -9,10 +8,10 @@ export default function RollingLink() {
   const root = 'localhost:5173/rolling/';
   const navigate = useNavigate();
   const handleRollingPaper = (): void => {
-    navigate(`/rolling/${state}/1`);
+    navigate(`/rolling/${state}`);
   };
   const copyUrl = (): void => {
-    navigator.clipboard.writeText(root + state + '/1');
+    navigator.clipboard.writeText(root + state);
     MySwal.fire({
       title: '링크가 복사되었습니다.',
       icon: 'success',
@@ -30,7 +29,7 @@ export default function RollingLink() {
         <div css={Link}>
           <div css={Url}>
             {root}
-            {state}/1
+            {state}
           </div>
           <img src={copy} css={Copy} onClick={copyUrl} />
         </div>

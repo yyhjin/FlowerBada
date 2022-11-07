@@ -140,12 +140,8 @@ const totalCSS = css`
     font-size: 12px !important;
   }
   .chargebox {
-    border: 1px solid;
     display: flex;
     justify-content: flex-end;
     float: right;
-  }
-  .imgcss {
-    transform: rotate(30deg);
   }
 `;

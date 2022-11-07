@@ -12,7 +12,7 @@ export default function MyPage() {
   return (
     <div css={totalCSS}>
       <div className="main-tab">
-        <div>
+        <div className="button-tab">
           {number === 0 ? (
             <button className="btn" onClick={() => handleChange(0)}>
               배송 목록
@@ -23,7 +23,7 @@ export default function MyPage() {
             </button>
           )}
         </div>
-        <div>
+        <div className="button-tab">
           {number === 1 ? (
             <button className="btn" onClick={() => handleChange(1)}>
               포인트
@@ -49,10 +49,14 @@ export default function MyPage() {
 const totalCSS = css`
   display: flex;
   flex-direction: column;
+  width: 100vw;
 
   .main_tab {
     display: flex;
     flex-direction: row;
+  }
+  .button_tab {
+    width: 100%;
   }
   button {
     border-radius: 8px;
@@ -67,6 +71,7 @@ const totalCSS = css`
   .btn,
   .active_btn {
     height: 40px;
+    width: 50%;
   }
   .btn {
     float: left;
