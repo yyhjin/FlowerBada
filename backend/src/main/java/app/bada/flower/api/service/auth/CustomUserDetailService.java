@@ -14,8 +14,8 @@ public class CustomUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByKakaoUserId(username)
+    public User loadUserByUsername(String token) throws UsernameNotFoundException {
+        return userRepository.findByKakaoUserId(token)
                 .orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다."));
     }
 }

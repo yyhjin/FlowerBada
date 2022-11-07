@@ -63,7 +63,7 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     @JsonIgnore
     public String getUsername() {
-        return nickname;
+        return String.valueOf(token);
     }
 
     @Override

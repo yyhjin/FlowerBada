@@ -1,5 +1,6 @@
 package app.bada.flower.api.service.jwt;
 
+import app.bada.flower.api.dto.auth.JwtCode;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.UserRepository;
 import app.bada.flower.api.service.UserService;
@@ -9,12 +10,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -50,6 +54,12 @@ public class JwtTokenUtil {
         return generateToken(userToken, roles, tokenValidTime);
     }
 
+    public String createAccessToken(String userToken){
+        User user = userRepository.findByKakaoUserId(userToken).orElse(null);
+        if(user == null) throw new UsernameNotFoundException("No such user found.");
+        return generateToken(userToken, user.getRoles(), tokenValidTime);
+    }
+
     public String createRefreshToken(String userToken, List<String> roles) {
         return generateToken(userToken, roles, refreshTokenValidTime);
     }
@@ -65,6 +75,18 @@ public class JwtTokenUtil {
                 .setExpiration(new Date(now.getTime() + expTime)) // set Expire Time
                 .signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘과 signature에 들어갈 secret값 세팅
                 .compact();
+    }
+
+    public String reissueRefreshToken(String curToken){
+        User user = userRepository.findByKakaoUserId(getUserToken(curToken)).orElse(null);
+        if(user == null) return null;
+        if(redisTemplate.opsForValue().get("REFRESH"+curToken) != null) {
+            String newRefresh = createRefreshToken(user.getToken(), user.getRoles());
+            redisTemplate.opsForValue().getAndDelete("REFRESH"+curToken);
+            redisTemplate.opsForValue().set("REFRESH"+newRefresh, true, Duration.ofSeconds(refreshTokenValidTime));
+            return newRefresh;
+        }
+        return null;
     }
 
     // JWT 토큰에서 인증 정보 조회
@@ -107,15 +129,17 @@ public class JwtTokenUtil {
     }
 
     // 토큰의 유효성 & 만료일자 확인
-    public boolean validateToken(String jwtToken) {
+    public JwtCode validateToken(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-            boolean flag = !claims.getBody().getExpiration().before(new Date()); // 만료일자 검사
-            flag &= claims.getBody().get("nonce").equals(nonce); // nonce 검사
-            return flag;
+            if(!claims.getBody().getExpiration().before(new Date())) // 만료일자 검사
+                return JwtCode.EXPIRED;
+            if(!claims.getBody().get("nonce").equals(nonce)) // nonce 검사
+                return JwtCode.INCORRECT;
+            return JwtCode.ACCESS;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return JwtCode.DENIED;
         }
     }
 
