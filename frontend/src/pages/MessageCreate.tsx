@@ -71,8 +71,8 @@ export default function MessageCreate() {
   return (
     <div css={outerBox}>
       <div css={PointBox}>
-        <span className="pointcss">
-          <img src={CoinImg} className="coinImg"></img>
+        <span className="point-css">
+          <img src={CoinImg} className="coin-img"></img>
           <b>{loginUser.points}</b>
         </span>
       </div>
@@ -83,10 +83,10 @@ export default function MessageCreate() {
               src={'/src/assets/' + flowerList[flowerId - 1].imgUrl}
               height="60%"
             ></img>
-            <div className="FlowerName">
+            <div className="flower-name">
               <b>{flowerList[flowerId - 1].name}</b>
             </div>
-            <div className="FlowerLanguage">
+            <div className="flower-language">
               {flowerList[flowerId - 1].flowerLanguage}
             </div>
           </>
@@ -106,7 +106,7 @@ export default function MessageCreate() {
                   {flower.isOwned ? (
                     <div css={GridStyle}>
                       <img
-                        className="item_image"
+                        className="item-image"
                         src={'/src/assets/' + flower.imgUrl}
                         key={flower.flowerId}
                         onClick={() => changeFlower(flower.flowerId, i)}
@@ -115,12 +115,12 @@ export default function MessageCreate() {
                   ) : (
                     <div css={GridStyle}>
                       <img
-                        className="item_image"
+                        className="item-image"
                         src={'/src/assets/' + flower.imgUrl}
                         key={flower.flowerId}
                       ></img>
                       <img
-                        className="locked_image"
+                        className="locked-image"
                         src={itemLocked}
                         onClick={() => changeFlower(flower.flowerId, i)}
                       />
@@ -245,7 +245,7 @@ const FlowerItemBox = css`
   overflow-y: scroll;
   position: relative;
 
-  .FlowerItem {
+  .flower-item {
     /* margin: 3vh 1vh 0 1vh; */
     width: 30vw;
     aspect-ratio: 1/1;
@@ -255,7 +255,7 @@ const FlowerItemBox = css`
     position: absolute;
     display: block;
   }
-  .locked_image {
+  .locked-image {
     width: 28%;
     padding-left: 2.5%;
     padding-right: 2.5%;
@@ -269,14 +269,14 @@ const FlowerItemBox = css`
 const DetailBox = css`
   height: 80vw;
   /* margin: 0 auto; */
-  .FlowerName {
+  .flower-name {
     font-size: 22px;
     margin-top: 1vh;
     margin-bottom: 1vh;
     height: auto;
   }
 
-  .FlowerLanguage {
+  .flower-language {
     font-size: 16px;
     height: auto;
   }
@@ -312,7 +312,7 @@ const PointBox = css`
   margin: auto;
   padding: 2vw;
 
-  .coinImg {
+  .coin-img {
     /* width: 4vw; */
     height: 15px;
     display: flex;
@@ -321,7 +321,7 @@ const PointBox = css`
     padding-bottom: 2px;
     padding-right: 5px;
   }
-  .pointcss {
+  .point-css {
     /* margin-bottom: 20px; */
     display: flex;
     position: relative;
@@ -350,7 +350,7 @@ const GridStyle = css`
   position: relative;
   height: 30vw;
 
-  .item_image {
+  .item-image {
     width: 20vw;
     position: absolute;
     margin-top: 3vw;
@@ -358,7 +358,7 @@ const GridStyle = css`
     /* z-index: 1; */
     left: 2vw;
   }
-  .locked_image {
+  .locked-image {
     position: absolute;
     /* z-index: 2; */
     width: 25vw;

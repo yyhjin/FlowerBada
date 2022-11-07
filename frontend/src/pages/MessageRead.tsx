@@ -125,7 +125,7 @@ export default function MessageRead() {
                   </DialogContentText>
                   {/* <br /> */}
                   <textarea
-                    className="inputContent"
+                    className="input-content"
                     value={reportContent}
                     onChange={(e) => setReportContent(e.target.value)}
                   ></textarea>
@@ -284,7 +284,7 @@ const ReportDialog = css`
     line-height: 2em;
   }
 
-  .inputContent {
+  .input-content {
     font-family: 'SeoulNamsanM';
     resize: none;
     padding: 20px;
