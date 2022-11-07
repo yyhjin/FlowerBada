@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import axios from 'axios';
 export default function Message(props: any) {
-  async function clickEvent(msgId: number) {
+  async function clickEvent(msgId: any) {
     if (props.valid) {
       try {
         const res: any = await axios.get(
