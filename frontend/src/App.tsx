@@ -20,7 +20,7 @@ import Layout from '@pages/Layout';
 import SignIn from '@pages/SignIn';
 import MessageRead from '@pages/MessageRead';
 import MessageCreate from '@pages/MessageCreate';
-
+import NOTFOUND from '@pages/error/NotFound';
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
   return (
@@ -63,6 +63,7 @@ function App() {
                   path="/rolling/message/create"
                   element={<MessageCreate />}
                 />
+                <Route path="/error/404" element={<NOTFOUND />} />
               </Route>
             </>
           )}
