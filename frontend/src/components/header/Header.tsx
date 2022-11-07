@@ -31,11 +31,11 @@ export default function Header() {
         <span css={LogoName}>
           {loginUser.jwt === '' ? (
             <a href="#" css={MainLogo}>
-              <h3>꽃바다</h3>
+              <h1>꽃바다</h1>
             </a>
           ) : (
             <a href="#" onClick={linkToMain} css={MainLogo}>
-              <h3>꽃바다</h3>
+              <h1>꽃바다</h1>
             </a>
           )}
         </span>
