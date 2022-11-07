@@ -3,23 +3,31 @@ package app.bada.flower.api.service;
 import app.bada.flower.api.dto.message.MessageReqDto;
 import app.bada.flower.api.dto.message.MessageResDto;
 import app.bada.flower.api.entity.Message;
+import app.bada.flower.api.entity.RollingPaper;
 import app.bada.flower.api.repository.FlowerItemRepository;
 import app.bada.flower.api.repository.MessageRepository;
 import app.bada.flower.api.repository.RollingPaperRepository;
+import app.bada.flower.api.util.S3FileUpload;
 import app.bada.flower.exception.CustomException;
 import app.bada.flower.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 
 @Service
 @RequiredArgsConstructor
-public class MessageServiceImpl implements MessageService{
+public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
     private final FlowerItemRepository flowerItemRepository;
     private final RollingPaperRepository rollingPaperRepository;
+    private final S3FileUpload s3FileUpload;
 
     @Override
     public Message createMessage(MessageReqDto.MessageReq messageReq) {
@@ -55,5 +63,25 @@ public class MessageServiceImpl implements MessageService{
     @Override
     public List<MessageResDto.MessageDto> search(String content) {
         return messageRepository.searchContent(content);
+    }
+
+    @Override
+    public void updateRollingImage(String url, String img) throws IOException{
+        rollingPaperRepository.findByUrl(url).orElseThrow(() -> new IllegalArgumentException());
+        String filename = "rollingpaper/"+url+".png";
+        String path = "";
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains("win"))
+            path = "C:\\Temp\\upload" + filename;
+        else if(os.contains("linux"))
+            path = "/home/ubuntu/upload" + filename;
+
+        byte[] imgByte = Base64.getDecoder().decode(img);
+        try(FileOutputStream fos = new FileOutputStream(path)){
+            fos.write(imgByte);
+        }
+        File file = new File(path);
+//        s3FileUpload.deleteFile(filename);
+//        s3FileUpload.putS3(file, filename);
     }
 }
