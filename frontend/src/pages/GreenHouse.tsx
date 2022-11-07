@@ -177,12 +177,7 @@ export default function GreenHouse() {
         {rollings.map((rolling: IRolling, index: number) => (
           <Grid xs={4} item key={index}>
             <div css={GridItem} onClick={() => handleRollingPaper(rolling.url)}>
-              {/* <img className="rolling_img" src={rolling.imgUrl} /> */}
-              <img
-                className="rolling_img"
-                src="../src/assets/fixed-size/rolling/rolling_7_fixed.png"
-              />
-
+              <img className="rolling_img" src={rolling.imgUrl} />
               <div className="rolling_title">{rolling.title}</div>
               <div className="rolling_date">({rolling.date})</div>
             </div>
