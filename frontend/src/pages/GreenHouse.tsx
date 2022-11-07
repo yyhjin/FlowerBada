@@ -5,7 +5,10 @@ import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import greenhouseAPI from '@api/greenhouseAPI';
 import { css } from '@emotion/react';
-import { Grid } from '@mui/material';
+import { createTheme, Grid, MenuItem, ThemeProvider } from '@mui/material';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 interface IRolling {
   url: string;
@@ -24,7 +27,7 @@ export default function GreenHouse() {
   const [rollings, setRollings] = useState<IRolling[]>([]);
   const [tab, setTab] = useState<String>('내가 만든 꽃다발');
   const [tabNum, setTabNum] = useState<number>(1);
-  const [sort, setSort] = useState<number>(1);
+  const [sort, setSort] = useState<string>('1');
   const [paginationId, setPaginationId] = useState<number>(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
 
@@ -74,10 +77,10 @@ export default function GreenHouse() {
   }
 
   // 드랍다운 필터 관련
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (event: SelectChangeEvent) => {
     setPaginationId(0);
     setRollings([]);
-    setSort(+event.target.value);
+    setSort(event.target.value);
   };
 
   const handleScroll = useCallback((): void => {
@@ -91,9 +94,9 @@ export default function GreenHouse() {
       Math.round(scrollTop + innerHeight) >= scrollHeight
     ) {
       if (tabNum === 1) {
-        getRollings(sort);
+        getRollings(+sort);
       } else {
-        getBookmarks(sort);
+        getBookmarks(+sort);
       }
     }
   }, [paginationId, rollings]);
@@ -112,9 +115,9 @@ export default function GreenHouse() {
 
   useEffect(() => {
     if (tabNum === 1) {
-      getRollings(sort);
+      getRollings(+sort);
     } else {
-      getBookmarks(sort);
+      getBookmarks(+sort);
     }
   }, [sort, tabNum]);
 
@@ -138,10 +141,28 @@ export default function GreenHouse() {
         )}
       </div>
       <div css={SelectBtn}>
-        <select className="dropdown" value={sort} onChange={handleChange}>
+        {/* <select className="dropdown" value={sort} onChange={handleChange}>
           <option value={1}>최신순</option>
           <option value={2}>오래된순</option>
-        </select>
+        </select> */}
+        <ThemeProvider theme={theme}>
+          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+            <Select
+              labelId="demo-select-small"
+              id="demo-select-small"
+              value={sort}
+              onChange={handleChange}
+              css={Font}
+            >
+              <MenuItem value={'1'} css={Font}>
+                최신순
+              </MenuItem>
+              <MenuItem value={'2'} css={Font}>
+                오래된순
+              </MenuItem>
+            </Select>
+          </FormControl>
+        </ThemeProvider>
       </div>
       {loading ? (
         <div>
@@ -156,7 +177,12 @@ export default function GreenHouse() {
         {rollings.map((rolling: IRolling, index: number) => (
           <Grid xs={4} item key={index}>
             <div css={GridItem} onClick={() => handleRollingPaper(rolling.url)}>
-              <img className="rolling_img" src={rolling.imgUrl} />
+              {/* <img className="rolling_img" src={rolling.imgUrl} /> */}
+              <img
+                className="rolling_img"
+                src="../src/assets/fixed-size/rolling/rolling_7_fixed.png"
+              />
+
               <div className="rolling_title">{rolling.title}</div>
               <div className="rolling_date">({rolling.date})</div>
             </div>
@@ -167,25 +193,45 @@ export default function GreenHouse() {
   );
 }
 
+const theme = createTheme({
+  status: {
+    danger: '#e53e3e',
+  },
+  palette: {
+    primary: {
+      main: '#848484',
+    },
+    neutral: {
+      main: '#B1BDBB',
+    },
+  },
+});
+
 const MainTab = css`
   width: 100vw;
+  margin-top: 5em;
 
   button {
     border-radius: 8px;
     border: 1px solid transparent;
-    padding: 0.6em 1.2em;
+    padding: 0.6em;
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
     cursor: pointer;
     transition: border-color 0.25s;
-    // margin: 0px 20px;
+    margin: 20px 10px 10px 10px;
+    word-break: keep-all;
+    line-height: 1.3;
+    vertical-align: middle;
+    height: 4em;
   }
   .active_btn {
     background-color: #16453e;
     width: 40%;
+    /* height: 4em; */
     color: white;
-    margin: 30px 10px 10px 10px;
+    /* margin: 30px 10px 10px 10px; */
 
     &:hover {
       outline: none;
@@ -197,7 +243,9 @@ const MainTab = css`
   .btn {
     background-color: #b1bdbb;
     width: 40%;
-    margin: 30px 10px 10px 10px;
+    /* height: 4em; */
+
+    /* margin: 30px 10px 10px 10px; */
 
     &:hover {
       outline: none;
@@ -210,24 +258,29 @@ const MainTab = css`
 
 const GridList = css`
   width: 80%;
-  height: 30%;
+  height: 55%;
   overflow: scroll;
-  margin: 30px auto;
+  margin: auto;
   border-radius: 15px;
   overflow-y: scroll;
-  margin-top: 10vh;
+  margin-top: 2vh;
 `;
 
 const GridItem = css`
   position: relative;
 
+  .rolling_img {
+    width: 80%;
+    padding-top: 30px;
+  }
+
   .rolling_title {
-    font-size: 10px;
-    font-family: 'GowunDodum-Regular';
+    font-size: 15px;
+    font-family: 'SeoulNamsanM';
   }
   .rolling_date {
-    font-size: 10px;
-    font-family: 'GowunDodum-Regular';
+    font-size: 12px;
+    font-family: 'SeoulNamsanM';
   }
 `;
 
@@ -240,4 +293,8 @@ const SelectBtn = css`
     margin-top: 0;
     border: 1px solid black;
   }
+`;
+
+const Font = css`
+  font-family: 'SeoulNamsanM';
 `;
