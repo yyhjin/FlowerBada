@@ -48,6 +48,11 @@ export default function MyPage() {
 
 const totalCSS = css`
   width: 100vw;
+  position: relative;
+
+  .maintab {
+    position: absolute;
+  }
 
   button {
     border: 1px solid transparent;
@@ -63,8 +68,9 @@ const totalCSS = css`
     float: left;
     background-color: white;
   }
+
   .delivery_list {
-    position: absolute;
-    margin-top: 37px;
+    position: relative;
+    top: 37px;
   }
 `;

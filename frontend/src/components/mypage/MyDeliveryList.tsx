@@ -77,22 +77,18 @@ export default function MyDeliveryList() {
 
   return (
     <div css={outerBox}>
-      <div css={selectBtn}>
+      <div css={selectBtn} className="dropdownBox">
         <select className="dropdown" value={sortNumber} onChange={handleChange}>
-          <option value={1} className="dropdownOp">
-            최신순
-          </option>
-          <option value={2} className="dropdownOp">
-            오래된순
-          </option>
+          <option value={1}>최신순</option>
+          <option value={2}>오래된순</option>
         </select>
       </div>
-      <div css={innerBox} className="mylist">
+      <div className="mylist">
         {myList.map((deliver: IDeliver, index: number) => {
           return (
             <div className="deliverybox" key={index}>
-              <div className="imgbox" css={imgBox}>
-                <a href={deliver.pageUrl}>
+              <div className="imgbox">
+                <a href={'/rolling/' + deliver.pageUrl}>
                   <img
                     src={deliver.imgUrl}
                     alt="배송꽃다발이미지"
@@ -101,41 +97,27 @@ export default function MyDeliveryList() {
                 </a>
               </div>
               <div className="infobox">
-                {deliver.date}
-                <br />
-                <b> {deliver.title}</b>
-                <br />
-                <br />
-                <div css={ChipCss}>
-                  {'결제완료' == deliver.status ? (
-                    <div className="cash">{deliver.status}</div>
-                  ) : (
-                    <span></span>
-                  )}
-                  {'배송중' == deliver.status ? (
-                    <div className="Ing">{deliver.status}</div>
-                  ) : (
-                    <span></span>
-                  )}
-                  {'배송완료' == deliver.status ? (
-                    <div className="Finished">{deliver.status}</div>
-                  ) : (
-                    <span></span>
-                  )}
-                </div>
-                <div className="smallinfobox">
-                  <div>
-                    <b>{deliver.flowerCount}</b> 개의 꽃송이
+                <div className="dateAndTitle">
+                  <ul>{deliver.date}</ul>
+                  <ul css={title}>{deliver.title}</ul>
+                  <div className="descAndPrice">
+                    <div>{deliver.flowerCount}개의 꽃송이</div>
+                    <div>결제 금액: {deliver.price}원</div>
                   </div>
-                  <div>가격: {deliver.price}원</div>
                 </div>
-              </div>
-              <div className="frombox">
-                <b>FROM &nbsp; </b>
-                {deliver.sender}
-                <br />
-                <b>TO &nbsp; </b>
-                {deliver.receiver} <br />
+                <div className="deliveryState">
+                  <div>{deliver.status}</div>
+                </div>
+                <div className="frombox">
+                  <div>
+                    FROM &nbsp;
+                    {deliver.sender}
+                  </div>
+                  <div>
+                    TO &nbsp;
+                    {deliver.receiver}
+                  </div>
+                </div>
               </div>
             </div>
           );
@@ -145,118 +127,92 @@ export default function MyDeliveryList() {
   );
 }
 
-// const totalCSS = css`
-//   .mylist {
-//     height: 80vh;
-//     overflow-y: scroll;
-//   }
-//   .mylist::-webkit-scrollbar {
-//     display: none;
-//   }
-//   .deliverybox {
-//     background-color: white;
-//     width: 100vh;
-
-//     &:first-of-type > .infobox {
-//       margin-top: 0px;
-//     }
-//   }
-//   .imgbox {
-//     width: 100px;
-//     height: 100px;
-//     padding: 20px;
-//     margin-left: 20px;
-//     margin-top: 20px;
-//     float: left;
-//   }
-//   .infobox {
-//     padding-top: 30px;
-//     margin: 20px;
-//     margin-left: 200px;
-//     text-align: left;
-//   }
-//   .smallinfobox {
-//     display: flex;
-//     justify-content: space-between;
-//     font-size: 14px;
-//   }
-//   .frombox {
-//     margin-top: -10px;
-//     margin-left: 50px;
-//     width: 130px;
-//     text-align: left;
-//     font-size: 10px;
-//     white-space: nowrap;
-//     overflow: hidden;
-//     text-overflow: ellipsis;
-//   }
-//   .dropdown {
-//     background-color: transparent;
-//     outline: 0 none;
-//     border: none;
-//     border-radius: 4px;
-//     margin-top: 10px;
-//     padding: 5px;
-//   }
-// `;
-
 const outerBox = css`
-  background-color: red;
-  position: relative;
-  width: 100vw;
+  position: absolute;
+  .dropdownBox {
+    position: relative;
+  }
+  .mylist {
+    position: relative;
+    height: calc(100vh - 132px);
+    overflow-y: scroll;
+  }
+  .mylist::-webkit-scrollbar {
+    display: none;
+  }
+  .deliverybox {
+    position: relative;
+  }
+  .imgbox {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    display: inline-block;
+    float: left;
+    padding: 10px;
+  }
+  .dateAndTitle {
+    position: relative;
+    display: inline-block;
+    width: calc(100vw - 100px);
+    height: 100px;
+  }
+  .dateAndTitle > ul {
+    margin: 5px 0 0 5px;
+    padding: 0px;
+    font-size: 12px;
+  }
+  .deliveryState {
+    color: #699877;
+    float: right;
+    font-size: 12px;
+    margin-right: 10px;
+    width: 100px;
+    text-align: end;
+  }
+  .infobox {
+    text-align: left;
+    margin-bottom: 20px;
+    background-color: white;
+    padding: 10px 0px;
+  }
+  .descAndPrice {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 10px 0 5px;
+    font-size: 12px;
+  }
+  .frombox {
+    margin-left: 20px;
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 12px;
+    width: calc(100vw - 130px);
+  }
 `;
 
 const selectBtn = css`
-  background-color: pink; // TO BE DELETED
-  /* position: absolute; */
-  width: 100px;
-  height: 25px;
-  position: relative;
-  display: flex;
-  justify-content: right;
-  /* right: 0; */
-  /* padding: 10px; */ /* margin-top: 0; */
-  /* select {
-    height: 25px;
+  /* position: relative; */
+  width: 100vw;
+  height: 30px;
+  text-align: end;
+  margin-top: 5px;
+
+  select {
     margin-right: 10px;
     border: none;
     background-color: transparent;
-    position: absolute;
     width: 100px;
-  } */
-
-  select {
-    display: none;
   }
-
-  select-selected {
-    background-color: dodgerblue;
+  option {
+    font-size: 12px;
   }
-
-  /* .dropdownOp {
-    background-color: green;
-    /* position: absolute; */
-    left: 0;
-    margin-left: 0;
-    height: 50px;
-    font-size: 10px;
-    border: none;
-  } */
 `;
 
-const innerBox = css`
-  background-color: lightblue;
-  position: absolute;
-  width: 100%;
-  top: 25px;
-`;
-
-const imgBox = css`
-  background-color: yellow;
-
-  img {
-    width: 30%;
-  }
+const title = css`
+  font-size: 16px !important;
 `;
 
 const ChipCss = css`
