@@ -1,5 +1,4 @@
-import { useEffect, useState, useCallback, ChangeEvent } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
@@ -74,7 +73,7 @@ export default function GreenHouse() {
   }
 
   // 드랍다운 필터 관련
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setPaginationId(0);
     setRollings([]);
     setSort(+event.target.value);
