@@ -96,9 +96,9 @@ public class JwtTokenUtil {
         return user.getRoles();
     }
 
-    // Request의 Header에서 token 값을 가져옵니다. "X-AUTH-TOKEN" : Bearer {jwt}
-    public String resolveToken(HttpServletRequest request) {
-        String header = request.getHeader("X-AUTH-TOKEN");
+    // Request의 Header에서 token 값을 가져옴
+    public String resolveToken(HttpServletRequest request, String type) {
+        String header = request.getHeader(type);
         try {
             return header == null ? null : header.split(" ")[1];
         } catch(IndexOutOfBoundsException e){

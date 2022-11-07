@@ -16,12 +16,14 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
+    public static final String AUTHORIZATION_HEADER = "X-AUTH-TOKEN";
+    public static final String REFRESH_HEADER = "REFRESH-TOKEN";
     private final JwtTokenUtil jwtTokenUtil;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         try {
-            String token = jwtTokenUtil.resolveToken((HttpServletRequest) request);
+            String token = jwtTokenUtil.resolveToken((HttpServletRequest) request, AUTHORIZATION_HEADER);
             // 유효한 토큰인지 확인
             if (token != null && (!jwtTokenUtil.isLogout(token)) && jwtTokenUtil.validateToken(token)) {
                 // 토큰이 유효하면 토큰으로부터 유저 정보를 받아옴
