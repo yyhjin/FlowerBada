@@ -1,6 +1,6 @@
-import axios from 'axios';
+import storeAPI from '@api/storeAPI';
 import React from 'react';
-import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { useRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import { css } from '@emotion/react';
@@ -39,13 +39,8 @@ export default function MessageCreate() {
     setFlowerIdx(0);
     setSelectedFlower(0);
     setBuying(false);
-    const url = `http://localhost:8080/api/v1/store/flower`;
-    axios
-      .get(url, {
-        headers: {
-          'X-AUTH-TOKEN': `Bearer ` + loginUser.jwt,
-        },
-      })
+    storeAPI
+      .getFlowers(loginUser.jwt)
       .then((res) => {
         setFlowerList(res.data.response);
         console.log(res.data.response);
@@ -96,7 +91,6 @@ export default function MessageCreate() {
           </>
         )}
       </div>
-      {/* <div css={innerBox}> */}
       {SelectedFlower == 0 ? (
         <>
           <div css={selectBox}>

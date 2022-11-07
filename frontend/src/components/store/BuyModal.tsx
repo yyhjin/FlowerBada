@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
-import { IuserRecoil, userReCoil } from '@src/recoil/userRecoil';
-import axios from 'axios';
+import storeAPI from '@api/storeAPI';
+import userAPI from '@api/userAPI';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { useRecoilState } from 'recoil';
 
 export default function Modal(props: any) {
@@ -16,31 +17,14 @@ export default function Modal(props: any) {
         const data: any = {
           flowerId: props.itemId,
         };
-        await axios.put('http://localhost:8080/api/v1/store/buy/flower', data, {
-          headers: {
-            'X-AUTH-TOKEN': `Bearer ${loginUser.jwt}`,
-          },
-        });
+        await storeAPI.putFlower(loginUser.jwt, data);
       } else {
         const data: any = {
           rollingId: props.itemId,
         };
-        await axios.put(
-          'http://localhost:8080/api/v1/store/buy/rolling',
-          data,
-          {
-            headers: {
-              'X-AUTH-TOKEN': `Bearer ${loginUser.jwt}`,
-            },
-          },
-        );
+        await storeAPI.putRolling(loginUser.jwt, data);
       }
-
-      const res = await axios.get('http://localhost:8080/api/v1/user/points', {
-        headers: {
-          'X-AUTH-TOKEN': `Bearer ${loginUser.jwt}`,
-        },
-      });
+      const res = await userAPI.getPoint(loginUser.jwt);
       const points: number = res.data.response.points;
       setLoginUser((prev: IuserRecoil) => {
         const variable = { ...prev };

@@ -34,6 +34,8 @@
     "react-router-dom": "^6.4.2",
     "recoil": "^0.7.6",
     "recoil-persist": "^4.2.0",
+    "sweetalert2": "^11.6.5",
+    "sweetalert2-react-content": "^5.0.7",
     "vite-tsconfig-paths": "^3.5.1"
   },
   "devDependencies": {

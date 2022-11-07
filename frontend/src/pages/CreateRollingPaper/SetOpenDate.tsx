@@ -1,5 +1,4 @@
-import { ChangeEvent, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
@@ -11,6 +10,7 @@ import {
   createRollingRecoil,
 } from '@recoil/createRollingRecoil';
 import { css } from '@emotion/react';
+import rollingAPI from '@api/rollingAPI';
 
 export default function SetOpenDate() {
   const today = new Date();
@@ -44,20 +44,11 @@ export default function SetOpenDate() {
     }
     let localDateTime = year + '-' + month + '-' + day + 'T10:00';
     try {
-      const res: any = await axios.post(
-        'http://localhost:8080/api/v1/rolling',
-        {
-          itemId: createRollingState.itemId,
-          openDate: localDateTime,
-          title: createRollingState.title,
-        },
-        {
-          headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
-          },
-        },
-      );
-      // console.log(res.data.response);
+      const res: any = await rollingAPI.makeRolling(userState.jwt, {
+        itemId: createRollingState.itemId,
+        openDate: localDateTime,
+        title: createRollingState.title,
+      });
       setCreateRollingState((prev: IcreateRollingRecoil): any => {
         const variable = { ...prev };
         variable.itemId = 0;
@@ -76,8 +67,8 @@ export default function SetOpenDate() {
     <>
       <div>
         <div css={Info}>
-          롤링페이퍼 개봉 날짜를 <br />
-          선택해주세요
+          <div css={Writing}>롤링페이퍼 개봉 날짜를</div>
+          <div css={Writing}> 선택해주세요</div>
         </div>
         <div css={Background}>
           <DatePicker
@@ -109,6 +100,14 @@ const Info = css`
   margin-top: 30vh;
   font-size: 6vw;
   font-weight: bold;
+  @media screen and (min-width: 400px) {
+    font-size: 4vw;
+  }
+`;
+
+const Writing = css`
+  margin-top: 1vh;
+  padding: 1vw;
 `;
 
 const Calendar = css`
@@ -117,7 +116,7 @@ const Calendar = css`
 `;
 
 const CreateButton = css`
-  margin-top: 43vh;
+  margin-top: 40vh;
   height: 7vh;
   width: 94vw;
   border-radius: 3vw;
