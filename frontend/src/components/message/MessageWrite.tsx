@@ -269,6 +269,7 @@ const MainButton = css`
   border-radius: 10px;
   font-size: 1em;
   transform: translate(0, 50%);
+  font-family: 'SeoulNamsanM';
 `;
 
 const WriteBox = css`

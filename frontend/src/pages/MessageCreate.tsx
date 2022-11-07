@@ -292,6 +292,7 @@ const MainButton = css`
   border-radius: 10px;
   font-size: 1em;
   transform: translate(0, 25%);
+  font-family: 'SeoulNamsanM';
 `;
 
 const PointBox = css`
