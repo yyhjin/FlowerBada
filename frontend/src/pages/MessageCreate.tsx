@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
-import { Button, IconButton } from '@mui/material';
+import { Button } from '@mui/material';
 import CoinImg from '@assets/coin.png';
 import itemLocked from '@assets/itemLocked.png';
 import MessageWrite from '@components/message/MessageWrite';

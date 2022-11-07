@@ -31,8 +31,7 @@ export default function Modal(props: any) {
         variable.points = points;
         return variable;
       });
-      alert('구매 완료!');
-
+      // alert('구매 완료!');
       switch (props.location) {
         case 'message':
           window.location.href = '/rolling/message/create';

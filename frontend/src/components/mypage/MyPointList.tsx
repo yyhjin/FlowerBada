@@ -60,39 +60,23 @@ export default function MyPointList() {
   return (
     <div css={totalCSS}>
       <div className="infobox">
-        <img
-          src={CoinImg}
-          width="25px"
-          className="
-        imgcss"
-        ></img>
-        <b>&nbsp;{myPoint}</b>
-        <div className="chargebox">
-          <button className="buttonbox">적립</button>
-          <button className="buttonbox">충전</button>
-        </div>
+        <div className="pointTitle">현재 포인트</div>
+        <img src={CoinImg} width="25px" className="imgcss"></img>
+        <span> {myPoint}</span>
       </div>
-      <div className="titlebox">
-        <b>사용내역</b>
-      </div>
+      <div className="titlebox">사용 내역</div>
       <div className="mylist">
-        <div className="pointbox">
-          <div className="listbox">
-            <b>내용</b>
-          </div>
-          <div className="listbox">
-            <b>포인트</b>
-          </div>
-          <div className="listbox">
-            <b>날짜</b>
-          </div>
+        <div className="innerbox">
+          <div className="datebox">날짜</div>
+          <div className="contentbox">내용</div>
+          <div className="pointbox">포인트</div>
         </div>
         {myPointList.map((point: IPoint, index: number) => {
           return (
-            <div className="pointbox" key={index}>
-              <div className="listbox">{point.name} 구매</div>
-              <div className="listbox"> -{point.point}P</div>
-              <div className="listbox">{point.createdDate}</div>
+            <div className="valuebox" key={index}>
+              <div className="datebox">{point.createdDate}</div>
+              <div className="contentbox">{point.name} 구매</div>
+              <div className="pointbox"> -{point.point}P</div>
             </div>
           );
         })}
@@ -102,46 +86,62 @@ export default function MyPointList() {
 }
 
 const totalCSS = css`
-  width: 100%;
   .mylist {
-    height: 80vh;
-    overflow-y: scroll;
     background-color: white;
+    overflow-y: scroll;
   }
   .mylist::-webkit-scrollbar {
     display: none;
   }
   .infobox {
-    padding: 20px;
-    padding-top: 100px;
     font-size: 30px;
-    text-align: left;
+    text-align: center;
+    margin-bottom: 20px;
+    .pointTitle {
+      font-size: 12px;
+    }
   }
-  .pointbox {
+  /* .outerbox {
+    background-color: white;
+    height: calc(100vh - 208px);
+    overflow-y: scroll;
+    .outerbox::-webkit-scrollbar {
+      display: none;
+    }
+  } */
+  .titlebox {
+    padding: 10px;
+    text-align: left;
+    background-color: #f2f0ef;
+  }
+  .innerbox {
     display: flex;
     justify-content: space-between;
-    padding: 5px;
-  }
-  .listbox {
+    font-size: 14px;
     text-align: center;
     margin: 10px;
-    width: 200px;
-    word-break: keep-all;
   }
-  .titlebox {
-    padding: 20px;
-    text-align: left;
-  }
-  .buttonbox {
-    background-color: #b1bdbb;
-    margin: 3px;
-    width: 60px;
-    height: 30px;
-    font-size: 12px !important;
-  }
-  .chargebox {
+  .valuebox {
     display: flex;
-    justify-content: flex-end;
-    float: right;
+    justify-content: space-between;
+    font-size: 12px;
+    text-align: center;
+    margin: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .datebox {
+    width: 20vw;
+    min-width: 60px;
+  }
+  .contentbox {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pointbox {
+    width: 15vw;
+    min-width: 30px;
   }
 `;
