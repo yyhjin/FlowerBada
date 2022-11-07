@@ -212,7 +212,7 @@ const MainTab = css`
     padding: 0.6em;
     font-size: 1em;
     font-weight: 500;
-    font-family: inherit;
+    font-family: 'SeoulNamsanM';
     cursor: pointer;
     transition: border-color 0.25s;
     margin: 20px 10px 10px 10px;
@@ -280,10 +280,11 @@ const GridItem = css`
 `;
 
 const SelectBtn = css`
-  display: flex;
+  text-align: right;
   justify-content: end;
-  padding: 0.5rem 1.5rem;
-  margin-top: 0;
+  margin-right: 1em;
+  /* padding: 0.5rem; */
+  /* margin-top: 0; */
   select {
     margin-top: 0;
     border: 1px solid black;
