@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import dateFormatter from '../../utils/dateFormatter';
-
-interface IPaymentinfo {}
+import dateFormatter from '@utils/dateFormatter';
+import paymentAPI from '@src/api/paymentAPI';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
@@ -28,10 +26,7 @@ const PaymentSuccess = () => {
   // 결제 완료 정보 가져오기
   useEffect(() => {
     const getPaymentInfo = async () => {
-      const res = await axios.post(
-        'http://localhost:8080/api/v1/payment/success',
-        reqData,
-      );
+      const res = await paymentAPI.successPayment(reqData);
       setPaymentInfo(res.data.response);
       console.log(res.data.response);
     };

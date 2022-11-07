@@ -1,26 +1,37 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
+import copy from '@assets/copy.png';
+import MySwal from '@components/SweetAlert';
 
 export default function RollingLink() {
   const { state } = useLocation();
-  const root = 'localhost:5173/rollingpaper/';
+  const root = 'localhost:5173/rolling/';
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const handleRollingPaper = (): void => {
-    navigate(`/rolling/${state}/1`);
+    navigate(`/rolling/${state}`);
+  };
+  const copyUrl = (): void => {
+    navigator.clipboard.writeText(root + state);
+    MySwal.fire({
+      title: '링크가 복사되었습니다.',
+      icon: 'success',
+      confirmButtonColor: '#16453e',
+      confirmButtonText: '확인',
+    });
   };
   return (
     <>
       <div css={Background}>
         <div css={Info}>
-          링크를 복사해 <br />
-          롤링페이퍼를 공유하세요
+          <div css={Writing}>링크를 복사해</div>
+          <div css={Writing}>롤링페이퍼를 공유하세요</div>
         </div>
         <div css={Link}>
-          {root}
-          {state}/1
+          <div css={Url}>
+            {root}
+            {state}
+          </div>
+          <img src={copy} css={Copy} onClick={copyUrl} />
         </div>
         <div css={CuttingLine}>
           <div css={Line}></div>
@@ -36,11 +47,6 @@ export default function RollingLink() {
   );
 }
 
-const DefaultColor = css`
-  background-color: #f2f0ef;
-  color: red;
-`;
-
 const Background = css`
   width: 100vw;
 `;
@@ -50,13 +56,30 @@ const Info = css`
   font-size: 6vw;
 `;
 
+const Writing = css`
+  margin-bottom: 3vh;
+`;
+
 const Link = css`
+  display: flex;
+  margin-right: 4vw;
+`;
+
+const Url = css`
   margin-top: 5vh;
-  margin-left: 5vw;
-  margin-right: 5vw;
+  margin-left: 10vw;
+  margin-right: 2vw;
   font-size: 4.5vw;
   background-color: white;
-  padding: 2vw;
+  padding: 1vh 4vw 1vh 4vw;
+  border-radius: 2vw;
+  overflow: scroll;
+  display: flex;
+`;
+
+const Copy = css`
+  margin-top: 5vh;
+  width: 9vw;
   border-radius: 2vw;
 `;
 
