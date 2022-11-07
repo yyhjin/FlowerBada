@@ -9,7 +9,11 @@ import { styled } from '@mui/material/styles';
 import '@src/index.css';
 import messageAPI from '@src/api/messageAPI';
 
-export default function MessageWrite(props: { flower: number }) {
+export default function MessageWrite(props: {
+  flower: number;
+  rolling: number;
+  rollingUrl: string;
+}) {
   const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
   let [msgContent, setMsgContent] = useState<string>('');
   let [msgLength, setMsgLength] = useState<number>(0);
@@ -56,11 +60,12 @@ export default function MessageWrite(props: { flower: number }) {
           writer: msgWriter,
           flowerId: props.flower,
           font: font,
-          rollingId: 2,
+          rollingId: props.rolling,
         })
         .then((res) => {
           console.log(res.data.response);
           alert('메시지가 등록되었습니다');
+          window.location.href = `/rolling/` + props.rollingUrl;
         })
         .catch((err) => {
           console.log(err);

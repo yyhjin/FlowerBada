@@ -1,11 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import Message from '@src/components/mypage/Message';
 import DotSlice from '@components/paging/DotSlice';
 import messageAPI from '@api/messageAPI';
+import { IconButton } from '@mui/material';
+import IosShareIcon from '@mui/icons-material/IosShare';
+import CreateIcon from '@mui/icons-material/Create';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 interface IRolling {
+  rollingId?: number;
   imgUrl?: string;
   imgFront?: string;
   imgBack?: string;
@@ -30,6 +35,9 @@ export default function RollingPaper() {
   const [type, setType] = useState<number>(1);
   let paramCopy: any = {};
   paramCopy = useParams();
+  const [nowDate, setNowDate] = useState<Date>(new Date());
+  const [rollingDate, setRollingDate] = useState<Date>(new Date());
+  const navigate = useNavigate();
 
   async function getRolling() {
     setLoading(false);
@@ -45,7 +53,9 @@ export default function RollingPaper() {
       const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
 
       const nowDate = new Date(utc + KR_TIME_DIFF);
+      setNowDate(nowDate);
       const rollingDate = new Date(utcOpen);
+      setRollingDate(rollingDate);
 
       if (rollingDate <= nowDate) {
         // console.log(res.data.response);
@@ -83,6 +93,15 @@ export default function RollingPaper() {
     }
   }
 
+  const moveMessageWrite = () => {
+    navigate('/rolling/message/create', {
+      state: {
+        rollingId: rolling.rollingId,
+        rollingUrl: paramCopy.url,
+      },
+    });
+  };
+
   useEffect(() => {
     getRolling();
   }, [paginationId]);
@@ -90,37 +109,60 @@ export default function RollingPaper() {
   return (
     <>
       {loading && rolling && rolling.messages && type ? (
-        <div css={DetailCss}>
-          <div className="fixbox">
-            <div className={`imgbox_${type}`}>
-              <img src={'/src/assets/' + rolling.imgBack}></img>
+        <>
+          <div css={DetailCss}>
+            <div className="fixbox">
+              <div className={`imgbox_${type}`}>
+                <img src={'/src/assets/' + rolling.imgBack}></img>
+              </div>
+              <div className="flowerlist">
+                {rolling.messages.map((message, index) => {
+                  return (
+                    <div key={index} className={`flowerbox_${type}`}>
+                      <Message
+                        imgUrl={message.imgUrl}
+                        flowerId={message.messageId}
+                        writer={message.writer}
+                        valid={valid}
+                      ></Message>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <div className="flowerlist">
-              {rolling.messages.map((message, index) => {
-                return (
-                  <div key={index} className={`flowerbox_${type}`}>
-                    <Message
-                      imgUrl={message.imgUrl}
-                      flowerId={message.messageId}
-                      writer={message.writer}
-                      valid={valid}
-                    ></Message>
-                  </div>
-                );
-              })}
+            <div className={`imgbox_front_${type}`}>
+              <img src={'/src/assets/' + rolling.imgFront}></img>
             </div>
+            <div className="dot">
+              <DotSlice
+                paginationId={paginationId}
+                setPaginationId={setPaginationId}
+                stepNumber={stepNumber}
+              ></DotSlice>
+            </div>
+            {rollingDate <= nowDate ? null : (
+              <div className="bottom-bar">
+                <ThemeProvider theme={theme}>
+                  <IconButton
+                    size="large"
+                    color="primary"
+                    className="share-btn"
+                  >
+                    <IosShareIcon fontSize="large" />
+                  </IconButton>
+                  <IconButton
+                    size="large"
+                    color="primary"
+                    className="write-btn"
+                    onClick={moveMessageWrite}
+                  >
+                    <CreateIcon fontSize="large" />
+                  </IconButton>
+                </ThemeProvider>
+              </div>
+            )}
           </div>
-          <div className={`imgbox_front_${type}`}>
-            <img src={'/src/assets/' + rolling.imgFront}></img>
-          </div>
-          <div className="dot">
-            <DotSlice
-              paginationId={paginationId}
-              setPaginationId={setPaginationId}
-              stepNumber={stepNumber}
-            ></DotSlice>
-          </div>
-        </div>
+        </>
       ) : (
         <div>로딩중</div>
       )}
@@ -130,6 +172,7 @@ export default function RollingPaper() {
 
 const DetailCss = css`
   width: 100%;
+  height: 110%;
   position: relative;
   transform: translate(0%, -15%);
 
@@ -362,4 +405,33 @@ const DetailCss = css`
     bottom: 10vw;
     pointer-events: none;
   }
+
+  .bottom-bar {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    .share-btn {
+      float: left;
+      margin-left: 1em;
+    }
+    .write-btn {
+      float: right;
+      margin-right: 1em;
+    }
+  }
 `;
+
+const theme = createTheme({
+  status: {
+    danger: '#e53e3e',
+  },
+  palette: {
+    primary: {
+      main: '#16453E',
+    },
+    neutral: {
+      main: '#B1BDBB',
+    },
+  },
+});
