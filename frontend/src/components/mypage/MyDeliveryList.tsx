@@ -76,18 +76,22 @@ export default function MyDeliveryList() {
   }
 
   return (
-    <div css={totalCSS}>
+    <div css={outerBox}>
       <div css={selectBtn}>
         <select className="dropdown" value={sortNumber} onChange={handleChange}>
-          <option value={1}>최신순</option>
-          <option value={2}>오래된순</option>
+          <option value={1} className="dropdownOp">
+            최신순
+          </option>
+          <option value={2} className="dropdownOp">
+            오래된순
+          </option>
         </select>
       </div>
-      <div className="mylist">
+      <div css={innerBox} className="mylist">
         {myList.map((deliver: IDeliver, index: number) => {
           return (
             <div className="deliverybox" key={index}>
-              <div className="imgbox">
+              <div className="imgbox" css={imgBox}>
                 <a href={deliver.pageUrl}>
                   <img
                     src={deliver.imgUrl}
@@ -141,74 +145,122 @@ export default function MyDeliveryList() {
   );
 }
 
-const selectBtn = css`
-  display: flex;
-  justify-content: end;
-  padding: 0.5rem 1.5rem;
-  margin-top: 0;
-  select {
-    margin-top: 0;
-    border: 1px solid black;
-  }
+// const totalCSS = css`
+//   .mylist {
+//     height: 80vh;
+//     overflow-y: scroll;
+//   }
+//   .mylist::-webkit-scrollbar {
+//     display: none;
+//   }
+//   .deliverybox {
+//     background-color: white;
+//     width: 100vh;
+
+//     &:first-of-type > .infobox {
+//       margin-top: 0px;
+//     }
+//   }
+//   .imgbox {
+//     width: 100px;
+//     height: 100px;
+//     padding: 20px;
+//     margin-left: 20px;
+//     margin-top: 20px;
+//     float: left;
+//   }
+//   .infobox {
+//     padding-top: 30px;
+//     margin: 20px;
+//     margin-left: 200px;
+//     text-align: left;
+//   }
+//   .smallinfobox {
+//     display: flex;
+//     justify-content: space-between;
+//     font-size: 14px;
+//   }
+//   .frombox {
+//     margin-top: -10px;
+//     margin-left: 50px;
+//     width: 130px;
+//     text-align: left;
+//     font-size: 10px;
+//     white-space: nowrap;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//   }
+//   .dropdown {
+//     background-color: transparent;
+//     outline: 0 none;
+//     border: none;
+//     border-radius: 4px;
+//     margin-top: 10px;
+//     padding: 5px;
+//   }
+// `;
+
+const outerBox = css`
+  background-color: red;
+  position: relative;
+  width: 100vw;
 `;
 
-const totalCSS = css`
-  .mylist {
-    height: 80vh;
-    overflow-y: scroll;
-  }
-  .mylist::-webkit-scrollbar {
+const selectBtn = css`
+  background-color: pink; // TO BE DELETED
+  /* position: absolute; */
+  width: 100px;
+  height: 25px;
+  position: relative;
+  display: flex;
+  justify-content: right;
+  /* right: 0; */
+  /* padding: 10px; */ /* margin-top: 0; */
+  /* select {
+    height: 25px;
+    margin-right: 10px;
+    border: none;
+    background-color: transparent;
+    position: absolute;
+    width: 100px;
+  } */
+
+  select {
     display: none;
   }
-  .deliverybox {
-    background-color: white;
-    width: 100%;
 
-    &:first-of-type > .infobox {
-      margin-top: 0px;
-    }
+  select-selected {
+    background-color: dodgerblue;
   }
-  .imgbox {
-    width: 100px;
-    height: 100px;
-    padding: 20px;
-    margin-left: 20px;
-    margin-top: 20px;
-    float: left;
-  }
-  .infobox {
-    padding-top: 30px;
-    margin: 20px;
-    margin-left: 200px;
-    text-align: left;
-  }
-  .smallinfobox {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-  }
-  .frombox {
-    margin-top: -10px;
-    margin-left: 50px;
-    width: 130px;
-    text-align: left;
+
+  /* .dropdownOp {
+    background-color: green;
+    /* position: absolute; */
+    left: 0;
+    margin-left: 0;
+    height: 50px;
     font-size: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .dropdown {
-    background-color: transparent;
-    outline: 0 none;
     border: none;
-    border-radius: 4px;
-    margin-top: 10px;
-    padding: 5px;
+  } */
+`;
+
+const innerBox = css`
+  background-color: lightblue;
+  position: absolute;
+  width: 100%;
+  top: 25px;
+`;
+
+const imgBox = css`
+  background-color: yellow;
+
+  img {
+    width: 30%;
   }
 `;
 
 const ChipCss = css`
-  width: 60px;
+  /* width: 60px;
   height: 24px;
   padding: 1px;
   margin: 4px 0px 4px;
@@ -228,5 +280,5 @@ const ChipCss = css`
     border: 1px solid green;
     color: green;
     border-radius: 0.5rem;
-  }
+  } */
 `;

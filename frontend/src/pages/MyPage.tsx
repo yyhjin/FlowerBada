@@ -48,12 +48,11 @@ export default function MyPage() {
 
 const totalCSS = css`
   width: 100vw;
-  height: 100vh;
 
   button {
     border: 1px solid transparent;
-    padding: 0.6em 1.2em;
     width: 50%;
+    height: 37px;
   }
   .btn {
     float: left;
@@ -63,5 +62,9 @@ const totalCSS = css`
   .active_btn {
     float: left;
     background-color: white;
+  }
+  .delivery_list {
+    position: absolute;
+    margin-top: 37px;
   }
 `;
