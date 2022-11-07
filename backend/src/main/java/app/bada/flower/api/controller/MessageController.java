@@ -5,7 +5,6 @@ import app.bada.flower.api.dto.ResponseDto;
 import app.bada.flower.api.dto.message.MessageReqDto;
 import app.bada.flower.api.dto.message.MessageResDto;
 import app.bada.flower.api.dto.rollingpaper.RollingPaperResDto;
-import app.bada.flower.api.dto.rollingpaper.RollingPaperWithTokenResDto;
 import app.bada.flower.api.entity.Message;
 import app.bada.flower.api.entity.Report;
 import app.bada.flower.api.service.MessageService;
@@ -81,28 +80,14 @@ public class MessageController {
     }
 
     @GetMapping("/{url}/{paginationId}")
-    @ApiOperation(value="비로그인 롤링페이퍼 조회", notes="비로그인시 롤링페이퍼를 조회한다.")
-    public ResponseEntity<ResponseDto> getRollingPaper(@PathVariable("url") String url,
+    @ApiOperation(value="롤링페이퍼 조회", notes="롤링페이퍼를 조회한다.")
+    public ResponseEntity<ResponseDto> getRollingPaper(@RequestHeader(value = "X-AUTH-TOKEN",required = false) String token,
+                                                       @PathVariable("url") String url,
                                                        @PathVariable("paginationId") int paginationId) {
-        RollingPaperResDto rollingPaperResDto = rollingPaperService.getRollingPaper(url, paginationId);
+        RollingPaperResDto rollingPaperResDto = rollingPaperService.getRollingPaper(token, url, paginationId);
 
         if (rollingPaperResDto!=null) {
             return new ResponseEntity<ResponseDto>(new ResponseDto(rollingPaperResDto), HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<ResponseDto>(new ResponseDto("롤링페이퍼 조회 실패"), HttpStatus.FORBIDDEN);
-        }
-    }
-
-    @GetMapping("/login/{url}/{paginationId}")
-    @ApiOperation(value="로그인 롤링페이퍼 조회", notes="로그인시 롤링페이퍼를 조회한다.")
-    public ResponseEntity<ResponseDto> getRollingPaperWithToken(@RequestHeader(value = "X-AUTH-TOKEN") String token,
-                                                                @PathVariable("url") String url,
-                                                       @PathVariable("paginationId") int paginationId) {
-        RollingPaperWithTokenResDto rollingPaperWithTokenResDto = rollingPaperService.getRollingPaperWithToken(token, url, paginationId);
-
-        if (rollingPaperWithTokenResDto!=null) {
-            return new ResponseEntity<ResponseDto>(new ResponseDto(rollingPaperWithTokenResDto), HttpStatus.OK);
         }
         else {
             return new ResponseEntity<ResponseDto>(new ResponseDto("롤링페이퍼 조회 실패"), HttpStatus.FORBIDDEN);

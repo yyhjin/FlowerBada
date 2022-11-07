@@ -5,18 +5,15 @@ import app.bada.flower.api.dto.message.MessageResDto;
 import app.bada.flower.api.dto.rollingpaper.BookmarkResDto;
 import app.bada.flower.api.dto.rollingpaper.RollingPaperReqDto;
 import app.bada.flower.api.dto.rollingpaper.RollingPaperResDto;
-import app.bada.flower.api.dto.rollingpaper.RollingPaperWithTokenResDto;
 import app.bada.flower.api.entity.Bookmark;
 import app.bada.flower.api.entity.Message;
 import app.bada.flower.api.entity.RollingPaper;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.*;
 import app.bada.flower.api.service.jwt.JwtTokenUtil;
-import app.bada.flower.api.util.S3FileUpload;
 import app.bada.flower.exception.CustomException;
 import app.bada.flower.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,7 +84,20 @@ public class RollingPaperServiceImpl implements RollingPaperService {
     }
 
     @Override
-    public RollingPaperResDto getRollingPaper(String url, int paginationId) {
+    public RollingPaperResDto getRollingPaper(String token, String url, int paginationId) {
+        boolean bookmarkCheck = true;
+        if(token.equals("Bearer")){
+            bookmarkCheck = false;
+        }else{
+            User user = userService.getUserByToken(token);
+            BookmarkResDto bookmarkResDto = new BookmarkResDto();
+            RollingPaper rollingPaper = rollingPaperRepository.findByUrl(url).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
+            Bookmark bookmark = bookmarkRepository.findByRollingPaper_IdAndUser_Id(rollingPaper.getId(), user.getId());
+            if(bookmark==null || bookmark.isValid()==false){
+                bookmarkCheck = false;
+            }
+        }
+
         RollingPaperResDto rollingPaperResDto = new RollingPaperResDto();
         RollingPaper rollingPaper = rollingPaperRepository.findByUrl(url).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
         List<Message> messageList = messageRepository.findAllByRollingPaper(rollingPaper);
@@ -111,45 +121,9 @@ public class RollingPaperServiceImpl implements RollingPaperService {
         rollingPaperResDto.setImgBack(rollingPaper.getRollingPaperItem().getImgBack());
         rollingPaperResDto.setImgUrl(rollingPaper.getRollingPaperItem().getImgUrl());
         rollingPaperResDto.setDate(rollingPaperResDto.changeDateToString(rollingPaper.getOpenDate()));
+        rollingPaperResDto.setBookmark(bookmarkCheck);
         rollingPaperResDto.setMessages(rollingMsgList);
         return rollingPaperResDto;
-    }
-
-    @Override
-    public RollingPaperWithTokenResDto getRollingPaperWithToken(String token, String url, int paginationId) {
-        User user = userService.getUserByToken(token);
-        RollingPaperWithTokenResDto rollingPaperWithTokenResDto = new RollingPaperWithTokenResDto();
-        RollingPaper rollingPaper = rollingPaperRepository.findByUrl(url).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
-        BookmarkResDto bookmarkResDto = new BookmarkResDto();
-        Bookmark bookmark = bookmarkRepository.findByRollingPaper_IdAndUser_Id(rollingPaper.getId(), user.getId());
-        boolean bookmarkCheck = true;
-        if(bookmark==null || bookmark.isValid()==false){
-            bookmarkCheck = false;
-        }
-        List<Message> messageList = messageRepository.findAllByRollingPaper(rollingPaper);
-        int capacity = rollingPaper.getRollingPaperItem().getCapacity();
-        if((messageList.size()-1)/capacity<paginationId-1){
-            return null;
-        }
-        List<MessageResDto.rollingMsgDto> rollingMsgList = new ArrayList<>();
-        int range = paginationId*capacity;
-        if(messageList.size()<paginationId*capacity) range = messageList.size();
-
-        for(int i= (paginationId-1)*capacity; i<range; i++){
-            rollingMsgList.add(messageConverter.toRollingMsgDto(messageList.get(i)));
-        }
-        rollingPaperWithTokenResDto.setRollingId(rollingPaper.getId());
-        rollingPaperWithTokenResDto.setItemId(rollingPaper.getRollingPaperItem().getId());
-        rollingPaperWithTokenResDto.setCapacity(capacity);
-        rollingPaperWithTokenResDto.setTotalMessages(messageList.size());
-        rollingPaperWithTokenResDto.setTitle(rollingPaper.getTitle());
-        rollingPaperWithTokenResDto.setImgFront(rollingPaper.getRollingPaperItem().getImgFront());
-        rollingPaperWithTokenResDto.setImgBack(rollingPaper.getRollingPaperItem().getImgBack());
-        rollingPaperWithTokenResDto.setImgUrl(rollingPaper.getRollingPaperItem().getImgUrl());
-        rollingPaperWithTokenResDto.setDate(rollingPaperWithTokenResDto.changeDateToString(rollingPaper.getOpenDate()));
-        rollingPaperWithTokenResDto.setBookmark(bookmarkCheck);
-        rollingPaperWithTokenResDto.setMessages(rollingMsgList);
-        return rollingPaperWithTokenResDto;
     }
 
     @Override
