@@ -100,13 +100,15 @@ public class MessageController {
     @PutMapping("/updateimg/{rollingUrl}")
     @ApiOperation(value="롤링페이퍼 이미지 갱신", notes="롤링페이퍼의 현재 s3 버킷에 저장된 이미지를 갱신한다.")
     public ResponseEntity updateRollingImg(@PathVariable("rollingUrl") String url, @RequestBody RollingImgDto dto) {
-        String img = dto.getImg();
+        String img = dto.getImgUrl();
+        System.out.println("img: "+img);
         try {
             messageService.updateRollingImage(url, img);
         } catch(IOException e){
             return new ResponseEntity("파일 입출력 오류", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch(IllegalArgumentException e){
-            return new ResponseEntity("해당 롤링페이퍼가 존재하징 않습니다.", HttpStatus.BAD_REQUEST);
+            e.printStackTrace();
+            return new ResponseEntity("해당 롤링페이퍼가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(HttpStatus.OK);
     }

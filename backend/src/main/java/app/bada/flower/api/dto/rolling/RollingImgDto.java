@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class RollingImgDto {
-    String img; // Base64로 인코딩 된 이미지
+    String imgUrl; // Base64로 인코딩 된 이미지
 }

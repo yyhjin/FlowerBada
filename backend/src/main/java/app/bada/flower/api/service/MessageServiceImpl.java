@@ -66,22 +66,33 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public void updateRollingImage(String url, String img) throws IOException{
+    public void updateRollingImage(String url, String imgUrl) throws IOException{
         rollingPaperRepository.findByUrl(url).orElseThrow(() -> new IllegalArgumentException());
-        String filename = "rollingpaper/"+url+".png";
+        final String dirname = "rollingpaper";
+        String filename = url+".png";
         String path = "";
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win"))
-            path = "C:\\Temp\\upload" + filename;
-        else if(os.contains("linux"))
-            path = "/home/ubuntu/upload" + filename;
+        File file = null;
+        if(os.contains("win")) {
+            path = "C:\\Temp\\upload\\"+dirname;
+            file = new File(path);
+            path += "\\" + filename;
+        }
+        else if(os.contains("linux")) {
+            path = "/home/ubuntu/upload/"+dirname;
+            file = new File(path);
+            path += "/" + filename;
+        }
+        file.mkdir();
+        System.out.println("path:"+path);
 
-        byte[] imgByte = Base64.getDecoder().decode(img);
+        String prefix = "data:image/png;base64,";
+        byte[] imgByte = Base64.getDecoder().decode(imgUrl.substring(prefix.length()));
         try(FileOutputStream fos = new FileOutputStream(path)){
             fos.write(imgByte);
         }
-        File file = new File(path);
-//        s3FileUpload.deleteFile(filename);
-//        s3FileUpload.putS3(file, filename);
+        file = new File(path);
+        s3FileUpload.deleteFile(dirname+"/"+filename);
+        s3FileUpload.upload2(file, "rollingpaper");
     }
 }

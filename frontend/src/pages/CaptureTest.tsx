@@ -1,5 +1,5 @@
 import html2canvas from 'html2canvas';
-import flower from '@assets/fixed-size/flower/flower_3_fixed.png';
+import flower from '@assets/fixed-size/flower/flower_2_fixed.png';
 import { css } from '@emotion/react';
 import axios from 'axios';
 
@@ -23,7 +23,7 @@ export default function CaptureTest() {
     // link.download = filename;
     // link.click();
     // document.body.removeChild(link);
-    axios.put(`localhost:8080/api/v1/message/updateimg/{rollingUrl}`, {
+    axios.put(`http://localhost:8080/api/v1/message/updateimg/${rollingUrl}`, {
       imgUrl: uri,
     });
   };
