@@ -42,7 +42,7 @@ export default function MessageCreate() {
     setSelectedFlower(0);
     setBuying(false);
 
-    const state = location.state as { rollingId: number; rollingUrl: string };
+    location.state as { rollingId: number; rollingUrl: string };
     storeAPI
       .getFlowers(loginUser.jwt)
       .then((res) => {

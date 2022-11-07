@@ -4,10 +4,21 @@ import { css } from '@emotion/react';
 import Message from '@src/components/mypage/Message';
 import DotSlice from '@components/paging/DotSlice';
 import messageAPI from '@api/messageAPI';
-import { IconButton } from '@mui/material';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import CreateIcon from '@mui/icons-material/Create';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+  IconButton,
+} from '@mui/material';
 
 interface IRolling {
   rollingId?: number;
@@ -38,9 +49,11 @@ export default function RollingPaper() {
   const [nowDate, setNowDate] = useState<Date>(new Date());
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
   const navigate = useNavigate();
+  const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
 
   async function getRolling() {
     setLoading(false);
+    setDeliveryModal(false);
     let url = paramCopy.url;
     try {
       const res: any = await messageAPI.getRolling(url, '' + paginationId);
@@ -102,6 +115,20 @@ export default function RollingPaper() {
     });
   };
 
+  const changeDelivery = (param: boolean) => {
+    setDeliveryModal(param);
+  };
+
+  const sendDelivery = () => {
+    // 주소 고쳐서 사용하세요~
+    navigate('/delivery', {
+      state: {
+        paginationId: paginationId,
+        rollingUrl: paramCopy.url,
+      },
+    });
+  };
+
   useEffect(() => {
     getRolling();
   }, [paginationId]);
@@ -140,7 +167,66 @@ export default function RollingPaper() {
                 stepNumber={stepNumber}
               ></DotSlice>
             </div>
-            {rollingDate <= nowDate ? null : (
+            {rollingDate <= nowDate ? (
+              <>
+                <div className="bottom-bar">
+                  <ThemeProvider theme={theme}>
+                    <IconButton
+                      size="large"
+                      color="primary"
+                      className="share-btn"
+                    >
+                      <SaveAltIcon fontSize="large" />
+                    </IconButton>
+                    <IconButton
+                      size="large"
+                      color="primary"
+                      className="write-btn"
+                      onClick={() => changeDelivery(true)}
+                    >
+                      <LocalShippingIcon fontSize="large" />
+                    </IconButton>
+                  </ThemeProvider>
+                </div>
+                <Dialog open={deliveryModal}>
+                  <DialogTitle id="alert-dialog-title" css={Font}>
+                    확인해주세요
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText css={Font}>
+                      현재 선택하신 페이지의 꽃들로 주문을 진행합니다.
+                    </DialogContentText>
+                    <DialogContentText css={Font}>
+                      계속하시겠습니까?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions css={ActionCss}>
+                    <ThemeProvider theme={theme}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        onClick={sendDelivery}
+                        css={Font}
+                      >
+                        확인
+                      </Button>
+                    </ThemeProvider>
+                    <ThemeProvider theme={theme}>
+                      <Button
+                        variant="contained"
+                        color="neutral"
+                        size="small"
+                        onClick={() => changeDelivery(false)}
+                        css={Font}
+                      >
+                        취소
+                      </Button>
+                    </ThemeProvider>
+                  </DialogActions>
+                </Dialog>
+              </>
+            ) : (
               <div className="bottom-bar">
                 <ThemeProvider theme={theme}>
                   <IconButton
@@ -435,3 +521,12 @@ const theme = createTheme({
     },
   },
 });
+
+const Font = css`
+  font-family: 'SeoulNamsanM';
+`;
+
+const ActionCss = css`
+  width: 90%;
+  float: right;
+`;
