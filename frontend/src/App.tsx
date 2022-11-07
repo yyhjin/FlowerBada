@@ -58,12 +58,9 @@ function App() {
                 <Route path="/payment/success" element={<PaymentSuccess />} />
                 <Route path="/payment/fail" element={<PaymentFail />} />
                 <Route path="/payment/cancel" element={<PaymentCancel />} />
+                <Route path="/rolling/message/read" element={<MessageRead />} />
                 <Route
-                  path="/rollingpaper/message/read"
-                  element={<MessageRead />}
-                />
-                <Route
-                  path="/rollingpaper/message/create"
+                  path="/rolling/message/create"
                   element={<MessageCreate />}
                 />
               </Route>

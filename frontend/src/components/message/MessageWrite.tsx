@@ -49,11 +49,7 @@ export default function MessageWrite(props: { flower: number }) {
     } else if (msgWriter == '') {
       alert('작성자를 입력해주세요');
       document.getElementById('writer')?.focus();
-    }
-    // else if (fontId == 0) {
-    //   alert('폰트를 선택해주세요');
-    // }
-    else {
+    } else {
       messageAPI
         .messageWrite({
           content: msgContent,
@@ -95,12 +91,10 @@ export default function MessageWrite(props: { flower: number }) {
               onChange={changeWriter}
             ></input>
           </span>
-          <div style={{ float: 'right', fontSize: '11px' }}>
-            {msgLength}/200
-          </div>
+          <div css={MsgLimit}>{msgLength}/200</div>
         </div>
       </div>
-      <div style={{ fontSize: '2vh' }}>마음에 드는 글씨체를 선택하세요!</div>
+      <div style={{ fontSize: '16px' }}>마음에 드는 글씨체를 선택하세요!</div>
       <div css={FontBox}>
         <ColorButton
           variant="contained"
@@ -203,6 +197,7 @@ const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   color: '#000000',
   margin: '1vh',
   flex: '0 0 auto',
+  fontSize: '18px',
   '&:hover': {
     backgroundColor: '#B1BDBB',
     borderColor: '#B1BDBB',
@@ -270,9 +265,9 @@ const MainButton = css`
   width: 90%;
   /* margin-top: 0.5vh; */
   margin-bottom: 1vh;
-  padding: 1vh;
+  padding: 1.5vh;
   border-radius: 10px;
-  font-size: 2vh;
+  font-size: 1em;
   transform: translate(0, 50%);
 `;
 
@@ -288,7 +283,7 @@ const WriteBox = css`
   }
 
   .input-css {
-    font-size: 1.5vh;
+    font-size: 18px;
     width: 85%;
     height: 70%;
     border: 0px;
@@ -303,18 +298,26 @@ const WriteBox = css`
     padding: 1vh;
     text-align: left;
     float: left;
+    font-size: 18px;
 
     .writer-input {
       border: 0px;
       width: 50%;
-      font-size: 1.5vh;
+      font-size: 18px;
     }
   }
 `;
 
+const MsgLimit = css`
+  float: right;
+  font-size: 13px;
+`;
 const FontBox = css`
   height: 7%;
-  margin: 1vh 2.5vh 0 2.5vh;
+  /* margin: 1vh 2.5vh 0 2.5vh; */
+  margin: 2% 5% 0 5%;
+  /* margin-left: 5%; */
+  /* margin-right: 5%; */
   overflow-x: scroll;
   display: flex;
   flex-flow: nowrap;

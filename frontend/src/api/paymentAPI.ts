@@ -11,7 +11,7 @@ const paymentAPI = {
   requestPayment() {
     return api({
       method: 'post',
-      url: `${END_POINT}/payment/1`,
+      url: `${END_POINT}/1`,
       data: null,
       headers: {
         'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
