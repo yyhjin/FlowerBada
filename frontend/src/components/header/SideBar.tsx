@@ -26,7 +26,7 @@ const SideBar = (props: any) => {
         return variable;
       });
       alert('logout success!');
-      window.location.href = '/';
+      window.location.href = '/singIn';
     } catch (err: any) {
       console.log(err);
     }
