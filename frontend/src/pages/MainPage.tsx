@@ -1,30 +1,29 @@
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import {
+  IcreateRollingRecoil,
+  createRollingRecoil,
+} from '@recoil/createRollingRecoil';
 import MainGreenHouse from '@assets/main_menu/main_greenhouse.png';
 import MainMyPage from '@assets/main_menu/main_mypage.png';
 import MainNewRoll from '@assets/main_menu/main_newroll.png';
 import MainStore from '@assets/main_menu/main_store.png';
 import LogoutBtn from '@assets/logout_btn.png';
+import { useEffect } from 'react';
+import userAPI from '@src/api/userAPI';
 
 const Mainpage = () => {
   const navigate = useNavigate();
   const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
+  const [createRollingState, setCreateRollingState] =
+    useRecoilState<IcreateRollingRecoil>(createRollingRecoil);
 
   // 로그아웃
   const signOut = async () => {
     try {
-      await axios.post(
-        'http://localhost:8080/api/v1/user/signout',
-        {},
-        {
-          headers: {
-            'X-AUTH-TOKEN': `Bearer ${loginUser.jwt}`,
-          },
-        },
-      );
+      await userAPI.signOut(loginUser.jwt);
       setLoginUser((prev: IuserRecoil) => {
         const variable = { ...prev };
         variable.id = 0;
@@ -39,6 +38,20 @@ const Mainpage = () => {
       console.log(err);
     }
   };
+
+  const resetCreateData = () => {
+    setCreateRollingState((prev: IcreateRollingRecoil): any => {
+      const variable = { ...prev };
+      variable.itemId = 0;
+      variable.itemIndex = 0;
+      variable.url = '';
+      variable.title = '';
+      return variable;
+    });
+  };
+  useEffect(() => {
+    resetCreateData();
+  }, []);
 
   // 페이지 이동 핸들러
   const moveGreenHouse = () => {

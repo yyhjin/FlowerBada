@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import axios from 'axios';
 import { css } from '@emotion/react';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import mypageAPI from '@src/api/mypageAPI';
 
 interface IDeliver {
   pageUrl?: string;
@@ -63,16 +63,10 @@ export default function MyDeliveryList() {
     try {
       setSortNumber(sortNumber);
       const params = { sort: sortNumber, paginationId: pages };
-      const res: any = await axios.get(
-        'http://localhost:8080/api/v1/mypage/delivery',
-        {
-          headers: {
-            'X-AUTH-TOKEN': 'Bearer ' + userState.jwt,
-          },
-          params,
-        },
-      );
+      const res: any = await mypageAPI.getDelivery(userState.jwt, params);
       if (res.data.response.length !== 0) {
+        // console.log(res.data.response.length);
+
         setMyList(myList.concat(res.data.response));
         setPages(pages + 1);
       }
@@ -82,8 +76,8 @@ export default function MyDeliveryList() {
   }
 
   return (
-    <div css={totalCSS}>
-      <div css={selectBtn}>
+    <div css={outerBox}>
+      <div css={selectBtn} className="dropdownBox">
         <select className="dropdown" value={sortNumber} onChange={handleChange}>
           <option value={1}>최신순</option>
           <option value={2}>오래된순</option>
@@ -94,7 +88,7 @@ export default function MyDeliveryList() {
           return (
             <div className="deliverybox" key={index}>
               <div className="imgbox">
-                <a href={deliver.pageUrl}>
+                <a href={'/rolling/' + deliver.pageUrl}>
                   <img
                     src={deliver.imgUrl}
                     alt="배송꽃다발이미지"
@@ -103,41 +97,27 @@ export default function MyDeliveryList() {
                 </a>
               </div>
               <div className="infobox">
-                {deliver.date}
-                <br />
-                <b> {deliver.title}</b>
-                <br />
-                <br />
-                <div css={ChipCss}>
-                  {'결제완료' == deliver.status ? (
-                    <div className="cash">{deliver.status}</div>
-                  ) : (
-                    <span></span>
-                  )}
-                  {'배송중' == deliver.status ? (
-                    <div className="Ing">{deliver.status}</div>
-                  ) : (
-                    <span></span>
-                  )}
-                  {'배송완료' == deliver.status ? (
-                    <div className="Finished">{deliver.status}</div>
-                  ) : (
-                    <span></span>
-                  )}
-                </div>
-                <div className="smallinfobox">
-                  <div>
-                    <b>{deliver.flowerCount}</b> 개의 꽃송이
+                <div className="dateAndTitle">
+                  <ul>{deliver.date}</ul>
+                  <ul css={title}>{deliver.title}</ul>
+                  <div className="descAndPrice">
+                    <div>{deliver.flowerCount}개의 꽃송이</div>
+                    <div>결제 금액: {deliver.price}원</div>
                   </div>
-                  <div>가격: {deliver.price}원</div>
                 </div>
-              </div>
-              <div className="frombox">
-                <b>FROM &nbsp; </b>
-                {deliver.sender}
-                <br />
-                <b>TO &nbsp; </b>
-                {deliver.receiver} <br />
+                <div className="deliveryState">
+                  <div>{deliver.status}</div>
+                </div>
+                <div className="frombox">
+                  <div>
+                    FROM &nbsp;
+                    {deliver.sender}
+                  </div>
+                  <div>
+                    TO &nbsp;
+                    {deliver.receiver}
+                  </div>
+                </div>
               </div>
             </div>
           );
@@ -147,74 +127,96 @@ export default function MyDeliveryList() {
   );
 }
 
-const selectBtn = css`
-  display: flex;
-  justify-content: end;
-  padding: 0.5rem 1.5rem;
-  margin-top: 0;
-  select {
-    margin-top: 0;
-    border: 1px solid black;
+const outerBox = css`
+  position: absolute;
+  .dropdownBox {
+    position: relative;
   }
-`;
-
-const totalCSS = css`
   .mylist {
-    height: 80vh;
+    position: relative;
+    height: calc(100vh - 132px);
     overflow-y: scroll;
   }
   .mylist::-webkit-scrollbar {
     display: none;
   }
   .deliverybox {
-    background-color: white;
-    width: 100%;
-
-    &:first-child > .infobox {
-      margin-top: 0px;
-    }
+    position: relative;
   }
   .imgbox {
-    width: 100px;
-    height: 100px;
-    padding: 20px;
-    margin-left: 20px;
-    margin-top: 20px;
+    width: 80px;
+    height: 80px;
+    position: relative;
+    display: inline-block;
     float: left;
+    padding: 10px;
+  }
+  .dateAndTitle {
+    position: relative;
+    display: inline-block;
+    width: calc(100vw - 100px);
+    height: 100px;
+  }
+  .dateAndTitle > ul {
+    margin: 5px 0 0 5px;
+    padding: 0px;
+    font-size: 12px;
+  }
+  .deliveryState {
+    color: #699877;
+    float: right;
+    font-size: 12px;
+    margin-right: 10px;
+    width: 100px;
+    text-align: end;
   }
   .infobox {
-    padding-top: 30px;
-    margin: 20px;
-    margin-left: 200px;
     text-align: left;
+    margin-bottom: 20px;
+    background-color: white;
+    padding: 10px 0px;
   }
-  .smallinfobox {
+  .descAndPrice {
     display: flex;
     justify-content: space-between;
-    font-size: 14px;
+    margin: 5px 10px 0 5px;
+    font-size: 12px;
   }
   .frombox {
-    margin-top: -10px;
-    margin-left: 50px;
-    width: 130px;
-    text-align: left;
+    margin-left: 20px;
     font-size: 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-  .dropdown {
-    background-color: transparent;
-    outline: 0 none;
-    border: none;
-    border-radius: 4px;
-    margin-top: 10px;
-    padding: 5px;
+    line-height: 12px;
+    width: calc(100vw - 130px);
   }
 `;
 
+const selectBtn = css`
+  /* position: relative; */
+  width: 100vw;
+  height: 30px;
+  text-align: end;
+  margin-top: 5px;
+
+  select {
+    margin-right: 10px;
+    border: none;
+    background-color: transparent;
+    width: 100px;
+  }
+  option {
+    font-size: 12px;
+  }
+`;
+
+const title = css`
+  font-size: 16px !important;
+`;
+
 const ChipCss = css`
-  width: 60px;
+  /* width: 60px;
   height: 24px;
   padding: 1px;
   margin: 4px 0px 4px;
@@ -234,5 +236,5 @@ const ChipCss = css`
     border: 1px solid green;
     color: green;
     border-radius: 0.5rem;
-  }
+  } */
 `;

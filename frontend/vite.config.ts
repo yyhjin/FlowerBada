@@ -30,6 +30,8 @@ export default defineConfig({
       { find: '@kakao', replacement: path.resolve(__dirname, 'src/kakao') },
       { find: '@pages', replacement: path.resolve(__dirname, 'src/pages') },
       { find: '@recoil', replacement: path.resolve(__dirname, 'src/recoil') },
+      { find: '@api', replacement: path.resolve(__dirname, 'src/api') },
+      { find: '@utils', replacement: path.resolve(__dirname, 'src/utils') },
     ],
   },
 });

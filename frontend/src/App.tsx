@@ -34,10 +34,7 @@ function App() {
                 path="/user/signin/redirect"
                 element={<KakaoRedirectHandler />}
               ></Route>
-              <Route
-                path="/rolling/:url/:paginationId"
-                element={<RollingPaper />}
-              ></Route>
+              <Route path="rolling/:url" element={<RollingPaper />}></Route>
             </>
           ) : (
             <>
@@ -52,21 +49,14 @@ function App() {
                   <Route path="date" element={<Date />}></Route>
                   <Route path="link" element={<Link />}></Route>
                 </Route>
-                <Route
-                  path="rolling/:url/:paginationId"
-                  element={<RollingPaper />}
-                ></Route>
-
+                <Route path="rolling/:url" element={<RollingPaper />}></Route>
                 <Route path="/payment" element={<KakaoPaymentTest />} />
                 <Route path="/payment/success" element={<PaymentSuccess />} />
                 <Route path="/payment/fail" element={<PaymentFail />} />
                 <Route path="/payment/cancel" element={<PaymentCancel />} />
+                <Route path="/rolling/message/read" element={<MessageRead />} />
                 <Route
-                  path="/rollingpaper/message/read"
-                  element={<MessageRead />}
-                />
-                <Route
-                  path="/rollingpaper/message/create"
+                  path="/rolling/message/create"
                   element={<MessageCreate />}
                 />
               </Route>
