@@ -1,6 +1,6 @@
 import paymentAPI from '@src/api/paymentAPI';
 
-const KakaoPaymentTest = () => {
+const Payment = () => {
   const payment = async () => {
     const res = await paymentAPI.requestPayment();
     window.location.href = res.data.response;
@@ -13,4 +13,4 @@ const KakaoPaymentTest = () => {
   );
 };
 
-export default KakaoPaymentTest;
+export default Payment;

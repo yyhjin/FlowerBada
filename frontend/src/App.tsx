@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import KakaoPaymentTest from '@pages/KakaoPaymentTest';
+import Payment from '@src/pages/Payment/Payment';
 import PaymentSuccess from '@pages/Payment/PaymentSuccess';
 import PaymentFail from '@pages/Payment/PaymentFail';
 import PaymentCancel from '@pages/Payment/PaymentCancel';
@@ -54,7 +54,7 @@ function App() {
                 </Route>
                 <Route path="rolling/:url" element={<RollingPaper />}></Route>
 
-                <Route path="/payment" element={<KakaoPaymentTest />} />
+                <Route path="/payment" element={<Payment />} />
                 <Route path="/payment/success" element={<PaymentSuccess />} />
                 <Route path="/payment/fail" element={<PaymentFail />} />
                 <Route path="/payment/cancel" element={<PaymentCancel />} />
