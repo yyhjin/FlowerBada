@@ -3,9 +3,11 @@ import storeAPI from '@api/storeAPI';
 import userAPI from '@api/userAPI';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { useRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 
 export default function Modal(props: any) {
   const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
+  const navigate = useNavigate();
 
   function closeModal() {
     props.closeModal();
@@ -34,9 +36,11 @@ export default function Modal(props: any) {
       // alert('구매 완료!');
       switch (props.location) {
         case 'message':
-          window.location.href = '/rolling/message/create';
+          navigate('/rolling/message/create');
+          // window.location.href = '/rolling/message/create';
           break;
         case 'store':
+          navigate('/store');
           window.location.href = '/store';
           break;
         case 'rolling':
