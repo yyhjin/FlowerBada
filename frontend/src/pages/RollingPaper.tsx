@@ -1,9 +1,24 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import Message from '@src/components/mypage/Message';
 import DotSlice from '@components/paging/DotSlice';
 import messageAPI from '@api/messageAPI';
+import IosShareIcon from '@mui/icons-material/IosShare';
+import CreateIcon from '@mui/icons-material/Create';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+  IconButton,
+} from '@mui/material';
 import rollingAPI from '@api/rollingAPI';
 import Star from '@assets/Star.png';
 import EmptyStar from '@assets/EmptyStar.png';
@@ -13,6 +28,7 @@ import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import MySwal from '@components/SweetAlert';
 
 interface IRolling {
+  rollingId?: number;
   imgUrl?: string;
   imgFront?: string;
   imgBack?: string;
@@ -40,9 +56,14 @@ export default function RollingPaper() {
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   let paramCopy: any = {};
   paramCopy = useParams();
+  const [nowDate, setNowDate] = useState<Date>(new Date());
+  const [rollingDate, setRollingDate] = useState<Date>(new Date());
+  const navigate = useNavigate();
+  const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
 
   async function getRolling() {
     setLoading(false);
+    setDeliveryModal(false);
     let url = paramCopy.url;
     try {
       const res: any = await messageAPI.getRolling(
@@ -59,7 +80,9 @@ export default function RollingPaper() {
       const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
 
       const nowDate = new Date(utc + KR_TIME_DIFF);
+      setNowDate(nowDate);
       const rollingDate = new Date(utcOpen);
+      setRollingDate(rollingDate);
 
       if (rollingDate <= nowDate) {
         setValid(true);
@@ -72,7 +95,6 @@ export default function RollingPaper() {
         });
         setValid(false);
       }
-      console.log(res.data.response);
 
       setRolling(res.data.response);
       setLoading(true);
@@ -123,6 +145,29 @@ export default function RollingPaper() {
     }
   };
 
+  const moveMessageWrite = () => {
+    navigate('/rolling/message/create', {
+      state: {
+        rollingId: rolling.rollingId,
+        rollingUrl: paramCopy.url,
+      },
+    });
+  };
+
+  const changeDelivery = (param: boolean) => {
+    setDeliveryModal(param);
+  };
+
+  const sendDelivery = () => {
+    // 주소 고쳐서 사용하세요~
+    navigate('/delivery', {
+      state: {
+        paginationId: paginationId,
+        rollingUrl: paramCopy.url,
+      },
+    });
+  };
+
   useEffect(() => {
     getRolling();
   }, [paginationId]);
@@ -130,46 +175,128 @@ export default function RollingPaper() {
   return (
     <>
       {loading && rolling && rolling.messages && type ? (
-        <div css={DetailCss}>
-          <div className={`titlezone_${type}`}>
-            <div>{rolling.title}</div>
-            {bookmark ? (
-              <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
+        <>
+          <div css={DetailCss}>
+            <div className={`titlezone_${type}`}>
+              <div>{rolling.title}</div>
+              {bookmark ? (
+                <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
+              ) : (
+                <img
+                  src={EmptyStar}
+                  css={BookmarkImg}
+                  onClick={bookmarkSwitch}
+                />
+              )}
+            </div>
+            <div className="fixbox">
+              <div className={`imgbox_${type}`}>
+                <img src={'/src/assets/' + rolling.imgBack}></img>
+              </div>
+              <div className="flowerlist">
+                {rolling.messages.map((message, index) => {
+                  return (
+                    <div key={index} className={`flowerbox_${type}`}>
+                      <Message
+                        imgUrl={message.imgUrl}
+                        flowerId={message.messageId}
+                        writer={message.writer}
+                        valid={valid}
+                      ></Message>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className={`imgbox_front_${type}`}>
+              <img src={'/src/assets/' + rolling.imgFront}></img>
+            </div>
+            <div className={`dot_${type}`}>
+              <DotSlice
+                paginationId={paginationId}
+                setPaginationId={setPaginationId}
+                stepNumber={stepNumber}
+              ></DotSlice>
+            </div>
+            {rollingDate <= nowDate ? (
+              <>
+                <div className="bottom-bar">
+                  <ThemeProvider theme={theme}>
+                    <IconButton
+                      size="large"
+                      color="primary"
+                      className="share-btn"
+                    >
+                      <SaveAltIcon fontSize="large" />
+                    </IconButton>
+                    <IconButton
+                      size="large"
+                      color="primary"
+                      className="write-btn"
+                      onClick={() => changeDelivery(true)}
+                    >
+                      <LocalShippingIcon fontSize="large" />
+                    </IconButton>
+                  </ThemeProvider>
+                </div>
+                <Dialog open={deliveryModal}>
+                  <DialogTitle id="alert-dialog-title" css={Font}>
+                    확인해주세요
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText css={Font}>
+                      현재 선택하신 페이지의 꽃들로 주문을 진행합니다.
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions css={ActionCss}>
+                    <ThemeProvider theme={theme}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        onClick={sendDelivery}
+                        css={Font}
+                      >
+                        확인
+                      </Button>
+                    </ThemeProvider>
+                    <ThemeProvider theme={theme}>
+                      <Button
+                        variant="contained"
+                        color="neutral"
+                        size="small"
+                        onClick={() => changeDelivery(false)}
+                        css={Font}
+                      >
+                        취소
+                      </Button>
+                    </ThemeProvider>
+                  </DialogActions>
+                </Dialog>
+              </>
             ) : (
-              <img src={EmptyStar} css={BookmarkImg} onClick={bookmarkSwitch} />
+              <div className="bottom-bar">
+                <ThemeProvider theme={theme}>
+                  <IconButton
+                    size="large"
+                    color="primary"
+                    className="share-btn"
+                  >
+                    <IosShareIcon fontSize="large" />
+                  </IconButton>
+                  <IconButton
+                    size="large"
+                    color="primary"
+                    className="write-btn"
+                    onClick={moveMessageWrite}
+                  >
+                    <CreateIcon fontSize="large" />
+                  </IconButton>
+                </ThemeProvider>
+              </div>
             )}
           </div>
-          <div className="fixbox">
-            <div className={`imgbox_${type}`}>
-              <img src={'/src/assets/' + rolling.imgBack}></img>
-            </div>
-            <div className="flowerlist">
-              {rolling.messages.map((message, index) => {
-                return (
-                  <div key={index} className={`flowerbox_${type}`}>
-                    <Message
-                      imgUrl={message.imgUrl}
-                      flowerId={message.messageId}
-                      writer={message.writer}
-                      valid={valid}
-                    ></Message>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div className={`imgbox_front_${type}`}>
-            <img src={'/src/assets/' + rolling.imgFront}></img>
-          </div>
-          <div className={`dot_${type}`}>
-            <DotSlice
-              paginationId={paginationId}
-              setPaginationId={setPaginationId}
-              stepNumber={stepNumber}
-            ></DotSlice>
-          </div>
-          <img src={Delivery} css={DeliveryIcon} />
-        </div>
+        </>
       ) : (
         <div css={Loading}>로딩중</div>
       )}
@@ -179,6 +306,7 @@ export default function RollingPaper() {
 
 const DetailCss = css`
   width: 100%;
+  height: 115%;
   position: relative;
   transform: translate(0%, -15%);
   .titlezone_1 {
@@ -205,11 +333,28 @@ const DetailCss = css`
     }
   }
   .titlezone_2 {
-    padding-top: 25vh;
+    padding-top: 20vh;
     margin-bottom: -10vw;
     justify-content: center;
     font-size: 7.5vw;
     display: flex;
+
+    @media screen and (min-height: 700px) {
+      padding-top: 22vh;
+      margin-bottom: -7vh;
+    }
+    @media screen and (min-height: 800px) {
+      padding-top: 22vh;
+      padding-bottom: 2vh;
+    }
+    @media screen and (min-height: 900px) {
+      padding-top: 22vh;
+      margin-bottom: -7vh;
+    }
+    @media screen and (max-height: 660px) and (max-width: 290px) {
+      padding-top: 22vh;
+      margin-bottom: -8vw;
+    }
   }
   .titlezone_3 {
     padding-top: 23vh;
@@ -488,19 +633,19 @@ const DetailCss = css`
   }
   .dot_1,
   .dot_2 {
-    margin-top: 6vh;
+    margin-top: 2vh;
     bottom: 0%;
     @media screen and (min-height: 700px) {
-      margin-top: 6vh;
+      margin-top: 2vh;
     }
     @media screen and (min-height: 800px) {
-      margin-top: 12vh;
+      margin-top: 2vh;
     }
     @media screen and (min-height: 900px) {
-      margin-top: 15vh;
+      margin-top: 4vh;
     }
     @media screen and (max-height: 660px) and (max-width: 290px) {
-      margin-top: 18vh;
+      margin-top: 4vh;
     }
   }
   .dot_3 {
@@ -553,6 +698,21 @@ const DetailCss = css`
       width: 75%;
     }
   }
+
+  .bottom-bar {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    .share-btn {
+      float: left;
+      margin-left: 1em;
+    }
+    .write-btn {
+      float: right;
+      margin-right: 1em;
+    }
+  }
 `;
 
 const Loading = css`
@@ -569,4 +729,28 @@ const BookmarkImg = css`
   left: 85%;
   width: 10vw;
   z-index: 1;
+`;
+
+const theme = createTheme({
+  status: {
+    danger: '#e53e3e',
+  },
+  palette: {
+    primary: {
+      main: '#16453E',
+    },
+    neutral: {
+      main: '#B1BDBB',
+    },
+  },
+});
+
+const Font = css`
+  font-family: 'SeoulNamsanM';
+  word-break: keep-all;
+`;
+
+const ActionCss = css`
+  width: 90%;
+  float: right;
 `;
