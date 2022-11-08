@@ -175,127 +175,128 @@ export default function RollingPaper() {
   return (
     <>
       {loading && rolling && rolling.messages && type ? (
-          <>
+        <>
           <div css={DetailCss}>
-          <div className={`titlezone_${type}`}>
-            <div>{rolling.title}</div>
-            {bookmark ? (
+            <div className={`titlezone_${type}`}>
+              <div>{rolling.title}</div>
+              {bookmark ? (
                 <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
-            ) : (
-                <img src={EmptyStar} css={BookmarkImg} onClick={bookmarkSwitch} />
-            )}
-          </div>
-          <div className="fixbox">
-            <div className={`imgbox_${type}`}>
-              <img src={'/src/assets/' + rolling.imgBack}></img>
+              ) : (
+                <img
+                  src={EmptyStar}
+                  css={BookmarkImg}
+                  onClick={bookmarkSwitch}
+                />
+              )}
             </div>
-            <div className="flowerlist">
-              {rolling.messages.map((message, index) => {
-                return (
-                  <div key={index} className={`flowerbox_${type}`}>
-                    <Message
-                      imgUrl={message.imgUrl}
-                      flowerId={message.messageId}
-                      writer={message.writer}
-                      valid={valid}
-                    ></Message>
-                  </div>
-                );
-              })}
+            <div className="fixbox">
+              <div className={`imgbox_${type}`}>
+                <img src={'/src/assets/' + rolling.imgBack}></img>
+              </div>
+              <div className="flowerlist">
+                {rolling.messages.map((message, index) => {
+                  return (
+                    <div key={index} className={`flowerbox_${type}`}>
+                      <Message
+                        imgUrl={message.imgUrl}
+                        flowerId={message.messageId}
+                        writer={message.writer}
+                        valid={valid}
+                      ></Message>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-          <div className={`imgbox_front_${type}`}>
-            <img src={'/src/assets/' + rolling.imgFront}></img>
-          </div>
-          <div className={`dot_${type}`}>
-            <DotSlice
-              paginationId={paginationId}
-              setPaginationId={setPaginationId}
-              stepNumber={stepNumber}
-            ></DotSlice>
-          </div>
+            <div className={`imgbox_front_${type}`}>
+              <img src={'/src/assets/' + rolling.imgFront}></img>
+            </div>
+            <div className={`dot_${type}`}>
+              <DotSlice
+                paginationId={paginationId}
+                setPaginationId={setPaginationId}
+                stepNumber={stepNumber}
+              ></DotSlice>
+            </div>
             {rollingDate <= nowDate ? (
-                <>
-                  <div className="bottom-bar">
-                    <ThemeProvider theme={theme}>
-                      <IconButton
-                          size="large"
-                          color="primary"
-                          className="share-btn"
-                      >
-                        <SaveAltIcon fontSize="large" />
-                      </IconButton>
-                      <IconButton
-                          size="large"
-                          color="primary"
-                          className="write-btn"
-                          onClick={() => changeDelivery(true)}
-                      >
-                        <LocalShippingIcon fontSize="large" />
-                      </IconButton>
-                    </ThemeProvider>
-                  </div>
-                  <Dialog open={deliveryModal}>
-                    <DialogTitle id="alert-dialog-title" css={Font}>
-                      확인해주세요
-                    </DialogTitle>
-                    <DialogContent>
-                      <DialogContentText css={Font}>
-                        현재 선택하신 페이지의 꽃들로 주문을 진행합니다.
-                      </DialogContentText>
-                      <DialogContentText css={Font}>
-                        계속하시겠습니까?
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions css={ActionCss}>
-                      <ThemeProvider theme={theme}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            size="small"
-                            onClick={sendDelivery}
-                            css={Font}
-                        >
-                          확인
-                        </Button>
-                      </ThemeProvider>
-                      <ThemeProvider theme={theme}>
-                        <Button
-                            variant="contained"
-                            color="neutral"
-                            size="small"
-                            onClick={() => changeDelivery(false)}
-                            css={Font}
-                        >
-                          취소
-                        </Button>
-                      </ThemeProvider>
-                    </DialogActions>
-                  </Dialog>
-                </>
-            ) : (
+              <>
                 <div className="bottom-bar">
                   <ThemeProvider theme={theme}>
                     <IconButton
-                        size="large"
-                        color="primary"
-                        className="share-btn"
+                      size="large"
+                      color="primary"
+                      className="share-btn"
                     >
-                      <IosShareIcon fontSize="large" />
+                      <SaveAltIcon fontSize="large" />
                     </IconButton>
                     <IconButton
-                        size="large"
-                        color="primary"
-                        className="write-btn"
-                        onClick={moveMessageWrite}
+                      size="large"
+                      color="primary"
+                      className="write-btn"
+                      onClick={() => changeDelivery(true)}
                     >
-                      <CreateIcon fontSize="large" />
+                      <LocalShippingIcon fontSize="large" />
                     </IconButton>
                   </ThemeProvider>
                 </div>
+                <Dialog open={deliveryModal}>
+                  <DialogTitle id="alert-dialog-title" css={Font}>
+                    확인해주세요
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText css={Font}>
+                      현재 선택하신 페이지의 꽃들로 주문을 진행합니다.
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions css={ActionCss}>
+                    <ThemeProvider theme={theme}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        onClick={sendDelivery}
+                        css={Font}
+                      >
+                        확인
+                      </Button>
+                    </ThemeProvider>
+                    <ThemeProvider theme={theme}>
+                      <Button
+                        variant="contained"
+                        color="neutral"
+                        size="small"
+                        onClick={() => changeDelivery(false)}
+                        css={Font}
+                      >
+                        취소
+                      </Button>
+                    </ThemeProvider>
+                  </DialogActions>
+                </Dialog>
+              </>
+            ) : (
+              <div className="bottom-bar">
+                <ThemeProvider theme={theme}>
+                  <IconButton
+                    size="large"
+                    color="primary"
+                    className="share-btn"
+                  >
+                    <IosShareIcon fontSize="large" />
+                  </IconButton>
+                  <IconButton
+                    size="large"
+                    color="primary"
+                    className="write-btn"
+                    onClick={moveMessageWrite}
+                  >
+                    <CreateIcon fontSize="large" />
+                  </IconButton>
+                </ThemeProvider>
+              </div>
             )}
           </div>
-          </>
+        </>
       ) : (
         <div css={Loading}>로딩중</div>
       )}
@@ -305,7 +306,7 @@ export default function RollingPaper() {
 
 const DetailCss = css`
   width: 100%;
-  height: 110%;
+  height: 115%;
   position: relative;
   transform: translate(0%, -15%);
   .titlezone_1 {
@@ -332,11 +333,28 @@ const DetailCss = css`
     }
   }
   .titlezone_2 {
-    padding-top: 25vh;
+    padding-top: 20vh;
     margin-bottom: -10vw;
     justify-content: center;
     font-size: 7.5vw;
     display: flex;
+
+    @media screen and (min-height: 700px) {
+      padding-top: 22vh;
+      margin-bottom: -7vh;
+    }
+    @media screen and (min-height: 800px) {
+      padding-top: 22vh;
+      padding-bottom: 2vh;
+    }
+    @media screen and (min-height: 900px) {
+      padding-top: 22vh;
+      margin-bottom: -7vh;
+    }
+    @media screen and (max-height: 660px) and (max-width: 290px) {
+      padding-top: 22vh;
+      margin-bottom: -8vw;
+    }
   }
   .titlezone_3 {
     padding-top: 23vh;
@@ -615,19 +633,19 @@ const DetailCss = css`
   }
   .dot_1,
   .dot_2 {
-    margin-top: 6vh;
+    margin-top: 2vh;
     bottom: 0%;
     @media screen and (min-height: 700px) {
-      margin-top: 6vh;
+      margin-top: 2vh;
     }
     @media screen and (min-height: 800px) {
-      margin-top: 12vh;
+      margin-top: 2vh;
     }
     @media screen and (min-height: 900px) {
-      margin-top: 15vh;
+      margin-top: 4vh;
     }
     @media screen and (max-height: 660px) and (max-width: 290px) {
-      margin-top: 18vh;
+      margin-top: 4vh;
     }
   }
   .dot_3 {
@@ -680,6 +698,21 @@ const DetailCss = css`
       width: 75%;
     }
   }
+
+  .bottom-bar {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    .share-btn {
+      float: left;
+      margin-left: 1em;
+    }
+    .write-btn {
+      float: right;
+      margin-right: 1em;
+    }
+  }
 `;
 
 const Loading = css`
@@ -696,21 +729,6 @@ const BookmarkImg = css`
   left: 85%;
   width: 10vw;
   z-index: 1;
-
-  .bottom-bar {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    bottom: 0;
-    .share-btn {
-      float: left;
-      margin-left: 1em;
-    }
-    .write-btn {
-      float: right;
-      margin-right: 1em;
-    }
-  }
 `;
 
 const theme = createTheme({
@@ -729,6 +747,7 @@ const theme = createTheme({
 
 const Font = css`
   font-family: 'SeoulNamsanM';
+  word-break: keep-all;
 `;
 
 const ActionCss = css`
