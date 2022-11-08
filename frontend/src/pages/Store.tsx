@@ -122,10 +122,11 @@ const Store = () => {
           console.log(err);
         });
     }
-  }, [isFlower]);
+  }, [isFlower, loginUser.points]);
 
   // 품목 리스트 가져오면 이미지 배열 갱신
   useEffect(() => {
+    setBuying(false);
     updateImgList();
   }, [flowerItemList, rollingItemList]);
 

@@ -4,6 +4,7 @@ import userAPI from '@api/userAPI';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
+import MySwal from '@components/SweetAlert';
 
 export default function Modal(props: any) {
   const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
@@ -33,17 +34,21 @@ export default function Modal(props: any) {
         variable.points = points;
         return variable;
       });
-      // alert('구매 완료!');
+      MySwal.fire({
+        title: '구매 완료!',
+        icon: 'success',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
       switch (props.location) {
         case 'message':
           navigate('/rolling/message/create');
-          // window.location.href = '/rolling/message/create';
           break;
         case 'store':
           navigate('/store');
-          window.location.href = '/store';
           break;
         case 'rolling':
+          navigate('/newroll/item');
           break;
       }
     } catch (err: any) {

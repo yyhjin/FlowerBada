@@ -52,7 +52,7 @@ export default function MessageCreate() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [loginUser.points]);
 
   const changeFlower = (param: any, index: number) => {
     setFlowerId(param);
