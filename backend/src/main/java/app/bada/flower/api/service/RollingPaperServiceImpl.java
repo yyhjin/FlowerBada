@@ -11,11 +11,9 @@ import app.bada.flower.api.entity.RollingPaper;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.*;
 import app.bada.flower.api.service.jwt.JwtTokenUtil;
-import app.bada.flower.api.util.S3FileUpload;
 import app.bada.flower.exception.CustomException;
 import app.bada.flower.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,7 +84,20 @@ public class RollingPaperServiceImpl implements RollingPaperService {
     }
 
     @Override
-    public RollingPaperResDto getRollingPaper(String url, int paginationId) {
+    public RollingPaperResDto getRollingPaper(String token, String url, int paginationId) {
+        boolean bookmarkCheck = true;
+        if(token.equals("Bearer")){
+            bookmarkCheck = false;
+        }else{
+            User user = userService.getUserByToken(token);
+            BookmarkResDto bookmarkResDto = new BookmarkResDto();
+            RollingPaper rollingPaper = rollingPaperRepository.findByUrl(url).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
+            Bookmark bookmark = bookmarkRepository.findByRollingPaper_IdAndUser_Id(rollingPaper.getId(), user.getId());
+            if(bookmark==null || bookmark.isValid()==false){
+                bookmarkCheck = false;
+            }
+        }
+
         RollingPaperResDto rollingPaperResDto = new RollingPaperResDto();
         RollingPaper rollingPaper = rollingPaperRepository.findByUrl(url).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
         List<Message> messageList = messageRepository.findAllByRollingPaper(rollingPaper);
@@ -110,6 +121,7 @@ public class RollingPaperServiceImpl implements RollingPaperService {
         rollingPaperResDto.setImgBack(rollingPaper.getRollingPaperItem().getImgBack());
         rollingPaperResDto.setImgUrl(rollingPaper.getRollingPaperItem().getImgUrl());
         rollingPaperResDto.setDate(rollingPaperResDto.changeDateToString(rollingPaper.getOpenDate()));
+        rollingPaperResDto.setBookmark(bookmarkCheck);
         rollingPaperResDto.setMessages(rollingMsgList);
         return rollingPaperResDto;
     }
