@@ -34,10 +34,7 @@ function App() {
                 path="/user/signin/redirect"
                 element={<KakaoRedirectHandler />}
               ></Route>
-              <Route
-                path="/rolling/:url/:paginationId"
-                element={<RollingPaper />}
-              ></Route>
+              <Route path="rolling/:url" element={<RollingPaper />}></Route>
             </>
           ) : (
             <>
@@ -53,7 +50,6 @@ function App() {
                   <Route path="link" element={<Link />}></Route>
                 </Route>
                 <Route path="rolling/:url" element={<RollingPaper />}></Route>
-
                 <Route path="/payment" element={<Payment />} />
                 <Route path="/payment/success" element={<PaymentSuccess />} />
                 <Route path="/payment/fail" element={<PaymentFail />} />
