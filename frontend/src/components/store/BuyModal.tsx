@@ -17,14 +17,14 @@ export default function Modal(props: any) {
         const data: any = {
           flowerId: props.itemId,
         };
-        await storeAPI.putFlower(loginUser.jwt, data);
+        await storeAPI.putFlower(loginUser.jwt, loginUser.refresh, data);
       } else {
         const data: any = {
           rollingId: props.itemId,
         };
-        await storeAPI.putRolling(loginUser.jwt, data);
+        await storeAPI.putRolling(loginUser.jwt, loginUser.refresh, data);
       }
-      const res = await userAPI.getPoint(loginUser.jwt);
+      const res = await userAPI.getPoint(loginUser.jwt, loginUser.refresh);
       const points: number = res.data.response.points;
       setLoginUser((prev: IuserRecoil) => {
         const variable = { ...prev };

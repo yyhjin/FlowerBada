@@ -30,12 +30,13 @@ const userAPI = {
       },
     });
   },
-  getPoint(jwt: string) {
+  getPoint(jwt: string, refresh: string) {
     return api({
       method: 'get',
       url: `${END_POINT}/points`,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
     });
   },

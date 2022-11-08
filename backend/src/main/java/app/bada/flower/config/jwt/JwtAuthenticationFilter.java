@@ -41,8 +41,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         response.setHeader(AUTHORIZATION_HEADER, "Bearer " + token);
                         Authentication authentication = jwtTokenUtil.getAuthentication(refreshToken);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
-                        request.setAttribute(AUTHORIZATION_HEADER, token);
-                        request.setAttribute(REFRESH_HEADER, refreshToken);
                         System.out.println("refresh token 재발급");
                     }
                     else{

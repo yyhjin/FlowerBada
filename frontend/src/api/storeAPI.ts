@@ -11,16 +11,17 @@ interface IPutRollingData {
 }
 
 const storeAPI = {
-  getFlowers(jwt: string) {
+  getFlowers(jwt: string, refresh: string) {
     return api({
       method: 'get',
       url: `${END_POINT}/flower`,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
     });
   },
-  putFlower(jwt: string, data: IPutFlowerData) {
+  putFlower(jwt: string, refresh: string, data: IPutFlowerData) {
     return api({
       method: 'put',
       url: `${END_POINT}/buy/flower`,
@@ -40,7 +41,7 @@ const storeAPI = {
       },
     });
   },
-  putRolling(jwt: string, data: IPutRollingData) {
+  putRolling(jwt: string, refresh: string, data: IPutRollingData) {
     return api({
       method: 'put',
       url: `${END_POINT}/buy/rolling`,

@@ -1,7 +1,7 @@
 import storeAPI from '@api/storeAPI';
 import React from 'react';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { createTheme } from '@mui/material/styles';
@@ -13,6 +13,7 @@ import MessageWrite from '@components/message/MessageWrite';
 import Modal from '@src/components/store/BuyModal';
 import Receipt from '@src/components/store/Receipt';
 import { Grid } from '@mui/material';
+import updateTokens from '@src/utils/updateTokens';
 
 interface IFlower {
   flowerId?: number;
@@ -27,6 +28,7 @@ interface IFlower {
 }
 
 export default function MessageCreate() {
+  let setLoginUser = useSetRecoilState<IuserRecoil>(userReCoil);
   let [flowerId, setFlowerId] = useState<number>(0); // 클릭한 꽃 번호
   let [flowerIdx, setFlowerIdx] = useState<number>(0); // 클릭한 꽃 인덱스
   let [flowerList, setFlowerList] = useState<IFlower[]>([]);
@@ -40,13 +42,27 @@ export default function MessageCreate() {
     setSelectedFlower(0);
     setBuying(false);
     storeAPI
-      .getFlowers(loginUser.jwt)
+      .getFlowers(loginUser.jwt, loginUser.refresh)
       .then((res) => {
         setFlowerList(res.data.response);
         console.log(res.data.response);
       })
       .catch((err) => {
-        console.log(err);
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setLoginUser);
+          storeAPI
+            .getFlowers(accessToken, refreshToken)
+            .then((res) => {
+              setFlowerList(res.data.response);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
       });
   }, []);
 

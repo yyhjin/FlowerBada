@@ -104,27 +104,29 @@ const Store = () => {
 
   const getFlowerList = () => {
     storeAPI
-      .getFlowers(loginUser.jwt)
+      .getFlowers(loginUser.jwt, loginUser.refresh)
       .then((res: any) => {
         setFlowerItemList(res.data.response);
       })
       .catch((err: any) => {
-        let accessToken: string = err.response.headers.get('x-auth-token');
-        let refreshToken: string = err.response.headers.get('refresh-token');
-        if (accessToken && refreshToken) {
-          accessToken = accessToken.split(' ')[1];
-          refreshToken = refreshToken.split(' ')[1];
-          updateTokens(accessToken, refreshToken, setLoginUser);
-          storeAPI
-            .getRollings(loginUser.jwt, loginUser.refresh)
-            .then((res: any) => {
-              setRollingItemList(res.data.response);
-            })
-            .catch((err: any) => {
-              console.log(err);
-            });
+        if (err.response.status === 402) {
+          alert('로그인이 필요합니다');
         } else {
-          console.log(err);
+          let accessToken: string = err.response.headers.get('x-auth-token');
+          let refreshToken: string = err.response.headers.get('refresh-token');
+          if (accessToken && refreshToken) {
+            accessToken = accessToken.split(' ')[1];
+            refreshToken = refreshToken.split(' ')[1];
+            updateTokens(accessToken, refreshToken, setLoginUser);
+            storeAPI
+              .getFlowers(accessToken, refreshToken)
+              .then((res: any) => {
+                setFlowerItemList(res.data.response);
+              })
+              .catch((err: any) => {
+                console.log(err);
+              });
+          }
         }
       });
   };
@@ -136,22 +138,25 @@ const Store = () => {
         setRollingItemList(res.data.response);
       })
       .catch((err: any) => {
-        let accessToken: string = err.response.headers.get('x-auth-token');
-        let refreshToken: string = err.response.headers.get('refresh-token');
-        if (accessToken && refreshToken) {
-          accessToken = accessToken.split(' ')[1];
-          refreshToken = refreshToken.split(' ')[1];
-          updateTokens(accessToken, refreshToken, setLoginUser);
-          storeAPI
-            .getRollings(accessToken, refreshToken)
-            .then((res: any) => {
-              setRollingItemList(res.data.response);
-            })
-            .catch((err: any) => {
-              console.log(err);
-            });
+        console.log(err);
+        if (err.response.status === 402) {
+          alert('로그인이 필요합니다');
         } else {
-          console.log(err);
+          let accessToken: string = err.response.headers.get('x-auth-token');
+          let refreshToken: string = err.response.headers.get('refresh-token');
+          if (accessToken && refreshToken) {
+            accessToken = accessToken.split(' ')[1];
+            refreshToken = refreshToken.split(' ')[1];
+            updateTokens(accessToken, refreshToken, setLoginUser);
+            storeAPI
+              .getRollings(accessToken, refreshToken)
+              .then((res: any) => {
+                setRollingItemList(res.data.response);
+              })
+              .catch((err: any) => {
+                console.log(err);
+              });
+          }
         }
       });
   };
