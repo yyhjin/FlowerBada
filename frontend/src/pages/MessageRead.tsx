@@ -108,96 +108,92 @@ export default function MessageRead() {
       </button>
       {messageId}
       <br />
-      {openModal ? (
-        <>
-          <div>
-            {/* 메시지 조회 Modal */}
-            <DialogCustom open={openModal}>
-              {/* 신고 Modal */}
-              <Dialog open={openReportModal} css={ReportDialog}>
-                <DialogTitle className="title">신고하기</DialogTitle>
-                <DialogContent>
-                  {/* <br /> */}
-                  <DialogContentText className="content">
-                    신고자 : {loginUser.nickname}
-                    <br />
-                    신고 사유
-                  </DialogContentText>
-                  {/* <br /> */}
-                  <textarea
-                    className="input-content"
-                    value={reportContent}
-                    onChange={(e) => setReportContent(e.target.value)}
-                  ></textarea>
-                </DialogContent>
-                <DialogActions className="action">
-                  <ThemeProvider theme={theme}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      onClick={sendReport}
-                      css={Font}
-                    >
-                      신고
-                    </Button>
-                  </ThemeProvider>
-                  <ThemeProvider theme={theme}>
-                    <Button
-                      variant="contained"
-                      color="neutral"
-                      size="small"
-                      onClick={(e) => changeReportModal(false)}
-                      css={Font}
-                    >
-                      취소
-                    </Button>
-                  </ThemeProvider>
-                </DialogActions>
-              </Dialog>
+      <div>
+        {/* 메시지 조회 Modal */}
+        <DialogCustom open={openModal}>
+          {/* 신고 Modal */}
+          <Dialog open={openReportModal} css={ReportDialog}>
+            <DialogTitle className="title">신고하기</DialogTitle>
+            <DialogContent>
+              {/* <br /> */}
+              <DialogContentText className="content">
+                신고자 : {loginUser.nickname}
+                <br />
+                신고 사유
+              </DialogContentText>
+              {/* <br /> */}
+              <textarea
+                className="input-content"
+                value={reportContent}
+                onChange={(e) => setReportContent(e.target.value)}
+              ></textarea>
+            </DialogContent>
+            <DialogActions className="action">
+              <ThemeProvider theme={theme}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  onClick={sendReport}
+                  css={Font}
+                >
+                  신고
+                </Button>
+              </ThemeProvider>
+              <ThemeProvider theme={theme}>
+                <Button
+                  variant="contained"
+                  color="neutral"
+                  size="small"
+                  onClick={(e) => changeReportModal(false)}
+                  css={Font}
+                >
+                  취소
+                </Button>
+              </ThemeProvider>
+            </DialogActions>
+          </Dialog>
 
-              <div>
-                <DialogContent>
-                  <div style={{ textAlign: 'center' }}>
-                    <img src={'/src/assets/' + msg.imgUrl} width="70%"></img>
-                  </div>
-                  <DialogContentTextCustom>
-                    <IconButton
-                      css={ReportIcon}
-                      color="error"
-                      aria-aria-label="report"
-                      onClick={(e) => changeReportModal(true)}
-                    >
-                      <WbTwilight />
-                    </IconButton>
-                    <br />
-                    {/* 개행문자 적용 */}
-                    <div id="content">
-                      {String(msg.content)
-                        .split('\n')
-                        .map((line, index) => {
-                          return (
-                            <span key={index}>
-                              {line}
-                              <br />
-                            </span>
-                          );
-                        })}
-                      <br />
-                      FROM. {msg.writer}
-                    </div>
-                  </DialogContentTextCustom>
-                  <div css={ReportIcon}>
-                    <IconButton onClick={(e) => changeModal(false)}>
-                      <CloseIcon />
-                    </IconButton>
-                  </div>
-                </DialogContent>
+          <div>
+            <DialogContent>
+              <div style={{ textAlign: 'center' }}>
+                <img src={'/src/assets/' + msg.imgUrl} width="70%"></img>
               </div>
-            </DialogCustom>
+              <DialogContentTextCustom>
+                <IconButton
+                  css={ReportIcon}
+                  color="error"
+                  aria-aria-label="report"
+                  onClick={(e) => changeReportModal(true)}
+                >
+                  <WbTwilight />
+                </IconButton>
+                <br />
+                {/* 개행문자 적용 */}
+                <div id="content">
+                  {String(msg.content)
+                    .split('\n')
+                    .map((line, index) => {
+                      return (
+                        <span key={index}>
+                          {line}
+                          <br />
+                        </span>
+                      );
+                    })}
+                  <br />
+                  FROM. {msg.writer}
+                </div>
+              </DialogContentTextCustom>
+              <div css={ReportIcon}>
+                <IconButton onClick={(e) => changeModal(false)}>
+                  <CloseIcon />
+                </IconButton>
+              </div>
+            </DialogContent>
           </div>
-        </>
-      ) : null}
+        </DialogCustom>
+      </div>
     </>
   );
 }
