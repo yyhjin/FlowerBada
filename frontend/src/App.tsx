@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Payment from '@src/pages/Payment/Payment';
+import Payment from '@pages/Payment/Payment';
 import PaymentSuccess from '@pages/Payment/PaymentSuccess';
 import PaymentFail from '@pages/Payment/PaymentFail';
 import PaymentCancel from '@pages/Payment/PaymentCancel';

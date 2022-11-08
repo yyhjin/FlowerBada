@@ -1,14 +1,22 @@
-import paymentAPI from '@src/api/paymentAPI';
+import PaymentOption from '@components/payment/PaymentOption';
+import PaymentReceiverAddress from '@components/payment/PaymentReceiverAddress';
+import PaymentSenderAddress from '@components/payment/PaymentSenderAddress';
+import PaymentRequest from '@components/payment/PaymentRequest';
+import { useState } from 'react';
+
+export interface IPaymentProps {
+  setTap: Function;
+}
 
 const Payment = () => {
-  const payment = async () => {
-    const res = await paymentAPI.requestPayment();
-    window.location.href = res.data.response;
-  };
-
+  const [tap, setTap] = useState('option');
+  const [paymentInfo, setPaymentInfo] = useState({});
   return (
-    <div onClick={payment}>
-      <button>결제하기</button>
+    <div>
+      {tap === 'option' && <PaymentOption setTap={setTap} />}
+      {tap === 'rAddress' && <PaymentReceiverAddress setTap={setTap} />}
+      {tap === 'sAddress' && <PaymentSenderAddress setTap={setTap} />}
+      {tap === 'request' && <PaymentRequest setTap={setTap} />}
     </div>
   );
 };

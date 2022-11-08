@@ -26,6 +26,7 @@ import Delivery from '@assets/Delivery.png';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import MySwal from '@components/SweetAlert';
+import { useCallback } from 'react';
 
 interface IRolling {
   rollingId?: number;
@@ -159,14 +160,18 @@ export default function RollingPaper() {
   };
 
   const sendDelivery = () => {
-    // 주소 고쳐서 사용하세요~
-    navigate('/delivery', {
-      state: {
-        paginationId: paginationId,
-        rollingUrl: paramCopy.url,
-      },
-    });
+    // 로컬스토리지에 담기
+    localStorage.setItem('url', paramCopy.url);
+    localStorage.setItem('paginationId', paginationId.toString());
+    navigate('/payment');
   };
+
+  useEffect(() => {
+    const paginationCheck = localStorage.getItem('paginationId');
+    if (paginationCheck) setPaginationId(+paginationCheck);
+    localStorage.removeItem('url');
+    localStorage.removeItem('paginationId');
+  }, []);
 
   useEffect(() => {
     getRolling();
