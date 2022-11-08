@@ -8,6 +8,7 @@ import Button, { ButtonProps } from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import '@src/index.css';
 import messageAPI from '@src/api/messageAPI';
+import { useNavigate } from 'react-router-dom';
 
 export default function MessageWrite(props: {
   flower: number;
@@ -19,6 +20,7 @@ export default function MessageWrite(props: {
   let [msgLength, setMsgLength] = useState<number>(0);
   let [msgWriter, setMsgWriter] = useState<string>('');
   let [font, setFont] = useState<string>('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     setMsgContent('');
@@ -65,7 +67,7 @@ export default function MessageWrite(props: {
         .then((res) => {
           console.log(res.data.response);
           alert('메시지가 등록되었습니다');
-          window.location.href = `/rolling/` + props.rollingUrl;
+          navigate(`/rolling/` + props.rollingUrl);
         })
         .catch((err) => {
           console.log(err);
