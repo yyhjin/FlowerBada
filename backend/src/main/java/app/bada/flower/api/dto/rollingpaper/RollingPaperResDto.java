@@ -22,6 +22,7 @@ public class RollingPaperResDto {
     private String imgBack;
     private String imgUrl;
     private String date;
+    private boolean bookmark;
     private List<MessageResDto.rollingMsgDto> messages = new ArrayList<>();
 
     public String changeDateToString(LocalDateTime date){
