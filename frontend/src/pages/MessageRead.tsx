@@ -137,6 +137,7 @@ export default function MessageRead() {
                       color="primary"
                       size="small"
                       onClick={sendReport}
+                      css={Font}
                     >
                       신고
                     </Button>
@@ -147,6 +148,7 @@ export default function MessageRead() {
                       color="neutral"
                       size="small"
                       onClick={(e) => changeReportModal(false)}
+                      css={Font}
                     >
                       취소
                     </Button>
@@ -293,9 +295,14 @@ const ReportDialog = css`
 
   .action {
     margin-bottom: 20px;
+    font-family: 'SeoulNamsanM';
   }
 `;
 
 const ReportIcon = css`
   float: right;
+`;
+
+const Font = css`
+  font-family: 'SeoulNamsanM';
 `;
