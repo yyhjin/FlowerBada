@@ -5,7 +5,9 @@ import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.UserRepository;
 import app.bada.flower.api.service.UserService;
 import app.bada.flower.api.service.auth.CustomUserDetailService;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,10 +24,6 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 @RequiredArgsConstructor
 @Component
@@ -34,11 +32,11 @@ public class JwtTokenUtil {
     @Value("${jwt.secret}")
     private String secretKey;
     private String nonce = "flowerbada";
-
     @Value("${jwt.token.access_token_valid_time}")
     private long tokenValidTime;
     @Value("${jwt.token.refresh_token_valid_time}")
     private long refreshTokenValidTime;
+
     private final CustomUserDetailService userDetailService;
     private final RedisTemplate redisTemplate;
     private final UserRepository userRepository;
@@ -54,10 +52,8 @@ public class JwtTokenUtil {
         return generateToken(userToken, roles, tokenValidTime);
     }
 
-    public String createAccessToken(String userToken){
-        User user = userRepository.findByKakaoUserId(userToken).orElse(null);
-        if(user == null) throw new UsernameNotFoundException("No such user found.");
-        return generateToken(userToken, user.getRoles(), tokenValidTime);
+    public String createAccessToken(String refreshToken){
+        return generateToken(getUserToken(refreshToken), getUserRoles(refreshToken), tokenValidTime);
     }
 
     public String createRefreshToken(String userToken, List<String> roles) {
@@ -78,12 +74,13 @@ public class JwtTokenUtil {
     }
 
     public String reissueRefreshToken(String curToken){
-        User user = userRepository.findByKakaoUserId(getUserToken(curToken)).orElse(null);
+        String userToken = getUserToken(curToken);
+        User user = userRepository.findByKakaoUserId(userToken).orElse(null);
         if(user == null) return null;
-        if(redisTemplate.opsForValue().get("REFRESH"+curToken) != null) {
-            String newRefresh = createRefreshToken(user.getToken(), user.getRoles());
-            redisTemplate.opsForValue().getAndDelete("REFRESH"+curToken);
-            redisTemplate.opsForValue().set("REFRESH"+newRefresh, true, Duration.ofSeconds(refreshTokenValidTime));
+        if(redisTemplate.opsForValue().get("REFRESH "+curToken) != null) {
+            String newRefresh = createRefreshToken(userToken, user.getRoles());
+            redisTemplate.delete("REFRESH "+curToken);
+            redisTemplate.opsForValue().set("REFRESH "+newRefresh, newRefresh, Duration.ofSeconds(refreshTokenValidTime));
             return newRefresh;
         }
         return null;
@@ -132,11 +129,13 @@ public class JwtTokenUtil {
     public JwtCode validateToken(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-            if(!claims.getBody().getExpiration().before(new Date())) // 만료일자 검사
+            if(claims.getBody().getExpiration().before(new Date())) // 만료일자 검사
                 return JwtCode.EXPIRED;
             if(!claims.getBody().get("nonce").equals(nonce)) // nonce 검사
                 return JwtCode.INCORRECT;
             return JwtCode.ACCESS;
+        } catch (ExpiredJwtException e) {
+            return JwtCode.EXPIRED;
         } catch (Exception e) {
             e.printStackTrace();
             return JwtCode.DENIED;
@@ -144,12 +143,10 @@ public class JwtTokenUtil {
     }
 
     public boolean isLogout(String jwtToken) {
-        final String PREFIX = "LOGOUT";
+        final String PREFIX = "LOGOUT ";
         if(redisTemplate.opsForValue().get(PREFIX+jwtToken)==null) {
-            System.out.println("logout: false");
             return false;
         }
-        System.out.println("logout: true");
         return true;
     }
 }

@@ -30,12 +30,13 @@ const storeAPI = {
       },
     });
   },
-  getRollings(jwt: string) {
+  getRollings(jwt: string, refresh: string) {
     return api({
       method: 'get',
       url: `${END_POINT}/rolling`,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
     });
   },

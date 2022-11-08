@@ -10,6 +10,7 @@ import coin from '@assets/coin.png';
 import rollingImgItem from '@assets/fixed-size/rolling/rollingImgItem';
 import flowerImgItem from '@assets/fixed-size/flower/flowerImgItem';
 import storeAPI from '@src/api/storeAPI';
+import updateTokens from '@src/utils/updateTokens';
 
 interface FlowerItem {
   flowerId: number;
@@ -36,7 +37,7 @@ interface RollingItem {
 }
 
 const Store = () => {
-  const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
+  const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
   const [buying, setBuying] = useState(false); // 구매하기 버튼 눌렀는지 여부
   const [flowerItemList, setFlowerItemList] = useState<FlowerItem[]>();
   const [rollingItemList, setRollingItemList] = useState<RollingItem[]>();
@@ -101,26 +102,66 @@ const Store = () => {
     setImgList(tmp);
   }
 
+  const getFlowerList = () => {
+    storeAPI
+      .getFlowers(loginUser.jwt)
+      .then((res: any) => {
+        setFlowerItemList(res.data.response);
+      })
+      .catch((err: any) => {
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setLoginUser);
+          storeAPI
+            .getRollings(loginUser.jwt, loginUser.refresh)
+            .then((res: any) => {
+              setRollingItemList(res.data.response);
+            })
+            .catch((err: any) => {
+              console.log(err);
+            });
+        } else {
+          console.log(err);
+        }
+      });
+  };
+
+  const getRollingList = () => {
+    storeAPI
+      .getRollings(loginUser.jwt, loginUser.refresh)
+      .then((res: any) => {
+        setRollingItemList(res.data.response);
+      })
+      .catch((err: any) => {
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setLoginUser);
+          storeAPI
+            .getRollings(accessToken, refreshToken)
+            .then((res: any) => {
+              setRollingItemList(res.data.response);
+            })
+            .catch((err: any) => {
+              console.log(err);
+            });
+        } else {
+          console.log(err);
+        }
+      });
+  };
+
   // 탭 바뀔 때마다 해당하는 품목 리스트 가져오기
   useEffect(() => {
     if (isFlower) {
-      storeAPI
-        .getFlowers(loginUser.jwt)
-        .then((res: any) => {
-          setFlowerItemList(res.data.response);
-        })
-        .catch((err: any) => {
-          console.log(err);
-        });
+      getFlowerList();
     } else {
-      storeAPI
-        .getRollings(loginUser.jwt)
-        .then((res: any) => {
-          setRollingItemList(res.data.response);
-        })
-        .catch((err: any) => {
-          console.log(err);
-        });
+      getRollingList();
     }
   }, [isFlower]);
 
