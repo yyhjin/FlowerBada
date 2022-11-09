@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
-import Message from '@src/components/mypage/Message';
+import Message from '@components/mypage/Message';
 import DotSlice from '@components/paging/DotSlice';
 import messageAPI from '@api/messageAPI';
 import IosShareIcon from '@mui/icons-material/IosShare';
@@ -27,10 +27,9 @@ import Delivery from '@assets/Delivery.png';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import MySwal from '@components/SweetAlert';
-import { useCallback } from 'react';
 import html2canvas from 'html2canvas';
 
-interface IRolling {
+export interface IRolling {
   rollingId?: number;
   imgUrl?: string;
   imgFront?: string;
@@ -41,7 +40,7 @@ interface IRolling {
   messages?: IMessage[];
 }
 
-interface IMessage {
+export interface IMessage {
   imgUrl: string;
   writer: string;
   flowerId: number;
@@ -165,7 +164,13 @@ export default function RollingPaper() {
     // 로컬스토리지에 담기
     localStorage.setItem('url', paramCopy.url);
     localStorage.setItem('paginationId', paginationId.toString());
-    navigate('/payment/option');
+    navigate('/payment/option', {
+      state: {
+        rolling,
+        type,
+        valid,
+      },
+    });
   };
 
   const shareRolling = () => {
@@ -186,7 +191,7 @@ export default function RollingPaper() {
       // 캡쳐 및 DB 저장
       const el = document.getElementById('to-save');
       if (el) {
-        html2canvas(el).then((canvas) => {
+        html2canvas(el).then((canvas: any) => {
           onSaveAs(
             canvas.toDataURL('image/png'),
             `final-image-` + paramCopy.url + `.png`,
