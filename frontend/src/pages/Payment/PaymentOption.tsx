@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 const PaymentOption = () => {
   const navigate = useNavigate();
-  const onClickNext = () => {};
+  const onClickNext = () => {
+    navigate(`/payment/address/receiver`);
+  };
 
   const goBack = () => {
     const url = localStorage.getItem('url');
