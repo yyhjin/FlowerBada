@@ -74,7 +74,9 @@ export default function MyPointList() {
         {myPointList.map((point: IPoint, index: number) => {
           return (
             <div className="valuebox" key={index}>
-              <div className="datebox">{point.createdDate}</div>
+              <div className="datebox">
+                {point.createdDate.split(' ')[0].replaceAll('-', '.')}
+              </div>
               <div className="contentbox">{point.name} 구매</div>
               <div className="pointbox"> -{point.point}P</div>
             </div>
