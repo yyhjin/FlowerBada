@@ -28,6 +28,7 @@ const storeAPI = {
       data: data,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
     });
   },
@@ -48,6 +49,7 @@ const storeAPI = {
       data: data,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
     });
   },

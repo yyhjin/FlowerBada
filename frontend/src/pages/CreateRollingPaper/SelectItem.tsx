@@ -50,31 +50,49 @@ export default function SelectItem() {
       }
       setLoading(true);
     } catch (err: any) {
-      let accessToken: string = err.response.headers.get('x-auth-token');
-      let refreshToken: string = err.response.headers.get('refresh-token');
-      if (accessToken && refreshToken) {
-        accessToken = accessToken.split(' ')[1];
-        refreshToken = refreshToken.split(' ')[1];
-        updateTokens(accessToken, refreshToken, setLoginUser);
-        try {
-          const res: any = await storeAPI.getRollings(
-            accessToken,
-            refreshToken,
-          );
-          setItems(res.data.response);
-          if (createRollingState.url === '') {
-            setRollingImg(rollingImgItem[0].img);
-            setCreateRollingState((prev: IcreateRollingRecoil) => {
-              const variable = { ...prev };
-              variable.itemId = res.data.response[0].rollingId;
-              variable.itemIndex = 0;
-              variable.url = rollingImgItem[0].img;
-              return variable;
-            });
+      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+        alert('로그인이 필요합니다');
+        setLoginUser((prev: IuserRecoil) => {
+          const variable = { ...prev };
+          variable.id = 0;
+          variable.userToken = '';
+          variable.nickname = '';
+          variable.points = 0;
+          variable.jwt = '';
+          variable.refresh = '';
+          return variable;
+        });
+        navigate('/');
+      } else {
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setLoginUser);
+          try {
+            const res: any = await storeAPI.getRollings(
+              accessToken,
+              refreshToken,
+            );
+            setItems(res.data.response);
+            if (createRollingState.url === '') {
+              setRollingImg(rollingImgItem[0].img);
+              setCreateRollingState((prev: IcreateRollingRecoil) => {
+                const variable = { ...prev };
+                variable.itemId = res.data.response[0].rollingId;
+                variable.itemIndex = 0;
+                variable.url = rollingImgItem[0].img;
+                return variable;
+              });
+            }
+            setLoading(true);
+          } catch (err: any) {
+            console.log(err);
           }
-          setLoading(true);
-        } catch (err: any) {
-          console.log(err);
+        } else {
+          console.log('No access or refresh token');
+          navigate('/');
         }
       }
     }

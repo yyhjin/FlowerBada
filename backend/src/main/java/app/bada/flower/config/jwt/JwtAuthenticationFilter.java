@@ -2,6 +2,7 @@ package app.bada.flower.config.jwt;
 
 import app.bada.flower.api.dto.auth.JwtCode;
 import app.bada.flower.api.service.jwt.JwtTokenUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,20 +42,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         response.setHeader(AUTHORIZATION_HEADER, "Bearer " + token);
                         Authentication authentication = jwtTokenUtil.getAuthentication(refreshToken);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
-                        System.out.println("refresh token 재발급");
                     }
-                    else{
-                        response.sendError(402);
-                        System.out.println("refresh token 만료");
+                    else{ // 새로 발급된 refresh token이 아닐 때
+                        response.setHeader(AUTHORIZATION_HEADER, "EXPIRED");
+                        System.out.println("refresh token 만료1");
                     }
                 }
+                // refresh token의 유효 기간이 지났을 때
+                else if(refreshToken != null && jwtTokenUtil.validateToken(refreshToken) == JwtCode.EXPIRED) {
+                    response.setHeader(AUTHORIZATION_HEADER, "EXPIRED");
+                    System.out.println("refresh token 만료2");
+                }
             }
-//            if (token != null && (!jwtTokenUtil.isLogout(token)) && jwtTokenUtil.validateToken(token)) {
-//                // 토큰이 유효하면 토큰으로부터 유저 정보를 받아옴
-//                Authentication authentication = jwtTokenUtil.getAuthentication(token);
-//                // SecurityContext 에 Authentication 객체를 저장
-//                SecurityContextHolder.getContext().setAuthentication(authentication);
-//            }
         } catch(Exception e){
             logger.error("JwtAuthenticationFilter exception occured: {}", e);
         }
