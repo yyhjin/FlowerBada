@@ -32,12 +32,12 @@ function App() {
         <Routes>
           {loginUser.jwt === '' ? (
             <>
-              <Route path="/*" element={<SignIn />}></Route>
+              <Route path="" element={<SignIn />}></Route>
+              <Route
+                path="/user/signin/redirect"
+                element={<KakaoRedirectHandler />}
+              ></Route>
               <Route path="/" element={<Layout />}>
-                <Route
-                  path="/user/signin/redirect"
-                  element={<KakaoRedirectHandler />}
-                ></Route>
                 <Route path="rolling/:url" element={<RollingPaper />}></Route>
               </Route>
             </>
