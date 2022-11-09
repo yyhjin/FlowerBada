@@ -23,6 +23,7 @@ const SideBar = (props: any) => {
         variable.nickname = '';
         variable.points = 0;
         variable.jwt = '';
+        variable.refresh = '';
         return variable;
       });
       alert('logout success!');

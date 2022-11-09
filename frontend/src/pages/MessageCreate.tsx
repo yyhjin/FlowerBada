@@ -14,6 +14,8 @@ import Modal from '@src/components/store/BuyModal';
 import Receipt from '@src/components/store/Receipt';
 import { Grid } from '@mui/material';
 import { useLocation } from 'react-router-dom';
+import updateTokens from '@src/utils/updateTokens';
+import { useNavigate } from 'react-router-dom';
 
 interface IFlower {
   flowerId?: number;
@@ -28,10 +30,11 @@ interface IFlower {
 }
 
 export default function MessageCreate() {
+  const navigate = useNavigate();
   const [flowerId, setFlowerId] = useState<number>(0); // 클릭한 꽃 번호
   const [flowerIdx, setFlowerIdx] = useState<number>(0); // 클릭한 꽃 인덱스
   const [flowerList, setFlowerList] = useState<IFlower[]>([]);
-  const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
+  const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
   const [SelectedFlower, setSelectedFlower] = useState<number>(0); // 선택 완료한 꽃 번호
   const [buying, setBuying] = useState<boolean>(false);
   const location = useLocation();
@@ -44,15 +47,47 @@ export default function MessageCreate() {
 
     location.state as { rollingId: number; rollingUrl: string };
     storeAPI
-      .getFlowers(loginUser.jwt)
+      .getFlowers(loginUser.jwt, loginUser.refresh)
       .then((res) => {
         setFlowerList(res.data.response);
         console.log(res.data.response);
       })
       .catch((err) => {
-        console.log(err);
+        if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+          alert('로그인이 필요합니다');
+          setLoginUser((prev: IuserRecoil) => {
+            const variable = { ...prev };
+            variable.id = 0;
+            variable.userToken = '';
+            variable.nickname = '';
+            variable.points = 0;
+            variable.jwt = '';
+            variable.refresh = '';
+            return variable;
+          });
+          navigate('/');
+        } else {
+          let accessToken: string = err.response.headers.get('x-auth-token');
+          let refreshToken: string = err.response.headers.get('refresh-token');
+          if (accessToken && refreshToken) {
+            accessToken = accessToken.split(' ')[1];
+            refreshToken = refreshToken.split(' ')[1];
+            updateTokens(accessToken, refreshToken, setLoginUser);
+            storeAPI
+              .getFlowers(accessToken, refreshToken)
+              .then((res) => {
+                setFlowerList(res.data.response);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          } else {
+            console.log('No access or refresh token');
+            navigate('/');
+          }
+        }
       });
-  }, [loginUser.points]);
+  }, []);
 
   const changeFlower = (param: any, index: number) => {
     setFlowerId(param);
