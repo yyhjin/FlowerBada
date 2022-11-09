@@ -24,13 +24,12 @@ export default function GreenHouse() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<Boolean>(true);
   const [rollings, setRollings] = useState<IRolling[]>([]);
+  const [bookmarks, setBookmarks] = useState<IRolling[]>([]);
   const [tab, setTab] = useState<String>('내가 만든 꽃다발');
   const [tabNum, setTabNum] = useState<number>(1);
   const [sort, setSort] = useState<string>('1');
   const [paginationId, setPaginationId] = useState<number>(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
-  const [disabled, setDisabled] = useState(false);
-  const timer = useRef<number | null>(null);
 
   function initRollings() {
     setTab('내가 만든 꽃다발');
@@ -51,15 +50,6 @@ export default function GreenHouse() {
 
     try {
       const params = { sort: sort, paginationId: paginationId };
-      setDisabled(true);
-
-      if (timer.current) {
-        clearTimeout(timer.current);
-      }
-      const scrollTimer = setTimeout(() => {
-        setDisabled(false);
-      }, 300);
-      timer.current = scrollTimer;
       const res: any = await greenhouseAPI.sentRolling(userState.jwt, params);
 
       setLoading(true);
@@ -75,9 +65,8 @@ export default function GreenHouse() {
     try {
       const params = { sort: sort, paginationId: paginationId };
       const res: any = await greenhouseAPI.bookmark(userState.jwt, params);
-      console.log(res.data.response);
       setLoading(true);
-      setRollings(rollings.concat(res.data.response));
+      setBookmarks(rollings.concat(res.data.response));
       setPaginationId(paginationId + 1);
     } catch (err: any) {
       // console.log(err);
@@ -111,7 +100,7 @@ export default function GreenHouse() {
         getBookmarks(+sort);
       }
     }
-  }, [paginationId, rollings]);
+  }, [paginationId, rollings, bookmarks]);
 
   useEffect(() => {
     // scroll event listener 등록
@@ -139,13 +128,13 @@ export default function GreenHouse() {
         {tabNum === 1 ? (
           <div css={MainTab}>
             <button className="active_btn">내가 만든 꽃다발</button>
-            <button className="btn" onClick={initBookmarks} disabled={disabled}>
+            <button className="btn" onClick={initBookmarks}>
               즐겨찾기
             </button>
           </div>
         ) : (
           <div css={MainTab}>
-            <button className="btn" onClick={initRollings} disabled={disabled}>
+            <button className="btn" onClick={initRollings}>
               내가 만든 꽃다발
             </button>
             <button className="active_btn">즐겨찾기</button>
@@ -185,17 +174,37 @@ export default function GreenHouse() {
       ) : (
         <div> 로딩중 </div>
       )}
-      <Grid container columns={8} css={GridList} className="gridlist">
-        {rollings.map((rolling: IRolling, index: number) => (
-          <Grid xs={4} item key={index}>
-            <div css={GridItem} onClick={() => handleRollingPaper(rolling.url)}>
-              <img className="rolling_img" src={rolling.imgUrl} />
-              <div className="rolling_title">{rolling.title}</div>
-              <div className="rolling_date">({rolling.date})</div>
-            </div>
-          </Grid>
-        ))}
-      </Grid>
+      {tabNum === 1 ? (
+        <Grid container columns={8} css={GridList} className="gridlist">
+          {rollings.map((rolling: IRolling, index: number) => (
+            <Grid xs={4} item key={index}>
+              <div
+                css={GridItem}
+                onClick={() => handleRollingPaper(rolling.url)}
+              >
+                <img className="rolling_img" src={rolling.imgUrl} />
+                <div className="rolling_title">{rolling.title}</div>
+                <div className="rolling_date">({rolling.date})</div>
+              </div>
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <Grid container columns={8} css={GridList} className="gridlist">
+          {bookmarks.map((rolling: IRolling, index: number) => (
+            <Grid xs={4} item key={index}>
+              <div
+                css={GridItem}
+                onClick={() => handleRollingPaper(rolling.url)}
+              >
+                <img className="rolling_img" src={rolling.imgUrl} />
+                <div className="rolling_title">{rolling.title}</div>
+                <div className="rolling_date">({rolling.date})</div>
+              </div>
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </>
   );
 }
