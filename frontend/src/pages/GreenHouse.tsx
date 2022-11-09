@@ -28,46 +28,47 @@ export default function GreenHouse() {
   const [tab, setTab] = useState<String>('내가 만든 꽃다발');
   const [tabNum, setTabNum] = useState<number>(1);
   const [sort, setSort] = useState<string>('1');
-  const [paginationId, setPaginationId] = useState<number>(0);
+  const [rPaginationId, setRPaginationId] = useState<number>(0);
+  const [bPaginationId, setBPaginationId] = useState<number>(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+  const timer = useRef<number | null>(null);
 
   function initRollings() {
     setTab('내가 만든 꽃다발');
-    setPaginationId(0);
+    setRPaginationId(0);
     setRollings([]);
     setTabNum(1);
   }
 
   function initBookmarks() {
     setTab('즐겨찾기한 꽃다발');
-    setPaginationId(0);
-    setRollings([]);
+    setBPaginationId(0);
+    setBookmarks([]);
     setTabNum(2);
   }
 
   async function getRollings(sort: number): Promise<void> {
     // setLoading(false);
-
     try {
-      const params = { sort: sort, paginationId: paginationId };
+      const params = { sort: sort, paginationId: rPaginationId };
       const res: any = await greenhouseAPI.sentRolling(userState.jwt, params);
-
       setLoading(true);
+      // console.log(rollings.concat(res.data.response));
       setRollings(rollings.concat(res.data.response));
-      setPaginationId(paginationId + 1);
+      setRPaginationId(rPaginationId + 1);
     } catch (err: any) {
       // console.log(err);
     }
   }
   async function getBookmarks(sort: number): Promise<void> {
     // setLoading(false);
-
     try {
-      const params = { sort: sort, paginationId: paginationId };
+      const params = { sort: sort, paginationId: bPaginationId };
       const res: any = await greenhouseAPI.bookmark(userState.jwt, params);
       setLoading(true);
-      setBookmarks(rollings.concat(res.data.response));
-      setPaginationId(paginationId + 1);
+      // console.log(bookmarks.concat(res.data.response));
+      setBookmarks(bookmarks.concat(res.data.response));
+      setBPaginationId(bPaginationId + 1);
     } catch (err: any) {
       // console.log(err);
     }
@@ -79,8 +80,10 @@ export default function GreenHouse() {
 
   // 드랍다운 필터 관련
   const handleChange = (event: SelectChangeEvent) => {
-    setPaginationId(0);
+    setBPaginationId(0);
+    setRPaginationId(0);
     setRollings([]);
+    setBookmarks([]);
     setSort(event.target.value);
   };
 
@@ -100,7 +103,7 @@ export default function GreenHouse() {
         getBookmarks(+sort);
       }
     }
-  }, [paginationId, rollings, bookmarks]);
+  }, [bPaginationId, rPaginationId, rollings, bookmarks]);
 
   useEffect(() => {
     // scroll event listener 등록
