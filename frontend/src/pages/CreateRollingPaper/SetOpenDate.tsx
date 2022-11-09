@@ -12,6 +12,7 @@ import {
 import { css } from '@emotion/react';
 import rollingAPI from '@api/rollingAPI';
 import updateTokens from '@src/utils/updateTokens';
+import MySwal from '@components/SweetAlert';
 
 export default function SetOpenDate() {
   const today = new Date();
@@ -29,7 +30,12 @@ export default function SetOpenDate() {
 
   const handleRollingLink = async (e: any): Promise<void> => {
     if (date === null) {
-      alert('날짜 제대로 입력해');
+      MySwal.fire({
+        title: '날짜를 선택해주세요',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
       return;
     }
     e.target.disabled = true;

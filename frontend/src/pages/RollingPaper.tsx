@@ -9,6 +9,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
 
 import {
   Dialog,
@@ -27,6 +28,7 @@ import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import MySwal from '@components/SweetAlert';
 import { useCallback } from 'react';
+import html2canvas from 'html2canvas';
 
 interface IRolling {
   rollingId?: number;
@@ -54,7 +56,7 @@ export default function RollingPaper() {
   const [stepNumber, setStepNumber] = useState<number>(1);
   const [type, setType] = useState<number>(1);
   const [bookmark, setBookmark] = useState<Boolean>(false);
-  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+  const [userState] = useRecoilState<IuserRecoil>(userReCoil);
   let paramCopy: any = {};
   paramCopy = useParams();
   const [nowDate, setNowDate] = useState<Date>(new Date());
@@ -166,6 +168,10 @@ export default function RollingPaper() {
     navigate('/payment/option');
   };
 
+  const shareRolling = () => {
+    navigate('/newroll/link', { state: paramCopy.url });
+  };
+
   useEffect(() => {
     const paginationCheck = localStorage.getItem('paginationId');
     if (paginationCheck) setPaginationId(+paginationCheck);
@@ -175,7 +181,37 @@ export default function RollingPaper() {
 
   useEffect(() => {
     getRolling();
+
+    if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
+      // 캡쳐 및 DB 저장
+      const el = document.getElementById('to-save');
+      if (el) {
+        html2canvas(el).then((canvas) => {
+          onSaveAs(
+            canvas.toDataURL('image/png'),
+            `final-image-` + paramCopy.url + `.png`,
+          );
+        });
+      }
+    }
   }, [paginationId]);
+
+  const onSaveAs = (uri: string, filename: string): void => {
+    // console.log(uri);
+    // let link: any = document.createElement('a');
+    // document.body.appendChild(link);
+    // link.href = uri;
+    // link.download = filename;
+    // link.click();
+    // document.body.removeChild(link);
+    // console.log('uri', uri);
+    // axios.put(
+    //   `http://localhost:8080/api/v1/message/updateimg/${paramCopy.url}`,
+    //   {
+    //     imgUrl: uri,
+    //   },
+    // );
+  };
 
   return (
     <>
@@ -194,27 +230,53 @@ export default function RollingPaper() {
                 />
               )}
             </div>
-            <div className="fixbox">
-              <div className={`imgbox_${type}`}>
-                <img src={'/src/assets/' + rolling.imgBack}></img>
+            <div css={SaveParent}>
+              <div>
+                <div className={`imgbox_${type}`}>
+                  <img src={'/src/assets/' + rolling.imgBack}></img>
+                </div>
+                <div className="flowerlist">
+                  {rolling.messages.map((message, index) => {
+                    return (
+                      <div key={index} className={`flowerbox_${type}`}>
+                        <Message
+                          imgUrl={message.imgUrl}
+                          messageId={message.messageId}
+                          writer={message.writer}
+                          valid={valid}
+                          writerDisplay={true}
+                        ></Message>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-              <div className="flowerlist">
-                {rolling.messages.map((message, index) => {
-                  return (
-                    <div key={index} className={`flowerbox_${type}`}>
-                      <Message
-                        imgUrl={message.imgUrl}
-                        messageId={message.messageId}
-                        writer={message.writer}
-                        valid={valid}
-                      ></Message>
-                    </div>
-                  );
-                })}
+              <div className={`imgbox_front_${type}`}>
+                <img src={'/src/assets/' + rolling.imgFront}></img>
               </div>
-            </div>
-            <div className={`imgbox_front_${type}`}>
-              <img src={'/src/assets/' + rolling.imgFront}></img>
+              <div id="to-save" className="save-child">
+                <div className={`imgbox_${type}`}>
+                  <img src={'/src/assets/' + rolling.imgBack}></img>
+                </div>
+                <div className="flowerlist">
+                  {rolling.messages.map((message, index) => {
+                    return (
+                      <div key={index} className={`flowerbox_${type}`}>
+                        <Message
+                          imgUrl={message.imgUrl}
+                          messageId={message.messageId}
+                          writer={message.writer}
+                          valid={valid}
+                          writerDisplay={false}
+                        ></Message>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className={`imgbox_front_${type}`}>
+                  <img src={'/src/assets/' + rolling.imgFront}></img>
+                </div>
+              </div>
             </div>
             <div className={`dot_${type}`}>
               <DotSlice
@@ -286,6 +348,7 @@ export default function RollingPaper() {
                     size="large"
                     color="primary"
                     className="share-btn"
+                    onClick={shareRolling}
                   >
                     <IosShareIcon fontSize="large" />
                   </IconButton>
@@ -369,7 +432,11 @@ const DetailCss = css`
     display: flex;
   }
   .imgbox_1,
-  .imgbox_2,
+  .imgbox_2 {
+    /* width: 50vh; */
+    /* height: 70vh; */
+    position: absolute;
+  }
   .imgbox_3 {
     position: absolute;
   }
@@ -677,6 +744,9 @@ const DetailCss = css`
     bottom: 10vw;
     pointer-events: none;
   }
+  .imgbox_front_2 {
+    height: 65vh;
+  }
   .imgbox_front_2 img {
     z-index: 12;
     position: relative;
@@ -758,4 +828,16 @@ const Font = css`
 const ActionCss = css`
   width: 90%;
   float: right;
+`;
+
+const SaveParent = css`
+  position: relative;
+
+  .save-child {
+    background-color: #f2f0ef;
+    height: 70vh;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+  }
 `;
