@@ -323,7 +323,7 @@ const ReportDialog = css`
   .input-content {
     font-family: 'SeoulNamsanM';
     resize: none;
-    padding: 20px;
+    padding: 15px;
     border-color: #b9b9b9;
     border-radius: 4px;
     font-size: 15px;
