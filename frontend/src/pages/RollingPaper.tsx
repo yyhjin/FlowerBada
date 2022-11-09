@@ -163,7 +163,7 @@ export default function RollingPaper() {
     // 로컬스토리지에 담기
     localStorage.setItem('url', paramCopy.url);
     localStorage.setItem('paginationId', paginationId.toString());
-    navigate('/payment');
+    navigate('/payment/option');
   };
 
   useEffect(() => {
