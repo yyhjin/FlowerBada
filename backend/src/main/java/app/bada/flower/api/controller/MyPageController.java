@@ -41,7 +41,7 @@ public class MyPageController {
     @ApiOperation(value="배송중 목록", notes="sort = 1(최신순), 2(오래된순)")
     public ResponseEntity deliveringList(@RequestHeader(value = "X-AUTH-TOKEN") String jwtToken, @RequestParam Integer sort, @RequestParam Integer paginationId) {
         if(paginationId!=null && sort != null && (sort==1 || sort==2) && paginationId>=0){
-            PageRequest pageRequest = PageRequest.of(paginationId,4);
+            PageRequest pageRequest = PageRequest.of(paginationId,10);
 
             List<DeliveryResDto> response = deliveryService.selectAllDelivery(jwtTokenUtil.getUserId(jwtToken.split(" ")[1]),sort,pageRequest);
             return new ResponseEntity(new ResponseDto(response), HttpStatus.OK);
@@ -53,7 +53,7 @@ public class MyPageController {
     @ApiOperation(value="나의 포인트 목록", notes="최신순 나열")
     public ResponseEntity myPointList(@RequestHeader(value = "X-AUTH-TOKEN") String jwtToken, @RequestParam Integer paginationId) {
         if(paginationId!=null && paginationId>=0){
-            PageRequest pageRequest = PageRequest.of(paginationId,10);
+            PageRequest pageRequest = PageRequest.of(paginationId,20);
 
             MyPointResDto response = myPageService.selectAllMyPoint(jwtTokenUtil.getUserId(jwtToken.split(" ")[1]), pageRequest);
             return new ResponseEntity(new ResponseDto(response), HttpStatus.OK);

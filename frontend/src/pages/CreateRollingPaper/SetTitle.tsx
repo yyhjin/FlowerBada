@@ -20,7 +20,7 @@ export default function SetTitle() {
   };
 
   const handleSetOpenDate = () => {
-    if (createRollingState.title === '') {
+    if (createRollingState.title.trimStart().trimEnd() === '') {
       MySwal.fire({
         title: '제목을 입력하세요!',
         icon: 'warning',
@@ -38,15 +38,16 @@ export default function SetTitle() {
           value={createRollingState.title || ''}
           onChange={changeTitle}
           css={TitleInput}
-          placeholder="제목을 입력하세요"
+          placeholder="제목을 입력하세요."
+          maxLength={20}
         ></input>
+        <div className="maxlength">{createRollingState.title.length} / 20</div>
       </div>
       <img
         src={createRollingState.url}
         alt="선택한 꽃 사진"
         css={SelectImage}
       />
-
       <button onClick={handleSetOpenDate} css={NextButton}>
         날짜 선택
       </button>
@@ -56,16 +57,23 @@ export default function SetTitle() {
 
 const Background = css`
   width: 100vw;
+  .maxlength {
+    margin-right: 17vw;
+    display: flex;
+    justify-content: end;
+  }
 `;
 
 const TitleInput = css`
   padding-left: 10vw;
+  padding-right: 10vw;
   font-size: 5vw;
   margin-top: 10vh;
   width: 50vw;
   border-radius: 2vw;
   border: 0;
   height: 5vh;
+  text-align: center;
 `;
 
 const SelectImage = css`
