@@ -12,6 +12,7 @@ import {
 import { css } from '@emotion/react';
 import rollingAPI from '@api/rollingAPI';
 import updateTokens from '@src/utils/updateTokens';
+import MySwal from '@components/SweetAlert';
 
 export default function SetOpenDate() {
   const today = new Date();
@@ -66,7 +67,12 @@ export default function SetOpenDate() {
       navigate('/newroll/link', { state: res.data.response });
     } catch (err: any) {
       if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
-        alert('로그인이 필요합니다');
+        MySwal.fire({
+          title: '로그인이 필요합니다!',
+          icon: 'warning',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        });
         setUserState((prev: IuserRecoil) => {
           const variable = { ...prev };
           variable.id = 0;
