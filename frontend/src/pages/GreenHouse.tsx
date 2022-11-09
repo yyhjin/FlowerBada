@@ -105,14 +105,23 @@ export default function GreenHouse() {
     }
   }, [bPaginationId, rPaginationId, rollings, bookmarks]);
 
+  const throttleScroll = () => {
+    timer.current = setTimeout(() => {
+      if (timer.current !== null) {
+        handleScroll();
+        timer.current = null;
+      }
+    }, 300);
+  };
+
   useEffect(() => {
     // scroll event listener 등록
     const event = document.querySelector('.gridlist');
     if (event) {
-      event.addEventListener('scroll', handleScroll);
+      event.addEventListener('scroll', throttleScroll);
       return () => {
         // scroll event listener 해제
-        event.removeEventListener('scroll', handleScroll);
+        event.removeEventListener('scroll', throttleScroll);
       };
     }
   }, [handleScroll]);
