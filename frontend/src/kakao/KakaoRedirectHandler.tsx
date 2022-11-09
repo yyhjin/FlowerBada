@@ -8,6 +8,7 @@ const KakaoRedirectHandler = () => {
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const code = new URL(window.location.href).searchParams.get('code');
   let token: string = '';
+  let refresh: string = '';
   let user: any = null;
   let register: boolean = false;
 
@@ -16,9 +17,9 @@ const KakaoRedirectHandler = () => {
       .signInCallback({ code })
       .then((res) => {
         token = res.data.response.jwt;
+        refresh = res.data.response.refresh;
         user = res.data.response.user;
         register = res.data.response.register;
-        // console.log(token, user, register);
 
         setUserState((prev: IuserRecoil) => {
           const variable = { ...prev };
@@ -27,6 +28,7 @@ const KakaoRedirectHandler = () => {
           variable.nickname = user.nickname;
           variable.points = user.points;
           variable.jwt = token;
+          variable.refresh = refresh;
           return variable;
         });
         // alert('login success!!!');

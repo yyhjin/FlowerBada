@@ -63,7 +63,11 @@ export default function MyDeliveryList() {
     try {
       setSortNumber(sortNumber);
       const params = { sort: sortNumber, paginationId: pages };
-      const res: any = await mypageAPI.getDelivery(userState.jwt, params);
+      const res: any = await mypageAPI.getDelivery(
+        userState.jwt,
+        userState.refresh,
+        params,
+      );
       if (res.data.response.length !== 0) {
         // console.log(res.data.response.length);
 

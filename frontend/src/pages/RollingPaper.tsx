@@ -204,7 +204,7 @@ export default function RollingPaper() {
                     <div key={index} className={`flowerbox_${type}`}>
                       <Message
                         imgUrl={message.imgUrl}
-                        flowerId={message.messageId}
+                        messageId={message.messageId}
                         writer={message.writer}
                         valid={valid}
                       ></Message>

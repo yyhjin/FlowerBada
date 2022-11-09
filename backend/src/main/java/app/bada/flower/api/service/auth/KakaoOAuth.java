@@ -46,7 +46,7 @@ public class KakaoOAuth {
                 .map(x->x.getKey()+"="+x.getValue())
                 .collect(Collectors.joining("&"));
         String redirectURL=KAKAO_SNS_LOGIN_URL+"?"+parameterString;
-        System.out.println("redirectURL = " + redirectURL);
+//        System.out.println("redirectURL = " + redirectURL);
 
         return redirectURL;
     }
@@ -85,15 +85,15 @@ public class KakaoOAuth {
     }
 
     public ResponseEntity<String> requestUserInfo(KakaoOAuthToken oAuthToken) {
-        System.out.println("oAuthToken = " + oAuthToken);
+//        System.out.println("oAuthToken = " + oAuthToken);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization","Bearer "+oAuthToken.getAccess_token());
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(headers);
-        System.out.println("============카카오에 회원 정보 요청============");
+//        System.out.println("============카카오에 회원 정보 요청============");
         ResponseEntity<String> response = restTemplate.exchange(KAKAO_USERINFO_REQUEST_URL, HttpMethod.GET, entity, String.class);
-        System.out.println("response.getBody() = " + response.getBody());
+//        System.out.println("response.getBody() = " + response.getBody());
         return response;
     }
 

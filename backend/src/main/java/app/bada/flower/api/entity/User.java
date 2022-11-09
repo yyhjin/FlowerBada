@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(indexes = @Index(name="i_token", columnList = "token"))
 public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String token;
@@ -62,7 +63,7 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     @JsonIgnore
     public String getUsername() {
-        return nickname;
+        return String.valueOf(token);
     }
 
     @Override

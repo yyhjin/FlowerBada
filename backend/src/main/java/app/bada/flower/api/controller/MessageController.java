@@ -4,6 +4,7 @@ package app.bada.flower.api.controller;
 import app.bada.flower.api.dto.ResponseDto;
 import app.bada.flower.api.dto.message.MessageReqDto;
 import app.bada.flower.api.dto.message.MessageResDto;
+import app.bada.flower.api.dto.rolling.RollingImgDto;
 import app.bada.flower.api.dto.rollingpaper.RollingPaperResDto;
 import app.bada.flower.api.entity.Message;
 import app.bada.flower.api.entity.Report;
@@ -16,6 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.Base64;
 
 @Api(value = "메시지 API", tags = {"메시지"})
 @CrossOrigin("*")
@@ -92,5 +96,21 @@ public class MessageController {
         else {
             return new ResponseEntity<ResponseDto>(new ResponseDto("롤링페이퍼 조회 실패"), HttpStatus.FORBIDDEN);
         }
+    }
+
+    @PutMapping("/updateimg/{rollingUrl}")
+    @ApiOperation(value="롤링페이퍼 이미지 갱신", notes="롤링페이퍼의 현재 s3 버킷에 저장된 이미지를 갱신한다.")
+    public ResponseEntity updateRollingImg(@PathVariable("rollingUrl") String url, @RequestBody RollingImgDto dto) {
+        String img = dto.getImgUrl();
+        System.out.println("img: "+img);
+        try {
+            messageService.updateRollingImage(url, img);
+        } catch(IOException e){
+            return new ResponseEntity("파일 입출력 오류", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch(IllegalArgumentException e){
+            e.printStackTrace();
+            return new ResponseEntity("해당 롤링페이퍼가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
