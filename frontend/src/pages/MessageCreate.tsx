@@ -52,7 +52,7 @@ export default function MessageCreate() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [loginUser.points]);
 
   const changeFlower = (param: any, index: number) => {
     setFlowerId(param);
@@ -80,7 +80,7 @@ export default function MessageCreate() {
           <>
             <img
               src={'/src/assets/' + flowerList[flowerId - 1].imgUrl}
-              height="60%"
+              height="50%"
             ></img>
             <div className="flower-name">
               <b>{flowerList[flowerId - 1].name}</b>
@@ -272,14 +272,14 @@ const DetailBox = css`
   height: 80vw;
   /* margin: 0 auto; */
   .flower-name {
-    font-size: 22px;
+    font-size: 1.2em;
     margin-top: 1vh;
     margin-bottom: 1vh;
     height: auto;
   }
 
   .flower-language {
-    font-size: 16px;
+    font-size: 0.7em;
     height: auto;
   }
 `;
@@ -317,7 +317,7 @@ const PointBox = css`
 
   .coin-img {
     /* width: 4vw; */
-    height: 20px;
+    height: 16px;
     display: flex;
     text-align: auto;
     justify-content: center;
@@ -331,7 +331,7 @@ const PointBox = css`
     float: right;
     right: 20px;
     text-align: left;
-    font-size: 20px;
+    font-size: 15px;
   }
 `;
 
