@@ -5,27 +5,47 @@ import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import MySwal from '@components/SweetAlert';
-
+import { useState } from 'react';
 export default function Modal(props: any) {
   const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
   const navigate = useNavigate();
-
+  const [doubleCheck, setDoubleCheck] = useState<boolean>(false);
   function closeModal() {
     props.closeModal();
   }
 
   const buyFunction = async () => {
     try {
-      if (props.isFlower) {
+      if (props.isFlower && !doubleCheck) {
+        setDoubleCheck(true);
         const data: any = {
           flowerId: props.itemId,
         };
-        await storeAPI.putFlower(loginUser.jwt, data);
-      } else {
+        await storeAPI.putFlower(loginUser.jwt, data).then(() => {
+          setDoubleCheck(false);
+          MySwal.fire({
+            title: '구매 완료!',
+            icon: 'success',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
+        });
+      } else if (!props.isFlower && !doubleCheck) {
+        setDoubleCheck(true);
         const data: any = {
           rollingId: props.itemId,
         };
-        await storeAPI.putRolling(loginUser.jwt, data);
+        const finish: any = await storeAPI
+          .putRolling(loginUser.jwt, data)
+          .then(() => {
+            setDoubleCheck(false);
+            MySwal.fire({
+              title: '구매 완료!',
+              icon: 'success',
+              confirmButtonColor: '#16453e',
+              confirmButtonText: '확인',
+            });
+          });
       }
       const res = await userAPI.getPoint(loginUser.jwt);
       const points: number = res.data.response.points;
@@ -34,12 +54,7 @@ export default function Modal(props: any) {
         variable.points = points;
         return variable;
       });
-      MySwal.fire({
-        title: '구매 완료!',
-        icon: 'success',
-        confirmButtonColor: '#16453e',
-        confirmButtonText: '확인',
-      });
+
       switch (props.location) {
         case 'message':
           navigate('/rolling/message/create');
@@ -52,7 +67,12 @@ export default function Modal(props: any) {
           break;
       }
     } catch (err: any) {
-      console.log(err);
+      MySwal.fire({
+        title: '구매 실패...',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
     }
   };
 
