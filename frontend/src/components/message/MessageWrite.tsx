@@ -8,13 +8,20 @@ import Button, { ButtonProps } from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import '@src/index.css';
 import messageAPI from '@src/api/messageAPI';
+import { useNavigate } from 'react-router-dom';
+import MySwal from '@components/SweetAlert';
 
-export default function MessageWrite(props: { flower: number }) {
+export default function MessageWrite(props: {
+  flower: number;
+  rolling: number;
+  rollingUrl: string;
+}) {
   const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
   let [msgContent, setMsgContent] = useState<string>('');
   let [msgLength, setMsgLength] = useState<number>(0);
   let [msgWriter, setMsgWriter] = useState<string>('');
   let [font, setFont] = useState<string>('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     setMsgContent('');
@@ -44,10 +51,20 @@ export default function MessageWrite(props: { flower: number }) {
 
   const createMsg = () => {
     if (msgContent == '') {
-      alert('메시지를 입력해주세요');
+      MySwal.fire({
+        title: '메시지를 입력해주세요',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
       document.getElementById('content')?.focus();
     } else if (msgWriter == '') {
-      alert('작성자를 입력해주세요');
+      MySwal.fire({
+        title: '작성자를 입력해주세요',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
       document.getElementById('writer')?.focus();
     } else {
       messageAPI
@@ -56,11 +73,12 @@ export default function MessageWrite(props: { flower: number }) {
           writer: msgWriter,
           flowerId: props.flower,
           font: font,
-          rollingId: 2,
+          rollingId: props.rolling,
         })
         .then((res) => {
           console.log(res.data.response);
           alert('메시지가 등록되었습니다');
+          navigate(`/rolling/` + props.rollingUrl);
         })
         .catch((err) => {
           console.log(err);
@@ -263,29 +281,31 @@ const ButtonBox = css`
 
 const MainButton = css`
   width: 90%;
-  /* margin-top: 0.5vh; */
+  margin-top: -0.5vh;
   margin-bottom: 1vh;
   padding: 1.5vh;
   border-radius: 10px;
   font-size: 1em;
   transform: translate(0, 50%);
+  font-family: 'SeoulNamsanM';
 `;
 
 const WriteBox = css`
   margin: 0 10vw 2vh 10vw;
-  height: 30%;
+  height: 18em;
   font-size: 1.5vh;
 
   .content-css {
     background-color: white;
-    height: 65%;
+    height: 10em;
     overflow-y: scroll;
+    margin-top: 3vh;
   }
 
   .input-css {
     font-size: 18px;
     width: 85%;
-    height: 70%;
+    height: 3.5em;
     border: 0px;
     margin: 2vh;
     resize: none;
@@ -313,7 +333,7 @@ const MsgLimit = css`
   font-size: 13px;
 `;
 const FontBox = css`
-  height: 7%;
+  /* height: 7%; */
   /* margin: 1vh 2.5vh 0 2.5vh; */
   margin: 2% 5% 0 5%;
   /* margin-left: 5%; */
@@ -324,6 +344,6 @@ const FontBox = css`
 `;
 
 const Background = css`
-  width: 100vw;
-  height: 100%;
+  /* width: 100vw; */
+  height: 100vw;
 `;

@@ -14,10 +14,13 @@ import storeAPI from '@src/api/storeAPI';
 import MySwal from '@components/SweetAlert';
 import '@components/SweetAlert.css';
 import updateTokens from '@src/utils/updateTokens';
+import Modal from '@src/components/store/BuyModal';
+import Receipt from '@src/components/store/Receipt';
 
 interface IItem {
   rollingId: number;
   imgUrl: string;
+  point: number;
   isOwned: boolean;
 }
 
@@ -26,10 +29,12 @@ export default function SelectItem() {
   const setLoginUser = useSetRecoilState<IuserRecoil>(userReCoil);
   const [items, setItems] = useState<IItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+  const [userState] = useRecoilState<IuserRecoil>(userReCoil);
   const [createRollingState, setCreateRollingState] =
     useRecoilState<IcreateRollingRecoil>(createRollingRecoil);
-  const [rollingImg, setRollingImg] = useState<string>(createRollingState.url);
+  const [selectIdx, setSelectIdx] = useState<number>(0);
+  const [buying, setBuying] = useState<boolean>(false);
+
   async function getItems(): Promise<void> {
     setLoading(false);
     try {
@@ -39,7 +44,6 @@ export default function SelectItem() {
       );
       setItems(res.data.response);
       if (createRollingState.url === '') {
-        setRollingImg(rollingImgItem[0].img);
         setCreateRollingState((prev: IcreateRollingRecoil) => {
           const variable = { ...prev };
           variable.itemId = res.data.response[0].rollingId;
@@ -77,7 +81,6 @@ export default function SelectItem() {
             );
             setItems(res.data.response);
             if (createRollingState.url === '') {
-              setRollingImg(rollingImgItem[0].img);
               setCreateRollingState((prev: IcreateRollingRecoil) => {
                 const variable = { ...prev };
                 variable.itemId = res.data.response[0].rollingId;
@@ -97,7 +100,6 @@ export default function SelectItem() {
       }
     }
   }
-
   const handleSetTitle = (): void => {
     navigate('/newroll/title');
   };
@@ -109,19 +111,29 @@ export default function SelectItem() {
       variable.url = rollingImgItem[e.target.id].img;
       return variable;
     });
-    setRollingImg(rollingImgItem[e.target.id].img);
+    setSelectIdx(e.target.id);
   };
-  const cantSelect = (): void => {
-    MySwal.fire({
-      title: '상점에서 구매 후<br/>사용 가능합니다!',
-      icon: 'warning',
-      confirmButtonColor: '#16453e',
-      confirmButtonText: '확인',
+
+  const changeRolling = (e: any): void => {
+    setCreateRollingState((prev: IcreateRollingRecoil): any => {
+      const variable = { ...prev };
+      variable.itemId = items[e.target.id].rollingId;
+      variable.itemIndex = e.target.id;
+      variable.url = rollingImgItem[e.target.id].img;
+      return variable;
     });
+    setSelectIdx(e.target.id);
   };
+
+  const handleBuying = () => {
+    setBuying(true);
+  };
+
   useEffect(() => {
+    setBuying(false);
     getItems();
-  }, []);
+  }, [userState.points]);
+
   return (
     <>
       <div css={Background}>
@@ -131,7 +143,11 @@ export default function SelectItem() {
               <img src={Coin} css={PointImg} /> {userState.points}P
             </div>
             <div>
-              <img src={rollingImg} alt="선택한 꽃 사진" css={SelectImage} />
+              <img
+                src={createRollingState.url}
+                alt="선택한 꽃 사진"
+                css={SelectImage}
+              />
               <div css={ItemZone}>
                 {items.map((item: IItem, index) => {
                   return (
@@ -150,12 +166,11 @@ export default function SelectItem() {
                           <img
                             src={ItemLocked}
                             css={Locked}
-                            onClick={cantSelect}
+                            id={String(index)}
+                            onClick={changeRolling}
                           ></img>
                           <img
                             src={rollingImgItem[index].img}
-                            onClick={cantSelect}
-                            id={String(index)}
                             css={NotOwnedItemImg}
                           />
                         </div>
@@ -169,9 +184,26 @@ export default function SelectItem() {
         ) : (
           '로딩중'
         )}
-        <button onClick={handleSetTitle} css={NextButton}>
-          다음
-        </button>
+        {items.length > 0 && items[selectIdx].isOwned ? (
+          <button onClick={handleSetTitle} css={NextButton}>
+            다음
+          </button>
+        ) : (
+          <button onClick={handleBuying} css={NextButton}>
+            구매
+          </button>
+        )}
+        {buying && (
+          <Modal
+            closeModal={() => setBuying(!buying)}
+            isFlower={false}
+            itemId={items[selectIdx].rollingId}
+            price={items[selectIdx].point}
+            location={'rolling'}
+          >
+            <Receipt points={userState.points} price={items[selectIdx].point} />
+          </Modal>
+        )}
       </div>
     </>
   );

@@ -1,6 +1,7 @@
 import api from './api';
 
 const END_POINT = 'rolling';
+const BOOKMARK = 'bookmark';
 
 interface IMakeRollingData {
   itemId: number;
@@ -17,6 +18,15 @@ const rollingAPI = {
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
         'REFRESH-TOKEN': 'Bearer ' + refresh,
+      },
+    });
+  },
+  bookmarkRolling(jwt: string, url: string) {
+    return api({
+      method: 'patch',
+      url: `${END_POINT}/${BOOKMARK}/${url}`,
+      headers: {
+        'X-AUTH-TOKEN': `Bearer ` + jwt,
       },
     });
   },

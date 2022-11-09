@@ -13,6 +13,7 @@ import MessageWrite from '@components/message/MessageWrite';
 import Modal from '@src/components/store/BuyModal';
 import Receipt from '@src/components/store/Receipt';
 import { Grid } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 import updateTokens from '@src/utils/updateTokens';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,18 +31,21 @@ interface IFlower {
 
 export default function MessageCreate() {
   const navigate = useNavigate();
-  let [flowerId, setFlowerId] = useState<number>(0); // 클릭한 꽃 번호
-  let [flowerIdx, setFlowerIdx] = useState<number>(0); // 클릭한 꽃 인덱스
-  let [flowerList, setFlowerList] = useState<IFlower[]>([]);
+  const [flowerId, setFlowerId] = useState<number>(0); // 클릭한 꽃 번호
+  const [flowerIdx, setFlowerIdx] = useState<number>(0); // 클릭한 꽃 인덱스
+  const [flowerList, setFlowerList] = useState<IFlower[]>([]);
   const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
-  let [SelectedFlower, setSelectedFlower] = useState<number>(0); // 선택 완료한 꽃 번호
-  let [buying, setBuying] = useState<boolean>(false);
+  const [SelectedFlower, setSelectedFlower] = useState<number>(0); // 선택 완료한 꽃 번호
+  const [buying, setBuying] = useState<boolean>(false);
+  const location = useLocation();
 
   useEffect(() => {
     setFlowerId(0);
     setFlowerIdx(0);
     setSelectedFlower(0);
     setBuying(false);
+
+    location.state as { rollingId: number; rollingUrl: string };
     storeAPI
       .getFlowers(loginUser.jwt, loginUser.refresh)
       .then((res) => {
@@ -111,7 +115,7 @@ export default function MessageCreate() {
           <>
             <img
               src={'/src/assets/' + flowerList[flowerId - 1].imgUrl}
-              height="60%"
+              height="50%"
             ></img>
             <div className="flower-name">
               <b>{flowerList[flowerId - 1].name}</b>
@@ -207,7 +211,11 @@ export default function MessageCreate() {
           )}
         </>
       ) : (
-        <MessageWrite flower={flowerId}></MessageWrite>
+        <MessageWrite
+          flower={flowerId}
+          rolling={location.state.rollingId}
+          rollingUrl={location.state.rollingUrl}
+        ></MessageWrite>
       )}
     </div>
   );
@@ -299,14 +307,14 @@ const DetailBox = css`
   height: 80vw;
   /* margin: 0 auto; */
   .flower-name {
-    font-size: 22px;
+    font-size: 1.2em;
     margin-top: 1vh;
     margin-bottom: 1vh;
     height: auto;
   }
 
   .flower-language {
-    font-size: 16px;
+    font-size: 0.7em;
     height: auto;
   }
 `;
@@ -327,6 +335,7 @@ const MainButton = css`
   border-radius: 10px;
   font-size: 1em;
   transform: translate(0, 25%);
+  font-family: 'SeoulNamsanM';
 `;
 
 const PointBox = css`
@@ -343,7 +352,7 @@ const PointBox = css`
 
   .coin-img {
     /* width: 4vw; */
-    height: 15px;
+    height: 16px;
     display: flex;
     text-align: auto;
     justify-content: center;
