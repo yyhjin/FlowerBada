@@ -29,9 +29,8 @@ export default function GreenHouse() {
   const [sort, setSort] = useState<string>('1');
   const [paginationId, setPaginationId] = useState<number>(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
-  // const [disabled, setDisabled] = useState(false);
-  const disabled = useRef(true);
-  const [timer, setTimer] = useState<any>();
+  const [disabled, setDisabled] = useState(false);
+  const timer = useRef<number | null>(null);
 
   function initRollings() {
     setTab('내가 만든 꽃다발');
@@ -52,16 +51,15 @@ export default function GreenHouse() {
 
     try {
       const params = { sort: sort, paginationId: paginationId };
-      disabled.current = true;
-      console.log(typeof disabled.current);
+      setDisabled(true);
 
-      if (timer) {
-        clearTimeout(timer);
+      if (timer.current) {
+        clearTimeout(timer.current);
       }
       const scrollTimer = setTimeout(() => {
-        disabled.current = false;
-      }, 1000);
-      setTimer(scrollTimer);
+        setDisabled(false);
+      }, 300);
+      timer.current = scrollTimer;
       const res: any = await greenhouseAPI.sentRolling(userState.jwt, params);
 
       setLoading(true);
@@ -141,21 +139,13 @@ export default function GreenHouse() {
         {tabNum === 1 ? (
           <div css={MainTab}>
             <button className="active_btn">내가 만든 꽃다발</button>
-            <button
-              className="btn"
-              onClick={initBookmarks}
-              disabled={disabled.current}
-            >
+            <button className="btn" onClick={initBookmarks} disabled={disabled}>
               즐겨찾기
             </button>
           </div>
         ) : (
           <div css={MainTab}>
-            <button
-              className="btn"
-              onClick={initRollings}
-              disabled={disabled.current}
-            >
+            <button className="btn" onClick={initRollings} disabled={disabled}>
               내가 만든 꽃다발
             </button>
             <button className="active_btn">즐겨찾기</button>
