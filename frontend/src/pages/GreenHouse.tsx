@@ -49,6 +49,28 @@ export default function GreenHouse() {
 
   async function getRollings(sort: number): Promise<void> {
     // setLoading(false);
+
+    try {
+      const params = { sort: sort, paginationId: paginationId };
+      disabled.current = true;
+      console.log(typeof disabled.current);
+
+      if (timer) {
+        clearTimeout(timer);
+      }
+      const scrollTimer = setTimeout(() => {
+        console.log('펄스');
+        disabled.current = false;
+      }, 1000);
+      setTimer(scrollTimer);
+      const res: any = await greenhouseAPI.sentRolling(userState.jwt, params);
+
+      setLoading(true);
+      setRollings(rollings.concat(res.data.response));
+      setPaginationId(paginationId + 1);
+    } catch (err: any) {
+      // console.log(err);
+    }
   }
   async function getBookmarks(sort: number): Promise<void> {
     // setLoading(false);
