@@ -93,18 +93,22 @@ public class StoreServiceImpl implements StoreService {
     /* 꽃 아이템 구매 */
     @Transactional
     public void buyFlowerItem(User user, FlowerReqDto flowerReqDto) {
-        FlowerItem flowerItem = flowerItemRepository.findById(flowerReqDto.getFlowerId())
-                .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-        user.updatePoint(user.getPoints() - flowerItem.getPoint());
-        flowerUserRepository.save(FlowerUser.addFlowerUser(user, flowerItem));
+        if(!flowerUserRepository.findByUserAndFlowerItem(user,flowerItemRepository.findById(flowerReqDto.getFlowerId()).get()).isPresent()){
+            FlowerItem flowerItem = flowerItemRepository.findById(flowerReqDto.getFlowerId())
+                    .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+            user.updatePoint(user.getPoints() - flowerItem.getPoint());
+            flowerUserRepository.save(FlowerUser.addFlowerUser(user, flowerItem));
+        }
     }
 
     /* 롤링페이퍼 아이템 구매 */
     @Transactional
     public void buyRollingItem(User user, RollingReqDto rollingReqDto) {
-        RollingItem rollingItem = rollingItemRepository.findById(rollingReqDto.getRollingId())
-                .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-        user.updatePoint(user.getPoints() - rollingItem.getPoint());
-        rollingUserRepository.save(RollingUser.addRollingUser(user, rollingItem));
+        if(!flowerUserRepository.findByUserAndFlowerItem(user,flowerItemRepository.findById(rollingReqDto.getRollingId()).get()).isPresent()){
+            RollingItem rollingItem = rollingItemRepository.findById(rollingReqDto.getRollingId())
+                    .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+            user.updatePoint(user.getPoints() - rollingItem.getPoint());
+            rollingUserRepository.save(RollingUser.addRollingUser(user, rollingItem));
+        }
     }
 }

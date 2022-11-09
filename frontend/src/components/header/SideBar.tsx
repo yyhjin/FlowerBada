@@ -26,7 +26,6 @@ const SideBar = (props: any) => {
         variable.refresh = '';
         return variable;
       });
-      alert('logout success!');
       window.location.href = '/';
     } catch (err: any) {
       console.log(err);

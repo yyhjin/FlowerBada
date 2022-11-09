@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import CoinImg from '@assets/coin.png';
 import mypageAPI from '@src/api/mypageAPI';
-
+import MySwal from '@components/SweetAlert';
 interface IPoint {
   name: string;
   point: number;
@@ -52,12 +52,15 @@ export default function MyPointList() {
         params,
       );
       setMyPoint(res.data.response.myPoint);
-      if (res.data.response.myPointList.length !== 0) {
-        setMyPointList(myPointList.concat(res.data.response.myPointList));
-        setPages(pages + 1);
-      }
+      setMyPointList(myPointList.concat(res.data.response.myPointList));
+      setPages(pages + 1);
     } catch (err: any) {
-      // console.log(err);
+      MySwal.fire({
+        title: '불러오기 실패...',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
     }
   }
 
@@ -69,16 +72,18 @@ export default function MyPointList() {
         <span> {myPoint}</span>
       </div>
       <div className="titlebox">사용 내역</div>
+      <div className="innerbox">
+        <div className="datebox">날짜</div>
+        <div className="contentbox">내용</div>
+        <div className="pointbox">포인트</div>
+      </div>
       <div className="mylist">
-        <div className="innerbox">
-          <div className="datebox">날짜</div>
-          <div className="contentbox">내용</div>
-          <div className="pointbox">포인트</div>
-        </div>
         {myPointList.map((point: IPoint, index: number) => {
           return (
             <div className="valuebox" key={index}>
-              <div className="datebox">{point.createdDate}</div>
+              <div className="datebox">
+                {point.createdDate.split(' ')[0].replaceAll('-', '.')}
+              </div>
               <div className="contentbox">{point.name} 구매</div>
               <div className="pointbox"> -{point.point}P</div>
             </div>
@@ -91,6 +96,7 @@ export default function MyPointList() {
 
 const totalCSS = css`
   .mylist {
+    height: calc(100vh - 200px);
     background-color: white;
     overflow-y: scroll;
   }
@@ -105,14 +111,7 @@ const totalCSS = css`
       font-size: 12px;
     }
   }
-  /* .outerbox {
-    background-color: white;
-    height: calc(100vh - 208px);
-    overflow-y: scroll;
-    .outerbox::-webkit-scrollbar {
-      display: none;
-    }
-  } */
+
   .titlebox {
     padding: 10px;
     text-align: left;
@@ -123,7 +122,8 @@ const totalCSS = css`
     justify-content: space-between;
     font-size: 14px;
     text-align: center;
-    margin: 10px;
+    padding: 6px;
+    background-color: white;
   }
   .valuebox {
     display: flex;
