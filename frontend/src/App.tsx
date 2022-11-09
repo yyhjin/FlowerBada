@@ -24,8 +24,6 @@ import MessageCreate from '@pages/MessageCreate';
 
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
-  const [url, setUrl] = useState();
-  const [paginationId, setPaginationId] = useState();
   return (
     <div className="App">
       <BrowserRouter>

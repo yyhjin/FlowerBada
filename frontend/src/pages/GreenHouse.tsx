@@ -59,7 +59,6 @@ export default function GreenHouse() {
         clearTimeout(timer);
       }
       const scrollTimer = setTimeout(() => {
-        console.log('펄스');
         disabled.current = false;
       }, 500);
       setTimer(scrollTimer);
