@@ -168,6 +168,10 @@ export default function RollingPaper() {
     });
   };
 
+  const shareRolling = () => {
+    navigate('/newroll/link', { state: paramCopy.url });
+  };
+
   useEffect(() => {
     getRolling();
   }, [paginationId]);
@@ -281,6 +285,7 @@ export default function RollingPaper() {
                     size="large"
                     color="primary"
                     className="share-btn"
+                    onClick={shareRolling}
                   >
                     <IosShareIcon fontSize="large" />
                   </IconButton>
