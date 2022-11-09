@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
@@ -29,14 +29,19 @@ export default function GreenHouse() {
   const [sort, setSort] = useState<string>('1');
   const [paginationId, setPaginationId] = useState<number>(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+  // const [disabled, setDisabled] = useState(false);
+  const disabled = useRef(false);
+  const [timer, setTimer] = useState<any>();
 
   function initRollings() {
+    setTab('내가 만든 꽃다발');
     setPaginationId(0);
     setRollings([]);
     setTabNum(1);
   }
 
   function initBookmarks() {
+    setTab('즐겨찾기한 꽃다발');
     setPaginationId(0);
     setRollings([]);
     setTabNum(2);
@@ -44,9 +49,20 @@ export default function GreenHouse() {
 
   async function getRollings(sort: number): Promise<void> {
     // setLoading(false);
-    setTab('내가 만든 꽃다발');
+
     try {
       const params = { sort: sort, paginationId: paginationId };
+      disabled.current = true;
+      console.log(typeof disabled.current);
+
+      if (timer) {
+        clearTimeout(timer);
+      }
+      const scrollTimer = setTimeout(() => {
+        console.log('펄스');
+        disabled.current = false;
+      }, 500);
+      setTimer(scrollTimer);
       const res: any = await greenhouseAPI.sentRolling(userState.jwt, params);
 
       setLoading(true);
@@ -58,13 +74,13 @@ export default function GreenHouse() {
   }
   async function getBookmarks(sort: number): Promise<void> {
     // setLoading(false);
-    setTab('즐겨찾기한 꽃다발');
+
     try {
       const params = { sort: sort, paginationId: paginationId };
       const res: any = await greenhouseAPI.bookmark(userState.jwt, params);
-      // console.log(res.data.response);
-      setRollings(res.data.response);
+      console.log(res.data.response);
       setLoading(true);
+      setRollings(rollings.concat(res.data.response));
       setPaginationId(paginationId + 1);
     } catch (err: any) {
       // console.log(err);
@@ -126,13 +142,21 @@ export default function GreenHouse() {
         {tabNum === 1 ? (
           <div css={MainTab}>
             <button className="active_btn">내가 만든 꽃다발</button>
-            <button className="btn" onClick={() => initBookmarks()}>
+            <button
+              className="btn"
+              onClick={initBookmarks}
+              disabled={disabled.current}
+            >
               즐겨찾기
             </button>
           </div>
         ) : (
           <div css={MainTab}>
-            <button className="btn" onClick={() => initRollings()}>
+            <button
+              className="btn"
+              onClick={initRollings}
+              disabled={disabled.current}
+            >
               내가 만든 꽃다발
             </button>
             <button className="active_btn">즐겨찾기</button>

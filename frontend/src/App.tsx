@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Payment from '@pages/Payment/Payment';
 import PaymentSuccess from '@pages/Payment/PaymentSuccess';
@@ -23,6 +24,8 @@ import MessageCreate from '@pages/MessageCreate';
 
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
+  const [url, setUrl] = useState();
+  const [paginationId, setPaginationId] = useState();
   return (
     <div className="App">
       <BrowserRouter>
@@ -30,11 +33,13 @@ function App() {
           {loginUser.jwt === '' ? (
             <>
               <Route path="/*" element={<SignIn />}></Route>
-              <Route
-                path="/user/signin/redirect"
-                element={<KakaoRedirectHandler />}
-              ></Route>
-              <Route path="rolling/:url" element={<RollingPaper />}></Route>
+              <Route path="/" element={<Layout />}>
+                <Route
+                  path="/user/signin/redirect"
+                  element={<KakaoRedirectHandler />}
+                ></Route>
+                <Route path="rolling/:url" element={<RollingPaper />}></Route>
+              </Route>
             </>
           ) : (
             <>

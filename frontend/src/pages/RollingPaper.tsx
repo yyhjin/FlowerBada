@@ -9,7 +9,6 @@ import CreateIcon from '@mui/icons-material/Create';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
 import {
   Dialog,
   DialogActions,
@@ -27,6 +26,7 @@ import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import MySwal from '@components/SweetAlert';
 import { useCallback } from 'react';
+import Login from '@assets/login_btn.png';
 
 interface IRolling {
   rollingId?: number;
@@ -56,6 +56,7 @@ export default function RollingPaper() {
   const [bookmark, setBookmark] = useState<Boolean>(false);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   let paramCopy: any = {};
+  let url: string;
   paramCopy = useParams();
   const [nowDate, setNowDate] = useState<Date>(new Date());
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
@@ -63,9 +64,9 @@ export default function RollingPaper() {
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
 
   async function getRolling() {
+    url = paramCopy.url;
     setLoading(false);
     setDeliveryModal(false);
-    let url = paramCopy.url;
     try {
       const res: any = await messageAPI.getRolling(
         userState.jwt,
@@ -96,6 +97,7 @@ export default function RollingPaper() {
         });
         setValid(false);
       }
+      console.log(res.data.response);
 
       setRolling(res.data.response);
       setLoading(true);
@@ -139,7 +141,7 @@ export default function RollingPaper() {
         let url = paramCopy.url;
         const res: any = await rollingAPI.bookmarkRolling(userState.jwt, url);
         setBookmark(!bookmark);
-        console.log('북마크 스위치 성공!');
+        // console.log('북마크 스위치 성공!');
       } catch (err: any) {
         // console.log(err);
       }
@@ -156,7 +158,16 @@ export default function RollingPaper() {
   };
 
   const changeDelivery = (param: boolean) => {
-    setDeliveryModal(param);
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setDeliveryModal(param);
+    }
   };
 
   const sendDelivery = () => {
@@ -164,6 +175,12 @@ export default function RollingPaper() {
     localStorage.setItem('url', paramCopy.url);
     localStorage.setItem('paginationId', paginationId.toString());
     navigate('/payment');
+  };
+
+  const linkToSignIn = () => {
+    localStorage.setItem('url', paramCopy.url);
+    localStorage.setItem('paginationId', String(paginationId));
+    navigate('/signIn');
   };
 
   useEffect(() => {
@@ -179,6 +196,9 @@ export default function RollingPaper() {
 
   return (
     <>
+      {userState.jwt === '' ? (
+        <img src={Login} css={LoginBtn} onClick={linkToSignIn} />
+      ) : null}
       {loading && rolling && rolling.messages && type ? (
         <>
           <div css={DetailCss}>
@@ -309,32 +329,41 @@ export default function RollingPaper() {
   );
 }
 
+const LoginBtn = css`
+  position: absolute;
+  width: 35px;
+  top: 2%;
+  right: 5%;
+  z-index: 999999;
+`;
+
 const DetailCss = css`
   width: 100%;
   height: 115%;
   position: relative;
   transform: translate(0%, -15%);
   .titlezone_1 {
-    padding-top: 23vh;
-    margin-bottom: -16vh;
+    padding-top: 20vh;
+    margin-bottom: -30vw;
     justify-content: center;
     font-size: 7.5vw;
     display: flex;
+
     @media screen and (min-height: 700px) {
-      padding-top: 27vh;
-      margin-bottom: -7vh;
+      padding-top: 22vh;
+      margin-bottom: -15vh;
     }
     @media screen and (min-height: 800px) {
-      padding-top: 27vh;
-      margin-bottom: -7vh;
+      padding-top: 22vh;
+      margin-bottom: -12vh;
     }
     @media screen and (min-height: 900px) {
-      padding-top: 27vh;
-      margin-bottom: -7vh;
+      padding-top: 22vh;
+      margin-bottom: -10vh;
     }
     @media screen and (max-height: 660px) and (max-width: 290px) {
-      padding-top: 20vh;
-      margin-bottom: -16vw;
+      padding-top: 22vh;
+      margin-bottom: -25vw;
     }
   }
   .titlezone_2 {
@@ -350,7 +379,7 @@ const DetailCss = css`
     }
     @media screen and (min-height: 800px) {
       padding-top: 22vh;
-      padding-bottom: 2vh;
+      margin-bottom: -5vh;
     }
     @media screen and (min-height: 900px) {
       padding-top: 22vh;
@@ -362,11 +391,28 @@ const DetailCss = css`
     }
   }
   .titlezone_3 {
-    padding-top: 23vh;
-    margin-bottom: -10vh;
+    padding-top: 20vh;
+    margin-bottom: -10vw;
     justify-content: center;
     font-size: 7.5vw;
     display: flex;
+
+    @media screen and (min-height: 700px) {
+      padding-top: 22vh;
+      margin-bottom: -12vh;
+    }
+    @media screen and (min-height: 800px) {
+      padding-top: 22vh;
+      margin-bottom: -10vh;
+    }
+    @media screen and (min-height: 900px) {
+      padding-top: 22vh;
+      margin-bottom: -7vh;
+    }
+    @media screen and (max-height: 660px) and (max-width: 290px) {
+      padding-top: 22vh;
+      margin-bottom: -8vw;
+    }
   }
   .imgbox_1,
   .imgbox_2,
@@ -654,16 +700,19 @@ const DetailCss = css`
     }
   }
   .dot_3 {
-    margin-top: 0vh;
+    margin-top: -8vh;
     bottom: 0%;
+    @media screen and (min-height: 700px) {
+      margin-top: -9vh;
+    }
     @media screen and (min-height: 800px) {
-      margin-top: 7vh;
+      margin-top: -8vh;
     }
     @media screen and (min-height: 900px) {
-      margin-top: 10vh;
+      margin-top: -9vh;
     }
     @media screen and (max-height: 660px) and (max-width: 290px) {
-      margin-top: 18vh;
+      margin-top: -6vh;
     }
   }
 
