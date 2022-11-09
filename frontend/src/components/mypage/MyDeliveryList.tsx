@@ -66,7 +66,11 @@ export default function MyDeliveryList() {
     try {
       setSortNumber(sortNumber);
       const params = { sort: sortNumber, paginationId: pages };
-      const res: any = await mypageAPI.getDelivery(userState.jwt, params);
+      const res: any = await mypageAPI.getDelivery(
+        userState.jwt,
+        userState.refresh,
+        params,
+      );
       setMyList(myList.concat(res.data.response));
       setPages(pages + 1);
     } catch (err: any) {

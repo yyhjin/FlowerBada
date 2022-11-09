@@ -46,7 +46,11 @@ export default function MyPointList() {
   async function myPointListFunc() {
     try {
       const params = { paginationId: pages };
-      const res: any = await mypageAPI.getPointList(userState.jwt, params);
+      const res: any = await mypageAPI.getPointList(
+        userState.jwt,
+        userState.refresh,
+        params,
+      );
       setMyPoint(res.data.response.myPoint);
       setMyPointList(myPointList.concat(res.data.response.myPointList));
       setPages(pages + 1);
