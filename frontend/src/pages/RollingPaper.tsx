@@ -182,7 +182,7 @@ export default function RollingPaper() {
   const linkToSignIn = () => {
     localStorage.setItem('url', paramCopy.url);
     localStorage.setItem('paginationId', String(paginationId));
-    navigate('/signIn');
+    navigate('/');
   };
 
   useEffect(() => {

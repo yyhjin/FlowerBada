@@ -32,7 +32,7 @@ function App() {
         <Routes>
           {loginUser.jwt === '' ? (
             <>
-              <Route path="/*" element={<SignIn />}></Route>
+              <Route path="" element={<SignIn />}></Route>
               <Route path="/" element={<Layout />}>
                 <Route
                   path="/user/signin/redirect"

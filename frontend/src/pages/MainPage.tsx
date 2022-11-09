@@ -33,7 +33,7 @@ const Mainpage = () => {
         variable.jwt = '';
         return variable;
       });
-      window.location.href = '/singIn';
+      window.location.href = '/';
     } catch (err: any) {
       console.log(err);
     }

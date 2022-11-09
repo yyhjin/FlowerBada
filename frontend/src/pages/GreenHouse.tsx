@@ -30,7 +30,7 @@ export default function GreenHouse() {
   const [paginationId, setPaginationId] = useState<number>(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   // const [disabled, setDisabled] = useState(false);
-  const disabled = useRef(false);
+  const disabled = useRef(true);
   const [timer, setTimer] = useState<any>();
 
   function initRollings() {
@@ -49,28 +49,6 @@ export default function GreenHouse() {
 
   async function getRollings(sort: number): Promise<void> {
     // setLoading(false);
-
-    try {
-      const params = { sort: sort, paginationId: paginationId };
-      disabled.current = true;
-      console.log(typeof disabled.current);
-
-      if (timer) {
-        clearTimeout(timer);
-      }
-      const scrollTimer = setTimeout(() => {
-        console.log('펄스');
-        disabled.current = false;
-      }, 500);
-      setTimer(scrollTimer);
-      const res: any = await greenhouseAPI.sentRolling(userState.jwt, params);
-
-      setLoading(true);
-      setRollings(rollings.concat(res.data.response));
-      setPaginationId(paginationId + 1);
-    } catch (err: any) {
-      // console.log(err);
-    }
   }
   async function getBookmarks(sort: number): Promise<void> {
     // setLoading(false);
