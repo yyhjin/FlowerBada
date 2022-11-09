@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import CoinImg from '@assets/coin.png';
 import mypageAPI from '@src/api/mypageAPI';
-
+import MySwal from '@components/SweetAlert';
 interface IPoint {
   name: string;
   point: number;
@@ -51,7 +51,12 @@ export default function MyPointList() {
       setMyPointList(myPointList.concat(res.data.response.myPointList));
       setPages(pages + 1);
     } catch (err: any) {
-      // console.log(err);
+      MySwal.fire({
+        title: '불러오기 실패...',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
     }
   }
 
