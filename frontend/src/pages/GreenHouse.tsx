@@ -30,7 +30,7 @@ export default function GreenHouse() {
   const [paginationId, setPaginationId] = useState<number>(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   // const [disabled, setDisabled] = useState(false);
-  const disabled = useRef(false);
+  const disabled = useRef(true);
   const [timer, setTimer] = useState<any>();
 
   function initRollings() {
@@ -60,7 +60,7 @@ export default function GreenHouse() {
       }
       const scrollTimer = setTimeout(() => {
         disabled.current = false;
-      }, 500);
+      }, 1000);
       setTimer(scrollTimer);
       const res: any = await greenhouseAPI.sentRolling(userState.jwt, params);
 
