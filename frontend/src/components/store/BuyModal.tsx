@@ -5,10 +5,11 @@ import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import MySwal from '@components/SweetAlert';
+import updateTokens from '@src/utils/updateTokens';
 
 export default function Modal(props: any) {
-  const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
   const navigate = useNavigate();
+  const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
 
   function closeModal() {
     props.closeModal();
@@ -16,40 +17,101 @@ export default function Modal(props: any) {
 
   const buyFunction = async () => {
     try {
-      if (props.isFlower) {
-        const data: any = {
-          flowerId: props.itemId,
-        };
-        await storeAPI.putFlower(loginUser.jwt, data);
-      } else {
-        const data: any = {
-          rollingId: props.itemId,
-        };
-        await storeAPI.putRolling(loginUser.jwt, data);
-      }
-      const res = await userAPI.getPoint(loginUser.jwt);
-      const points: number = res.data.response.points;
-      setLoginUser((prev: IuserRecoil) => {
-        const variable = { ...prev };
-        variable.points = points;
-        return variable;
-      });
-      MySwal.fire({
-        title: '구매 완료!',
-        icon: 'success',
-        confirmButtonColor: '#16453e',
-        confirmButtonText: '확인',
-      });
-      switch (props.location) {
-        case 'message':
-          navigate('/rolling/message/create');
-          break;
-        case 'store':
-          navigate('/store');
-          break;
-        case 'rolling':
-          navigate('/newroll/item');
-          break;
+      try {
+        if (props.isFlower) {
+          const data: any = {
+            flowerId: props.itemId,
+          };
+          await storeAPI.putFlower(loginUser.jwt, loginUser.refresh, data);
+        } else {
+          const data: any = {
+            rollingId: props.itemId,
+          };
+          await storeAPI.putRolling(loginUser.jwt, loginUser.refresh, data);
+        }
+        const res = await userAPI.getPoint(loginUser.jwt, loginUser.refresh);
+        const points: number = res.data.response.points;
+        setLoginUser((prev: IuserRecoil) => {
+          const variable = { ...prev };
+          variable.points = points;
+          return variable;
+        });
+        MySwal.fire({
+          title: '구매 완료!',
+          icon: 'success',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        });
+        switch (props.location) {
+          case 'message':
+            window.location.href = '/rolling/message/create';
+            break;
+          case 'store':
+            window.location.href = '/store';
+            break;
+          case 'rolling':
+            break;
+        }
+      } catch (err: any) {
+        if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+          alert('로그인이 필요합니다');
+          setLoginUser((prev: IuserRecoil) => {
+            const variable = { ...prev };
+            variable.id = 0;
+            variable.userToken = '';
+            variable.nickname = '';
+            variable.points = 0;
+            variable.jwt = '';
+            variable.refresh = '';
+            return variable;
+          });
+          navigate('/');
+        } else {
+          let accessToken: string = err.response.headers.get('x-auth-token');
+          let refreshToken: string = err.response.headers.get('refresh-token');
+          if (accessToken && refreshToken) {
+            accessToken = accessToken.split(' ')[1];
+            refreshToken = refreshToken.split(' ')[1];
+            updateTokens(accessToken, refreshToken, setLoginUser);
+            if (props.isFlower) {
+              const data: any = {
+                flowerId: props.itemId,
+              };
+              await storeAPI.putFlower(accessToken, refreshToken, data);
+            } else {
+              const data: any = {
+                rollingId: props.itemId,
+              };
+              await storeAPI.putRolling(accessToken, refreshToken, data);
+            }
+            const res = await userAPI.getPoint(accessToken, refreshToken);
+            const points: number = res.data.response.points;
+            setLoginUser((prev: IuserRecoil) => {
+              const variable = { ...prev };
+              variable.points = points;
+              return variable;
+            });
+            MySwal.fire({
+              title: '구매 완료!',
+              icon: 'success',
+              confirmButtonColor: '#16453e',
+              confirmButtonText: '확인',
+            });
+            switch (props.location) {
+              case 'message':
+                window.location.href = '/rolling/message/create';
+                break;
+              case 'store':
+                window.location.href = '/store';
+                break;
+              case 'rolling':
+                break;
+            }
+          } else {
+            console.log('No access or refresh token');
+            navigate('/');
+          }
+        }
       }
     } catch (err: any) {
       console.log(err);

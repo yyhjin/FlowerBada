@@ -1,27 +1,29 @@
 package app.bada.flower.api.service.jwt;
 
+import app.bada.flower.api.dto.auth.JwtCode;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.UserRepository;
 import app.bada.flower.api.service.UserService;
 import app.bada.flower.api.service.auth.CustomUserDetailService;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 @RequiredArgsConstructor
 @Component
@@ -30,11 +32,11 @@ public class JwtTokenUtil {
     @Value("${jwt.secret}")
     private String secretKey;
     private String nonce = "flowerbada";
-
     @Value("${jwt.token.access_token_valid_time}")
     private long tokenValidTime;
     @Value("${jwt.token.refresh_token_valid_time}")
     private long refreshTokenValidTime;
+
     private final CustomUserDetailService userDetailService;
     private final RedisTemplate redisTemplate;
     private final UserRepository userRepository;
@@ -48,6 +50,10 @@ public class JwtTokenUtil {
     // JWT 토큰 생성
     public String createToken(String userToken, List<String> roles) {
         return generateToken(userToken, roles, tokenValidTime);
+    }
+
+    public String createAccessToken(String refreshToken){
+        return generateToken(getUserToken(refreshToken), getUserRoles(refreshToken), tokenValidTime);
     }
 
     public String createRefreshToken(String userToken, List<String> roles) {
@@ -65,6 +71,19 @@ public class JwtTokenUtil {
                 .setExpiration(new Date(now.getTime() + expTime)) // set Expire Time
                 .signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘과 signature에 들어갈 secret값 세팅
                 .compact();
+    }
+
+    public String reissueRefreshToken(String curToken){
+        String userToken = getUserToken(curToken);
+        User user = userRepository.findByKakaoUserId(userToken).orElse(null);
+        if(user == null) return null;
+        if(redisTemplate.opsForValue().get("REFRESH "+curToken) != null) {
+            String newRefresh = createRefreshToken(userToken, user.getRoles());
+            redisTemplate.delete("REFRESH "+curToken);
+            redisTemplate.opsForValue().set("REFRESH "+newRefresh, newRefresh, Duration.ofSeconds(refreshTokenValidTime));
+            return newRefresh;
+        }
+        return null;
     }
 
     // JWT 토큰에서 인증 정보 조회
@@ -96,9 +115,9 @@ public class JwtTokenUtil {
         return user.getRoles();
     }
 
-    // Request의 Header에서 token 값을 가져옵니다. "X-AUTH-TOKEN" : Bearer {jwt}
-    public String resolveToken(HttpServletRequest request) {
-        String header = request.getHeader("X-AUTH-TOKEN");
+    // Request의 Header에서 token 값을 가져옴
+    public String resolveToken(HttpServletRequest request, String type) {
+        String header = request.getHeader(type);
         try {
             return header == null ? null : header.split(" ")[1];
         } catch(IndexOutOfBoundsException e){
@@ -107,25 +126,27 @@ public class JwtTokenUtil {
     }
 
     // 토큰의 유효성 & 만료일자 확인
-    public boolean validateToken(String jwtToken) {
+    public JwtCode validateToken(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-            boolean flag = !claims.getBody().getExpiration().before(new Date()); // 만료일자 검사
-            flag &= claims.getBody().get("nonce").equals(nonce); // nonce 검사
-            return flag;
+            if(claims.getBody().getExpiration().before(new Date())) // 만료일자 검사
+                return JwtCode.EXPIRED;
+            if(!claims.getBody().get("nonce").equals(nonce)) // nonce 검사
+                return JwtCode.INCORRECT;
+            return JwtCode.ACCESS;
+        } catch (ExpiredJwtException e) {
+            return JwtCode.EXPIRED;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return JwtCode.DENIED;
         }
     }
 
     public boolean isLogout(String jwtToken) {
-        final String PREFIX = "LOGOUT";
+        final String PREFIX = "LOGOUT ";
         if(redisTemplate.opsForValue().get(PREFIX+jwtToken)==null) {
-            System.out.println("logout: false");
             return false;
         }
-        System.out.println("logout: true");
         return true;
     }
 }

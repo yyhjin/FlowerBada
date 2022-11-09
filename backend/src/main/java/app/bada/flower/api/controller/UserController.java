@@ -30,7 +30,6 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final OAuthService oAuthService;
-    private final JwtTokenUtil jwtTokenUtil;
 
     @GetMapping("/signin")
     @ApiOperation(value="카카오 소셜 로그인", notes="로그인 요청을 보냄")
@@ -42,14 +41,15 @@ public class UserController {
     @PostMapping("/signin/callback")
     public ResponseEntity callback (@RequestBody Map<String, String> data) throws Exception {
         String code = data.get("code");
-        System.out.println(">> 소셜 로그인 API 서버로부터 받은 code :"+ code);
+//        System.out.println(">> 소셜 로그인 API 서버로부터 받은 code :"+ code);
         OAuthRes oAuthRes=oAuthService.oAuthLogin(SocialLoginType.KAKAO, code);
 
         HashMap<String, Object> resultMap = new HashMap<>();
         resultMap.put("jwt", oAuthRes.getJwtToken());
+        resultMap.put("refresh", oAuthRes.getRefreshToken());
         resultMap.put("user", oAuthRes.getUser().toUserInfo());
         resultMap.put("register", oAuthRes.getRegistered());
-        System.out.println(resultMap);
+//        System.out.println(resultMap);
         return new ResponseEntity<>(new ResponseDto(resultMap), HttpStatus.OK);
     }
 
