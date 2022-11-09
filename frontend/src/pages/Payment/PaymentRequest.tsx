@@ -1,9 +1,8 @@
 import paymentAPI from '@src/api/paymentAPI';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
-import type { IPaymentProps } from '@pages/Payment/Payment';
 
-const PaymentRequest = ({ setTap }: IPaymentProps) => {
+const PaymentRequest = () => {
   const navigate = useNavigate();
   const onClickPayment = async () => {
     const res = await paymentAPI.requestPayment();

@@ -1,12 +1,9 @@
 import { css } from '@emotion/react';
-import type { IPaymentProps } from '@pages/Payment/Payment';
 import { useNavigate } from 'react-router-dom';
 
-const PaymentOption = ({ setTap }: IPaymentProps) => {
+const PaymentOption = () => {
   const navigate = useNavigate();
-  const onClickNext = () => {
-    setTap('rAddress');
-  };
+  const onClickNext = () => {};
 
   const goBack = () => {
     const url = localStorage.getItem('url');

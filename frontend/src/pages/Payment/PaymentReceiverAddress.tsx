@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
-import type { IPaymentProps } from '@pages/Payment/Payment';
 
-const PaymentReceiverAddress = ({ setTap }: IPaymentProps) => {
+const PaymentReceiverAddress = () => {
   return (
     <>
       <div>받는 사람</div>

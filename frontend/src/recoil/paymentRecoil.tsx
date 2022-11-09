@@ -13,12 +13,18 @@ export interface IPaymentRecoil {
   senderPhone: string;
 }
 
-// export const paymentRecoil = atom<IPaymentRecoil>({
-//   key: 'paymentRecoil',
-//   default: {
-//     itemId: 0,
-//     itemIndex: 0,
-//     url: '',
-//     title: '',
-//   },
-// });
+export const paymentRecoil = atom<IPaymentRecoil>({
+  key: 'paymentRecoil',
+  default: {
+    tap: 'option',
+    url: '',
+    paginationId: 0,
+    title: 'string',
+    price: 0,
+    receiver: '',
+    receiverPhone: '',
+    reveicerAddress: '',
+    senderName: '',
+    senderPhone: '',
+  },
+});
