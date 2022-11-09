@@ -5,6 +5,7 @@ const { persistAtom } = recoilPersist();
 
 export interface IuserRecoil {
   jwt: string;
+  refresh: string;
   id: number;
   userToken: string;
   nickname: string;
@@ -15,6 +16,7 @@ export const userReCoil = atom<IuserRecoil>({
   key: 'userRecoil',
   default: {
     jwt: '',
+    refresh: '',
     id: 0,
     userToken: '',
     nickname: '',

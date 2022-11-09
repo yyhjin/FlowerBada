@@ -1,5 +1,6 @@
 .swal2-title {
-  font-size: 15pt;
+  font-size: 14pt;
+  font-family: 'SeoulNamsanM';
 }
 /* 아이패드 미니 */
 @media screen and (min-width: 768px) {
