@@ -48,10 +48,8 @@ export default function MyPointList() {
       const params = { paginationId: pages };
       const res: any = await mypageAPI.getPointList(userState.jwt, params);
       setMyPoint(res.data.response.myPoint);
-      if (res.data.response.myPointList.length !== 0) {
-        setMyPointList(myPointList.concat(res.data.response.myPointList));
-        setPages(pages + 1);
-      }
+      setMyPointList(myPointList.concat(res.data.response.myPointList));
+      setPages(pages + 1);
     } catch (err: any) {
       // console.log(err);
     }
@@ -65,12 +63,12 @@ export default function MyPointList() {
         <span> {myPoint}</span>
       </div>
       <div className="titlebox">사용 내역</div>
+      <div className="innerbox">
+        <div className="datebox">날짜</div>
+        <div className="contentbox">내용</div>
+        <div className="pointbox">포인트</div>
+      </div>
       <div className="mylist">
-        <div className="innerbox">
-          <div className="datebox">날짜</div>
-          <div className="contentbox">내용</div>
-          <div className="pointbox">포인트</div>
-        </div>
         {myPointList.map((point: IPoint, index: number) => {
           return (
             <div className="valuebox" key={index}>
@@ -89,6 +87,7 @@ export default function MyPointList() {
 
 const totalCSS = css`
   .mylist {
+    height: calc(100vh - 200px);
     background-color: white;
     overflow-y: scroll;
   }
@@ -103,14 +102,7 @@ const totalCSS = css`
       font-size: 12px;
     }
   }
-  /* .outerbox {
-    background-color: white;
-    height: calc(100vh - 208px);
-    overflow-y: scroll;
-    .outerbox::-webkit-scrollbar {
-      display: none;
-    }
-  } */
+
   .titlebox {
     padding: 10px;
     text-align: left;
@@ -121,7 +113,8 @@ const totalCSS = css`
     justify-content: space-between;
     font-size: 14px;
     text-align: center;
-    margin: 10px;
+    padding: 6px;
+    background-color: white;
   }
   .valuebox {
     display: flex;
