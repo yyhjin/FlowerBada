@@ -3,27 +3,34 @@ import storeAPI from '@api/storeAPI';
 import userAPI from '@api/userAPI';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { useRecoilState } from 'recoil';
-
+import { useState } from 'react';
 export default function Modal(props: any) {
   const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
-
+  const [doubleCheck, setDoubleCheck] = useState<boolean>(false);
   function closeModal() {
     props.closeModal();
   }
 
   const buyFunction = async () => {
     try {
-      if (props.isFlower) {
+      if (props.isFlower && !doubleCheck) {
+        setDoubleCheck(true);
         const data: any = {
           flowerId: props.itemId,
         };
-        await storeAPI.putFlower(loginUser.jwt, data);
-      } else {
+        await storeAPI.putFlower(loginUser.jwt, data).then(() => {
+          setDoubleCheck(false);
+        });
+      } else if (!props.isFlower && !doubleCheck) {
+        setDoubleCheck(true);
         const data: any = {
           rollingId: props.itemId,
         };
-        await storeAPI.putRolling(loginUser.jwt, data);
+        await storeAPI.putRolling(loginUser.jwt, data).then(() => {
+          setDoubleCheck(false);
+        });
       }
+
       const res = await userAPI.getPoint(loginUser.jwt);
       const points: number = res.data.response.points;
       setLoginUser((prev: IuserRecoil) => {
