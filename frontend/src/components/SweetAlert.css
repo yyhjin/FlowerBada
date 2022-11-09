@@ -1,6 +1,8 @@
 .swal2-title {
   font-size: 15pt;
 }
+
+
 /* 아이패드 미니 */
 @media screen and (min-width: 768px) {
   .swal2-container {
@@ -14,3 +16,17 @@
     left: 19.5%;
   }
 }
+/* 오딧세이? */
+@media screen and (min-width: 1000px) {
+  .swal2-container {
+    position: absolute;
+    left: 33.7%;
+  }
+}
+/* 더 큰 모니터 */
+@media screen and (min-width: 1600px) {
+  .swal2-container {
+    left: 35%;
+  }
+}
+/* 이걸 사이즈 별로 해주는거 말이 안되는데.. 좋은 방법이 있을까 */
