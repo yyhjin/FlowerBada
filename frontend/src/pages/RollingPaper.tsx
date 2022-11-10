@@ -359,7 +359,15 @@ const DetailCss = css`
   height: 115%;
   position: relative;
   transform: translate(0%, -15%);
-
+  @media screen and (min-width: 500px) {
+    background-color: red;
+    .title {
+      font-size: 30px;
+    }
+    .titlezone_3 img {
+      max-width: 50px;
+    }
+  }
   .titlezone_1 {
     padding-top: 20vh;
     margin-bottom: -30vw;
@@ -431,6 +439,9 @@ const DetailCss = css`
       padding-top: 22vh;
       margin-bottom: -8vw;
     }
+    // @media screen and (max-width: 500px) {
+    //   font-size: 50px;
+    // }
   }
   .imgbox_1,
   .imgbox_2,
