@@ -7,6 +7,8 @@ import mypageAPI from '@src/api/mypageAPI';
 import MySwal from '@components/SweetAlert';
 import { useNavigate } from 'react-router-dom';
 import updateTokens from '@utils/updateTokens';
+import { Tooltip, Button, ClickAwayListener } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 interface IPoint {
   name: string;
   point: number;
@@ -19,6 +21,15 @@ export default function MyPointList() {
   const [myPoint, setMyPoint] = useState(0);
   const [myPointList, setMyPointList] = useState([]);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+  const [open, setOpen] = useState(false);
+
+  const handleTooltipClose = () => {
+    setOpen(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setOpen(true);
+  };
   const handleScroll = useCallback((): void => {
     const { innerHeight } = window;
     const scrollHeight = document.querySelector('.mylist')?.scrollHeight;
@@ -104,6 +115,27 @@ export default function MyPointList() {
         <img src={CoinImg} width="25px" className="imgcss"></img>
         <span> {myPoint}</span>
       </div>
+      <div className="tooltipBox">
+        <div className="tooltip">
+          <ClickAwayListener onClickAway={handleTooltipClose}>
+            <Tooltip
+              PopperProps={{
+                disablePortal: true,
+              }}
+              onClose={handleTooltipClose}
+              open={open}
+              disableFocusListener
+              disableHoverListener
+              disableTouchListener
+              title="매일 로그인 시 10P 적립"
+            >
+              <Button onClick={handleTooltipOpen}>
+                <HelpOutlineIcon color="action"></HelpOutlineIcon>
+              </Button>
+            </Tooltip>
+          </ClickAwayListener>
+        </div>
+      </div>
       <div className="titlebox">사용 내역</div>
       <div className="innerbox">
         <div className="datebox">날짜</div>
@@ -128,6 +160,21 @@ export default function MyPointList() {
 }
 
 const totalCSS = css`
+  .tooltipBox {
+    display: flex;
+    justify-content: end;
+    .tooltip {
+      width: 10%;
+      margin-top: -15vw;
+      margin-right: 28vw;
+    }
+    @media screen and (min-width: 500px) {
+      .tooltip {
+        margin-top: -67px;
+        margin-right: 150px;
+      }
+    }
+  }
   .mylist {
     height: calc(100vh - 200px);
     background-color: white;

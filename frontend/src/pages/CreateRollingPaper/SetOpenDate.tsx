@@ -69,7 +69,9 @@ export default function SetOpenDate() {
         return variable;
       });
 
-      navigate('/newroll/link', { state: res.data.response });
+      navigate('/newroll/link', {
+        state: { url: res.data.response, title: createRollingState.title },
+      });
     } catch (err: any) {
       if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
         MySwal.fire({
