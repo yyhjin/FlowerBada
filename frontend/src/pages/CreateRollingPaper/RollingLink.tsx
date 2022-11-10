@@ -2,6 +2,12 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import copy from '@assets/copy.png';
 import MySwal from '@components/SweetAlert';
+<script
+  src="https://t1.kakaocdn.net/kakao_js_sdk/2.0.1/kakao.min.js"
+  integrity="sha384-eKjgHJ9+vwU/FCSUG3nV1RKFolUXLsc6nLQ2R1tD0t4YFPCvRmkcF8saIfOZNWf/"
+  crossOrigin="anonymous"
+></script>;
+<script>Kakao.init(`a452135df47a8eef043c1b08491c2c34`)</script>;
 
 export default function RollingLink() {
   const { state } = useLocation();
@@ -19,12 +25,14 @@ export default function RollingLink() {
       confirmButtonText: '확인',
     });
   };
+
   return (
     <>
       <div css={Background}>
         <div css={Info}>
           <div css={Writing}>링크를 복사해</div>
           <div css={Writing}>롤링페이퍼를 공유하세요</div>
+          <img src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png" />
         </div>
         <div css={Link}>
           <div css={Url}>

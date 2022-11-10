@@ -27,12 +27,12 @@ export default function Modal(props: any) {
             .putFlower(loginUser.jwt, loginUser.refresh, data)
             .then(() => {
               setDoubleCheck(true);
-              MySwal.fire({
-                title: '구매 완료!',
-                icon: 'success',
-                confirmButtonColor: '#16453e',
-                confirmButtonText: '확인',
-              });
+              // MySwal.fire({
+              //   title: '구매 완료!',
+              //   icon: 'success',
+              //   confirmButtonColor: '#16453e',
+              //   confirmButtonText: '확인',
+              // });
             });
         } else if (!props.isFlower && !doubleCheck) {
           setDoubleCheck(true);
@@ -43,12 +43,12 @@ export default function Modal(props: any) {
             .putRolling(loginUser.jwt, loginUser.refresh, data)
             .then(() => {
               setDoubleCheck(false);
-              MySwal.fire({
-                title: '구매 완료!',
-                icon: 'success',
-                confirmButtonColor: '#16453e',
-                confirmButtonText: '확인',
-              });
+              // MySwal.fire({
+              //   title: '구매 완료!',
+              //   icon: 'success',
+              //   confirmButtonColor: '#16453e',
+              //   confirmButtonText: '확인',
+              // });
             });
         }
         const res = await userAPI.getPoint(loginUser.jwt, loginUser.refresh);
