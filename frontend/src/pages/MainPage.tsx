@@ -72,9 +72,7 @@ const Mainpage = () => {
     <div css={TestCSS}>
       <h2 className="main_title">꽃바다</h2>
       <img src={LogoutBtn} className="logout_btn" onClick={signOut} />
-      <div className="only_web">
-        최적화를 위해 모바일 환경으로 접속해주세요.
-      </div>
+      <div className="only_web">꽃바다는 모바일 환경에 최적화되어있습니다.</div>
       <div className="main_menu">
         <div className="first_row">
           <div className="greenhouse" onClick={moveGreenHouse}>
