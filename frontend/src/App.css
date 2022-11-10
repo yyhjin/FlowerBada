@@ -18,8 +18,12 @@ body {
   /* margin: 0; */
   /* margin-left: 100%; */
   float: center;
+  
 }
 
+body ::-webkit-scrollbar {
+  display: none;
+}
 #root {
   /* width: 100%; */
   font-family: 'SeoulNamsanM';

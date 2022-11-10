@@ -5,6 +5,10 @@ import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import CoinImg from '@assets/coin.png';
 import mypageAPI from '@src/api/mypageAPI';
 import MySwal from '@components/SweetAlert';
+import { useNavigate } from 'react-router-dom';
+import updateTokens from '@utils/updateTokens';
+import { Tooltip, Button, ClickAwayListener } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 interface IPoint {
   name: string;
   point: number;
@@ -12,10 +16,20 @@ interface IPoint {
 }
 
 export default function MyPointList() {
+  const navigate = useNavigate();
   const [pages, setPages] = useState(0);
   const [myPoint, setMyPoint] = useState(0);
   const [myPointList, setMyPointList] = useState([]);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+  const [open, setOpen] = useState(false);
+
+  const handleTooltipClose = () => {
+    setOpen(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setOpen(true);
+  };
   const handleScroll = useCallback((): void => {
     const { innerHeight } = window;
     const scrollHeight = document.querySelector('.mylist')?.scrollHeight;
@@ -55,12 +69,42 @@ export default function MyPointList() {
       setMyPointList(myPointList.concat(res.data.response.myPointList));
       setPages(pages + 1);
     } catch (err: any) {
-      MySwal.fire({
-        title: '불러오기 실패...',
-        icon: 'warning',
-        confirmButtonColor: '#16453e',
-        confirmButtonText: '확인',
-      });
+      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+        MySwal.fire({
+          title: '로그인이 필요합니다!',
+          icon: 'warning',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        }).then(() => {
+          navigate('/');
+        });
+        setUserState((prev: IuserRecoil) => {
+          const variable = { ...prev };
+          variable.id = 0;
+          variable.userToken = '';
+          variable.nickname = '';
+          variable.points = 0;
+          variable.jwt = '';
+          variable.refresh = '';
+          return variable;
+        });
+      } else {
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setUserState);
+          MySwal.fire({
+            title: '액세스 토큰이 만료되었습니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '갱신',
+          }).then(() => {
+            navigate('/');
+          });
+        }
+      }
     }
   }
 
@@ -70,6 +114,27 @@ export default function MyPointList() {
         <div className="pointTitle">현재 포인트</div>
         <img src={CoinImg} width="25px" className="imgcss"></img>
         <span> {myPoint}</span>
+      </div>
+      <div className="tooltipBox">
+        <div className="tooltip">
+          <ClickAwayListener onClickAway={handleTooltipClose}>
+            <Tooltip
+              PopperProps={{
+                disablePortal: true,
+              }}
+              onClose={handleTooltipClose}
+              open={open}
+              disableFocusListener
+              disableHoverListener
+              disableTouchListener
+              title="매일 로그인 시 10P 적립"
+            >
+              <Button onClick={handleTooltipOpen}>
+                <HelpOutlineIcon color="action"></HelpOutlineIcon>
+              </Button>
+            </Tooltip>
+          </ClickAwayListener>
+        </div>
       </div>
       <div className="titlebox">사용 내역</div>
       <div className="innerbox">
@@ -95,6 +160,21 @@ export default function MyPointList() {
 }
 
 const totalCSS = css`
+  .tooltipBox {
+    display: flex;
+    justify-content: end;
+    .tooltip {
+      width: 10%;
+      margin-top: -15vw;
+      margin-right: 28vw;
+    }
+    @media screen and (min-width: 500px) {
+      .tooltip {
+        margin-top: -67px;
+        margin-right: 150px;
+      }
+    }
+  }
   .mylist {
     height: calc(100vh - 200px);
     background-color: white;
