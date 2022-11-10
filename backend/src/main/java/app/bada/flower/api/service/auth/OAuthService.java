@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -68,6 +69,16 @@ public class OAuthService {
                 OAuthRes res = null;
                 String refreshToken = jwtTokenUtil.createRefreshToken(user.getToken(), user.getRoles());
                 if(user != null) {
+                    // 하루에 한 번 로그인 시 10 포인트 지급 - 자정 기준
+                    LocalDateTime lastLoginDate = user.getLastLoginDate();
+                    LocalDateTime nowDate = LocalDateTime.now();
+                    if(lastLoginDate.getYear() != nowDate.getYear() ||
+                            lastLoginDate.getMonth() != nowDate.getMonth() ||
+                            lastLoginDate.getDayOfMonth() != nowDate.getDayOfMonth()) {
+                        user.updatePoint(user.getPoints()+10);
+                    }
+                    user.updateLastLoginDate(LocalDateTime.now());
+                    userRepository.save(user);
                     //서버에 user가 존재하면 앞으로 회원 인가 처리를 위한 jwtToken을 발급한다.
                     String jwtToken = jwtTokenUtil.createToken(user.getToken(), user.getRoles());
                     //액세스 토큰과 jwtToken, 이외 정보들이 담긴 자바 객체를 다시 전송한다.
@@ -83,8 +94,10 @@ public class OAuthService {
                     System.out.println("--------소셜 회원가입--------");
                     user = User.builder()
                             .token(String.valueOf(kakaoUser.getId()))
+                            .points(50) // 회원가입 시에 50포인트 지급
                             .nickname(kakaoUser.getNickname())
                             .roles(Arrays.asList("ROLE_USER"))
+                            .lastLoginDate(LocalDateTime.now())
                             .build();
                     try {
                         userRepository.save(user);
