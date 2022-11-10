@@ -117,7 +117,7 @@ public class OAuthService {
                 }
 
                 //refresh token 관련
-                redisTemplate.opsForValue().set("REFRESH "+refreshToken, refreshToken, Duration.ofSeconds(refreshTokenValidTime));
+                redisTemplate.opsForValue().set("REFRESH "+refreshToken, refreshToken, Duration.ofSeconds(refreshTokenValidTime/1000));
                 return res;
             }
             default:{
