@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import KakaoPaymentTest from '@pages/KakaoPaymentTest';
+import Payment from '@pages/Payment/Payment';
 import PaymentSuccess from '@pages/Payment/PaymentSuccess';
 import PaymentFail from '@pages/Payment/PaymentFail';
 import PaymentCancel from '@pages/Payment/PaymentCancel';
@@ -31,12 +32,14 @@ function App() {
           <Route path="/capture" element={<CaptureTest />}></Route>
           {loginUser.jwt === '' ? (
             <>
-              <Route path="/*" element={<SignIn />}></Route>
+              <Route path="" element={<SignIn />}></Route>
               <Route
                 path="/user/signin/redirect"
                 element={<KakaoRedirectHandler />}
               ></Route>
-              <Route path="rolling/:url" element={<RollingPaper />}></Route>
+              <Route path="/" element={<Layout />}>
+                <Route path="rolling/:url" element={<RollingPaper />}></Route>
+              </Route>
             </>
           ) : (
             <>
@@ -52,7 +55,7 @@ function App() {
                   <Route path="link" element={<Link />}></Route>
                 </Route>
                 <Route path="rolling/:url" element={<RollingPaper />}></Route>
-                <Route path="/payment" element={<KakaoPaymentTest />} />
+                <Route path="/payment" element={<Payment />} />
                 <Route path="/payment/success" element={<PaymentSuccess />} />
                 <Route path="/payment/fail" element={<PaymentFail />} />
                 <Route path="/payment/cancel" element={<PaymentCancel />} />
