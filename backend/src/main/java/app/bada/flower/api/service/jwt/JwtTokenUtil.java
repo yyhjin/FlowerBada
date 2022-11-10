@@ -80,7 +80,7 @@ public class JwtTokenUtil {
         if(redisTemplate.opsForValue().get("REFRESH "+curToken) != null) {
             String newRefresh = createRefreshToken(userToken, user.getRoles());
             redisTemplate.delete("REFRESH "+curToken);
-            redisTemplate.opsForValue().set("REFRESH "+newRefresh, newRefresh, Duration.ofSeconds(refreshTokenValidTime));
+            redisTemplate.opsForValue().set("REFRESH "+newRefresh, newRefresh, Duration.ofSeconds(refreshTokenValidTime/1000));
             return newRefresh;
         }
         return null;

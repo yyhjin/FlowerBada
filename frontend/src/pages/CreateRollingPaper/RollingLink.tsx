@@ -56,7 +56,7 @@ export default function RollingLink() {
       },
       buttons: [
         {
-          title: '게시글확인',
+          title: '롤링페이퍼 작성하기',
           link: {
             mobileWebUrl: `${root}${url}`,
             webUrl: `${root}${url}`,
