@@ -34,7 +34,7 @@ const KakaoRedirectHandler = () => {
           return variable;
         });
         // alert('login success!!!');
-        if (url !== null && url !== '' && url !== undefined) {
+        if (url && url !== '') {
           window.location.href = `/rolling/${url}`;
         } else {
           window.location.href = '/';
