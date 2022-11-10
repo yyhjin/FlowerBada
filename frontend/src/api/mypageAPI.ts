@@ -12,22 +12,24 @@ interface IPointParams {
 }
 
 const mypageAPI = {
-  getDelivery(jwt: string, params: IDeliveryParams) {
+  getDelivery(jwt: string, refresh: string, params: IDeliveryParams) {
     return api({
       method: 'get',
       url: `${END_POINT}/delivery`,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
       params: params,
     });
   },
-  getPointList(jwt: string, params: IPointParams) {
+  getPointList(jwt: string, refresh: string, params: IPointParams) {
     return api({
       method: 'get',
       url: `${END_POINT}/mypoint`,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
       params: params,
     });

@@ -1,9 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { css } from '@emotion/react';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import mypageAPI from '@src/api/mypageAPI';
-
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { createTheme, MenuItem, ThemeProvider } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import MySwal from '@components/SweetAlert';
 interface IDeliver {
   pageUrl?: string;
   imgUrl?: string;
@@ -22,7 +25,7 @@ export default function MyDeliveryList() {
   const [sortNumber, setSortNumber] = useState(1);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (event: SelectChangeEvent) => {
     setSortNumber(+event.target.value);
     setPages(0);
     setMyList([]);
@@ -63,25 +66,52 @@ export default function MyDeliveryList() {
     try {
       setSortNumber(sortNumber);
       const params = { sort: sortNumber, paginationId: pages };
-      const res: any = await mypageAPI.getDelivery(userState.jwt, params);
-      if (res.data.response.length !== 0) {
-        // console.log(res.data.response.length);
-
-        setMyList(myList.concat(res.data.response));
-        setPages(pages + 1);
-      }
+      const res: any = await mypageAPI.getDelivery(
+        userState.jwt,
+        userState.refresh,
+        params,
+      );
+      setMyList(myList.concat(res.data.response));
+      setPages(pages + 1);
     } catch (err: any) {
-      // console.log(err);
+      MySwal.fire({
+        title: '불러오기 실패...',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
     }
   }
 
   return (
     <div css={outerBox}>
       <div css={selectBtn} className="dropdownBox">
-        <select className="dropdown" value={sortNumber} onChange={handleChange}>
-          <option value={1}>최신순</option>
-          <option value={2}>오래된순</option>
-        </select>
+        <ThemeProvider theme={theme}>
+          <FormControl
+            sx={{
+              mt: 1,
+              minWidth: 100,
+            }}
+            size="small"
+          >
+            <Select
+              labelId="demo-select-small"
+              id="demo-select-small"
+              value={String(sortNumber)}
+              onChange={handleChange}
+              css={Font}
+              variant="standard"
+              disableUnderline
+            >
+              <MenuItem value={'1'} css={Font}>
+                최신순
+              </MenuItem>
+              <MenuItem value={'2'} css={Font}>
+                오래된순
+              </MenuItem>
+            </Select>
+          </FormControl>
+        </ThemeProvider>
       </div>
       <div className="mylist">
         {myList.map((deliver: IDeliver, index: number) => {
@@ -127,6 +157,19 @@ export default function MyDeliveryList() {
   );
 }
 
+const theme = createTheme({
+  status: {
+    danger: '#e53e3e',
+  },
+  palette: {
+    primary: {
+      main: '#848484',
+    },
+    neutral: {
+      main: '#B1BDBB',
+    },
+  },
+});
 const outerBox = css`
   position: absolute;
   .dropdownBox {
@@ -214,27 +257,8 @@ const selectBtn = css`
 const title = css`
   font-size: 16px !important;
 `;
-
-const ChipCss = css`
-  /* width: 60px;
-  height: 24px;
-  padding: 1px;
-  margin: 4px 0px 4px;
-  text-align: center;
-  font-size: 12px;
-  .cash {
-    color: red;
-    border: 1px solid red;
-    border-radius: 0.5rem;
-  }
-  .Ing {
-    border: 1px solid orange;
-    color: orange;
-    border-radius: 0.5rem;
-  }
-  .Finished {
-    border: 1px solid green;
-    color: green;
-    border-radius: 0.5rem;
-  } */
+const Font = css`
+  font-family: 'SeoulNamsanM';
+  height: 20px;
+  padding-bottom: 10px;
 `;

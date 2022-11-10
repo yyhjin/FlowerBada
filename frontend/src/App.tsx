@@ -20,6 +20,7 @@ import Layout from '@pages/Layout';
 import SignIn from '@pages/SignIn';
 import MessageRead from '@pages/MessageRead';
 import MessageCreate from '@pages/MessageCreate';
+import CaptureTest from './pages/CaptureTest';
 
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
@@ -27,6 +28,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
+          <Route path="/capture" element={<CaptureTest />}></Route>
           {loginUser.jwt === '' ? (
             <>
               <Route path="/*" element={<SignIn />}></Route>

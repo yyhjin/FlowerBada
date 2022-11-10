@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    @Query("select u from User u where u.token = :id")
-    Optional<User> findByKakaoUserId(@Param("id") String id);
+    @Query("select u from User u where u.token = :token")
+    Optional<User> findByKakaoUserId(@Param("token") String token);
 }

@@ -13,23 +13,25 @@ interface IBookmark {
 }
 
 const greenhouseAPI = {
-  sentRolling(jwt: string, params: ISentRolling) {
+  sentRolling(jwt: string, refresh: string, params: ISentRolling) {
     return api({
       method: 'get',
       url: `${END_POINT}/sent`,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
       params: params,
     });
   },
 
-  bookmark(jwt: string, params: IBookmark) {
+  bookmark(jwt: string, refresh: string, params: IBookmark) {
     return api({
       method: 'get',
       url: `${END_POINT}/bookmark`,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
       params: params,
     });

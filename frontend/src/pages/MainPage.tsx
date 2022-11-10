@@ -31,6 +31,7 @@ const Mainpage = () => {
         variable.nickname = '';
         variable.points = 0;
         variable.jwt = '';
+        variable.refresh = '';
         return variable;
       });
       window.location.href = '/';

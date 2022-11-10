@@ -10,6 +10,7 @@ import lombok.*;
 public class OAuthRes {
     private String jwtToken;
     private String accessToken;
+    private String refreshToken;
     private Boolean registered;
     private User user;
 }
