@@ -121,7 +121,12 @@ export default function RollingPaper() {
         setType(3);
       }
     } catch (err: any) {
-      // console.log(err);
+      MySwal.fire({
+        title: '불러오기 실패...',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
     }
   }
   const bookmarkSwitch = async () => {
@@ -140,9 +145,14 @@ export default function RollingPaper() {
         let url = paramCopy.url;
         const res: any = await rollingAPI.bookmarkRolling(userState.jwt, url);
         setBookmark(!bookmark);
-        console.log('북마크 스위치 성공!');
+        // console.log('북마크 스위치 성공!');
       } catch (err: any) {
-        // console.log(err);
+        MySwal.fire({
+          title: '북마크 실패...',
+          icon: 'warning',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        });
       }
     }
   };
@@ -212,7 +222,7 @@ export default function RollingPaper() {
         <>
           <div css={DetailCss}>
             <div className={`titlezone_${type}`}>
-              <div>{rolling.title}</div>
+              <div className="title">{rolling.title}</div>
               {bookmark ? (
                 <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
               ) : (
@@ -223,6 +233,14 @@ export default function RollingPaper() {
                 />
               )}
             </div>
+            {!valid ? (
+              <div className="valid">
+                {rolling.date} 이후로 개봉 가능합니다.
+              </div>
+            ) : (
+              <div className="valid">꽃을 눌러보세요!</div>
+            )}
+
             <div css={SaveParent}>
               <div>
                 <div className={`imgbox_${type}`}>
@@ -370,6 +388,7 @@ const DetailCss = css`
   height: 115%;
   position: relative;
   transform: translate(0%, -15%);
+
   .titlezone_1 {
     padding-top: 23vh;
     margin-bottom: -16vh;

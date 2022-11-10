@@ -6,11 +6,11 @@ import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import MySwal from '@components/SweetAlert';
 import updateTokens from '@src/utils/updateTokens';
-
+import { useState } from 'react';
 export default function Modal(props: any) {
   const navigate = useNavigate();
   const [loginUser, setLoginUser] = useRecoilState<IuserRecoil>(userReCoil);
-
+  const [doubleCheck, setDoubleCheck] = useState<boolean>(false);
   function closeModal() {
     props.closeModal();
   }
@@ -18,16 +18,38 @@ export default function Modal(props: any) {
   const buyFunction = async () => {
     try {
       try {
-        if (props.isFlower) {
+        if (props.isFlower && !doubleCheck) {
+          setDoubleCheck(true);
           const data: any = {
             flowerId: props.itemId,
           };
-          await storeAPI.putFlower(loginUser.jwt, loginUser.refresh, data);
-        } else {
+          await storeAPI
+            .putFlower(loginUser.jwt, loginUser.refresh, data)
+            .then(() => {
+              setDoubleCheck(true);
+              MySwal.fire({
+                title: '구매 완료!',
+                icon: 'success',
+                confirmButtonColor: '#16453e',
+                confirmButtonText: '확인',
+              });
+            });
+        } else if (!props.isFlower && !doubleCheck) {
+          setDoubleCheck(true);
           const data: any = {
             rollingId: props.itemId,
           };
-          await storeAPI.putRolling(loginUser.jwt, loginUser.refresh, data);
+          await storeAPI
+            .putRolling(loginUser.jwt, loginUser.refresh, data)
+            .then(() => {
+              setDoubleCheck(false);
+              MySwal.fire({
+                title: '구매 완료!',
+                icon: 'success',
+                confirmButtonColor: '#16453e',
+                confirmButtonText: '확인',
+              });
+            });
         }
         const res = await userAPI.getPoint(loginUser.jwt, loginUser.refresh);
         const points: number = res.data.response.points;
@@ -36,12 +58,7 @@ export default function Modal(props: any) {
           variable.points = points;
           return variable;
         });
-        MySwal.fire({
-          title: '구매 완료!',
-          icon: 'success',
-          confirmButtonColor: '#16453e',
-          confirmButtonText: '확인',
-        });
+
         switch (props.location) {
           case 'message':
             window.location.href = '/rolling/message/create';
@@ -54,7 +71,12 @@ export default function Modal(props: any) {
         }
       } catch (err: any) {
         if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
-          alert('로그인이 필요합니다');
+          MySwal.fire({
+            title: '로그인이 필요합니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
           setLoginUser((prev: IuserRecoil) => {
             const variable = { ...prev };
             variable.id = 0;
@@ -73,16 +95,38 @@ export default function Modal(props: any) {
             accessToken = accessToken.split(' ')[1];
             refreshToken = refreshToken.split(' ')[1];
             updateTokens(accessToken, refreshToken, setLoginUser);
-            if (props.isFlower) {
+            if (props.isFlower && !doubleCheck) {
+              setDoubleCheck(true);
               const data: any = {
                 flowerId: props.itemId,
               };
-              await storeAPI.putFlower(accessToken, refreshToken, data);
-            } else {
+              await storeAPI
+                .putFlower(loginUser.jwt, loginUser.refresh, data)
+                .then(() => {
+                  setDoubleCheck(true);
+                  MySwal.fire({
+                    title: '구매 완료!',
+                    icon: 'success',
+                    confirmButtonColor: '#16453e',
+                    confirmButtonText: '확인',
+                  });
+                });
+            } else if (!props.isFlower && !doubleCheck) {
+              setDoubleCheck(true);
               const data: any = {
                 rollingId: props.itemId,
               };
-              await storeAPI.putRolling(accessToken, refreshToken, data);
+              await storeAPI
+                .putRolling(loginUser.jwt, loginUser.refresh, data)
+                .then(() => {
+                  setDoubleCheck(false);
+                  MySwal.fire({
+                    title: '구매 완료!',
+                    icon: 'success',
+                    confirmButtonColor: '#16453e',
+                    confirmButtonText: '확인',
+                  });
+                });
             }
             const res = await userAPI.getPoint(accessToken, refreshToken);
             const points: number = res.data.response.points;
@@ -91,12 +135,7 @@ export default function Modal(props: any) {
               variable.points = points;
               return variable;
             });
-            MySwal.fire({
-              title: '구매 완료!',
-              icon: 'success',
-              confirmButtonColor: '#16453e',
-              confirmButtonText: '확인',
-            });
+
             switch (props.location) {
               case 'message':
                 window.location.href = '/rolling/message/create';
@@ -114,7 +153,12 @@ export default function Modal(props: any) {
         }
       }
     } catch (err: any) {
-      console.log(err);
+      MySwal.fire({
+        title: '구매 실패...',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
     }
   };
 
