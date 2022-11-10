@@ -30,7 +30,12 @@ export default function SetOpenDate() {
 
   const handleRollingLink = async (e: any): Promise<void> => {
     if (date === null) {
-      alert('날짜 제대로 입력해');
+      MySwal.fire({
+        title: '날짜를 제대로 입력해주세요',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
       return;
     }
     e.target.disabled = true;

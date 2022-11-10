@@ -77,7 +77,12 @@ export default function MessageWrite(props: {
         })
         .then((res) => {
           console.log(res.data.response);
-          alert('메시지가 등록되었습니다');
+          MySwal.fire({
+            title: '메세지가 등록되었습니다',
+            icon: 'success',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
           navigate(`/rolling/` + props.rollingUrl);
         })
         .catch((err) => {
