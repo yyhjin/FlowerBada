@@ -91,11 +91,13 @@ export default function RollingLink() {
           <div>OR</div>
           <div css={Line}></div>
         </div>
-        <img
-          css={KakaoButton}
-          onClick={shareKakao}
-          src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
-        />
+        <div>
+          <img
+            css={KakaoButton}
+            onClick={shareKakao}
+            src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
+          />
+        </div>
         <button onClick={handleRollingPaper} css={GoRollingButton}>
           작성하러 가기
         </button>
@@ -109,8 +111,11 @@ const Background = css`
 `;
 
 const Info = css`
-  margin-top: 23vh;
-  font-size: 6vw;
+  padding-top: 15vh;
+  font-size: 30px;
+  @media screen and (max-width: 300px) {
+    font-size: 20px;
+  }
 `;
 
 const Writing = css`
@@ -123,20 +128,21 @@ const Link = css`
 
 const Url = css`
   margin-top: 5vh;
-  margin-left: 10vw;
-  font-size: 4.5vw;
+  margin-left: 40px;
+  font-size: 20px;
   background-color: white;
-  padding: 1vh 4vw 1vh 4vw;
+  padding: 10px 10px 10px 20px;
   border-radius: 2vw;
   overflow: scroll;
   display: flex;
 `;
 
 const Copy = css`
+  cursor: pointer;
   margin-top: 5vh;
-  margin-left: 1vw;
-  width: 8vw;
-  border-radius: 2vw;
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 40px;
 `;
 
 const CuttingLine = css`
@@ -148,24 +154,36 @@ const CuttingLine = css`
 const Line = css`
   background-color: black;
   height: 0.1vh;
-  width: 35vw;
+  width: 40%;
 `;
 
 const KakaoButton = css`
   cursor: pointer;
-  margin-top: 8vh;
-  height: 5vh;
-  width: 4vw;
+  margin-top: 6vh;
+  height: 50px;
+  width: 50px;
+  @media screen and (max-height: 500px) {
+    margin-top: 5vh;
+  }
 `;
 
 const GoRollingButton = css`
-  margin-top: 26.5vh;
+  margin-top: 20vh;
   height: 7vh;
-  width: 94vw;
+  width: 94%;
   border-radius: 3vw;
   color: white;
-  font-size: 4vw;
+  font-size: 20px;
   background-color: #16453e;
+  @media screen and (max-height: 500px) {
+    margin-top: 5vh;
+  }
+  @media screen and (max-height: 600px) {
+    margin-top: 7vh;
+  }
+  @media screen and (max-height: 700px) {
+    margin-top: 10vh;
+  }
 `;
 
 declare global {
