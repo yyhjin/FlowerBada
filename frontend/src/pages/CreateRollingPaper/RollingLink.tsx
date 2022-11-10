@@ -13,6 +13,9 @@ import MySwal from '@components/SweetAlert';
 }
 
 export default function RollingLink() {
+  const VITE_APP_KAKAO_KEY = import.meta.env.VITE_APP_KAKAO_KEY;
+  console.log(VITE_APP_KAKAO_KEY);
+
   const url = useLocation().state.url;
   const title = useLocation().state.title;
   const root = 'https://k7a405.p.ssafy.io/rolling/';
@@ -35,11 +38,11 @@ export default function RollingLink() {
     if (window.Kakao) {
       const kakao = window.Kakao;
       if (!kakao.isInitialized()) {
-        kakao.init(process.env.REACT_APP_KAKAO_KEY);
+        kakao.init(VITE_APP_KAKAO_KEY);
       }
     }
     console.log(root + url);
-    Kakao.Link.sendDefault({
+    window.Kakao.Link.sendDefault({
       objectType: 'feed',
       content: {
         title: '꽃바다 - 우리들의 이야기를 꽃에 담아',
@@ -164,3 +167,11 @@ const GoRollingButton = css`
   font-size: 4vw;
   background-color: #16453e;
 `;
+
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
+
+window.Kakao = window.Kakao || {};
