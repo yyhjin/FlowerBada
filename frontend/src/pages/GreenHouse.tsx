@@ -146,7 +146,7 @@ export default function GreenHouse() {
             confirmButtonColor: '#16453e',
             confirmButtonText: '갱신',
           });
-          navigate('/greenhouse');
+          navigate('/');
         }
       }
     }

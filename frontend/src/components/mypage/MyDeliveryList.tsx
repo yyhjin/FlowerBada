@@ -83,6 +83,8 @@ export default function MyDeliveryList() {
           icon: 'warning',
           confirmButtonColor: '#16453e',
           confirmButtonText: '확인',
+        }).then(() => {
+          navigate('/');
         });
         setUserState((prev: IuserRecoil) => {
           const variable = { ...prev };
@@ -94,7 +96,6 @@ export default function MyDeliveryList() {
           variable.refresh = '';
           return variable;
         });
-        navigate('/');
       } else {
         let accessToken: string = err.response.headers.get('x-auth-token');
         let refreshToken: string = err.response.headers.get('refresh-token');
@@ -107,8 +108,9 @@ export default function MyDeliveryList() {
             icon: 'warning',
             confirmButtonColor: '#16453e',
             confirmButtonText: '갱신',
+          }).then(() => {
+            navigate('/');
           });
-          navigate('/');
         }
       }
     }

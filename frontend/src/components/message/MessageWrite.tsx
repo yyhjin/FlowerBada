@@ -82,8 +82,9 @@ export default function MessageWrite(props: {
             icon: 'success',
             confirmButtonColor: '#16453e',
             confirmButtonText: '확인',
+          }).then(() => {
+            navigate(`/rolling/` + props.rollingUrl);
           });
-          navigate(`/rolling/` + props.rollingUrl);
         })
         .catch((err) => {
           console.log(err);
