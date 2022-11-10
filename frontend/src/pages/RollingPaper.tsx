@@ -176,7 +176,6 @@ export default function RollingPaper() {
 
   useEffect(() => {
     getRolling();
-
     if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
       // 캡쳐 및 DB 저장
       const el = document.getElementById('to-save');
@@ -192,20 +191,19 @@ export default function RollingPaper() {
   }, [paginationId]);
 
   const onSaveAs = (uri: string, filename: string): void => {
-    // console.log(uri);
-    // let link: any = document.createElement('a');
-    // document.body.appendChild(link);
-    // link.href = uri;
+    console.log(uri);
+    let link: any = document.createElement('a');
+    document.body.appendChild(link);
+    link.href = uri;
     // link.download = filename;
     // link.click();
-    // document.body.removeChild(link);
-    // console.log('uri', uri);
-    // axios.put(
-    //   `http://localhost:8080/api/v1/message/updateimg/${paramCopy.url}`,
-    //   {
-    //     imgUrl: uri,
-    //   },
-    // );
+    document.body.removeChild(link);
+    axios.put(
+      `http://localhost:8080/api/v1/message/updateimg/${paramCopy.url}`,
+      {
+        imgUrl: uri,
+      },
+    );
   };
 
   return (
