@@ -16,6 +16,7 @@ import { Grid } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import updateTokens from '@src/utils/updateTokens';
 import { useNavigate } from 'react-router-dom';
+import MySwal from '@components/SweetAlert';
 
 interface IFlower {
   flowerId?: number;
@@ -54,7 +55,12 @@ export default function MessageCreate() {
       })
       .catch((err) => {
         if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
-          alert('로그인이 필요합니다');
+          MySwal.fire({
+            title: '로그인이 필요합니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
           setLoginUser((prev: IuserRecoil) => {
             const variable = { ...prev };
             variable.id = 0;

@@ -12,6 +12,7 @@ import flowerImgItem from '@assets/fixed-size/flower/flowerImgItem';
 import storeAPI from '@src/api/storeAPI';
 import updateTokens from '@src/utils/updateTokens';
 import { useNavigate } from 'react-router-dom';
+import MySwal from '@components/SweetAlert';
 
 interface FlowerItem {
   flowerId: number;
@@ -112,7 +113,12 @@ const Store = () => {
       })
       .catch((err: any) => {
         if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
-          alert('로그인이 필요합니다');
+          MySwal.fire({
+            title: '로그인이 필요합니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
           setLoginUser((prev: IuserRecoil) => {
             const variable = { ...prev };
             variable.id = 0;
@@ -155,7 +161,12 @@ const Store = () => {
       })
       .catch((err: any) => {
         if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
-          alert('로그인이 필요합니다');
+          MySwal.fire({
+            title: '로그인이 필요합니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
           setLoginUser((prev: IuserRecoil) => {
             const variable = { ...prev };
             variable.id = 0;
