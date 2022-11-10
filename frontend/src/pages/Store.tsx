@@ -13,7 +13,8 @@ import storeAPI from '@src/api/storeAPI';
 import updateTokens from '@src/utils/updateTokens';
 import { useNavigate } from 'react-router-dom';
 import MySwal from '@components/SweetAlert';
-
+import { Tooltip, Button, ClickAwayListener } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 interface FlowerItem {
   flowerId: number;
   name: string;
@@ -53,7 +54,15 @@ const Store = () => {
   const [point, setPoint] = useState<number>(0);
   const [itemId, setItemId] = useState<number>(0);
   const [owned, setOwned] = useState<boolean>(true);
+  const [open, setOpen] = useState(false);
 
+  const handleTooltipClose = () => {
+    setOpen(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setOpen(true);
+  };
   const handleBuying = () => {
     setBuying(true);
   };
@@ -235,7 +244,27 @@ const Store = () => {
           </div>
         ) : null}
       </div>
-      <div css={empty}></div>
+      <div css={empty}>
+        <ClickAwayListener onClickAway={handleTooltipClose}>
+          <div className="tooltip">
+            <Tooltip
+              PopperProps={{
+                disablePortal: true,
+              }}
+              onClose={handleTooltipClose}
+              open={open}
+              disableFocusListener
+              disableHoverListener
+              disableTouchListener
+              title="일반: 꽃 7개 / 고급: 꽃 8개 / 바구니: 꽃 10개"
+            >
+              <Button onClick={handleTooltipOpen}>
+                <HelpOutlineIcon color="action"></HelpOutlineIcon>
+              </Button>
+            </Tooltip>
+          </div>
+        </ClickAwayListener>
+      </div>
       <div css={selectBox}>
         <Grid container columns={12} css={GridContainer}>
           {imgList.map((image: string, index: number) => (
@@ -388,7 +417,11 @@ const flowerInfo = css`
 `;
 const empty = css`
   position: relative;
-  padding: 10vw;
+  /* padding: 10vw; */
+  .tooltip {
+    display: flex;
+    justify-content: end;
+  }
   @media screen and (min-width: 500px) {
     padding: 0vh;
   }
