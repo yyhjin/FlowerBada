@@ -2,6 +2,7 @@
   font-size: 14pt;
   font-family: 'SeoulNamsanM';
 }
+
 /* 아이패드 미니 */
 @media screen and (min-width: 768px) {
   .swal2-container {
@@ -13,5 +14,18 @@
 @media screen and (min-width: 820px) {
   .swal2-container {
     left: 19.5%;
+  }
+}
+/* 오딧세이? */
+@media screen and (min-width: 1000px) {
+  .swal2-container {
+    position: absolute;
+    left: 33.7%;
+  }
+}
+/* 더 큰 모니터 */
+@media screen and (min-width: 1600px) {
+  .swal2-container {
+    left: 35%;
   }
 }
