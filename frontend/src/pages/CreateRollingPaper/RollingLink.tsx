@@ -35,7 +35,7 @@ export default function RollingLink() {
     if (window.Kakao) {
       const kakao = window.Kakao;
       if (!kakao.isInitialized()) {
-        kakao.init('a452135df47a8eef043c1b08491c2c34');
+        kakao.init(process.env.REACT_APP_KAKAO_KEY);
       }
     }
     console.log(root + url);
