@@ -19,12 +19,14 @@ export default function RollingLink() {
       confirmButtonText: '확인',
     });
   };
+
   return (
     <>
       <div css={Background}>
         <div css={Info}>
           <div css={Writing}>링크를 복사해</div>
           <div css={Writing}>롤링페이퍼를 공유하세요</div>
+          <img src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png" />
         </div>
         <div css={Link}>
           <div css={Url}>

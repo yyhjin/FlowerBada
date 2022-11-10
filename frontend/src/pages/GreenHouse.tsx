@@ -286,12 +286,18 @@ const MainTab = css`
 
 const GridList = css`
   width: 80%;
-  height: 55%;
+  height: 65%;
   overflow: scroll;
   margin: auto;
   border-radius: 15px;
   overflow-y: scroll;
   margin-top: 2vh;
+  @media screen and (min-height: 800px) {
+    height: 70%;
+  }
+  @media screen and (min-height: 1000px) {
+    height: 75%;
+  }
 `;
 
 const GridItem = css`
