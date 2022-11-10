@@ -72,6 +72,7 @@ const Mainpage = () => {
     <div css={TestCSS}>
       <h2 className="main_title">꽃바다</h2>
       <img src={LogoutBtn} className="logout_btn" onClick={signOut} />
+      <div className="only_web">꽃바다는 모바일 환경에 최적화되어있습니다.</div>
       <div className="main_menu">
         <div className="first_row">
           <div className="greenhouse" onClick={moveGreenHouse}>
@@ -220,6 +221,16 @@ const TestCSS = css`
   }
   .main_menu::-webkit-scrollbar-track {
     border-radius: 15px;
+  }
+  .only_web {
+    display: none;
+  }
+  @media screen and (min-width: 500px) {
+    .only_web {
+      display: block;
+      color: #16453e;
+      text-shadow: 2px 2px 2px gray;
+    }
   }
 `;
 
