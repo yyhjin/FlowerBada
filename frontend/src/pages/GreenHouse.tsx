@@ -184,7 +184,7 @@ export default function GreenHouse() {
   }, [bPaginationId, rPaginationId, rollings, bookmarks]);
 
   const throttleScroll = () => {
-    timer.current = setTimeout(() => {
+    timer.current = window.setTimeout(() => {
       if (timer.current !== null) {
         handleScroll();
         timer.current = null;
