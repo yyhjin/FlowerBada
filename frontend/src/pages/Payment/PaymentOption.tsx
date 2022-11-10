@@ -2,13 +2,22 @@ import { css } from '@emotion/react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Message from '@components/mypage/Message';
 import type { IRolling, IMessage } from '@pages/RollingPaper';
+import { createTheme, Grid, MenuItem, ThemeProvider } from '@mui/material';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import { useState } from 'react';
 
 const PaymentOption = () => {
+  const [optionType, setOptionType] = useState<string>('default');
   const navigate = useNavigate();
   const location = useLocation();
 
   location.state as { rolling: IRolling; type: number; valid: Boolean };
   const { rolling, type, valid } = location.state;
+
+  const selectOption = (e: SelectChangeEvent) => {
+    setOptionType(e.target.value);
+  };
 
   const onClickNext = () => {
     navigate(`/payment/address/receiver`);
@@ -21,7 +30,7 @@ const PaymentOption = () => {
 
   return (
     <div css={OptionCSS}>
-      <div>
+      <div className="img-preview">
         <div className={`imgbox_${type}`}>
           <img src={'/src/assets/' + rolling.imgBack}></img>
         </div>
@@ -44,8 +53,33 @@ const PaymentOption = () => {
           <img src={'/src/assets/' + rolling.imgFront}></img>
         </div>
       </div>
-      <div>Option</div>
-      <div>수량</div>
+      <div css={SelectBtn}>
+        <p>주문 옵션 :</p>
+        <ThemeProvider theme={theme}>
+          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+            <Select
+              labelId="demo-select-small"
+              id="demo-select-small"
+              value={optionType}
+              onChange={selectOption}
+              css={SelectCSS}
+            >
+              <MenuItem value={'default'} css={Font}>
+                선택해주세요
+              </MenuItem>
+              <MenuItem value={'rollingPaperOnly'} css={Font}>
+                롤링페이퍼
+              </MenuItem>
+              <MenuItem value={'flowerOnly'} css={Font}>
+                꽃
+              </MenuItem>
+              <MenuItem value={'both'} css={Font}>
+                롤링페이퍼 + 꽃
+              </MenuItem>
+            </Select>
+          </FormControl>
+        </ThemeProvider>
+      </div>
       <div>가격</div>
       <div className="option-buttons">
         <button onClick={onClickNext}>받는 분 정보 입력하러 가기</button>
@@ -55,7 +89,26 @@ const PaymentOption = () => {
   );
 };
 
+const theme = createTheme({
+  status: {
+    danger: '#e53e3e',
+  },
+  palette: {
+    primary: {
+      main: '#848484',
+    },
+    neutral: {
+      main: '#B1BDBB',
+    },
+  },
+});
+
 const OptionCSS = css`
+  .img-preview {
+    width: 50%;
+    height: 50%;
+  }
+
   .option-buttons {
     display: flex;
     flex-direction: column;
@@ -72,7 +125,7 @@ const OptionCSS = css`
   .imgbox_1 img {
     position: relative;
     z-index: 0;
-    width: 75%;
+    width: 60%;
     left: 0vw;
     top: 10vw;
   }
@@ -371,6 +424,36 @@ const OptionCSS = css`
       width: 75%;
     }
   }
+`;
+
+const SelectBtn = css`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 3rem;
+
+  /* padding: 0.5rem; */
+  /* margin-top: 0; */
+  p {
+    display: flex;
+    justify-content: left;
+    align-items: end;
+  }
+  select {
+    margin-top: 0;
+    border: 1px solid black;
+    display: flex;
+    justify-content: left;
+  }
+`;
+
+const SelectCSS = css`
+  font-family: 'SeoulNamsanM';
+  width: 70vw;
+`;
+
+const Font = css`
+  font-family: 'SeoulNamsanM';
 `;
 
 export default PaymentOption;
