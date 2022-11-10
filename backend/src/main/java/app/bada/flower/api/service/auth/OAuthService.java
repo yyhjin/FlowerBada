@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -116,7 +117,7 @@ public class OAuthService {
                 }
 
                 //refresh token 관련
-                redisTemplate.opsForValue().set("REFRESH "+refreshToken, refreshToken, refreshTokenValidTime);
+                redisTemplate.opsForValue().set("REFRESH "+refreshToken, refreshToken, Duration.ofSeconds(refreshTokenValidTime));
                 return res;
             }
             default:{
