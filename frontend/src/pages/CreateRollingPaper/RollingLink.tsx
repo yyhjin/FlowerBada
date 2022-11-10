@@ -13,15 +13,16 @@ import MySwal from '@components/SweetAlert';
 }
 
 export default function RollingLink() {
-  const { state } = useLocation();
+  const url = useLocation().state.url;
+  const title = useLocation().state.title;
   const root = 'localhost:5173/rolling/';
   const navigate = useNavigate();
   const handleRollingPaper = (): void => {
-    navigate(`/rolling/${state}`);
+    navigate(`/rolling/${url}`);
   };
 
   const copyUrl = (): void => {
-    navigator.clipboard.writeText(root + state);
+    navigator.clipboard.writeText(root + url);
     MySwal.fire({
       title: '링크가 복사되었습니다.',
       icon: 'success',
@@ -31,33 +32,42 @@ export default function RollingLink() {
   };
 
   function shareKakao() {
+    if (window.Kakao) {
+      const kakao = window.Kakao;
+      if (!kakao.isInitialized()) {
+        kakao.init('a452135df47a8eef043c1b08491c2c34');
+      }
+    }
+
     Kakao.Link.sendDefault({
       objectType: 'feed',
       content: {
-        title: '꽃바다',
-        description: '롤링페이퍼를 작성해줘!',
+        title: '꽃바다 - 우리들의 이야기를 꽃에 담아',
+        description: `${title}`,
         imageUrl:
           'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/rollingpaper/03LO7T.png',
         link: {
-          mobileWebUrl: `http://localhost:5173/rolling/${state}`,
-          webUrl: `http://localhost:5173/rolling/${state}`,
+          mobileWebUrl: `${root}${url}`,
+          webUrl: `${root}${url}`,
         },
       },
       buttons: [
         {
           title: '게시글확인',
           link: {
-            mobileWebUrl: `http://localhost:5173/rolling/${state}`,
-            webUrl: `http://localhost:5173/rolling/${state}`,
+            mobileWebUrl: `${root}${url}`,
+            webUrl: `${root}${url}`,
           },
         },
       ],
     });
   }
 
-  const Explain = useEffect(() => {
-    Kakao.init('a452135df47a8eef043c1b08491c2c34');
-  }, []);
+  // const Explain = useEffect(() => {
+  //   if (!Window.Kakao.init) {
+  //     Kakao.init('a452135df47a8eef043c1b08491c2c34');
+  //   }
+  // }, []);
 
   return (
     <>
@@ -69,7 +79,7 @@ export default function RollingLink() {
         <div css={Link}>
           <div css={Url}>
             {root}
-            {state}
+            {url}
           </div>
           <img src={copy} css={Copy} onClick={copyUrl} />
         </div>
@@ -78,9 +88,11 @@ export default function RollingLink() {
           <div>OR</div>
           <div css={Line}></div>
         </div>
-        <button css={KakaoButton} onClick={shareKakao}>
-          <img src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png" />
-        </button>
+        <img
+          css={KakaoButton}
+          onClick={shareKakao}
+          src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
+        />
         <button onClick={handleRollingPaper} css={GoRollingButton}>
           작성하러 가기
         </button>
@@ -137,9 +149,10 @@ const Line = css`
 `;
 
 const KakaoButton = css`
+  cursor: pointer;
   margin-top: 8vh;
   height: 5vh;
-  width: 50vw;
+  width: 4vw;
 `;
 
 const GoRollingButton = css`
