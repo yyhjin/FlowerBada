@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import Message from '@components/mypage/Message';
@@ -196,7 +196,6 @@ export default function RollingPaper() {
 
   useEffect(() => {
     getRolling();
-
     if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
       // 캡쳐 및 DB 저장
       const el = document.getElementById('to-save');
@@ -212,20 +211,19 @@ export default function RollingPaper() {
   }, [paginationId]);
 
   const onSaveAs = (uri: string, filename: string): void => {
-    // console.log(uri);
-    // let link: any = document.createElement('a');
-    // document.body.appendChild(link);
-    // link.href = uri;
+    console.log(uri);
+    let link: any = document.createElement('a');
+    document.body.appendChild(link);
+    link.href = uri;
     // link.download = filename;
     // link.click();
-    // document.body.removeChild(link);
-    // console.log('uri', uri);
-    // axios.put(
-    //   `http://localhost:8080/api/v1/message/updateimg/${paramCopy.url}`,
-    //   {
-    //     imgUrl: uri,
-    //   },
-    // );
+    document.body.removeChild(link);
+    axios.put(
+      `http://localhost:8080/api/v1/message/updateimg/${paramCopy.url}`,
+      {
+        imgUrl: uri,
+      },
+    );
   };
 
   return (
@@ -252,9 +250,27 @@ export default function RollingPaper() {
             ) : (
               <div className="valid">꽃을 눌러보세요!</div>
             )}
-            <div className="fixbox">
-              <div className={`imgbox_${type}`}>
-                <img src={'/src/assets/' + rolling.imgBack}></img>
+
+            <div css={SaveParent}>
+              <div>
+                <div className={`imgbox_${type}`}>
+                  <img src={'/src/assets/' + rolling.imgBack}></img>
+                </div>
+                <div className="flowerlist">
+                  {rolling.messages.map((message, index) => {
+                    return (
+                      <div key={index} className={`flowerbox_${type}`}>
+                        <Message
+                          imgUrl={message.imgUrl}
+                          messageId={message.messageId}
+                          writer={message.writer}
+                          valid={valid}
+                          writerDisplay={true}
+                        ></Message>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
               <div className={`imgbox_front_${type}`}>
                 <img src={'/src/assets/' + rolling.imgFront}></img>

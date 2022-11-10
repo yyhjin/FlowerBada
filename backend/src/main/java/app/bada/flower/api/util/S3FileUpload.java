@@ -49,6 +49,8 @@ public class S3FileUpload {
         String fileName = dirName + "/" + uploadFile.getName();
         putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
+
+//        String fileUrl = File_Server_Url + fileName;
         return fileName;
     }
     //S3로 업로드
