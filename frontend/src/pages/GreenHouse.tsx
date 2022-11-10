@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
@@ -8,6 +8,8 @@ import { createTheme, Grid, MenuItem, ThemeProvider } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import MySwal from '@components/SweetAlert';
+import updateTokens from '@src/utils/updateTokens';
 
 interface IRolling {
   url: string;
@@ -24,29 +26,33 @@ export default function GreenHouse() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<Boolean>(true);
   const [rollings, setRollings] = useState<IRolling[]>([]);
+  const [bookmarks, setBookmarks] = useState<IRolling[]>([]);
   const [tab, setTab] = useState<String>('내가 만든 꽃다발');
   const [tabNum, setTabNum] = useState<number>(1);
   const [sort, setSort] = useState<string>('1');
-  const [paginationId, setPaginationId] = useState<number>(0);
+  const [rPaginationId, setRPaginationId] = useState<number>(0);
+  const [bPaginationId, setBPaginationId] = useState<number>(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+  const timer = useRef<number | null>(null);
 
   function initRollings() {
-    setPaginationId(0);
+    setTab('내가 만든 꽃다발');
+    setRPaginationId(0);
     setRollings([]);
     setTabNum(1);
   }
 
   function initBookmarks() {
-    setPaginationId(0);
-    setRollings([]);
+    setTab('즐겨찾기한 꽃다발');
+    setBPaginationId(0);
+    setBookmarks([]);
     setTabNum(2);
   }
 
   async function getRollings(sort: number): Promise<void> {
     // setLoading(false);
-    setTab('내가 만든 꽃다발');
     try {
-      const params = { sort: sort, paginationId: paginationId };
+      const params = { sort: sort, paginationId: rPaginationId };
       const res: any = await greenhouseAPI.sentRolling(
         userState.jwt,
         userState.refresh,
@@ -55,27 +61,94 @@ export default function GreenHouse() {
 
       setLoading(true);
       setRollings(rollings.concat(res.data.response));
-      setPaginationId(paginationId + 1);
+      setRPaginationId(rPaginationId + 1);
     } catch (err: any) {
-      // console.log(err);
+      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+        MySwal.fire({
+          title: '로그인이 필요합니다!',
+          icon: 'warning',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        });
+        setUserState((prev: IuserRecoil) => {
+          const variable = { ...prev };
+          variable.id = 0;
+          variable.userToken = '';
+          variable.nickname = '';
+          variable.points = 0;
+          variable.jwt = '';
+          variable.refresh = '';
+          return variable;
+        });
+        navigate('/');
+      } else {
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setUserState);
+          MySwal.fire({
+            title: '액세스 토큰이 만료되었습니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '갱신',
+          });
+          navigate('/');
+        }
+      }
     }
   }
   async function getBookmarks(sort: number): Promise<void> {
     // setLoading(false);
     setTab('즐겨찾기한 꽃다발');
     try {
-      const params = { sort: sort, paginationId: paginationId };
+      const params = { sort: sort, paginationId: bPaginationId };
       const res: any = await greenhouseAPI.bookmark(
         userState.jwt,
         userState.refresh,
         params,
       );
-      // console.log(res.data.response);
-      setRollings(res.data.response);
+
+      // setRollings(res.data.response);
       setLoading(true);
-      setPaginationId(paginationId + 1);
+      setBookmarks(bookmarks.concat(res.data.response));
+      setBPaginationId(bPaginationId + 1);
     } catch (err: any) {
-      // console.log(err);
+      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+        MySwal.fire({
+          title: '로그인이 필요합니다!',
+          icon: 'warning',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        });
+        setUserState((prev: IuserRecoil) => {
+          const variable = { ...prev };
+          variable.id = 0;
+          variable.userToken = '';
+          variable.nickname = '';
+          variable.points = 0;
+          variable.jwt = '';
+          variable.refresh = '';
+          return variable;
+        });
+        navigate('/');
+      } else {
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setUserState);
+          MySwal.fire({
+            title: '액세스 토큰이 만료되었습니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '갱신',
+          });
+          navigate('/');
+        }
+      }
     }
   }
 
@@ -85,8 +158,10 @@ export default function GreenHouse() {
 
   // 드랍다운 필터 관련
   const handleChange = (event: SelectChangeEvent) => {
-    setPaginationId(0);
+    setBPaginationId(0);
+    setRPaginationId(0);
     setRollings([]);
+    setBookmarks([]);
     setSort(event.target.value);
   };
 
@@ -106,16 +181,25 @@ export default function GreenHouse() {
         getBookmarks(+sort);
       }
     }
-  }, [paginationId, rollings]);
+  }, [bPaginationId, rPaginationId, rollings, bookmarks]);
+
+  const throttleScroll = () => {
+    timer.current = window.setTimeout(() => {
+      if (timer.current !== null) {
+        handleScroll();
+        timer.current = null;
+      }
+    }, 300);
+  };
 
   useEffect(() => {
     // scroll event listener 등록
     const event = document.querySelector('.gridlist');
     if (event) {
-      event.addEventListener('scroll', handleScroll);
+      event.addEventListener('scroll', throttleScroll);
       return () => {
         // scroll event listener 해제
-        event.removeEventListener('scroll', handleScroll);
+        event.removeEventListener('scroll', throttleScroll);
       };
     }
   }, [handleScroll]);
@@ -134,13 +218,13 @@ export default function GreenHouse() {
         {tabNum === 1 ? (
           <div css={MainTab}>
             <button className="active_btn">내가 만든 꽃다발</button>
-            <button className="btn" onClick={() => initBookmarks()}>
+            <button className="btn" onClick={initBookmarks}>
               즐겨찾기
             </button>
           </div>
         ) : (
           <div css={MainTab}>
-            <button className="btn" onClick={() => initRollings()}>
+            <button className="btn" onClick={initRollings}>
               내가 만든 꽃다발
             </button>
             <button className="active_btn">즐겨찾기</button>
@@ -160,6 +244,8 @@ export default function GreenHouse() {
               value={sort}
               onChange={handleChange}
               css={Font}
+              variant="standard"
+              disableUnderline
             >
               <MenuItem value={'1'} css={Font}>
                 최신순
@@ -180,17 +266,37 @@ export default function GreenHouse() {
       ) : (
         <div> 로딩중 </div>
       )}
-      <Grid container columns={8} css={GridList} className="gridlist">
-        {rollings.map((rolling: IRolling, index: number) => (
-          <Grid xs={4} item key={index}>
-            <div css={GridItem} onClick={() => handleRollingPaper(rolling.url)}>
-              <img className="rolling_img" src={rolling.imgUrl} />
-              <div className="rolling_title">{rolling.title}</div>
-              <div className="rolling_date">({rolling.date})</div>
-            </div>
-          </Grid>
-        ))}
-      </Grid>
+      {tabNum === 1 ? (
+        <Grid container columns={8} css={GridList} className="gridlist">
+          {rollings.map((rolling: IRolling, index: number) => (
+            <Grid xs={4} item key={index}>
+              <div
+                css={GridItem}
+                onClick={() => handleRollingPaper(rolling.url)}
+              >
+                <img className="rolling_img" src={rolling.imgUrl} />
+                <div className="rolling_title">{rolling.title}</div>
+                <div className="rolling_date">({rolling.date})</div>
+              </div>
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <Grid container columns={8} css={GridList} className="gridlist">
+          {bookmarks.map((rolling: IRolling, index: number) => (
+            <Grid xs={4} item key={index}>
+              <div
+                css={GridItem}
+                onClick={() => handleRollingPaper(rolling.url)}
+              >
+                <img className="rolling_img" src={rolling.imgUrl} />
+                <div className="rolling_title">{rolling.title}</div>
+                <div className="rolling_date">({rolling.date})</div>
+              </div>
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </>
   );
 }
@@ -260,12 +366,21 @@ const MainTab = css`
 
 const GridList = css`
   width: 80%;
-  height: 55%;
+  height: 65%;
   overflow: scroll;
   margin: auto;
   border-radius: 15px;
   overflow-y: scroll;
   margin-top: 2vh;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  @media screen and (min-height: 800px) {
+    height: 70%;
+  }
+  @media screen and (min-height: 1000px) {
+    height: 75%;
+  }
 `;
 
 const GridItem = css`
