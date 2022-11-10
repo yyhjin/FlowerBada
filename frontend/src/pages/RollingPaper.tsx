@@ -29,7 +29,7 @@ import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import MySwal from '@components/SweetAlert';
 import html2canvas from 'html2canvas';
 
-interface IRolling {
+export interface IRolling {
   rollingId?: number;
   imgUrl?: string;
   imgFront?: string;
@@ -40,7 +40,7 @@ interface IRolling {
   messages?: IMessage[];
 }
 
-interface IMessage {
+export interface IMessage {
   imgUrl: string;
   writer: string;
   flowerId: number;
@@ -184,8 +184,21 @@ export default function RollingPaper() {
     navigate('/newroll/link', { state: paramCopy.url });
   };
 
+  const saveRolling = () => {
+    navigate('/rolling/print', {
+      state: {
+        rolling,
+        type,
+        valid,
+      },
+    });
+  };
+
   useEffect(() => {
     getRolling();
+  }, [paginationId]);
+
+  useEffect(() => {
     if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
       // 캡쳐 및 DB 저장
       const el = document.getElementById('to-save');
@@ -198,7 +211,7 @@ export default function RollingPaper() {
         });
       }
     }
-  }, [paginationId]);
+  }, [rolling]);
 
   const onSaveAs = (uri: string, filename: string): void => {
     console.log(uri);
@@ -304,6 +317,7 @@ export default function RollingPaper() {
                       size="large"
                       color="primary"
                       className="share-btn"
+                      onClick={saveRolling}
                     >
                       <SaveAltIcon fontSize="large" />
                     </IconButton>
