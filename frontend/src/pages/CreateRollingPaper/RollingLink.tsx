@@ -1,13 +1,16 @@
+import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import copy from '@assets/copy.png';
 import MySwal from '@components/SweetAlert';
-<script
+
+{
+  /* <script
   src="https://t1.kakaocdn.net/kakao_js_sdk/2.0.1/kakao.min.js"
   integrity="sha384-eKjgHJ9+vwU/FCSUG3nV1RKFolUXLsc6nLQ2R1tD0t4YFPCvRmkcF8saIfOZNWf/"
   crossOrigin="anonymous"
-></script>;
-<script>Kakao.init(`a452135df47a8eef043c1b08491c2c34`)</script>;
+></script>; */
+}
 
 export default function RollingLink() {
   const { state } = useLocation();
@@ -16,6 +19,7 @@ export default function RollingLink() {
   const handleRollingPaper = (): void => {
     navigate(`/rolling/${state}`);
   };
+
   const copyUrl = (): void => {
     navigator.clipboard.writeText(root + state);
     MySwal.fire({
@@ -26,13 +30,41 @@ export default function RollingLink() {
     });
   };
 
+  function shareKakao() {
+    Kakao.Link.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '꽃바다',
+        description: '롤링페이퍼를 작성해줘!',
+        imageUrl:
+          'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/rollingpaper/03LO7T.png',
+        link: {
+          mobileWebUrl: `http://localhost:5173/rolling/${state}`,
+          webUrl: `http://localhost:5173/rolling/${state}`,
+        },
+      },
+      buttons: [
+        {
+          title: '게시글확인',
+          link: {
+            mobileWebUrl: `http://localhost:5173/rolling/${state}`,
+            webUrl: `http://localhost:5173/rolling/${state}`,
+          },
+        },
+      ],
+    });
+  }
+
+  const Explain = useEffect(() => {
+    Kakao.init('a452135df47a8eef043c1b08491c2c34');
+  }, []);
+
   return (
     <>
       <div css={Background}>
         <div css={Info}>
           <div css={Writing}>링크를 복사해</div>
           <div css={Writing}>롤링페이퍼를 공유하세요</div>
-          <img src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png" />
         </div>
         <div css={Link}>
           <div css={Url}>
@@ -46,7 +78,9 @@ export default function RollingLink() {
           <div>OR</div>
           <div css={Line}></div>
         </div>
-        <button css={KakaoButton}>카카오톡으로 공유</button>
+        <button css={KakaoButton} onClick={shareKakao}>
+          <img src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png" />
+        </button>
         <button onClick={handleRollingPaper} css={GoRollingButton}>
           작성하러 가기
         </button>
