@@ -147,6 +147,7 @@ export default function SelectItem() {
             <div css={Point}>
               <img src={Coin} css={PointImg} /> {userState.points}P
             </div>
+
             <div>
               <img
                 src={createRollingState.url}
@@ -296,7 +297,7 @@ const NextButton = css`
   width: 94%;
   border-radius: 3vw;
   color: white;
-  font-size: 4vw;
+  font-size: 100%;
   background-color: #16453e;
 
   @media screen and (max-height: 800px) {
@@ -310,7 +311,6 @@ const NextButton = css`
   }
   @media screen and (min-width: 1000px) {
     margin-top: -3vh;
-    font-size: 20pt;
   }
 `;
 
