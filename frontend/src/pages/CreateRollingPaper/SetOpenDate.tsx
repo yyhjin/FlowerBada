@@ -31,7 +31,7 @@ export default function SetOpenDate() {
   const handleRollingLink = async (e: any): Promise<void> => {
     if (date === null) {
       MySwal.fire({
-        title: '날짜를 제대로 입력해주세요',
+        title: '날짜를 다시 선택해 주세요.',
         icon: 'warning',
         confirmButtonColor: '#16453e',
         confirmButtonText: '확인',
@@ -123,31 +123,28 @@ export default function SetOpenDate() {
     }
   };
   return (
-    <>
-      <div>
-        <div css={Info}>
-          <div css={Writing}>롤링페이퍼 개봉 날짜를</div>
-          <div css={Writing}> 선택해주세요</div>
-        </div>
-        <div css={Background}>
-          <DatePicker
-            css={Calendar}
-            locale={ko} // 언어설정 기본값은 영어
-            dateFormat="yyyy-MM-dd" // 날짜 형식 설정
-            className="input-datepicker" // 클래스 명 지정 css주기 위해
-            minDate={tomorrow} // 선택할 수 있는 최소 날짜값 지정 오늘 +1        \
-            popperPlacement="auto" // 화면 중앙에 팝업이 뜨도록
-            closeOnScroll={true} // 스크롤을 움직였을 때 자동으로 닫히도록 설정 기본값 false
-            placeholderText="롤링페이퍼 개봉 날짜 선택" // placeholder
-            selected={date} // value
-            onChange={(date: Date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
-          />
-        </div>
-        <button onClick={handleRollingLink} css={CreateButton}>
-          롤페 생성
-        </button>
+    <div css={Background}>
+      <div css={Info}>
+        <div css={Writing}>롤링페이퍼 개봉 날짜를</div>
+        <div css={Writing}> 선택해주세요</div>
       </div>
-    </>
+      <div css={Calendar}>
+        <DatePicker
+          locale={ko} // 언어설정 기본값은 영어
+          dateFormat="yyyy-MM-dd" // 날짜 형식 설정
+          className="input-datepicker" // 클래스 명 지정 css주기 위해
+          minDate={tomorrow} // 선택할 수 있는 최소 날짜값 지정 오늘 +1        \
+          popperPlacement="auto" // 화면 중앙에 팝업이 뜨도록
+          closeOnScroll={true} // 스크롤을 움직였을 때 자동으로 닫히도록 설정 기본값 false
+          placeholderText="롤링페이퍼 개봉 날짜 선택" // placeholder
+          selected={date} // value
+          onChange={(date: Date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
+        />
+      </div>
+      <button onClick={handleRollingLink} css={CreateButton}>
+        롤페 생성
+      </button>
+    </div>
   );
 }
 
@@ -156,12 +153,9 @@ const Background = css`
 `;
 
 const Info = css`
-  margin-top: 30vh;
-  font-size: 6vw;
+  padding-top: 10vh;
   font-weight: bold;
-  @media screen and (min-width: 400px) {
-    font-size: 4vw;
-  }
+  font-size: 200%;
 `;
 
 const Writing = css`
@@ -172,14 +166,21 @@ const Writing = css`
 const Calendar = css`
   margin-top: 5vh;
   text-align: center;
+  @media screen and (min-width: 500px) {
+    position: absolute;
+    left: 44vw;
+  }
 `;
 
 const CreateButton = css`
-  margin-top: 40vh;
+  margin-top: 53vh;
   height: 7vh;
   width: 94vw;
   border-radius: 3vw;
   color: white;
-  font-size: 4vw;
+  font-size: 100%;
   background-color: #16453e;
+  @media screen and (min-width: 500px) {
+    width: 80%;
+  }
 `;

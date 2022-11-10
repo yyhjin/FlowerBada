@@ -244,6 +244,8 @@ export default function GreenHouse() {
               value={sort}
               onChange={handleChange}
               css={Font}
+              variant="standard"
+              disableUnderline
             >
               <MenuItem value={'1'} css={Font}>
                 최신순
@@ -370,6 +372,9 @@ const GridList = css`
   border-radius: 15px;
   overflow-y: scroll;
   margin-top: 2vh;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   @media screen and (min-height: 800px) {
     height: 70%;
   }
