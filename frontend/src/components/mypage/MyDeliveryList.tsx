@@ -7,7 +7,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { createTheme, MenuItem, ThemeProvider } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MySwal from '@components/SweetAlert';
-import updateTokens from '@src/utils/updateTokens';
+import updateTokens from '@utils/updateTokens';
 import { useNavigate } from 'react-router-dom';
 interface IDeliver {
   pageUrl?: string;

@@ -6,7 +6,7 @@ import CoinImg from '@assets/coin.png';
 import mypageAPI from '@src/api/mypageAPI';
 import MySwal from '@components/SweetAlert';
 import { useNavigate } from 'react-router-dom';
-import updateTokens from '@src/utils/updateTokens';
+import updateTokens from '@utils/updateTokens';
 interface IPoint {
   name: string;
   point: number;
