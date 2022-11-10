@@ -11,6 +11,8 @@ import {
 } from '@recoil/createRollingRecoil';
 import { css } from '@emotion/react';
 import rollingAPI from '@api/rollingAPI';
+import updateTokens from '@src/utils/updateTokens';
+import MySwal from '@components/SweetAlert';
 
 export default function SetOpenDate() {
   const today = new Date();
@@ -44,11 +46,15 @@ export default function SetOpenDate() {
     }
     let localDateTime = year + '-' + month + '-' + day + 'T10:00';
     try {
-      const res: any = await rollingAPI.makeRolling(userState.jwt, {
-        itemId: createRollingState.itemId,
-        openDate: localDateTime,
-        title: createRollingState.title,
-      });
+      const res: any = await rollingAPI.makeRolling(
+        userState.jwt,
+        userState.refresh,
+        {
+          itemId: createRollingState.itemId,
+          openDate: localDateTime,
+          title: createRollingState.title,
+        },
+      );
       setCreateRollingState((prev: IcreateRollingRecoil): any => {
         const variable = { ...prev };
         variable.itemId = 0;
@@ -60,7 +66,55 @@ export default function SetOpenDate() {
 
       navigate('/newroll/link', { state: res.data.response });
     } catch (err: any) {
-      // console.log(err);
+      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+        MySwal.fire({
+          title: '로그인이 필요합니다!',
+          icon: 'warning',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        });
+        setUserState((prev: IuserRecoil) => {
+          const variable = { ...prev };
+          variable.id = 0;
+          variable.userToken = '';
+          variable.nickname = '';
+          variable.points = 0;
+          variable.jwt = '';
+          variable.refresh = '';
+          return variable;
+        });
+        navigate('/');
+      } else {
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setUserState);
+          const res: any = await rollingAPI.makeRolling(
+            accessToken,
+            refreshToken,
+            {
+              itemId: createRollingState.itemId,
+              openDate: localDateTime,
+              title: createRollingState.title,
+            },
+          );
+          setCreateRollingState((prev: IcreateRollingRecoil): any => {
+            const variable = { ...prev };
+            variable.itemId = 0;
+            variable.itemIndex = 0;
+            variable.url = '';
+            variable.title = '';
+            return variable;
+          });
+
+          navigate('/newroll/link', { state: res.data.response });
+        } else {
+          console.log('No access or refresh token');
+          navigate('/');
+        }
+      }
     }
   };
   return (

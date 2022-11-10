@@ -51,7 +51,12 @@ export default function GreenHouse() {
     // setLoading(false);
     try {
       const params = { sort: sort, paginationId: rPaginationId };
-      const res: any = await greenhouseAPI.sentRolling(userState.jwt, params);
+      const res: any = await greenhouseAPI.sentRolling(
+        userState.jwt,
+        userState.refresh,
+        params,
+      );
+
       setLoading(true);
       // console.log(rollings.concat(res.data.response));
       setRollings(rollings.concat(res.data.response));
@@ -62,9 +67,16 @@ export default function GreenHouse() {
   }
   async function getBookmarks(sort: number): Promise<void> {
     // setLoading(false);
+    setTab('즐겨찾기한 꽃다발');
     try {
       const params = { sort: sort, paginationId: bPaginationId };
-      const res: any = await greenhouseAPI.bookmark(userState.jwt, params);
+      const res: any = await greenhouseAPI.bookmark(
+        userState.jwt,
+        userState.refresh,
+        params,
+      );
+      // console.log(res.data.response);
+      setRollings(res.data.response);
       setLoading(true);
       // console.log(bookmarks.concat(res.data.response));
       setBookmarks(bookmarks.concat(res.data.response));
