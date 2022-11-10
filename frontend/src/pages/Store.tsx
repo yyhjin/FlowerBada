@@ -12,6 +12,7 @@ import flowerImgItem from '@assets/fixed-size/flower/flowerImgItem';
 import storeAPI from '@src/api/storeAPI';
 import updateTokens from '@src/utils/updateTokens';
 import { useNavigate } from 'react-router-dom';
+import MySwal from '@components/SweetAlert';
 
 interface FlowerItem {
   flowerId: number;
@@ -112,7 +113,12 @@ const Store = () => {
       })
       .catch((err: any) => {
         if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
-          alert('로그인이 필요합니다');
+          MySwal.fire({
+            title: '로그인이 필요합니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
           setLoginUser((prev: IuserRecoil) => {
             const variable = { ...prev };
             variable.id = 0;
@@ -155,7 +161,12 @@ const Store = () => {
       })
       .catch((err: any) => {
         if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
-          alert('로그인이 필요합니다');
+          MySwal.fire({
+            title: '로그인이 필요합니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
           setLoginUser((prev: IuserRecoil) => {
             const variable = { ...prev };
             variable.id = 0;
@@ -252,7 +263,7 @@ const Store = () => {
         </Grid>
         <div css={tabs}>
           {isFlower ? (
-            <div>
+            <div className="m_tabs">
               <button
                 css={tabActive(false)}
                 className="btn"
@@ -269,7 +280,7 @@ const Store = () => {
               </button>
             </div>
           ) : (
-            <div>
+            <div className="m_tabs">
               <button
                 css={tabActive(true)}
                 className="active_btn"
@@ -337,6 +348,7 @@ const points = css`
   text-align: auto;
   margin: auto;
   padding-top: 10px;
+
   .coinImg {
     height: 20px;
     display: flex;
@@ -370,10 +382,16 @@ const SelectedImgDiv = css`
 const flowerInfo = css`
   /* display: flex; */
   margin-top: 3vh;
+  @media screen and (min-width: 500px) {
+    padding: 0vh;
+  }
 `;
 const empty = css`
   position: relative;
   padding: 10vw;
+  @media screen and (min-width: 500px) {
+    padding: 0vh;
+  }
 `;
 
 const selectBox = css`
@@ -411,6 +429,23 @@ const GridStyle = css`
     display: grid;
     left: 2.5vw;
   }
+  @media screen and (min-width: 500px) {
+    height: 155px;
+    .item_image {
+      margin-top: 5px;
+      margin-left: 0px;
+      z-index: 1;
+      /* left: 0vw; */
+      width: 80%;
+    }
+    .locked_image {
+      z-index: 2;
+      width: 85%;
+      opacity: 100%;
+      display: grid;
+      left: 25px;
+    }
+  }
 `;
 
 const tabs = css`
@@ -428,6 +463,11 @@ const tabActive = (isActive: boolean) => css`
   background-color: ${isActive
     ? 'rgba(255,255,255,1)'
     : 'rgba(255,255,255,0.5)'};
+  @media screen and (min-width: 500px) {
+    top: -500px;
+    width: 225px;
+    height: 60px;
+  }
 `;
 
 const BuyButton = (isOwned: boolean) => css`
@@ -447,6 +487,11 @@ const BuyButton = (isOwned: boolean) => css`
   background-color: ${!isOwned ? '#16453e' : '#9c9c9c'};
   width: 90%;
   height: 50px;
+  @media screen and (min-width: 500px) {
+    top: 120px;
+    width: 450px;
+    height: 60px;
+  }
 `;
 
 const BuyText = css`

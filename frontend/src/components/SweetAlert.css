@@ -3,7 +3,6 @@
   font-family: 'SeoulNamsanM';
 }
 
-
 /* 아이패드 미니 */
 @media screen and (min-width: 768px) {
   .swal2-container {
@@ -30,4 +29,3 @@
     left: 35%;
   }
 }
-/* 이걸 사이즈 별로 해주는거 말이 안되는데.. 좋은 방법이 있을까 */

@@ -8,6 +8,8 @@ import { createTheme, Grid, MenuItem, ThemeProvider } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import MySwal from '@components/SweetAlert';
+import updateTokens from '@src/utils/updateTokens';
 
 interface IRolling {
   url: string;
@@ -58,11 +60,43 @@ export default function GreenHouse() {
       );
 
       setLoading(true);
-      // console.log(rollings.concat(res.data.response));
       setRollings(rollings.concat(res.data.response));
       setRPaginationId(rPaginationId + 1);
     } catch (err: any) {
-      // console.log(err);
+      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+        MySwal.fire({
+          title: '로그인이 필요합니다!',
+          icon: 'warning',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        });
+        setUserState((prev: IuserRecoil) => {
+          const variable = { ...prev };
+          variable.id = 0;
+          variable.userToken = '';
+          variable.nickname = '';
+          variable.points = 0;
+          variable.jwt = '';
+          variable.refresh = '';
+          return variable;
+        });
+        navigate('/');
+      } else {
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setUserState);
+          MySwal.fire({
+            title: '액세스 토큰이 만료되었습니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '갱신',
+          });
+          navigate('/');
+        }
+      }
     }
   }
   async function getBookmarks(sort: number): Promise<void> {
@@ -75,14 +109,46 @@ export default function GreenHouse() {
         userState.refresh,
         params,
       );
-      // console.log(res.data.response);
-      setRollings(res.data.response);
+
+      // setRollings(res.data.response);
       setLoading(true);
-      // console.log(bookmarks.concat(res.data.response));
       setBookmarks(bookmarks.concat(res.data.response));
       setBPaginationId(bPaginationId + 1);
     } catch (err: any) {
-      // console.log(err);
+      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+        MySwal.fire({
+          title: '로그인이 필요합니다!',
+          icon: 'warning',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        });
+        setUserState((prev: IuserRecoil) => {
+          const variable = { ...prev };
+          variable.id = 0;
+          variable.userToken = '';
+          variable.nickname = '';
+          variable.points = 0;
+          variable.jwt = '';
+          variable.refresh = '';
+          return variable;
+        });
+        navigate('/');
+      } else {
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setUserState);
+          MySwal.fire({
+            title: '액세스 토큰이 만료되었습니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '갱신',
+          });
+          navigate('/');
+        }
+      }
     }
   }
 
@@ -178,6 +244,8 @@ export default function GreenHouse() {
               value={sort}
               onChange={handleChange}
               css={Font}
+              variant="standard"
+              disableUnderline
             >
               <MenuItem value={'1'} css={Font}>
                 최신순
@@ -304,6 +372,9 @@ const GridList = css`
   border-radius: 15px;
   overflow-y: scroll;
   margin-top: 2vh;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   @media screen and (min-height: 800px) {
     height: 70%;
   }

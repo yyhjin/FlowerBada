@@ -7,6 +7,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { createTheme, MenuItem, ThemeProvider } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MySwal from '@components/SweetAlert';
+import updateTokens from '@utils/updateTokens';
+import { useNavigate } from 'react-router-dom';
 interface IDeliver {
   pageUrl?: string;
   imgUrl?: string;
@@ -20,6 +22,7 @@ interface IDeliver {
 }
 
 export default function MyDeliveryList() {
+  const navigate = useNavigate();
   const [pages, setPages] = useState<number>(0);
   const [myList, setMyList] = useState([]);
   const [sortNumber, setSortNumber] = useState(1);
@@ -74,12 +77,42 @@ export default function MyDeliveryList() {
       setMyList(myList.concat(res.data.response));
       setPages(pages + 1);
     } catch (err: any) {
-      MySwal.fire({
-        title: '불러오기 실패...',
-        icon: 'warning',
-        confirmButtonColor: '#16453e',
-        confirmButtonText: '확인',
-      });
+      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+        MySwal.fire({
+          title: '로그인이 필요합니다!',
+          icon: 'warning',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        }).then(() => {
+          navigate('/');
+        });
+        setUserState((prev: IuserRecoil) => {
+          const variable = { ...prev };
+          variable.id = 0;
+          variable.userToken = '';
+          variable.nickname = '';
+          variable.points = 0;
+          variable.jwt = '';
+          variable.refresh = '';
+          return variable;
+        });
+      } else {
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setUserState);
+          MySwal.fire({
+            title: '액세스 토큰이 만료되었습니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '갱신',
+          }).then(() => {
+            navigate('/');
+          });
+        }
+      }
     }
   }
 
