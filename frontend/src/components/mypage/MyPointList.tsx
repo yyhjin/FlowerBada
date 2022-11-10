@@ -5,6 +5,8 @@ import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import CoinImg from '@assets/coin.png';
 import mypageAPI from '@src/api/mypageAPI';
 import MySwal from '@components/SweetAlert';
+import { useNavigate } from 'react-router-dom';
+import updateTokens from '@src/utils/updateTokens';
 interface IPoint {
   name: string;
   point: number;
@@ -12,6 +14,7 @@ interface IPoint {
 }
 
 export default function MyPointList() {
+  const navigate = useNavigate();
   const [pages, setPages] = useState(0);
   const [myPoint, setMyPoint] = useState(0);
   const [myPointList, setMyPointList] = useState([]);
@@ -55,12 +58,40 @@ export default function MyPointList() {
       setMyPointList(myPointList.concat(res.data.response.myPointList));
       setPages(pages + 1);
     } catch (err: any) {
-      MySwal.fire({
-        title: '불러오기 실패...',
-        icon: 'warning',
-        confirmButtonColor: '#16453e',
-        confirmButtonText: '확인',
-      });
+      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+        MySwal.fire({
+          title: '로그인이 필요합니다!',
+          icon: 'warning',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        });
+        setUserState((prev: IuserRecoil) => {
+          const variable = { ...prev };
+          variable.id = 0;
+          variable.userToken = '';
+          variable.nickname = '';
+          variable.points = 0;
+          variable.jwt = '';
+          variable.refresh = '';
+          return variable;
+        });
+        navigate('/');
+      } else {
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setUserState);
+          MySwal.fire({
+            title: '액세스 토큰이 만료되었습니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '갱신',
+          });
+          navigate('/');
+        }
+      }
     }
   }
 
