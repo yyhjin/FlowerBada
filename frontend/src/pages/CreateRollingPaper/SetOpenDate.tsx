@@ -13,7 +13,6 @@ import { css } from '@emotion/react';
 import rollingAPI from '@api/rollingAPI';
 import updateTokens from '@src/utils/updateTokens';
 import MySwal from '@components/SweetAlert';
-import { Keyboard } from 'react-native';
 
 export default function SetOpenDate() {
   const today = new Date();
