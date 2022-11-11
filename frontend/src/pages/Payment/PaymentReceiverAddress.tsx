@@ -13,6 +13,7 @@ const PaymentReceiverAddress = () => {
   const [receiverName, setReceiverName] = useState<string>('');
   const [receiverPhone, setReceiverPhone] = useState<string>('');
   const [receiverAddress, setReceiverAddress] = useState<string>('');
+  const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
 
   const navigate = useNavigate();
 
@@ -40,7 +41,7 @@ const PaymentReceiverAddress = () => {
   };
 
   const goBack = () => {
-    useResetRecoilState(paymentRecoil);
+    resetPaymentRecoil();
     const url = localStorage.getItem('url');
     navigate(`/rolling/${url}`);
   };

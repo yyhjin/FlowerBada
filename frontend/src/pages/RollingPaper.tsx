@@ -24,8 +24,9 @@ import rollingAPI from '@api/rollingAPI';
 import Star from '@assets/Star.png';
 import EmptyStar from '@assets/EmptyStar.png';
 import Delivery from '@assets/Delivery.png';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
 import MySwal from '@components/SweetAlert';
 import html2canvas from 'html2canvas';
 
@@ -63,6 +64,7 @@ export default function RollingPaper() {
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
+  const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
 
   async function getRolling() {
     setLoading(false);

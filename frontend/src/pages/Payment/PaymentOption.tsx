@@ -17,6 +17,7 @@ const PaymentOption = () => {
     useRecoilState<IPaymentRecoil>(paymentRecoil);
   const navigate = useNavigate();
   const location = useLocation();
+  const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
 
   location.state as { rolling: IRolling; type: number; valid: Boolean };
   const { rolling, type, valid, stepNumber } = location.state;
@@ -43,7 +44,7 @@ const PaymentOption = () => {
   };
 
   const goBack = () => {
-    useResetRecoilState(paymentRecoil);
+    resetPaymentRecoil();
     const url = localStorage.getItem('url');
     navigate(`/rolling/${url}`);
   };

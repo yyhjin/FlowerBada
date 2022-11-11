@@ -14,6 +14,7 @@ const PaymentSenderAddress = () => {
   const [senderPhone, setSenderPhone] = useState<string>('');
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
   const navigate = useNavigate();
+  const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
 
   const onChangeSenderName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSenderName(e.target.value);
@@ -43,7 +44,7 @@ const PaymentSenderAddress = () => {
   };
 
   const goBack = () => {
-    useResetRecoilState(paymentRecoil);
+    resetPaymentRecoil();
     const url = localStorage.getItem('url');
     navigate(`/rolling/${url}`);
   };
