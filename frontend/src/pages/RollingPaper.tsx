@@ -27,6 +27,7 @@ import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import MySwal from '@components/SweetAlert';
 import { useCallback } from 'react';
 import Login from '@assets/login_btn.png';
+import updateTokens from '@utils/updateTokens';
 
 interface IRolling {
   rollingId?: number;
@@ -63,6 +64,56 @@ export default function RollingPaper() {
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
 
+  function afterGetRolling(res: any) {
+    const curr = new Date();
+    const open = new Date(res.data.response.date.replaceAll('.', '-'));
+
+    const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+    const utcOpen = open.getTime() + open.getTimezoneOffset() * 60 * 1000;
+    const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+
+    const nowDate = new Date(utc + KR_TIME_DIFF);
+    setNowDate(nowDate);
+    const rollingDate = new Date(utcOpen);
+    setRollingDate(rollingDate);
+
+    if (rollingDate <= nowDate) {
+      setValid(true);
+    } else {
+      MySwal.fire({
+        title: `${res.data.response.date} 일 이후 개봉 가능`,
+        icon: 'info',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+      setValid(false);
+    }
+    console.log(res.data.response);
+
+    setRolling(res.data.response);
+    setLoading(true);
+    setStepNumber(
+      Math.floor(
+        res.data.response.totalMessages <= res.data.response.capacity
+          ? 1
+          : Number(res.data.response.totalMessages - 1) /
+              Number(res.data.response.capacity) +
+              1,
+      ),
+    );
+    if (res.data.response.bookmark) {
+      setBookmark(true);
+    }
+    const tmpType = res.data.response.imgFront.split('_')[2];
+    if (Number(tmpType) >= 1 && Number(tmpType) <= 4) {
+      setType(1);
+    } else if (Number(tmpType) >= 5 && Number(tmpType) <= 7) {
+      setType(2);
+    } else {
+      setType(3);
+    }
+  }
+
   async function getRolling() {
     url = paramCopy.url;
     setLoading(false);
@@ -70,64 +121,61 @@ export default function RollingPaper() {
     try {
       const res: any = await messageAPI.getRolling(
         userState.jwt,
+        userState.refresh,
         url,
         paginationId,
       );
-
-      const curr = new Date();
-      const open = new Date(res.data.response.date.replaceAll('.', '-'));
-
-      const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
-      const utcOpen = open.getTime() + open.getTimezoneOffset() * 60 * 1000;
-      const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-
-      const nowDate = new Date(utc + KR_TIME_DIFF);
-      setNowDate(nowDate);
-      const rollingDate = new Date(utcOpen);
-      setRollingDate(rollingDate);
-
-      if (rollingDate <= nowDate) {
-        setValid(true);
-      } else {
+      afterGetRolling(res);
+    } catch (err: any) {
+      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
         MySwal.fire({
-          title: `${res.data.response.date} 일 이후 개봉 가능`,
-          icon: 'info',
+          title: '로그아웃 되었습니다!',
+          icon: 'warning',
           confirmButtonColor: '#16453e',
           confirmButtonText: '확인',
+        }).then(async () => {
+          setUserState((prev: IuserRecoil) => {
+            const variable = { ...prev };
+            variable.id = 0;
+            variable.userToken = '';
+            variable.nickname = '';
+            variable.points = 0;
+            variable.jwt = '';
+            variable.refresh = '';
+            return variable;
+          });
+          const res: any = await messageAPI.getRolling(
+            '',
+            '',
+            url,
+            paginationId,
+          );
+          afterGetRolling(res);
         });
-        setValid(false);
-      }
-      console.log(res.data.response);
-
-      setRolling(res.data.response);
-      setLoading(true);
-      setStepNumber(
-        Math.floor(
-          res.data.response.totalMessages <= res.data.response.capacity
-            ? 1
-            : Number(res.data.response.totalMessages - 1) /
-                Number(res.data.response.capacity) +
-                1,
-        ),
-      );
-      if (res.data.response.bookmark) {
-        setBookmark(true);
-      }
-      const tmpType = res.data.response.imgFront.split('_')[2];
-      if (Number(tmpType) >= 1 && Number(tmpType) <= 4) {
-        setType(1);
-      } else if (Number(tmpType) >= 5 && Number(tmpType) <= 7) {
-        setType(2);
       } else {
-        setType(3);
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setUserState);
+          const res: any = await messageAPI.getRolling(
+            accessToken,
+            refreshToken,
+            url,
+            paginationId,
+          );
+          afterGetRolling(res);
+        } else {
+          MySwal.fire({
+            title: '불러오기 실패...',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
+          navigate('/');
+        }
       }
-    } catch (err: any) {
-      MySwal.fire({
-        title: '불러오기 실패...',
-        icon: 'warning',
-        confirmButtonColor: '#16453e',
-        confirmButtonText: '확인',
-      });
     }
   }
   const bookmarkSwitch = async () => {
@@ -142,18 +190,49 @@ export default function RollingPaper() {
     }
     //로그인시
     else {
+      const url = paramCopy.url;
       try {
-        let url = paramCopy.url;
-        const res: any = await rollingAPI.bookmarkRolling(userState.jwt, url);
+        await rollingAPI.bookmarkRolling(userState.jwt, userState.refresh, url);
         setBookmark(!bookmark);
         // console.log('북마크 스위치 성공!');
       } catch (err: any) {
-        MySwal.fire({
-          title: '북마크 실패...',
-          icon: 'warning',
-          confirmButtonColor: '#16453e',
-          confirmButtonText: '확인',
-        });
+        if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+          MySwal.fire({
+            title: '로그인이 필요합니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
+          setUserState((prev: IuserRecoil) => {
+            const variable = { ...prev };
+            variable.id = 0;
+            variable.userToken = '';
+            variable.nickname = '';
+            variable.points = 0;
+            variable.jwt = '';
+            variable.refresh = '';
+            return variable;
+          });
+          navigate('/');
+        } else {
+          let accessToken: string = err.response.headers.get('x-auth-token');
+          let refreshToken: string = err.response.headers.get('refresh-token');
+          if (accessToken && refreshToken) {
+            accessToken = accessToken.split(' ')[1];
+            refreshToken = refreshToken.split(' ')[1];
+            updateTokens(accessToken, refreshToken, setUserState);
+            await rollingAPI.bookmarkRolling(accessToken, refreshToken, url);
+            setBookmark(!bookmark);
+          } else {
+            MySwal.fire({
+              title: '북마크 실패...',
+              icon: 'warning',
+              confirmButtonColor: '#16453e',
+              confirmButtonText: '확인',
+            });
+            navigate('/');
+          }
+        }
       }
     }
   };
