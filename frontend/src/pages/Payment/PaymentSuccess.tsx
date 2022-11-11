@@ -2,9 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import dateFormatter from '@utils/dateFormatter';
 import paymentAPI from '@src/api/paymentAPI';
+import { useResetRecoilState } from 'recoil';
+import { paymentRecoil } from '@recoil/paymentRecoil';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
+  const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
 
   // url 분리
   const urlParams = new URLSearchParams(location.search);
@@ -23,6 +26,11 @@ const PaymentSuccess = () => {
     payment_method_type: '',
   });
 
+  // 잘못된 접근시 메인 페이지로 돌아가는 함수
+  const goMain = () => {
+    navigate('/');
+  };
+
   // 결제 완료 정보 가져오기
   useEffect(() => {
     const getPaymentInfo = async () => {
@@ -33,10 +41,9 @@ const PaymentSuccess = () => {
     getPaymentInfo();
   }, []);
 
-  // 잘못된 접근시 메인 페이지로 돌아가는 함수
-  const goMain = () => {
-    navigate('/');
-  };
+  useEffect(() => {
+    resetPaymentRecoil();
+  }, []);
 
   return (
     <div>
