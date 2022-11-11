@@ -36,10 +36,8 @@ public class StoreServiceImpl implements StoreService {
 
     /* 꽃 아이템 조회 */
     public List<FlowerResDto> getFlowerList(User user) {
-
         List<FlowerItem> flowers = flowerItemRepository.findAllFlowerItem();
         List<FlowerItem> userPurchasedFlowers = flowerUserRepository.userPurchasedFlower(user.getId());
-
         List<FlowerResDto> resDtos = new ArrayList<>();
 
         for(FlowerItem f : flowers) {
@@ -56,6 +54,30 @@ public class StoreServiceImpl implements StoreService {
                 flowerResDto.setIsOwned(true);
             } else {
                 flowerResDto.setIsOwned(userPurchasedFlowers.contains(f));
+            }
+            resDtos.add(flowerResDto);
+        }
+
+        return resDtos;
+    }
+
+    @Override
+    public List<FlowerResDto> getFlowerList() {
+        List<FlowerItem> flowers = flowerItemRepository.findAllFlowerItem();
+        List<FlowerResDto> resDtos = new ArrayList<>();
+
+        for(FlowerItem f : flowers) {
+            FlowerResDto flowerResDto = new FlowerResDto();
+            flowerResDto.setFlowerId(f.getId());
+            flowerResDto.setName(f.getName());
+            flowerResDto.setPoint(f.getPoint());
+            flowerResDto.setFlowerLanguage(f.getFlowerLanguage());
+            flowerResDto.setSeason(f.getSeason());
+            flowerResDto.setPrice(f.getPrice());
+            flowerResDto.setImgUrl(f.getImgUrl());
+            flowerResDto.setImgBud(f.getImgBud());
+            if(f.getPoint() == 0) {
+                flowerResDto.setIsOwned(true);
             }
             resDtos.add(flowerResDto);
         }
