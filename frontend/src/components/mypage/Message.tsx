@@ -107,7 +107,6 @@ export default function Message(props: {
       if (el.textContent && el.textContent.length >= 5) {
         el.textContent = el.textContent?.substring(0, 4) + '...';
       }
-      console.log(el.textContent);
     }
   }, []);
 
