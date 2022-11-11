@@ -209,7 +209,9 @@ export default function RollingPaper() {
   }, []);
 
   const shareRolling = () => {
-    navigate('/newroll/link', { state: paramCopy.url });
+    navigate('/newroll/link', {
+      state: { url: paramCopy.url, title: rolling.title },
+    });
   };
 
   const saveRolling = () => {
@@ -404,7 +406,7 @@ export default function RollingPaper() {
                     size="large"
                     color="primary"
                     className="share-btn"
-                    // onClick={shareRolling}
+                    onClick={shareRolling}
                   >
                     <IosShareIcon fontSize="large" />
                   </IconButton>
