@@ -8,7 +8,7 @@ export interface IPaymentRecoil {
   price: number;
   receiver: string;
   receiverPhone: string;
-  reveicerAddress: string;
+  receiverAddress: string;
   senderName: string;
   senderPhone: string;
 }
@@ -23,7 +23,7 @@ export const paymentRecoil = atom<IPaymentRecoil>({
     price: 0,
     receiver: '',
     receiverPhone: '',
-    reveicerAddress: '',
+    receiverAddress: '',
     senderName: '',
     senderPhone: '',
   },

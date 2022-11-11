@@ -1,6 +1,8 @@
 import paymentAPI from '@api/paymentAPI';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
+import { useResetRecoilState } from 'recoil';
+import { paymentRecoil } from '@recoil/paymentRecoil';
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
@@ -10,6 +12,7 @@ const PaymentRequest = () => {
   };
 
   const goBack = () => {
+    useResetRecoilState(paymentRecoil);
     const url = localStorage.getItem('url');
     navigate(`/rolling/${url}`);
   };
