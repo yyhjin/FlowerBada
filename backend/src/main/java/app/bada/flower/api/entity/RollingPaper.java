@@ -44,4 +44,6 @@ public class RollingPaper extends BaseEntity{
 
     @OneToMany(mappedBy = "rollingPaper")
     private List<Message> messages = new ArrayList<>();
+
+    public void imgUrlUpdate(String imgUrl) { this.imgUrl = imgUrl ; }
 }
