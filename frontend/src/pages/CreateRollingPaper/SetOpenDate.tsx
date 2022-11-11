@@ -13,6 +13,7 @@ import { css } from '@emotion/react';
 import rollingAPI from '@api/rollingAPI';
 import updateTokens from '@src/utils/updateTokens';
 import MySwal from '@components/SweetAlert';
+import { Keyboard } from 'react-native';
 
 export default function SetOpenDate() {
   const today = new Date();
@@ -141,6 +142,7 @@ export default function SetOpenDate() {
           placeholderText="롤링페이퍼 개봉 날짜 선택" // placeholder
           selected={date} // value
           onChange={(date: Date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
+          onFocus={(e) => e.target.blur()}
         />
       </div>
       <button onClick={handleRollingLink} css={CreateButton}>
