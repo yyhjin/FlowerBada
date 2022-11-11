@@ -1,8 +1,8 @@
 import paymentAPI from '@api/paymentAPI';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
-import { useResetRecoilState } from 'recoil';
-import { paymentRecoil } from '@recoil/paymentRecoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
+import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { Button } from '@mui/material';
 import KakaoPayBtn from '@assets/kakaoPay.png';
@@ -13,6 +13,8 @@ const PaymentRequest = () => {
     const res = await paymentAPI.requestPayment();
     window.location.href = res.data.response;
   };
+  const [paymentState, setPaymentState] =
+    useRecoilState<IPaymentRecoil>(paymentRecoil);
   const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
 
   const goBack = () => {
