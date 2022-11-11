@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import Message from '@src/components/mypage/Message';
@@ -28,6 +28,11 @@ import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import MySwal from '@components/SweetAlert';
 import html2canvas from 'html2canvas';
+import { useReactToPrint } from 'react-to-print';
+
+import Print from '@pages/Print';
+import Main from '@pages/MainPage';
+import View from '@pages/View';
 
 export interface IRolling {
   rollingId?: number;
@@ -62,6 +67,7 @@ export default function RollingPaper() {
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
+  let componentRef = useRef<HTMLDivElement>(null);
 
   async function getRolling() {
     setLoading(false);
@@ -190,6 +196,7 @@ export default function RollingPaper() {
         rolling,
         type,
         valid,
+        mainImg: rolling.imgUrl,
       },
     });
   };
@@ -313,6 +320,27 @@ export default function RollingPaper() {
               <>
                 <div className="bottom-bar">
                   <ThemeProvider theme={theme}>
+                    {/* <ReactToPrint
+                      trigger={() => (
+                        <IconButton
+                          size="large"
+                          color="primary"
+                          className="share-btn"
+                        >
+                          <SaveAltIcon fontSize="large" />
+                        </IconButton>
+                      )}
+                      content={() => componentRef.current}
+                    /> */}
+                    {/* <div style={{ display: 'none' }}>
+                      <Print
+                        ref={(el: any) => (componentRef = el)}
+                        // ref={componentRef}
+                        rolling={rolling}
+                        type={type}
+                        valid={valid}
+                      />
+                    </div> */}
                     <IconButton
                       size="large"
                       color="primary"
