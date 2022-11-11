@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import Message from '@src/components/message/Message';
@@ -28,7 +28,14 @@ import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
 import MySwal from '@components/SweetAlert';
+import { useCallback } from 'react';
+import Login from '@assets/login_btn.png';
 import html2canvas from 'html2canvas';
+import { useReactToPrint } from 'react-to-print';
+
+import Print from '@pages/Print';
+import Main from '@pages/MainPage';
+import View from '@pages/View';
 
 export interface IRolling {
   rollingId?: number;
@@ -59,17 +66,19 @@ export default function RollingPaper() {
   const [bookmark, setBookmark] = useState<Boolean>(false);
   const [userState] = useRecoilState<IuserRecoil>(userReCoil);
   let paramCopy: any = {};
+  let url: string;
   paramCopy = useParams();
   const [nowDate, setNowDate] = useState<Date>(new Date());
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
   const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
+  let componentRef = useRef<HTMLDivElement>(null);
 
   async function getRolling() {
+    url = paramCopy.url;
     setLoading(false);
     setDeliveryModal(false);
-    let url = paramCopy.url;
     try {
       const res: any = await messageAPI.getRolling(
         userState.jwt,
@@ -170,19 +179,45 @@ export default function RollingPaper() {
   };
 
   const changeDelivery = (param: boolean) => {
-    setDeliveryModal(param);
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setDeliveryModal(param);
+    }
   };
 
   const sendDelivery = () => {
     // 로컬스토리지에 담기
     localStorage.setItem('url', paramCopy.url);
     localStorage.setItem('paginationId', paginationId.toString());
-    navigate('/payment/option', {
+    navigate('/payment/option');
+  };
+
+  const linkToSignIn = () => {
+    localStorage.setItem('url', paramCopy.url);
+    localStorage.setItem('paginationId', String(paginationId));
+    navigate('/');
+  };
+
+  useEffect(() => {
+    const paginationCheck = localStorage.getItem('paginationId');
+    if (paginationCheck) setPaginationId(+paginationCheck);
+    localStorage.removeItem('url');
+    localStorage.removeItem('paginationId');
+  }, []);
+
+  const saveRolling = () => {
+    navigate('/rolling/print', {
       state: {
         rolling,
         type,
         valid,
-        stepNumber,
+        mainImg: rolling.imgUrl,
       },
     });
   };
@@ -214,6 +249,21 @@ export default function RollingPaper() {
     }
   }, [paginationId]);
 
+  useEffect(() => {
+    if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
+      // 캡쳐 및 DB 저장
+      const el = document.getElementById('to-save');
+      if (el) {
+        html2canvas(el).then((canvas: any) => {
+          onSaveAs(
+            canvas.toDataURL('image/png'),
+            `final-image-` + paramCopy.url + `.png`,
+          );
+        });
+      }
+    }
+  }, [rolling]);
+
   const onSaveAs = (uri: string, filename: string): void => {
     console.log(uri);
     let link: any = document.createElement('a');
@@ -232,6 +282,9 @@ export default function RollingPaper() {
 
   return (
     <>
+      {userState.jwt === '' ? (
+        <img src={Login} css={LoginBtn} onClick={linkToSignIn} />
+      ) : null}
       {loading && rolling && rolling.messages && type ? (
         <>
           <div css={DetailCss}>
@@ -397,6 +450,14 @@ export default function RollingPaper() {
   );
 }
 
+const LoginBtn = css`
+  position: absolute;
+  width: 35px;
+  top: 2%;
+  right: 5%;
+  z-index: 999999;
+`;
+
 const DetailCss = css`
   width: 100%;
   height: 115%;
@@ -404,26 +465,27 @@ const DetailCss = css`
   transform: translate(0%, -15%);
 
   .titlezone_1 {
-    padding-top: 23vh;
-    margin-bottom: -16vh;
+    padding-top: 20vh;
+    margin-bottom: -30vw;
     justify-content: center;
     font-size: 7.5vw;
     display: flex;
+
     @media screen and (min-height: 700px) {
-      padding-top: 27vh;
-      margin-bottom: -7vh;
+      padding-top: 22vh;
+      margin-bottom: -15vh;
     }
     @media screen and (min-height: 800px) {
-      padding-top: 27vh;
-      margin-bottom: -7vh;
+      padding-top: 22vh;
+      margin-bottom: -12vh;
     }
     @media screen and (min-height: 900px) {
-      padding-top: 27vh;
-      margin-bottom: -7vh;
+      padding-top: 22vh;
+      margin-bottom: -10vh;
     }
     @media screen and (max-height: 660px) and (max-width: 290px) {
-      padding-top: 20vh;
-      margin-bottom: -16vw;
+      padding-top: 22vh;
+      margin-bottom: -25vw;
     }
   }
   .titlezone_2 {
@@ -439,7 +501,7 @@ const DetailCss = css`
     }
     @media screen and (min-height: 800px) {
       padding-top: 22vh;
-      padding-bottom: 2vh;
+      margin-bottom: -5vh;
     }
     @media screen and (min-height: 900px) {
       padding-top: 22vh;
@@ -451,11 +513,28 @@ const DetailCss = css`
     }
   }
   .titlezone_3 {
-    padding-top: 23vh;
-    margin-bottom: -10vh;
+    padding-top: 20vh;
+    margin-bottom: -10vw;
     justify-content: center;
     font-size: 7.5vw;
     display: flex;
+
+    @media screen and (min-height: 700px) {
+      padding-top: 22vh;
+      margin-bottom: -12vh;
+    }
+    @media screen and (min-height: 800px) {
+      padding-top: 22vh;
+      margin-bottom: -10vh;
+    }
+    @media screen and (min-height: 900px) {
+      padding-top: 22vh;
+      margin-bottom: -7vh;
+    }
+    @media screen and (max-height: 660px) and (max-width: 290px) {
+      padding-top: 22vh;
+      margin-bottom: -8vw;
+    }
   }
   .imgbox_1,
   .imgbox_2 {
@@ -747,16 +826,19 @@ const DetailCss = css`
     }
   }
   .dot_3 {
-    margin-top: 0vh;
+    margin-top: -8vh;
     bottom: 0%;
+    @media screen and (min-height: 700px) {
+      margin-top: -9vh;
+    }
     @media screen and (min-height: 800px) {
-      margin-top: 7vh;
+      margin-top: -8vh;
     }
     @media screen and (min-height: 900px) {
-      margin-top: 10vh;
+      margin-top: -9vh;
     }
     @media screen and (max-height: 660px) and (max-width: 290px) {
-      margin-top: 18vh;
+      margin-top: -6vh;
     }
   }
 

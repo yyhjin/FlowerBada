@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PaymentOption from '@pages/Payment/PaymentOption';
 import PaymentReceiverAddress from '@pages/Payment/PaymentReceiverAddress';
@@ -23,7 +24,9 @@ import Layout from '@pages/Layout';
 import SignIn from '@pages/SignIn';
 import MessageRead from '@pages/MessageRead';
 import MessageCreate from '@pages/MessageCreate';
-import CaptureTest from './pages/CaptureTest';
+import CaptureTest from '@pages/CaptureTest';
+import Print from '@pages/Print';
+import View from './pages/View';
 
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
@@ -34,12 +37,14 @@ function App() {
           <Route path="/capture" element={<CaptureTest />}></Route>
           {loginUser.jwt === '' ? (
             <>
-              <Route path="/*" element={<SignIn />}></Route>
+              <Route path="" element={<SignIn />}></Route>
               <Route
                 path="/user/signin/redirect"
                 element={<KakaoRedirectHandler />}
               ></Route>
-              <Route path="rolling/:url" element={<RollingPaper />}></Route>
+              <Route path="/" element={<Layout />}>
+                <Route path="rolling/:url" element={<RollingPaper />}></Route>
+              </Route>
             </>
           ) : (
             <>
@@ -74,6 +79,8 @@ function App() {
                   element={<MessageCreate />}
                 />
               </Route>
+              <Route path="/rolling/print" element={<Print />} />
+              <Route path="/rolling/view" element={<View />} />
             </>
           )}
         </Routes>

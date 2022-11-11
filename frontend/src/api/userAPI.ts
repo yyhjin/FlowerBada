@@ -20,13 +20,14 @@ const userAPI = {
       data: data,
     });
   },
-  signOut(jwt: string) {
+  signOut(jwt: string, refresh: string) {
     return api({
       method: 'post',
       url: `${END_POINT}/signout`,
       data: {},
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
     });
   },

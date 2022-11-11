@@ -147,6 +147,7 @@ export default function SelectItem() {
             <div css={Point}>
               <img src={Coin} css={PointImg} /> {userState.points}P
             </div>
+
             <div>
               <img
                 src={createRollingState.url}
@@ -222,11 +223,12 @@ const Background = css`
 const Point = css`
   text-align: right;
   margin-top: 6vh;
-  margin-right: 6vw;
+  margin-right: 6%;
 `;
 
 const PointImg = css`
-  width: 3vw;
+  margin-top: 2vw;
+  width: 15px;
 `;
 
 const SelectImage = css`
@@ -237,35 +239,45 @@ const SelectImage = css`
     width: 125px;
   }
   @media screen and (min-width: 500px) {
-    width: 100px;
+    width: 150px;
+    margin-bottom: -3vh;
   }
 `;
 
 const ItemZone = css`
   background-color: white;
-  width: 90%;
+  /* width: 90%; */
   height: 40vh;
   margin: 3vw;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   overflow: scroll;
+  @media screen and (min-height: 700px) {
+    height: 45vh;
+  }
+  @media screen and (min-height: 800px) {
+    height: 50vh;
+  }
+  @media screen and (min-height: 900px) {
+    height: 55vh;
+  }
 `;
 
 const OwnedItem = css`
   background-color: white;
   width: 90px;
-  padding: 2vw;
+  padding: 1vw;
   @media screen and (min-width: 400px) {
     width: 125px;
   }
   @media screen and (min-width: 500px) {
-    width: 100px;
+    width: 90px;
   }
 `;
 
 const NotOwnedItem = css`
-  padding: 2vw;
+  padding: 1vw;
   position: relative;
 `;
 
@@ -276,20 +288,29 @@ const NotOwnedItemImg = css`
     width: 125px;
   }
   @media screen and (min-width: 500px) {
-    width: 100px;
+    width: 90px;
   }
 `;
 
 const NextButton = css`
-  margin-top: 3vh;
   height: 7vh;
   width: 94%;
   border-radius: 3vw;
   color: white;
-  font-size: 4vw;
+  font-size: 100%;
   background-color: #16453e;
+
+  @media screen and (max-height: 800px) {
+    margin-top: 4vh;
+  }
+  @media screen and (max-height: 900px) {
+    margin-top: 5vh;
+  }
+  @media screen and (max-height: 1000px) {
+    margin-top: 4vh;
+  }
   @media screen and (min-width: 1000px) {
-    font-size: 20pt;
+    margin-top: -3vh;
   }
 `;
 
@@ -300,6 +321,6 @@ const Locked = css`
     width: 125px;
   }
   @media screen and (min-width: 500px) {
-    width: 100px;
+    width: 90px;
   }
 `;

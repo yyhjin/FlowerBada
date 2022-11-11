@@ -11,6 +11,8 @@ const KakaoRedirectHandler = () => {
   let refresh: string = '';
   let user: any = null;
   let register: boolean = false;
+  let url = localStorage.getItem('url');
+  let paginationId = localStorage.getItem('paginationId');
 
   useEffect(() => {
     userAPI
@@ -31,8 +33,11 @@ const KakaoRedirectHandler = () => {
           variable.refresh = refresh;
           return variable;
         });
-        // alert('login success!!!');
-        window.location.href = '/';
+        if (url && url !== '') {
+          window.location.href = `/rolling/${url}`;
+        } else {
+          window.location.href = '/';
+        }
       })
       .catch((err) => {
         console.log(err);
