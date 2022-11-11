@@ -57,6 +57,12 @@ const messageAPI = {
       data: data,
     });
   },
+  getAllMessage(rollingUrl: string) {
+    return api({
+      method: 'get',
+      url: `${END_POINT}/getall/${rollingUrl}`,
+    });
+  },
   // loginGetRolling(jwt: string, url: string, paginationId: number) {
   //   return api({
   //     method: 'get',

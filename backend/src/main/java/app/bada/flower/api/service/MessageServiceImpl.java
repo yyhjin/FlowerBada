@@ -17,8 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -101,5 +103,18 @@ public class MessageServiceImpl implements MessageService {
                 .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         rollingPaper.imgUrlUpdate(fileUrl);
         rollingPaperRepository.save(rollingPaper);
+    }
+
+    @Override
+    public List<MessageResDto.MessageDto> getAllMessage(String rollingUrl) {
+        List<Message> messages = rollingPaperRepository.findByUrl(rollingUrl).get().getMessages();
+        List<MessageResDto.MessageDto> messageDtos = new ArrayList<>();
+
+        for (int i = 0; i < messages.size(); i++) {
+            MessageResDto.MessageDto messageDto = new MessageResDto.MessageDto(messages.get(i));
+            messageDtos.add(messageDto);
+        }
+
+        return messageDtos;
     }
 }

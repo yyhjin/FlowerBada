@@ -17,4 +17,6 @@ public interface MessageService {
     List<MessageResDto.MessageDto> search(String content);
 
     void updateRollingImage(String url, String img) throws IOException;
+
+    List<MessageResDto.MessageDto> getAllMessage(String rollingUrl);
 }
