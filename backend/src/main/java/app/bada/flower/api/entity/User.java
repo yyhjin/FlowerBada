@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,6 +29,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
     private String nickname;
+
+    @Column(nullable = false)
+    private LocalDateTime lastLoginDate;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
@@ -92,5 +96,9 @@ public class User extends BaseEntity implements UserDetails {
 
     public void updatePoint(int points) {
         this.points = points;
+    }
+
+    public void updateLastLoginDate(LocalDateTime ldt) {
+        this.lastLoginDate = ldt;
     }
 }

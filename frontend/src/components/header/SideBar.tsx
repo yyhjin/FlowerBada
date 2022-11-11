@@ -15,7 +15,7 @@ const SideBar = (props: any) => {
 
   const logout = async () => {
     try {
-      await userAPI.signOut(loginUser.jwt);
+      await userAPI.signOut(loginUser.jwt, loginUser.refresh);
       setLoginUser((prev: IuserRecoil) => {
         const variable = { ...prev };
         variable.id = 0;

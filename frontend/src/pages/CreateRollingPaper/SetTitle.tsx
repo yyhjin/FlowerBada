@@ -58,22 +58,33 @@ export default function SetTitle() {
 const Background = css`
   width: 100vw;
   .maxlength {
+    margin-top: 1vh;
     margin-right: 17vw;
     display: flex;
     justify-content: end;
+  }
+  @media screen and (min-width: 500px) {
+    .maxlength {
+      margin-right: 60px;
+    }
   }
 `;
 
 const TitleInput = css`
   padding-left: 10vw;
   padding-right: 10vw;
-  font-size: 5vw;
+  font-size: 100%;
   margin-top: 10vh;
   width: 50vw;
   border-radius: 2vw;
   border: 0;
   height: 5vh;
   text-align: center;
+  @media screen and (min-width: 500px) {
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 70%;
+  }
 `;
 
 const SelectImage = css`
@@ -86,11 +97,16 @@ const SelectImage = css`
 `;
 
 const NextButton = css`
-  margin-top: 7.3vh;
+  margin-top: 20vh;
   height: 7vh;
   width: 94vw;
   border-radius: 3vw;
   color: white;
-  font-size: 4vw;
+  font-size: 100%;
   background-color: #16453e;
+  @media screen and (min-width: 500px) {
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 80%;
+  }
 `;

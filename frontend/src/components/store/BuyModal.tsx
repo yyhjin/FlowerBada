@@ -27,12 +27,6 @@ export default function Modal(props: any) {
             .putFlower(loginUser.jwt, loginUser.refresh, data)
             .then(() => {
               setDoubleCheck(true);
-              MySwal.fire({
-                title: '구매 완료!',
-                icon: 'success',
-                confirmButtonColor: '#16453e',
-                confirmButtonText: '확인',
-              });
             });
         } else if (!props.isFlower && !doubleCheck) {
           setDoubleCheck(true);
@@ -43,12 +37,6 @@ export default function Modal(props: any) {
             .putRolling(loginUser.jwt, loginUser.refresh, data)
             .then(() => {
               setDoubleCheck(false);
-              MySwal.fire({
-                title: '구매 완료!',
-                icon: 'success',
-                confirmButtonColor: '#16453e',
-                confirmButtonText: '확인',
-              });
             });
         }
         const res = await userAPI.getPoint(loginUser.jwt, loginUser.refresh);
@@ -198,6 +186,11 @@ const ModalCss = css`
     justify-content: center;
     align-items: center;
     z-index: 3;
+    @media screen and (min-width: 500px) {
+      position: relative;
+      top: -300px;
+      left: 0px;
+    }
   }
 
   /* modal창 */
@@ -210,6 +203,9 @@ const ModalCss = css`
     background-color: rgb(255, 255, 255);
     border-radius: 10px;
     box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+    @media screen and (min-width: 500px) {
+      background-color: rgb(224, 224, 224);
+    }
   }
 
   #modalCloseBtn {

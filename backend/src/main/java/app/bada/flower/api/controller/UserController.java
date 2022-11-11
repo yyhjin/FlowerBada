@@ -54,8 +54,9 @@ public class UserController {
     }
 
     @PostMapping("/signout")
-    public void signOut (@RequestHeader(value = "X-AUTH-TOKEN") String jwt) throws Exception {
-        userService.logout(jwt.split(" ")[1]);
+    public void signOut (@RequestHeader(value = "X-AUTH-TOKEN") String jwt,
+                         @RequestHeader(value = "REFRESH-TOKEN") String refresh) throws Exception {
+        userService.logout(jwt.split(" ")[1], refresh.split(" ")[1]);
     }
 
     @GetMapping("/points")

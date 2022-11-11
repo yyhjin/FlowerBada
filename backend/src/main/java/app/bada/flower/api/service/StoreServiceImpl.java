@@ -104,7 +104,7 @@ public class StoreServiceImpl implements StoreService {
     /* 롤링페이퍼 아이템 구매 */
     @Transactional
     public void buyRollingItem(User user, RollingReqDto rollingReqDto) {
-        if(!flowerUserRepository.findByUserAndFlowerItem(user,flowerItemRepository.findById(rollingReqDto.getRollingId()).get()).isPresent()){
+        if(!rollingUserRepository.findByUserAndRollingItem(user,rollingItemRepository.findById(rollingReqDto.getRollingId()).get()).isPresent()){
             RollingItem rollingItem = rollingItemRepository.findById(rollingReqDto.getRollingId())
                     .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
             user.updatePoint(user.getPoints() - rollingItem.getPoint());
