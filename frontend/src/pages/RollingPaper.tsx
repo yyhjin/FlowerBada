@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
-import Message from '@components/mypage/Message';
+import Message from '@src/components/message/Message';
 import DotSlice from '@components/paging/DotSlice';
 import messageAPI from '@api/messageAPI';
 import IosShareIcon from '@mui/icons-material/IosShare';
@@ -45,6 +45,7 @@ export interface IMessage {
   writer: string;
   flowerId: number;
   messageId: number;
+  price: number;
 }
 
 export default function RollingPaper() {
@@ -179,6 +180,7 @@ export default function RollingPaper() {
         rolling,
         type,
         valid,
+        stepNumber,
       },
     });
   };

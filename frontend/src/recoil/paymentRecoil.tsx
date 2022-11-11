@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
 
 export interface IPaymentRecoil {
-  tap: string;
+  optionType: string;
   url: string;
   paginationId: number;
   title: string;
@@ -16,7 +16,7 @@ export interface IPaymentRecoil {
 export const paymentRecoil = atom<IPaymentRecoil>({
   key: 'paymentRecoil',
   default: {
-    tap: 'option',
+    optionType: 'default',
     url: '',
     paginationId: 0,
     title: 'string',
