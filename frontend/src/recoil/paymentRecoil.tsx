@@ -6,11 +6,12 @@ export interface IPaymentRecoil {
   paginationId: number;
   title: string;
   price: number;
-  receiver: string;
+  receiverName: string;
   receiverPhone: string;
   receiverAddress: string;
   senderName: string;
   senderPhone: string;
+  isAnonymous: boolean;
 }
 
 export const paymentRecoil = atom<IPaymentRecoil>({
@@ -21,10 +22,11 @@ export const paymentRecoil = atom<IPaymentRecoil>({
     paginationId: 0,
     title: 'string',
     price: 0,
-    receiver: '',
+    receiverName: '',
     receiverPhone: '',
     receiverAddress: '',
     senderName: '',
     senderPhone: '',
+    isAnonymous: false,
   },
 });

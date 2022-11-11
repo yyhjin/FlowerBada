@@ -2,8 +2,7 @@ import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
-import { createTheme, Grid, MenuItem, ThemeProvider } from '@mui/material';
-import FormControl from '@mui/material/FormControl';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { Button } from '@mui/material';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
@@ -32,7 +31,7 @@ const PaymentReceiverAddress = () => {
   const onClickNext = () => {
     setPaymentState((prev: IPaymentRecoil) => {
       const data = { ...prev };
-      data.receiver = receiverName;
+      data.receiverName = receiverName;
       data.receiverPhone = receiverPhone;
       data.receiverAddress = receiverAddress;
       return data;
@@ -47,7 +46,7 @@ const PaymentReceiverAddress = () => {
   };
 
   useEffect(() => {
-    setReceiverName(paymentState.receiver);
+    setReceiverName(paymentState.receiverName);
     setReceiverPhone(paymentState.receiverPhone);
     setReceiverAddress(paymentState.receiverAddress);
   }, []);
