@@ -20,7 +20,7 @@ import {
   IconButton,
 } from '@mui/material';
 
-interface IMsg {
+export interface IMsg {
   messageId?: number;
   flowerId?: number;
   content?: string;

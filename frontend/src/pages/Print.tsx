@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Message from '@components/mypage/Message';
 import type { IRolling, IMessage } from '@pages/RollingPaper';
+import type { IMsg } from '@components/mypage/Message';
 import {
   Button,
   createTheme,
@@ -10,29 +11,41 @@ import {
   ThemeProvider,
 } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
+import messageAPI from '@src/api/messageAPI';
 
 const Print = () => {
   const location = useLocation();
   const printRef = useRef<HTMLDivElement>(null);
-  // const componentRef = props.printRef;
-  // const rolling = props.rolling;
-  // const type = props.type;
-  // const valid = props.valid;
+  const [messages, setMessages] = useState<IMsg[]>([]);
 
   location.state as {
-    rolling: IRolling;
-    type: number;
-    valid: Boolean;
+    rollingUrl: string;
     mainImg: string;
   };
-  const { rolling, mainImg } = location.state;
-  // const imgUrl = '/src/assets/' + rolling.messages[0].imgUrl;
+  const { rollingUrl, mainImg } = location.state;
 
   useEffect(() => {
-    console.log(rolling.messages[0]);
+    getMessages();
+  }, []);
+
+  useEffect(() => {
+    console.log(messages);
     console.log(mainImg);
-    onClickPrint();
-  }, [rolling]);
+    // onClickPrint();
+  }, [messages]);
+
+  const getMessages = () => {
+    messageAPI
+      .getAllMessage(rollingUrl)
+      .then((res) => {
+        console.log(res.data.response);
+        setMessages(res.data.response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const onClickPrint = () => {
     if (printRef.current) {
       let printContents = printRef.current.innerHTML;
@@ -53,14 +66,13 @@ const Print = () => {
 
   return (
     <div css={A4CSS}>
-      <Button onClick={onClickPrint}>Print</Button>
-      {/* <h1>{rolling.messages[0].content}</h1> */}
+      {/* <Button onClick={onClickPrint}>Print</Button> */}
       <div ref={printRef} className="page">
         <img
           // className="main-img"
           style={{
             width: '250px',
-            transform: 'translate(150%, 40%)',
+            transform: 'translate(0, 40%)',
           }}
           src={
             'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/' +
@@ -68,7 +80,20 @@ const Print = () => {
           }
         />
         {/* <div style={{ position: 'relative' }}> */}
-        <div
+
+        <div className="flowerlist">
+          {messages.map((message: any, index: number) => {
+            return (
+              <div key={index} className="flowerbox">
+                <img
+                  src={'/src/assets/' + message.imgUrl}
+                  className="flowerbox"
+                ></img>
+              </div>
+            );
+          })}
+        </div>
+        {/* <div
           style={{
             position: 'relative',
             width: '100px',
@@ -97,22 +122,18 @@ const Print = () => {
               height: '150px',
               transform: 'translate(10%, -120%)',
             }}
-          />
-        </div>
-        <img
-          src={
-            'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/' +
-            rolling.messages[1].imgUrl
-          }
-          style={{
-            width: '150px',
-            transform: 'translate(50%, 70%)',
-          }}
-        />
-
-        {rolling.messages[0].content}
+          /> */}
       </div>
-      {/* </div> */}
+      {/* <img
+        src={
+          'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/' +
+          rolling.messages[1].imgUrl
+        }
+        style={{
+          width: '150px',
+          transform: 'translate(50%, 70%)',
+        }}
+      /> */}
     </div>
   );
 };
@@ -122,7 +143,7 @@ const A4CSS = css`
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   background-color: white;
-  z-index: -1;
+  /* z-index: -1; */
   /* margin: 100px; */
   /* padding: 0; */
 
@@ -142,7 +163,8 @@ const A4CSS = css`
     margin: 0;
 
     .flowerlist {
-      /* width: 100%; */
+      width: 100%;
+      height: 100%;
       position: static;
 
       .flowerbox {
@@ -211,8 +233,9 @@ const A4CSS = css`
       &:first-of-type {
         /* z-index: 10; */
         left: 100px;
-        top: -200px;
-        width: 50px;
+        top: -400px;
+        width: 80px;
+        height: 80px;
         transform: rotate(0deg);
         @media screen and (max-height: 700px) {
           left: -12vw;
@@ -220,9 +243,9 @@ const A4CSS = css`
         }
       }
       &:nth-of-type(2) {
-        z-index: 9;
-        left: -2vw;
-        top: 80vw;
+        /* z-index: 9; */
+        left: -280px;
+        top: -50px;
         transform: rotate(0deg);
         @media screen and (max-height: 700px) {
           left: -1.5vw;
@@ -230,7 +253,7 @@ const A4CSS = css`
         }
       }
       &:nth-of-type(3) {
-        z-index: 8;
+        /* z-index: 8; */
         left: -34vw;
         top: 83vw;
         transform: rotate(-10deg);
@@ -240,7 +263,7 @@ const A4CSS = css`
         }
       }
       &:nth-of-type(4) {
-        z-index: 7;
+        /* z-index: 7; */
         left: 15vw;
         top: 75vw;
         transform: rotate(15deg);
@@ -250,7 +273,7 @@ const A4CSS = css`
         }
       }
       &:nth-of-type(5) {
-        z-index: 6;
+        /* z-index: 6; */
         left: -45vw;
         top: 80vw;
         transform: rotate(-5deg);
@@ -260,7 +283,7 @@ const A4CSS = css`
         }
       }
       &:nth-of-type(6) {
-        z-index: 5;
+        /* z-index: 5; */
         left: -15vw;
         top: 65vw;
         transform: rotate(-5deg);
@@ -270,7 +293,7 @@ const A4CSS = css`
         }
       }
       &:nth-of-type(7) {
-        z-index: 5;
+        /* z-index: 5; */
         left: -32vw;
         top: 68vw;
         transform: rotate(-10deg);
@@ -280,7 +303,7 @@ const A4CSS = css`
         }
       }
       &:nth-of-type(8) {
-        z-index: 5;
+        /* z-index: 5; */
         left: 2vw;
         top: 65vw;
         transform: rotate(5deg);
@@ -290,7 +313,7 @@ const A4CSS = css`
         }
       }
       &:nth-of-type(9) {
-        z-index: 2;
+        /* z-index: 2; */
         left: -45vw;
         top: 70vw;
         transform: rotate(-20deg);
@@ -300,7 +323,7 @@ const A4CSS = css`
         }
       }
       &:nth-of-type(10) {
-        z-index: 1;
+        /* z-index: 1; */
         left: 15vw;
         top: 65vw;
         transform: rotate(0deg);

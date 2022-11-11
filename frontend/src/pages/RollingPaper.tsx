@@ -9,7 +9,6 @@ import CreateIcon from '@mui/icons-material/Create';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
 
 import {
   Dialog,
@@ -217,9 +216,7 @@ export default function RollingPaper() {
   const saveRolling = () => {
     navigate('/rolling/print', {
       state: {
-        rolling,
-        type,
-        valid,
+        rollingUrl: paramCopy.url,
         mainImg: rolling.imgUrl,
       },
     });
@@ -356,6 +353,7 @@ export default function RollingPaper() {
                       size="large"
                       color="primary"
                       className="share-btn"
+                      onClick={saveRolling}
                     >
                       <SaveAltIcon fontSize="large" />
                     </IconButton>
