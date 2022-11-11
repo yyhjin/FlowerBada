@@ -69,7 +69,9 @@ export default function SetOpenDate() {
         return variable;
       });
 
-      navigate('/newroll/link', { state: res.data.response });
+      navigate('/newroll/link', {
+        state: { url: res.data.response, title: createRollingState.title },
+      });
     } catch (err: any) {
       if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
         MySwal.fire({
@@ -139,6 +141,7 @@ export default function SetOpenDate() {
           placeholderText="롤링페이퍼 개봉 날짜 선택" // placeholder
           selected={date} // value
           onChange={(date: Date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
+          onFocus={(e) => e.target.blur()}
         />
       </div>
       <button onClick={handleRollingLink} css={CreateButton}>
