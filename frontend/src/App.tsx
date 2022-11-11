@@ -39,6 +39,10 @@ function App() {
               ></Route>
               <Route path="/" element={<Layout />}>
                 <Route path="rolling/:url" element={<RollingPaper />}></Route>
+                <Route
+                  path="rolling/message/create"
+                  element={<MessageCreate />}
+                />
               </Route>
             </>
           ) : (
@@ -55,13 +59,13 @@ function App() {
                   <Route path="link" element={<Link />}></Route>
                 </Route>
                 <Route path="rolling/:url" element={<RollingPaper />}></Route>
-                <Route path="/payment" element={<Payment />} />
-                <Route path="/payment/success" element={<PaymentSuccess />} />
-                <Route path="/payment/fail" element={<PaymentFail />} />
-                <Route path="/payment/cancel" element={<PaymentCancel />} />
-                <Route path="/rolling/message/read" element={<MessageRead />} />
+                <Route path="payment" element={<Payment />} />
+                <Route path="payment/success" element={<PaymentSuccess />} />
+                <Route path="payment/fail" element={<PaymentFail />} />
+                <Route path="payment/cancel" element={<PaymentCancel />} />
+                <Route path="rolling/message/read" element={<MessageRead />} />
                 <Route
-                  path="/rolling/message/create"
+                  path="rolling/message/create"
                   element={<MessageCreate />}
                 />
               </Route>
