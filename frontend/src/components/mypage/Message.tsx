@@ -29,7 +29,13 @@ interface IMsg {
   imgUrl?: string;
 }
 
-export default function Message(props: any) {
+export default function Message(props: {
+  imgUrl: string;
+  messageId: number;
+  writer: string;
+  valid: Boolean;
+  writerDisplay: Boolean;
+}) {
   const [msg, setMsg] = useState<IMsg>({});
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openReportModal, setOpenReportModal] = useState<boolean>(false);
@@ -99,104 +105,119 @@ export default function Message(props: any) {
     <>
       {props.valid ? (
         <>
-          <div css={FlowerCss} className="f-wrap">
-            <div className="f-imgbox" onClick={getMessage}>
-              <img src={'/src/assets/' + props.imgUrl}></img>
-            </div>
-            <div className="f-inner">{props.writer}</div>
-          </div>
-          <div>
-            {/* 메시지 조회 Modal */}
-            <DialogCustom open={openModal}>
-              {/* 신고 Modal */}
-              <DialogReport open={openReportModal} css={ReportDialog}>
-                <DialogTitle className="title">
-                  <WbTwilight color="error" />
-                  &nbsp; 메시지 신고하기
-                </DialogTitle>
-                <DialogContent>
-                  {/* <br /> */}
-                  <DialogContentText className="content">
-                    신고자 : {loginUser.nickname}
-                    <br />
-                    신고 사유
-                  </DialogContentText>
-                  {/* <br /> */}
-                  <textarea
-                    className="input-content"
-                    value={reportContent}
-                    placeholder="신고 사유를 입력하세요"
-                    onChange={(e) => setReportContent(e.target.value)}
-                  ></textarea>
-                </DialogContent>
-                <DialogActions className="action">
-                  <ThemeProvider theme={theme}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      onClick={sendReport}
-                      css={Font}
-                    >
-                      신고
-                    </Button>
-                  </ThemeProvider>
-                  <ThemeProvider theme={theme}>
-                    <Button
-                      variant="contained"
-                      color="neutral"
-                      size="small"
-                      onClick={(e) => changeReportModal(false)}
-                      css={Font}
-                    >
-                      취소
-                    </Button>
-                  </ThemeProvider>
-                </DialogActions>
-              </DialogReport>
-
-              <div>
-                <DialogContent>
-                  <div style={{ textAlign: 'center' }}>
-                    <img src={'/src/assets/' + msg.imgUrl} width="70%"></img>
-                  </div>
-                  <DialogContentTextCustom>
-                    <IconButton
-                      css={ReportIcon}
-                      color="error"
-                      aria-aria-label="report"
-                      onClick={(e) => changeReportModal(true)}
-                    >
-                      <WbTwilight />
-                    </IconButton>
-                    <br />
-                    {/* 개행문자 적용 */}
-                    <div id="content">
-                      {String(msg.content)
-                        .split('\n')
-                        .map((line, index) => {
-                          return (
-                            <span key={index}>
-                              {line}
-                              <br />
-                            </span>
-                          );
-                        })}
-                      <br />
-                      FROM. {msg.writer}
-                    </div>
-                  </DialogContentTextCustom>
-                  <div css={ReportIcon}>
-                    <ThemeProvider theme={theme}>
-                      <IconButton onClick={(e) => changeModal(false)}>
-                        <CloseIcon color="secondary" />
-                      </IconButton>
-                    </ThemeProvider>
-                  </div>
-                </DialogContent>
+          {props.writerDisplay ? (
+            <>
+              <div css={FlowerCss} className="f-wrap">
+                <div className="f-imgbox" onClick={getMessage}>
+                  <img src={'/src/assets/' + props.imgUrl}></img>
+                </div>
+                <div className="f-inner">{props.writer}</div>
               </div>
-            </DialogCustom>
-          </div>
+              <div>
+                {/* 메시지 조회 Modal */}
+                <DialogCustom open={openModal}>
+                  {/* 신고 Modal */}
+                  <DialogReport open={openReportModal} css={ReportDialog}>
+                    <DialogTitle className="title">
+                      <WbTwilight color="error" />
+                      &nbsp; 메시지 신고하기
+                    </DialogTitle>
+                    <DialogContent>
+                      {/* <br /> */}
+                      <DialogContentText className="content">
+                        신고자 : {loginUser.nickname}
+                        <br />
+                        신고 사유
+                      </DialogContentText>
+                      {/* <br /> */}
+                      <textarea
+                        className="input-content"
+                        value={reportContent}
+                        placeholder="신고 사유를 입력하세요"
+                        onChange={(e) => setReportContent(e.target.value)}
+                      ></textarea>
+                    </DialogContent>
+                    <DialogActions className="action">
+                      <ThemeProvider theme={theme}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={sendReport}
+                          css={Font}
+                        >
+                          신고
+                        </Button>
+                      </ThemeProvider>
+                      <ThemeProvider theme={theme}>
+                        <Button
+                          variant="contained"
+                          color="neutral"
+                          size="small"
+                          onClick={(e) => changeReportModal(false)}
+                          css={Font}
+                        >
+                          취소
+                        </Button>
+                      </ThemeProvider>
+                    </DialogActions>
+                  </DialogReport>
+
+                  <div>
+                    <DialogContent>
+                      <div style={{ textAlign: 'center' }}>
+                        <img
+                          src={'/src/assets/' + msg.imgUrl}
+                          width="70%"
+                        ></img>
+                      </div>
+                      <DialogContentTextCustom>
+                        <IconButton
+                          css={ReportIcon}
+                          color="error"
+                          aria-aria-label="report"
+                          onClick={(e) => changeReportModal(true)}
+                        >
+                          <WbTwilight />
+                        </IconButton>
+                        <br />
+                        {/* 개행문자 적용 */}
+                        <div id="content">
+                          {String(msg.content)
+                            .split('\n')
+                            .map((line, index) => {
+                              return (
+                                <span key={index}>
+                                  {line}
+                                  <br />
+                                </span>
+                              );
+                            })}
+                          <br />
+                          FROM. {msg.writer}
+                        </div>
+                      </DialogContentTextCustom>
+                      <div css={ReportIcon}>
+                        <ThemeProvider theme={theme}>
+                          <IconButton onClick={(e) => changeModal(false)}>
+                            <CloseIcon color="secondary" />
+                          </IconButton>
+                        </ThemeProvider>
+                      </div>
+                    </DialogContent>
+                  </div>
+                </DialogCustom>
+              </div>
+            </>
+          ) : (
+            <>
+              <div css={FlowerCss} className="f-wrap">
+                <div className="f-imgbox">
+                  <img src={'/src/assets/' + props.imgUrl}></img>
+                </div>
+              </div>
+            </>
+          )}
         </>
       ) : (
         <div css={FlowerCss} className="f-wrap">
@@ -323,7 +344,7 @@ const ReportDialog = css`
   .input-content {
     font-family: 'SeoulNamsanM';
     resize: none;
-    padding: 20px;
+    padding: 15px;
     border-color: #b9b9b9;
     border-radius: 4px;
     font-size: 15px;
