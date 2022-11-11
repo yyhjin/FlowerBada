@@ -14,7 +14,7 @@ import Modal from '@src/components/store/BuyModal';
 import Receipt from '@src/components/store/Receipt';
 import { Grid } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import updateTokens from '@src/utils/updateTokens';
+import updateTokens from '@utils/updateTokens';
 import { useNavigate } from 'react-router-dom';
 import MySwal from '@components/SweetAlert';
 
