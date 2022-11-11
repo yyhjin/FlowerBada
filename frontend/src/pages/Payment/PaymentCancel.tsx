@@ -1,7 +1,10 @@
+import { css } from '@emotion/react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useResetRecoilState } from 'recoil';
 import { paymentRecoil } from '@recoil/paymentRecoil';
+import { createTheme, ThemeProvider } from '@mui/material';
+import { Button } from '@mui/material';
 
 const PaymentCancel = () => {
   const navigate = useNavigate();
@@ -19,9 +22,51 @@ const PaymentCancel = () => {
   return (
     <div>
       <p>결제를 취소하셨습니다.</p>
-      <button onClick={goMain}>메인으로</button>
+      <div css={ButtonBox}>
+        <div className="option-buttons">
+          <ThemeProvider theme={btnTheme}>
+            <Button
+              variant="contained"
+              color="neutral"
+              size="small"
+              onClick={goMain}
+              css={Font}
+            >
+              메인으로
+            </Button>
+          </ThemeProvider>
+        </div>
+      </div>
     </div>
   );
 };
+
+const btnTheme = createTheme({
+  status: {
+    danger: '#e53e3e',
+  },
+  palette: {
+    primary: {
+      main: '#16453E',
+    },
+    neutral: {
+      main: '#B1BDBB',
+    },
+  },
+});
+
+const Font = css`
+  font-family: 'SeoulNamsanM';
+  padding: 16px;
+  width: 90%;
+  margin: 6px;
+`;
+
+const ButtonBox = css`
+  position: fixed;
+  bottom: 5vh;
+  width: 100%;
+  /* height: 20%; */
+`;
 
 export default PaymentCancel;
