@@ -21,7 +21,9 @@ import Layout from '@pages/Layout';
 import SignIn from '@pages/SignIn';
 import MessageRead from '@pages/MessageRead';
 import MessageCreate from '@pages/MessageCreate';
-import CaptureTest from './pages/CaptureTest';
+import CaptureTest from '@pages/CaptureTest';
+import Print from '@pages/Print';
+import View from './pages/View';
 
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
@@ -69,6 +71,8 @@ function App() {
                   element={<MessageCreate />}
                 />
               </Route>
+              <Route path="/rolling/print" element={<Print />} />
+              <Route path="/rolling/view" element={<View />} />
             </>
           )}
         </Routes>
