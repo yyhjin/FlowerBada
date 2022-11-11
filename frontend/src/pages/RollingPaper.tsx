@@ -63,7 +63,7 @@ export default function RollingPaper() {
   const [stepNumber, setStepNumber] = useState<number>(1);
   const [type, setType] = useState<number>(1);
   const [bookmark, setBookmark] = useState<Boolean>(false);
-  const [userState] = useRecoilState<IuserRecoil>(userReCoil);
+  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   let paramCopy: any = {};
   let url: string;
   paramCopy = useParams();
