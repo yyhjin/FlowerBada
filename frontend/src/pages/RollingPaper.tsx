@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import Message from '@src/components/mypage/Message';
@@ -9,6 +9,8 @@ import CreateIcon from '@mui/icons-material/Create';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
+
 import {
   Dialog,
   DialogActions,
@@ -27,9 +29,15 @@ import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import MySwal from '@components/SweetAlert';
 import { useCallback } from 'react';
 import Login from '@assets/login_btn.png';
+import html2canvas from 'html2canvas';
+import { useReactToPrint } from 'react-to-print';
 import updateTokens from '@utils/updateTokens';
 
-interface IRolling {
+import Print from '@pages/Print';
+import Main from '@pages/MainPage';
+import View from '@pages/View';
+
+export interface IRolling {
   rollingId?: number;
   imgUrl?: string;
   imgFront?: string;
@@ -40,7 +48,7 @@ interface IRolling {
   messages?: IMessage[];
 }
 
-interface IMessage {
+export interface IMessage {
   imgUrl: string;
   writer: string;
   flowerId: number;
@@ -55,7 +63,7 @@ export default function RollingPaper() {
   const [stepNumber, setStepNumber] = useState<number>(1);
   const [type, setType] = useState<number>(1);
   const [bookmark, setBookmark] = useState<Boolean>(false);
-  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+  const [userState] = useRecoilState<IuserRecoil>(userReCoil);
   let paramCopy: any = {};
   let url: string;
   paramCopy = useParams();
@@ -63,6 +71,7 @@ export default function RollingPaper() {
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
+  let componentRef = useRef<HTMLDivElement>(null);
 
   function afterGetRolling(res: any) {
     const curr = new Date();
@@ -88,7 +97,6 @@ export default function RollingPaper() {
       });
       setValid(false);
     }
-    console.log(res.data.response);
 
     setRolling(res.data.response);
     setLoading(true);
@@ -279,9 +287,57 @@ export default function RollingPaper() {
     localStorage.removeItem('paginationId');
   }, []);
 
+  const shareRolling = () => {
+    navigate('/newroll/link', {
+      state: { url: paramCopy.url, title: rolling.title },
+    });
+  };
+
+  const saveRolling = () => {
+    navigate('/rolling/print', {
+      state: {
+        rolling,
+        type,
+        valid,
+        mainImg: rolling.imgUrl,
+      },
+    });
+  };
+
   useEffect(() => {
     getRolling();
   }, [paginationId]);
+
+  useEffect(() => {
+    if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
+      // 캡쳐 및 DB 저장
+      const el = document.getElementById('to-save');
+      if (el) {
+        html2canvas(el).then((canvas) => {
+          onSaveAs(
+            canvas.toDataURL('image/png'),
+            `final-image-` + paramCopy.url + `.png`,
+          );
+        });
+      }
+    }
+  }, [rolling]);
+
+  const onSaveAs = (uri: string, filename: string): void => {
+    console.log(uri);
+    let link: any = document.createElement('a');
+    document.body.appendChild(link);
+    link.href = uri;
+    // link.download = filename;
+    // link.click();
+    document.body.removeChild(link);
+    axios.put(
+      `http://localhost:8080/api/v1/message/updateimg/${paramCopy.url}`,
+      {
+        imgUrl: uri,
+      },
+    );
+  };
 
   return (
     <>
@@ -310,27 +366,54 @@ export default function RollingPaper() {
             ) : (
               <div className="valid">꽃을 눌러보세요!</div>
             )}
-            <div className="fixbox">
-              <div className={`imgbox_${type}`}>
-                <img src={'/src/assets/' + rolling.imgBack}></img>
+
+            <div css={SaveParent}>
+              <div>
+                <div className={`imgbox_${type}`}>
+                  <img src={'/src/assets/' + rolling.imgBack}></img>
+                </div>
+                <div className="flowerlist">
+                  {rolling.messages.map((message, index) => {
+                    return (
+                      <div key={index} className={`flowerbox_${type}`}>
+                        <Message
+                          imgUrl={message.imgUrl}
+                          messageId={message.messageId}
+                          writer={message.writer}
+                          valid={valid}
+                          writerDisplay={true}
+                        ></Message>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-              <div className="flowerlist">
-                {rolling.messages.map((message, index) => {
-                  return (
-                    <div key={index} className={`flowerbox_${type}`}>
-                      <Message
-                        imgUrl={message.imgUrl}
-                        messageId={message.messageId}
-                        writer={message.writer}
-                        valid={valid}
-                      ></Message>
-                    </div>
-                  );
-                })}
+              <div className={`imgbox_front_${type}`}>
+                <img src={'/src/assets/' + rolling.imgFront}></img>
               </div>
-            </div>
-            <div className={`imgbox_front_${type}`}>
-              <img src={'/src/assets/' + rolling.imgFront}></img>
+              <div id="to-save" className="save-child">
+                <div className={`imgbox_${type}`}>
+                  <img src={'/src/assets/' + rolling.imgBack}></img>
+                </div>
+                <div className="flowerlist">
+                  {rolling.messages.map((message, index) => {
+                    return (
+                      <div key={index} className={`flowerbox_${type}`}>
+                        <Message
+                          imgUrl={message.imgUrl}
+                          messageId={message.messageId}
+                          writer={message.writer}
+                          valid={valid}
+                          writerDisplay={false}
+                        ></Message>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className={`imgbox_front_${type}`}>
+                  <img src={'/src/assets/' + rolling.imgFront}></img>
+                </div>
+              </div>
             </div>
             <div className={`dot_${type}`}>
               <DotSlice
@@ -402,6 +485,7 @@ export default function RollingPaper() {
                     size="large"
                     color="primary"
                     className="share-btn"
+                    onClick={shareRolling}
                   >
                     <IosShareIcon fontSize="large" />
                   </IconButton>
@@ -512,7 +596,11 @@ const DetailCss = css`
     }
   }
   .imgbox_1,
-  .imgbox_2,
+  .imgbox_2 {
+    /* width: 50vh; */
+    /* height: 70vh; */
+    position: absolute;
+  }
   .imgbox_3 {
     position: absolute;
   }
@@ -823,6 +911,9 @@ const DetailCss = css`
     bottom: 10vw;
     pointer-events: none;
   }
+  .imgbox_front_2 {
+    height: 65vh;
+  }
   .imgbox_front_2 img {
     z-index: 12;
     position: relative;
@@ -904,4 +995,16 @@ const Font = css`
 const ActionCss = css`
   width: 90%;
   float: right;
+`;
+
+const SaveParent = css`
+  position: relative;
+
+  .save-child {
+    background-color: #f2f0ef;
+    height: 70vh;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+  }
 `;
