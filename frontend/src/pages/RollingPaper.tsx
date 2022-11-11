@@ -244,7 +244,7 @@ export default function RollingPaper() {
     }
   }, [rolling]);
 
-  const onSaveAs = (uri: string, filename: string): void => {
+  const onSaveAs = async (uri: string, filename: string): Promise<void> => {
     console.log(uri);
     let link: any = document.createElement('a');
     document.body.appendChild(link);
@@ -252,12 +252,17 @@ export default function RollingPaper() {
     // link.download = filename;
     // link.click();
     document.body.removeChild(link);
-    axios.put(
-      `http://localhost:8080/api/v1/message/updateimg/${paramCopy.url}`,
-      {
+
+    messageAPI
+      .updateRollingImg(paramCopy.url, {
         imgUrl: uri,
-      },
-    );
+      })
+      .then((res) => {
+        console.log(res.data.response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

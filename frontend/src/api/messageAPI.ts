@@ -16,6 +16,10 @@ interface IMessageWriteData {
   writer: string;
 }
 
+interface IUpdateImgUrl {
+  imgUrl: string;
+}
+
 const messageAPI = {
   messageCreate(messageId: number) {
     return api({
@@ -44,6 +48,13 @@ const messageAPI = {
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
       },
+    });
+  },
+  updateRollingImg(rollingUrl: string, data: IUpdateImgUrl) {
+    return api({
+      method: 'put',
+      url: `${END_POINT}/updateimg/${rollingUrl}`,
+      data: data,
     });
   },
   // loginGetRolling(jwt: string, url: string, paginationId: number) {
