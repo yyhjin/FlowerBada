@@ -23,12 +23,10 @@ import {
 import rollingAPI from '@api/rollingAPI';
 import Star from '@assets/Star.png';
 import EmptyStar from '@assets/EmptyStar.png';
-import Delivery from '@assets/Delivery.png';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import MySwal from '@components/SweetAlert';
 import { useCallback } from 'react';
-import Login from '@assets/login_btn.png';
 import html2canvas from 'html2canvas';
 import { useReactToPrint } from 'react-to-print';
 import updateTokens from '@utils/updateTokens';
@@ -55,7 +53,7 @@ export interface IMessage {
   messageId: number;
 }
 
-export default function RollingPaper() {
+export default function RollingPaper(props: any) {
   const [loading, setLoading] = useState<Boolean>(false);
   const [rolling, setRolling] = useState<IRolling>({});
   const [paginationId, setPaginationId] = useState<number>(1);
@@ -124,6 +122,11 @@ export default function RollingPaper() {
 
   async function getRolling() {
     url = paramCopy.url;
+    if (userState.jwt === '') {
+      props.Setters.setUrl(paramCopy.url);
+      props.Setters.setPageId(paginationId);
+    }
+
     setLoading(false);
     setDeliveryModal(false);
     try {
@@ -341,90 +344,91 @@ export default function RollingPaper() {
 
   return (
     <>
-      {userState.jwt === '' ? (
-        <img src={Login} css={LoginBtn} onClick={linkToSignIn} />
-      ) : null}
       {loading && rolling && rolling.messages && type ? (
         <>
-          <div css={DetailCss}>
-            <div className={`titlezone_${type}`}>
-              <div className="title">{rolling.title}</div>
-              {bookmark ? (
-                <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
+          <div>
+            <div css={DetailCss}>
+              {!valid ? (
+                <div className="valid">
+                  {rolling.date} 이후로 개봉 가능합니다.
+                </div>
               ) : (
-                <img
-                  src={EmptyStar}
-                  css={BookmarkImg}
-                  onClick={bookmarkSwitch}
-                />
+                <div className="valid">꽃을 눌러보세요!</div>
               )}
-            </div>
-            {!valid ? (
-              <div className="valid">
-                {rolling.date} 이후로 개봉 가능합니다.
+              <div className={`titlezone_${type}`}>
+                <div className="title">{rolling.title}</div>
+                {bookmark ? (
+                  <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
+                ) : (
+                  <img
+                    src={EmptyStar}
+                    css={BookmarkImg}
+                    onClick={bookmarkSwitch}
+                  />
+                )}
               </div>
-            ) : (
-              <div className="valid">꽃을 눌러보세요!</div>
-            )}
 
-            <div css={SaveParent}>
-              <div>
-                <div className={`imgbox_${type}`}>
-                  <img src={'/src/assets/' + rolling.imgBack}></img>
-                </div>
-                <div className="flowerlist">
-                  {rolling.messages.map((message, index) => {
-                    return (
-                      <div key={index} className={`flowerbox_${type}`}>
-                        <Message
-                          imgUrl={message.imgUrl}
-                          messageId={message.messageId}
-                          writer={message.writer}
-                          valid={valid}
-                          writerDisplay={true}
-                        ></Message>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className={`imgbox_front_${type}`}>
-                <img src={'/src/assets/' + rolling.imgFront}></img>
-              </div>
-              <div id="to-save" className="save-child">
-                <div className={`imgbox_${type}`}>
-                  <img src={'/src/assets/' + rolling.imgBack}></img>
-                </div>
-                <div className="flowerlist">
-                  {rolling.messages.map((message, index) => {
-                    return (
-                      <div key={index} className={`flowerbox_${type}`}>
-                        <Message
-                          imgUrl={message.imgUrl}
-                          messageId={message.messageId}
-                          writer={message.writer}
-                          valid={valid}
-                          writerDisplay={false}
-                        ></Message>
-                      </div>
-                    );
-                  })}
+              <div css={SaveParent}>
+                <div>
+                  <div className={`imgbox_${type}`}>
+                    <img src={'/src/assets/' + rolling.imgBack}></img>
+                  </div>
+                  <div className="flowerlist">
+                    {rolling.messages.map((message, index) => {
+                      return (
+                        <div key={index} className={`flowerbox_${type}`}>
+                          <Message
+                            imgUrl={message.imgUrl}
+                            messageId={message.messageId}
+                            writer={message.writer}
+                            valid={valid}
+                            writerDisplay={true}
+                            type={type}
+                          ></Message>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
                 <div className={`imgbox_front_${type}`}>
                   <img src={'/src/assets/' + rolling.imgFront}></img>
                 </div>
+                <div id="to-save" className="save-child">
+                  <div className={`imgbox_${type}`}>
+                    <img src={'/src/assets/' + rolling.imgBack}></img>
+                  </div>
+                  <div className="flowerlist">
+                    {rolling.messages.map((message, index) => {
+                      return (
+                        <div key={index} className={`flowerbox_${type}`}>
+                          <Message
+                            imgUrl={message.imgUrl}
+                            messageId={message.messageId}
+                            writer={message.writer}
+                            valid={valid}
+                            writerDisplay={false}
+                            type={type}
+                          ></Message>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className={`imgbox_front_${type}`}>
+                    <img src={'/src/assets/' + rolling.imgFront}></img>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className={`dot_${type}`}>
-              <DotSlice
-                paginationId={paginationId}
-                setPaginationId={setPaginationId}
-                stepNumber={stepNumber}
-              ></DotSlice>
+              <div className={`dot_${type}`}>
+                <DotSlice
+                  paginationId={paginationId}
+                  setPaginationId={setPaginationId}
+                  stepNumber={stepNumber}
+                ></DotSlice>
+              </div>
             </div>
             {rollingDate <= nowDate ? (
               <>
-                <div className="bottom-bar">
+                <div css={BottomBar}>
                   <ThemeProvider theme={theme}>
                     <IconButton
                       size="large"
@@ -479,7 +483,7 @@ export default function RollingPaper() {
                 </Dialog>
               </>
             ) : (
-              <div className="bottom-bar">
+              <div css={BottomBar}>
                 <ThemeProvider theme={theme}>
                   <IconButton
                     size="large"
@@ -509,27 +513,40 @@ export default function RollingPaper() {
   );
 }
 
-const LoginBtn = css`
-  position: absolute;
-  width: 35px;
-  top: 2%;
-  right: 5%;
-  z-index: 999999;
-`;
-
 const DetailCss = css`
   width: 100%;
-  height: 115%;
+  height: 100%;
   position: relative;
   transform: translate(0%, -15%);
-
-  .titlezone_1 {
-    padding-top: 20vh;
-    margin-bottom: -30vw;
+  .valid {
+    margin-top: 25vh;
     justify-content: center;
+    @media screen and (max-height: 600px) {
+      margin-top: 30vh;
+    }
+    @media screen and (max-height: 500px) {
+      margin-top: 33vh;
+    }
+    @media screen and (max-height: 400px) {
+      margin-top: 35vh;
+    }
+  }
+  .titlezone_1 {
+    justify-content: center;
+    margin-top: 5vh;
+    margin-bottom: -100px;
     font-size: 7.5vw;
     display: flex;
-
+    @media screen and (min-width: 500px) {
+      margin-top: 50px;
+      font-size: 25pt;
+      margin-bottom: -100px;
+    }
+    @media screen and (max-width: 300px) {
+      margin-top: 50px;
+      margin-bottom: -50px;
+    }
+    /* 
     @media screen and (min-height: 700px) {
       padding-top: 22vh;
       margin-bottom: -15vh;
@@ -541,11 +558,7 @@ const DetailCss = css`
     @media screen and (min-height: 900px) {
       padding-top: 22vh;
       margin-bottom: -10vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      padding-top: 22vh;
-      margin-bottom: -25vw;
-    }
+    } */
   }
   .titlezone_2 {
     padding-top: 20vh;
@@ -597,8 +610,6 @@ const DetailCss = css`
   }
   .imgbox_1,
   .imgbox_2 {
-    /* width: 50vh; */
-    /* height: 70vh; */
     position: absolute;
   }
   .imgbox_3 {
@@ -609,7 +620,13 @@ const DetailCss = css`
     z-index: 0;
     width: 75%;
     left: 0vw;
+    right: 0vw;
     top: 10vw;
+    bottom: 10vw;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 60px;
+    }
   }
   .imgbox_2 img {
     position: relative;
@@ -639,45 +656,73 @@ const DetailCss = css`
       position: relative;
       &:first-of-type {
         z-index: 10;
-        left: -10vw;
+        left: -5vw;
         top: 46vw;
         transform: rotate(0deg);
+        @media screen and (min-width: 500px) {
+          left: -25px;
+          top: 230px;
+        }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: 9vw;
-        top: 44vw;
+        left: 16vw;
+        top: 45vw;
         transform: rotate(5deg);
+        @media screen and (min-width: 500px) {
+          left: 75px;
+          top: 230px;
+        }
       }
       &:nth-of-type(3) {
         z-index: 8;
-        left: -25vw;
+        left: -16vw;
         top: 40vw;
         transform: rotate(20deg);
+        @media screen and (min-width: 500px) {
+          left: -90px;
+          top: 200px;
+        }
       }
       &:nth-of-type(4) {
         z-index: 7;
         left: -40vw;
         top: 50vw;
         transform: rotate(-10deg);
+        @media screen and (min-width: 500px) {
+          left: -220px;
+          top: 250px;
+        }
       }
       &:nth-of-type(5) {
         z-index: 6;
-        left: 5vw;
+        left: 12vw;
         top: 27vw;
         transform: rotate(25deg);
+        @media screen and (min-width: 500px) {
+          left: 70px;
+          top: 120px;
+        }
       }
       &:nth-of-type(6) {
         z-index: 5;
-        left: -21vw;
+        left: -15vw;
         top: 36vw;
         transform: rotate(-20deg);
+        @media screen and (min-width: 500px) {
+          left: -80px;
+          top: 165px;
+        }
       }
       &:nth-of-type(7) {
         z-index: 4;
-        left: -36vw;
-        top: 33vw;
+        left: -31vw;
+        top: 32vw;
         transform: rotate(0deg);
+        @media screen and (min-width: 500px) {
+          left: -170px;
+          top: 140px;
+        }
       }
     }
     .flowerbox_2 {
@@ -867,7 +912,22 @@ const DetailCss = css`
       }
     }
   }
-  .dot_1,
+  .dot_1 {
+    margin-top: 0vh;
+    bottom: 0%;
+    @media screen and (min-height: 700px) {
+      margin-top: 0vh;
+    }
+    @media screen and (min-height: 800px) {
+      margin-top: 2vh;
+    }
+    @media screen and (min-height: 900px) {
+      margin-top: 4vh;
+    }
+    @media screen and (max-height: 660px) and (max-width: 290px) {
+      margin-top: 4vh;
+    }
+  }
   .dot_2 {
     margin-top: 2vh;
     bottom: 0%;
@@ -910,6 +970,10 @@ const DetailCss = css`
     top: 10vw;
     bottom: 10vw;
     pointer-events: none;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 60px;
+    }
   }
   .imgbox_front_2 {
     height: 65vh;
@@ -940,20 +1004,19 @@ const DetailCss = css`
       width: 75%;
     }
   }
+`;
 
-  .bottom-bar {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    bottom: 0;
-    .share-btn {
-      float: left;
-      margin-left: 1em;
-    }
-    .write-btn {
-      float: right;
-      margin-right: 1em;
-    }
+const BottomBar = css`
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  .share-btn {
+    float: left;
+    margin-left: 1em;
+  }
+  .write-btn {
+    float: right;
+    margin-right: 1em;
   }
 `;
 
@@ -961,16 +1024,14 @@ const Loading = css`
   width: 100vw;
 `;
 
-const DeliveryIcon = css`
-  width: 10vw;
-  margin-left: 75vw;
-`;
-
 const BookmarkImg = css`
   position: absolute;
   left: 85%;
   width: 10vw;
   z-index: 1;
+  @media screen and (min-width: 500px) {
+    width: 45px;
+  }
 `;
 
 const theme = createTheme({

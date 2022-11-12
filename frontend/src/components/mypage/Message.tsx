@@ -35,6 +35,7 @@ export default function Message(props: {
   writer: string;
   valid: Boolean;
   writerDisplay: Boolean;
+  type: number;
 }) {
   const [msg, setMsg] = useState<IMsg>({});
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -107,8 +108,11 @@ export default function Message(props: {
         <>
           {props.writerDisplay ? (
             <>
-              <div css={FlowerCss} className="f-wrap">
-                <div className="f-imgbox" onClick={getMessage}>
+              <div
+                css={FlowerCss(315 - props.writer.length * 4)}
+                className="f-wrap"
+              >
+                <div className={`f-imgbox${props.type}`} onClick={getMessage}>
                   <img src={'/src/assets/' + props.imgUrl}></img>
                 </div>
                 <div className="f-inner">{props.writer}</div>
@@ -211,8 +215,11 @@ export default function Message(props: {
             </>
           ) : (
             <>
-              <div css={FlowerCss} className="f-wrap">
-                <div className="f-imgbox">
+              <div
+                css={FlowerCss(315 - props.writer.length * 7)}
+                className="f-wrap"
+              >
+                <div className={`f-imgbox${props.type}`}>
                   <img src={'/src/assets/' + props.imgUrl}></img>
                 </div>
               </div>
@@ -220,43 +227,44 @@ export default function Message(props: {
           )}
         </>
       ) : (
-        <div css={FlowerCss} className="f-wrap">
-          <div className="f-imgbox">
+        <div css={FlowerCss(315 - props.writer.length * 7)} className="f-wrap">
+          <div className={`f-imgbox${props.type}`}>
             <img
               src={
                 '/src/assets/' + props.imgUrl.replaceAll('flower', 'flowerbud')
               }
             ></img>
           </div>
-          <div className="f-inner">{props.writer}</div>
+          <div css="f-inner">{props.writer.length}</div>
         </div>
       )}
     </>
   );
 }
-const FlowerCss = css`
+const FlowerCss = (props: number) => css`
   .f-wrap {
     width: 100%;
     position: relative;
   }
-  .f-imgbox img {
+  .f-imgbox1 img {
     position: absolute;
-    width: 30vw;
+    width: 28vw;
     vertical-align: middle;
-    @media screen and (max-height: 700px) {
-      width: 25vw;
+    @media screen and (min-width: 500px) {
+      width: 150px;
     }
   }
   .f-inner {
     position: absolute;
-    left: 60%;
-    top: 7vw;
+    left: 58vw;
+    top: 10vw;
     color: white;
     text-shadow: 2px 2px 2px gray;
-    font-size: 4.5vw;
-    @media screen and (max-height: 700px) {
-      left: 60vw;
-      font-size: 4vw;
+    font-size: 3vw;
+    @media screen and (min-width: 500px) {
+      left: ${props}px;
+      top: 50px;
+      font-size: 13pt;
     }
   }
 `;
