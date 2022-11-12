@@ -45,6 +45,9 @@ function App() {
                   path="rolling/message/create"
                   element={<MessageCreate />}
                 />
+                <Route path="newroll/">
+                  <Route path="link" element={<Link />}></Route>
+                </Route>
               </Route>
             </>
           ) : (

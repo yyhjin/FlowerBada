@@ -105,7 +105,16 @@ export default function MessageCreate() {
   };
 
   const handleBuying = () => {
-    setBuying(true);
+    if (loginUser.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>구매 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setBuying(true);
+    }
   };
 
   return (
