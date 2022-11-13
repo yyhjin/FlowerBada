@@ -33,6 +33,7 @@ export default function GreenHouse() {
   const [rPaginationId, setRPaginationId] = useState<number>(0);
   const [bPaginationId, setBPaginationId] = useState<number>(0);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+  const [isFetching, setIsFetching] = useState(false);
   const timer = useRef<number | null>(null);
 
   function initRollings() {
@@ -40,6 +41,7 @@ export default function GreenHouse() {
     setRPaginationId(0);
     setRollings([]);
     setTabNum(1);
+    setIsFetching(false);
   }
 
   function initBookmarks() {
@@ -47,54 +49,60 @@ export default function GreenHouse() {
     setBPaginationId(0);
     setBookmarks([]);
     setTabNum(2);
+    setIsFetching(false);
   }
 
   async function getRollings(sort: number): Promise<void> {
     // setLoading(false);
-    try {
-      const params = { sort: sort, paginationId: rPaginationId };
-      const res: any = await greenhouseAPI.sentRolling(
-        userState.jwt,
-        userState.refresh,
-        params,
-      );
-
-      setLoading(true);
-      setRollings(rollings.concat(res.data.response));
-      setRPaginationId(rPaginationId + 1);
-    } catch (err: any) {
-      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
-        MySwal.fire({
-          title: '로그인이 필요합니다!',
-          icon: 'warning',
-          confirmButtonColor: '#16453e',
-          confirmButtonText: '확인',
-        });
-        setUserState((prev: IuserRecoil) => {
-          const variable = { ...prev };
-          variable.id = 0;
-          variable.userToken = '';
-          variable.nickname = '';
-          variable.points = 0;
-          variable.jwt = '';
-          variable.refresh = '';
-          return variable;
-        });
-        navigate('/');
-      } else {
-        let accessToken: string = err.response.headers.get('x-auth-token');
-        let refreshToken: string = err.response.headers.get('refresh-token');
-        if (accessToken && refreshToken) {
-          accessToken = accessToken.split(' ')[1];
-          refreshToken = refreshToken.split(' ')[1];
-          updateTokens(accessToken, refreshToken, setUserState);
+    if (!isFetching) {
+      try {
+        const params = { sort: sort, paginationId: rPaginationId };
+        const res: any = await greenhouseAPI.sentRolling(
+          userState.jwt,
+          userState.refresh,
+          params,
+        );
+        console.log(res.data.response.length);
+        if (res.data.response.length == 0) {
+          setIsFetching(true);
+        }
+        setLoading(true);
+        setRollings(rollings.concat(res.data.response));
+        setRPaginationId(rPaginationId + 1);
+      } catch (err: any) {
+        if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
           MySwal.fire({
-            title: '액세스 토큰이 만료되었습니다!',
+            title: '로그인이 필요합니다!',
             icon: 'warning',
             confirmButtonColor: '#16453e',
-            confirmButtonText: '갱신',
+            confirmButtonText: '확인',
+          });
+          setUserState((prev: IuserRecoil) => {
+            const variable = { ...prev };
+            variable.id = 0;
+            variable.userToken = '';
+            variable.nickname = '';
+            variable.points = 0;
+            variable.jwt = '';
+            variable.refresh = '';
+            return variable;
           });
           navigate('/');
+        } else {
+          let accessToken: string = err.response.headers.get('x-auth-token');
+          let refreshToken: string = err.response.headers.get('refresh-token');
+          if (accessToken && refreshToken) {
+            accessToken = accessToken.split(' ')[1];
+            refreshToken = refreshToken.split(' ')[1];
+            updateTokens(accessToken, refreshToken, setUserState);
+            MySwal.fire({
+              title: '액세스 토큰이 만료되었습니다!',
+              icon: 'warning',
+              confirmButtonColor: '#16453e',
+              confirmButtonText: '갱신',
+            });
+            navigate('/');
+          }
         }
       }
     }
@@ -102,51 +110,55 @@ export default function GreenHouse() {
   async function getBookmarks(sort: number): Promise<void> {
     // setLoading(false);
     setTab('즐겨찾기한 꽃다발');
-    try {
-      const params = { sort: sort, paginationId: bPaginationId };
-      const res: any = await greenhouseAPI.bookmark(
-        userState.jwt,
-        userState.refresh,
-        params,
-      );
-
-      // setRollings(res.data.response);
-      setLoading(true);
-      setBookmarks(bookmarks.concat(res.data.response));
-      setBPaginationId(bPaginationId + 1);
-    } catch (err: any) {
-      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
-        MySwal.fire({
-          title: '로그인이 필요합니다!',
-          icon: 'warning',
-          confirmButtonColor: '#16453e',
-          confirmButtonText: '확인',
-        });
-        setUserState((prev: IuserRecoil) => {
-          const variable = { ...prev };
-          variable.id = 0;
-          variable.userToken = '';
-          variable.nickname = '';
-          variable.points = 0;
-          variable.jwt = '';
-          variable.refresh = '';
-          return variable;
-        });
-        navigate('/');
-      } else {
-        let accessToken: string = err.response.headers.get('x-auth-token');
-        let refreshToken: string = err.response.headers.get('refresh-token');
-        if (accessToken && refreshToken) {
-          accessToken = accessToken.split(' ')[1];
-          refreshToken = refreshToken.split(' ')[1];
-          updateTokens(accessToken, refreshToken, setUserState);
+    if (!isFetching) {
+      try {
+        const params = { sort: sort, paginationId: bPaginationId };
+        const res: any = await greenhouseAPI.bookmark(
+          userState.jwt,
+          userState.refresh,
+          params,
+        );
+        console.log(res.data.response.length);
+        if (res.data.response.length == 0) {
+          setIsFetching(true);
+        }
+        setLoading(true);
+        setBookmarks(bookmarks.concat(res.data.response));
+        setBPaginationId(bPaginationId + 1);
+      } catch (err: any) {
+        if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
           MySwal.fire({
-            title: '액세스 토큰이 만료되었습니다!',
+            title: '로그인이 필요합니다!',
             icon: 'warning',
             confirmButtonColor: '#16453e',
-            confirmButtonText: '갱신',
+            confirmButtonText: '확인',
+          });
+          setUserState((prev: IuserRecoil) => {
+            const variable = { ...prev };
+            variable.id = 0;
+            variable.userToken = '';
+            variable.nickname = '';
+            variable.points = 0;
+            variable.jwt = '';
+            variable.refresh = '';
+            return variable;
           });
           navigate('/');
+        } else {
+          let accessToken: string = err.response.headers.get('x-auth-token');
+          let refreshToken: string = err.response.headers.get('refresh-token');
+          if (accessToken && refreshToken) {
+            accessToken = accessToken.split(' ')[1];
+            refreshToken = refreshToken.split(' ')[1];
+            updateTokens(accessToken, refreshToken, setUserState);
+            MySwal.fire({
+              title: '액세스 토큰이 만료되었습니다!',
+              icon: 'warning',
+              confirmButtonColor: '#16453e',
+              confirmButtonText: '갱신',
+            });
+            navigate('/');
+          }
         }
       }
     }
@@ -163,6 +175,7 @@ export default function GreenHouse() {
     setRollings([]);
     setBookmarks([]);
     setSort(event.target.value);
+    setIsFetching(false);
   };
 
   const handleScroll = useCallback((): void => {
