@@ -47,7 +47,7 @@ export default function Message(props: {
       .messageCreate(props.messageId)
       .then((res) => {
         setMsg(res.data.response);
-        console.log(res.data.response);
+
         document.getElementById('content')!.style.fontFamily =
           res.data.response.font;
       })
