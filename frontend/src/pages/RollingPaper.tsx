@@ -46,6 +46,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import Kakao from '@assets/kakaoTalk2.png';
 import { Edit } from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
 
 export interface IRolling {
   rollingId?: number;
@@ -81,6 +82,15 @@ export default function RollingPaper(props: any) {
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
+  const [left, setLeft] = useState<string>('0px');
+
+  window.addEventListener('resize', function () {
+    if (window.outerWidth >= 500) {
+      setLeft((window.outerWidth - 500) / 2 + 'px');
+    } else {
+      setLeft('0px');
+    }
+  });
 
   let componentRef = useRef<HTMLDivElement>(null);
   const root = 'https://k7a405.p.ssafy.io/rolling/';
@@ -281,6 +291,11 @@ export default function RollingPaper(props: any) {
         confirmButtonText: '확인',
       });
     } else {
+      if (window.outerWidth >= 500) {
+        setLeft((window.outerWidth - 500) / 2 + 'px');
+      } else {
+        setLeft('0px');
+      }
       setDeliveryModal(true);
     }
   };
@@ -574,7 +589,7 @@ export default function RollingPaper(props: any) {
                 setPaginationId={setPaginationId}
                 stepNumber={stepNumber}
               ></DotSlice>
-              <Dialog open={deliveryModal}>
+              <DialogCustom open={deliveryModal} left={left}>
                 <DialogTitle id="alert-dialog-title" css={Font}>
                   확인해주세요
                 </DialogTitle>
@@ -607,7 +622,7 @@ export default function RollingPaper(props: any) {
                     </Button>
                   </ThemeProvider>
                 </DialogActions>
-              </Dialog>
+              </DialogCustom>
             </div>
             {/* {rollingDate <= nowDate ? (
               <>
@@ -1278,3 +1293,21 @@ const SaveParent = css`
     z-index: -1;
   }
 `;
+
+const DialogCustom = styled(Dialog)((props) => ({
+  '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
+    boxShadow: 'none',
+    width: '100%',
+    left: `${props.left}`,
+  },
+  '& .css-ypiqx9-MuiDialogContent-root': {
+    margin: 'auto',
+    width: '70%',
+    left: `${props.left}`,
+  },
+
+  '& .css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': {
+    backgroundColor: 'rgb(0 0 0 / 80%)',
+    left: `${props.left}`,
+  },
+}));

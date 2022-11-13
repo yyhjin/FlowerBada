@@ -42,8 +42,23 @@ export default function Message(props: {
   const [openReportModal, setOpenReportModal] = useState<boolean>(false);
   const [reportContent, setReportContent] = useState<string>('');
   const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
+  const [left, setLeft] = useState<string>('0px');
+
+  window.addEventListener('resize', function () {
+    if (window.outerWidth >= 500) {
+      setLeft((window.outerWidth - 500) / 2 + 'px');
+    } else {
+      setLeft('0px');
+    }
+  });
 
   async function getMessage() {
+    if (window.outerWidth >= 500) {
+      setLeft((window.outerWidth - 500) / 2 + 'px');
+    } else {
+      setLeft('0px');
+    }
+
     messageAPI
       .messageCreate(props.messageId)
       .then((res) => {
@@ -119,14 +134,18 @@ export default function Message(props: {
               </div>
               <div>
                 {/* 메시지 조회 Modal */}
-                <DialogCustom open={openModal}>
+                <DialogCustom open={openModal} left={left}>
                   {/* 신고 Modal */}
-                  <DialogReport open={openReportModal} css={ReportDialog}>
+                  <DialogReport
+                    open={openReportModal}
+                    css={ReportDialog}
+                    left={left}
+                  >
                     <DialogTitle className="title">
                       <WbTwilight color="error" />
                       &nbsp; 메시지 신고하기
                     </DialogTitle>
-                    <DialogContent>
+                    <DialogContent left={left}>
                       {/* <br /> */}
                       <DialogContentText className="content">
                         신고자 : {loginUser.nickname}
@@ -141,7 +160,7 @@ export default function Message(props: {
                         onChange={(e) => setReportContent(e.target.value)}
                       ></textarea>
                     </DialogContent>
-                    <DialogActions className="action">
+                    <DialogActions className="action" left={left}>
                       <ThemeProvider theme={theme}>
                         <Button
                           variant="contained"
@@ -179,7 +198,7 @@ export default function Message(props: {
                         <IconButton
                           css={ReportIcon}
                           color="error"
-                          aria-aria-label="report"
+                          aria-label="report"
                           onClick={(e) => changeReportModal(true)}
                         >
                           <WbTwilight />
@@ -311,29 +330,34 @@ const FlowerCss = (props: number) => css`
   }
 `;
 
-const DialogCustom = styled(Dialog)(() => ({
+const DialogCustom = styled(Dialog)((props) => ({
   '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
     backgroundColor: 'transparent',
     boxShadow: 'none',
     width: '100%',
+    left: `${props.left}`,
   },
   '& .css-ypiqx9-MuiDialogContent-root': {
     margin: 'auto',
     width: '70%',
+    left: `${props.left}`,
   },
 
   '& .css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': {
     backgroundColor: 'rgb(0 0 0 / 80%)',
+    left: `${props.left}`,
   },
 }));
 
-const DialogReport = styled(Dialog)(() => ({
+const DialogReport = styled(Dialog)((props) => ({
   '& .css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': {
     backgroundColor: '#2F2F2F',
+    left: `${props.left}`,
   },
 
   '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
     width: '65%',
+    left: `${props.left}`,
     // height: '22em',
   },
 }));
