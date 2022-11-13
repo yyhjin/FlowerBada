@@ -101,6 +101,15 @@ export default function Message(props: {
     }
   };
 
+  useEffect(() => {
+    let writerEls = document.getElementsByClassName('f-inner');
+    for (let el of writerEls) {
+      if (el.textContent && el.textContent.length >= 5) {
+        el.textContent = el.textContent?.substring(0, 4) + '...';
+      }
+    }
+  }, []);
+
   return (
     <>
       {props.valid ? (
