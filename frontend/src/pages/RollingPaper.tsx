@@ -760,27 +760,27 @@ const DetailCss = css`
     }
   }
   .titlezone_3 {
-    padding-top: 20vh;
-    margin-bottom: -10vw;
     justify-content: center;
+    padding-top: 150px;
+    margin-bottom: 0vh;
     font-size: 7.5vw;
     display: flex;
-
+    @media screen and (min-width: 500px) {
+      padding-top: 180px;
+      margin-bottom: -20vh;
+      font-size: 25pt;
+    }
+    @media screen and (max-width: 300px) {
+      padding-top: 150px;
+      margin-bottom: -50px;
+    }
     @media screen and (min-height: 700px) {
-      padding-top: 22vh;
-      margin-bottom: -12vh;
+      padding-top: 180px;
+      margin-bottom: -50px;
     }
-    @media screen and (min-height: 800px) {
-      padding-top: 22vh;
-      margin-bottom: -10vh;
-    }
-    @media screen and (min-height: 900px) {
-      padding-top: 22vh;
-      margin-bottom: -7vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      padding-top: 22vh;
-      margin-bottom: -8vw;
+    @media screen and (min-width: 1000px) {
+      padding-top: 180px;
+      margin-bottom: -150px;
     }
   }
 
@@ -951,19 +951,19 @@ const DetailCss = css`
         left: -15vw;
         top: 80vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 68vw;
+        @media screen and (min-width: 500px) {
+          left: -65px;
+          top: 510px;
         }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: -2vw;
+        left: -1vw;
         top: 80vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -1.5vw;
-          top: 68vw;
+        @media screen and (min-width: 500px) {
+          left: 0px;
+          top: 510px;
         }
       }
       &:nth-of-type(3) {
@@ -971,19 +971,19 @@ const DetailCss = css`
         left: -34vw;
         top: 83vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -28vw;
-          top: 70vw;
+        @media screen and (min-width: 500px) {
+          left: -150px;
+          top: 525px;
         }
       }
       &:nth-of-type(4) {
         z-index: 7;
-        left: 15vw;
+        left: 17vw;
         top: 75vw;
         transform: rotate(15deg);
-        @media screen and (max-height: 700px) {
-          left: 13.5vw;
-          top: 63vw;
+        @media screen and (min-width: 500px) {
+          left: 90px;
+          top: 485px;
         }
       }
       &:nth-of-type(5) {
@@ -991,9 +991,9 @@ const DetailCss = css`
         left: -45vw;
         top: 80vw;
         transform: rotate(-5deg);
-        @media screen and (max-height: 700px) {
-          left: -36vw;
-          top: 68vw;
+        @media screen and (min-width: 500px) {
+          left: -220px;
+          top: 505px;
         }
       }
       &:nth-of-type(6) {
@@ -1001,29 +1001,29 @@ const DetailCss = css`
         left: -15vw;
         top: 65vw;
         transform: rotate(-5deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 55vw;
+        @media screen and (min-width: 500px) {
+          left: -70px;
+          top: 430px;
         }
       }
       &:nth-of-type(7) {
-        z-index: 5;
+        z-index: 4;
         left: -32vw;
         top: 68vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -27vw;
-          top: 57vw;
+        @media screen and (min-width: 500px) {
+          left: -150px;
+          top: 440px;
         }
       }
       &:nth-of-type(8) {
-        z-index: 5;
+        z-index: 3;
         left: 2vw;
         top: 65vw;
         transform: rotate(5deg);
-        @media screen and (max-height: 700px) {
-          left: 2vw;
-          top: 55vw;
+        @media screen and (min-width: 500px) {
+          left: 10px;
+          top: 425px;
         }
       }
       &:nth-of-type(9) {
@@ -1031,9 +1031,9 @@ const DetailCss = css`
         left: -45vw;
         top: 70vw;
         transform: rotate(-20deg);
-        @media screen and (max-height: 700px) {
-          left: -40vw;
-          top: 60vw;
+        @media screen and (min-width: 500px) {
+          left: -230px;
+          top: 450px;
         }
       }
       &:nth-of-type(10) {
@@ -1041,9 +1041,9 @@ const DetailCss = css`
         left: 15vw;
         top: 65vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: 13vw;
-          top: 55vw;
+        @media screen and (min-width: 500px) {
+          left: 80px;
+          top: 430px;
         }
       }
     }
@@ -1147,8 +1147,9 @@ const DetailCss = css`
     width: 90%;
     left: 0vw;
     top: 10vw;
-    @media screen and (max-height: 700px) {
-      width: 75%;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
     }
   }
 
@@ -1189,8 +1190,9 @@ const DetailCss = css`
     top: 10vw;
     bottom: 10vw;
     pointer-events: none;
-    @media screen and (max-height: 700px) {
-      width: 75%;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
     }
   }
 `;
@@ -1200,18 +1202,6 @@ const Dot = css`
   width: 100%;
   margin-top: 0vh;
   bottom: 0%;
-  @media screen and (min-height: 700px) {
-    margin-top: 0vh;
-  }
-  @media screen and (min-height: 800px) {
-    margin-top: 2vh;
-  }
-  @media screen and (min-height: 900px) {
-    margin-top: 4vh;
-  }
-  @media screen and (max-height: 660px) and (max-width: 290px) {
-    margin-top: 4vh;
-  }
   .speed-dial-zone {
     padding-bottom: 50px;
     .MuiButtonBase-root {
@@ -1225,19 +1215,19 @@ const Dot = css`
   }
 `;
 
-const BottomBar = css`
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  .share-btn {
-    float: left;
-    margin-left: 1em;
-  }
-  .write-btn {
-    float: right;
-    margin-right: 1em;
-  }
-`;
+// const BottomBar = css`
+//   position: absolute;
+//   width: 100%;
+//   bottom: 0;
+//   .share-btn {
+//     float: left;
+//     margin-left: 1em;
+//   }
+//   .write-btn {
+//     float: right;
+//     margin-right: 1em;
+//   }
+// `;
 
 const Loading = css`
   width: 100vw;

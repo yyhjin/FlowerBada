@@ -262,6 +262,14 @@ const FlowerCss = (props: number) => css`
       width: 150px;
     }
   }
+  .f-imgbox3 img {
+    position: absolute;
+    width: 28vw;
+    vertical-align: middle;
+    @media screen and (min-width: 500px) {
+      width: 130px;
+    }
+  }
   .f-inner1 {
     position: absolute;
     left: 58vw;
@@ -286,6 +294,19 @@ const FlowerCss = (props: number) => css`
       left: ${props}px;
       top: 50px;
       font-size: 13pt;
+    }
+  }
+  .f-inner3 {
+    position: absolute;
+    left: 58vw;
+    top: 8vw;
+    color: white;
+    text-shadow: 2px 2px 2px gray;
+    font-size: 3vw;
+    @media screen and (min-width: 500px) {
+      left: ${props}px;
+      top: 45px;
+      font-size: 11pt;
     }
   }
 `;
