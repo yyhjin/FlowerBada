@@ -3,6 +3,7 @@ package app.bada.flower.api.service;
 import app.bada.flower.api.dto.message.MessageReqDto;
 import app.bada.flower.api.dto.message.MessageResDto;
 import app.bada.flower.api.entity.Message;
+import app.bada.flower.api.entity.RollingPaper;
 import app.bada.flower.api.repository.FlowerItemRepository;
 import app.bada.flower.api.repository.MessageRepository;
 import app.bada.flower.api.repository.RollingPaperRepository;
