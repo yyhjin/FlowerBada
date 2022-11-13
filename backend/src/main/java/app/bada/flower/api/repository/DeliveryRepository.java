@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface DeliveryRepository extends JpaRepository<Delivery, Integer> {
     Optional<Slice<Delivery>> findAllByUserAndIsDeletedFalseOrderByCreatedDateDesc(User user, Pageable pageable);
     Optional<Slice<Delivery>> findAllByUserAndIsDeletedFalseOrderByCreatedDate(User user, Pageable pageable);
+
+    Optional<Delivery> findByOrderId(String order_id);
 }
