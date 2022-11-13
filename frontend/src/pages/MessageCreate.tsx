@@ -51,7 +51,6 @@ export default function MessageCreate() {
       .getFlowers(loginUser.jwt, loginUser.refresh)
       .then((res) => {
         setFlowerList(res.data.response);
-        console.log(res.data.response);
       })
       .catch((err) => {
         if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
@@ -281,40 +280,8 @@ declare module '@mui/material/styles' {
 const outerBox = css`
   width: 100vw;
   height: 100%;
-`;
-
-const innerBox = css`
-  width: 90%;
-  margin: auto;
-  align-items: center;
-`;
-
-const FlowerItemBox = css`
-  background-color: white;
-  /* margin: 1vw 5vw 5vw 5vw; */
-  height: 90%;
-  aspect-ratio: 1/1;
-  overflow-y: scroll;
-  position: relative;
-
-  .flower-item {
-    /* margin: 3vh 1vh 0 1vh; */
-    width: 30vw;
-    aspect-ratio: 1/1;
-    padding-left: 2.5%;
-    padding-right: 2.5%;
-    /* height: 25%; */
-    position: absolute;
-    display: block;
-  }
-  .locked-image {
-    width: 28%;
-    padding-left: 2.5%;
-    padding-right: 2.5%;
-    /* height: 25%; */
-    position: absolute;
-    z-index: 0;
-    opacity: 70%;
+  @media screen and (min-width: 500px) {
+    height: 80%;
   }
 `;
 
@@ -331,6 +298,10 @@ const DetailBox = css`
   .flower-language {
     font-size: 0.7em;
     height: auto;
+  }
+  @media screen and (min-width: 500px) {
+    height: 80%;
+    /* margin-bottom: 0vh; */
   }
 `;
 
@@ -418,5 +389,22 @@ const GridStyle = css`
     opacity: 100%;
     display: grid;
     left: 2.5vw;
+  }
+  @media screen and (min-width: 500px) {
+    height: 155px;
+    .item-image {
+      margin-top: 5px;
+      margin-left: 0px;
+      z-index: 1;
+      left: 1vw;
+      width: 80%;
+    }
+    .locked-image {
+      z-index: 2;
+      width: 85%;
+      opacity: 100%;
+      display: grid;
+      left: 0.8vw;
+    }
   }
 `;

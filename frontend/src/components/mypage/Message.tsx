@@ -47,7 +47,7 @@ export default function Message(props: {
       .messageCreate(props.messageId)
       .then((res) => {
         setMsg(res.data.response);
-        console.log(res.data.response);
+
         document.getElementById('content')!.style.fontFamily =
           res.data.response.font;
       })
@@ -84,7 +84,7 @@ export default function Message(props: {
           })
           .then((res) => {
             setMsg(res.data.response);
-            console.log(res.data.response);
+            // console.log(res.data.response);
             MySwal.fire({
               title: '신고가 접수되었습니다',
               icon: 'success',
@@ -93,7 +93,12 @@ export default function Message(props: {
             });
           })
           .catch((err) => {
-            console.log(err);
+            MySwal.fire({
+              title: '신고 접수를 실패하였습니다.',
+              icon: 'warning',
+              confirmButtonColor: '#16453e',
+              confirmButtonText: '확인',
+            });
           });
         changeReportModal(false);
         changeModal(false);
