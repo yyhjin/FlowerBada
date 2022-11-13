@@ -1,6 +1,10 @@
 package app.bada.flower.api.controller.exception;
 
 import app.bada.flower.api.service.IpBlockedService;
+import app.bada.flower.api.service.TimeCheckService;
+import app.bada.flower.exception.CustomException;
+import app.bada.flower.exception.ErrorCode;
+import com.google.common.cache.LoadingCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -13,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 public class HttpInterceptor implements HandlerInterceptor {
     @Autowired
     private IpBlockedService ipBlockedService;
+
+    @Autowired
+    private TimeCheckService timeCheckService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -38,25 +45,14 @@ public class HttpInterceptor implements HandlerInterceptor {
                 ip = request.getRemoteAddr();
             }
 
-            ipBlockedService.IpAccess(ip);
-            if(ipBlockedService.isBlocked(ip)){
-                throw new RuntimeException("you're blocked.");
+            Integer oneIPAccessCountPerTime = timeCheckService.IpAccess(ip);
+            if(ipBlockedService.isBlocked(ip, oneIPAccessCountPerTime)){
+                throw new CustomException(ErrorCode.BLOCKED_IP);
             }
             return true;
         }catch (Exception e){
             log.info(e.toString());
             return false;
         }
-    }
-
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.debug("==================== END ======================");
-        log.debug("===============================================");
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object object, Exception ex) throws Exception {
-
     }
 }
