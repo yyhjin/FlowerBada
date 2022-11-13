@@ -41,9 +41,6 @@ public class HttpInterceptor implements HandlerInterceptor {
             if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
                 ip = request.getRemoteAddr();
             }
-            if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getRemoteAddr();
-            }
 
             Integer oneIPAccessCountPerTime = timeCheckService.IpAccess(ip);
             if(ipBlockedService.isBlocked(ip, oneIPAccessCountPerTime)){
