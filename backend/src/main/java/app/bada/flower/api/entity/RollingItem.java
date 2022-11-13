@@ -10,9 +10,6 @@ import javax.persistence.Entity;
 @Getter
 @NoArgsConstructor
 public class RollingItem extends BaseEntity{
-    @Column
-    private Integer code;
-
     @Column(nullable = false)
     private String name;
 
@@ -27,4 +24,10 @@ public class RollingItem extends BaseEntity{
 
     @Column(nullable = false)
     private String imgUrl;
+
+    @Column(nullable = false)
+    private String imgFront;
+
+    @Column(nullable = false)
+    private String imgBack;
 }

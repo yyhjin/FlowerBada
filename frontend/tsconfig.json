@@ -14,7 +14,20 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
+    "types": ["vite/client", "@emotion/react/types/css-prop", "node"],
+    "baseUrl": "./src",
+    "paths": {
+      "@src/*": ["./*"],
+      "@api/*": ["./api/*"],
+      "@assets/*": ["./assets/*"],
+      "@components/*": ["./components/*"],
+      "@kakao/*": ["./kakao/*"],
+      "@pages/*": ["./pages/*"],
+      "@recoil/*": ["./recoil/*"],
+      "@utils/*": ["./utils/*"]
+    }
   },
   "include": ["src", ".eslintrc"],
   "references": [{ "path": "./tsconfig.node.json" }]

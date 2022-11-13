@@ -29,5 +29,7 @@ public class Message extends BaseEntity{
     @Column(nullable = false)
     private String writer;
 
-    private int fontId;
+    @Column(nullable = false)
+    private String font;
+
 }

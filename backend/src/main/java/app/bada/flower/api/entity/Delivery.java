@@ -1,5 +1,7 @@
 package app.bada.flower.api.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +10,8 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Delivery extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,6 +38,9 @@ public class Delivery extends BaseEntity{
     private String receiverPhone;
 
     @Column(nullable = false)
-    private String recieverAddress;
+    private String receiverAddress;
+
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private int flowersCount;
 
 }
