@@ -127,9 +127,9 @@ export default function Message(props: {
                 </div>
                 <div className="f-inner">{props.writer}</div>
               </div>
-              <div className="modalBox">
+              <div>
                 {/* 메시지 조회 Modal */}
-                <DialogCustom className="Modal" open={openModal}>
+                <DialogCustom open={openModal}>
                   {/* 신고 Modal */}
                   <DialogReport open={openReportModal} css={ReportDialog}>
                     <DialogTitle className="title">
@@ -271,11 +271,6 @@ const FlowerCss = css`
     @media screen and (max-height: 700px) {
       left: 60vw;
       font-size: 4vw;
-    }
-  }
-  @media screen and (min-width: 500px) {
-    .Modal {
-      margin: 10vw;
     }
   }
 `;
