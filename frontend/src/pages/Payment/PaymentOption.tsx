@@ -19,8 +19,16 @@ const PaymentOption = () => {
   const location = useLocation();
   const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
 
-  location.state as { rolling: IRolling; type: number; valid: Boolean };
-  const { rolling, type, valid, stepNumber } = location.state;
+  location.state as {
+    rolling: IRolling;
+    type: number;
+    valid: Boolean;
+    stepNumber: number;
+    userToken: string;
+    paginationId: number;
+  };
+  const { rolling, type, valid, stepNumber, userToken, paginationId } =
+    location.state;
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [shipPrice, setShipPrice] = useState<number>(3000);
 
@@ -38,6 +46,11 @@ const PaymentOption = () => {
       data.price = totalPrice;
       data.title = rolling.title;
       data.optionType = optionType;
+      data.userToken = userToken;
+      data.rollingId = rolling.rollingId;
+      data.paginationId = paginationId;
+      if (optionType === 'both') data.flowerCnt = rolling.messages.length;
+      else data.flowerCnt = 0;
       return data;
     });
     navigate(`/payment/address/receiver`);

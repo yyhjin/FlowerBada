@@ -3,14 +3,16 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import dateFormatter from '@utils/dateFormatter';
 import paymentAPI from '@src/api/paymentAPI';
-import { useResetRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import { paymentRecoil } from '@recoil/paymentRecoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { Button } from '@mui/material';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
   const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
+  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
 
   // url 분리
   const urlParams = new URLSearchParams(location.search);
@@ -37,7 +39,11 @@ const PaymentSuccess = () => {
   // 결제 완료 정보 가져오기
   useEffect(() => {
     const getPaymentInfo = async () => {
-      const res = await paymentAPI.successPayment(reqData);
+      const res = await paymentAPI.successPayment(
+        userState.jwt,
+        userState.refresh,
+        reqData,
+      );
       setPaymentInfo(res.data.response);
       console.log(res.data.response);
     };

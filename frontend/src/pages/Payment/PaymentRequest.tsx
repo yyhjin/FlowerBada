@@ -3,19 +3,27 @@ import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { Button } from '@mui/material';
 import KakaoPayBtn from '@assets/kakaoPay.png';
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
-  const onClickPayment = async () => {
-    const res = await paymentAPI.requestPayment();
-    window.location.href = res.data.response;
-  };
   const [paymentState, setPaymentState] =
     useRecoilState<IPaymentRecoil>(paymentRecoil);
+  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+
   const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
+
+  const onClickPayment = async () => {
+    const res = await paymentAPI.requestPayment(
+      userState.jwt,
+      userState.refresh,
+      paymentState,
+    );
+    window.location.href = res.data.response;
+  };
 
   const goBack = () => {
     resetPaymentRecoil();
