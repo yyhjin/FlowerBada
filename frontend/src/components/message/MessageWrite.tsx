@@ -89,7 +89,7 @@ export default function MessageWrite(props: {
         .catch((err) => {
           MySwal.fire({
             title: '메세지 등록을 실패하였습니다.',
-            icon: 'success',
+            icon: 'warning',
             confirmButtonColor: '#16453e',
             confirmButtonText: '확인',
           }).then(() => {
