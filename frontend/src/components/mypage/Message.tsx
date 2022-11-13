@@ -109,13 +109,13 @@ export default function Message(props: {
           {props.writerDisplay ? (
             <>
               <div
-                css={FlowerCss(315 - props.writer.length * 4)}
+                css={FlowerCss(315 - props.writer.length * 7)}
                 className="f-wrap"
               >
                 <div className={`f-imgbox${props.type}`} onClick={getMessage}>
                   <img src={'/src/assets/' + props.imgUrl}></img>
                 </div>
-                <div className="f-inner">{props.writer}</div>
+                <div className={`f-inner${props.type}`}>{props.writer}</div>
               </div>
               <div>
                 {/* 메시지 조회 Modal */}
@@ -235,7 +235,7 @@ export default function Message(props: {
               }
             ></img>
           </div>
-          <div css="f-inner">{props.writer.length}</div>
+          <div className={`f-inner${props.type}`}>{props.writer}</div>
         </div>
       )}
     </>
@@ -254,10 +254,31 @@ const FlowerCss = (props: number) => css`
       width: 150px;
     }
   }
-  .f-inner {
+  .f-imgbox2 img {
+    position: absolute;
+    width: 28vw;
+    vertical-align: middle;
+    @media screen and (min-width: 500px) {
+      width: 150px;
+    }
+  }
+  .f-inner1 {
     position: absolute;
     left: 58vw;
     top: 10vw;
+    color: white;
+    text-shadow: 2px 2px 2px gray;
+    font-size: 3vw;
+    @media screen and (min-width: 500px) {
+      left: ${props}px;
+      top: 50px;
+      font-size: 13pt;
+    }
+  }
+  .f-inner2 {
+    position: absolute;
+    left: 58vw;
+    top: 8vw;
     color: white;
     text-shadow: 2px 2px 2px gray;
     font-size: 3vw;

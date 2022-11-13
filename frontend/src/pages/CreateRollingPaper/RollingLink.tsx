@@ -14,7 +14,6 @@ import MySwal from '@components/SweetAlert';
 
 export default function RollingLink() {
   const VITE_APP_KAKAO_KEY = import.meta.env.VITE_APP_KAKAO_KEY;
-  console.log(VITE_APP_KAKAO_KEY);
 
   const url = useLocation().state.url;
   const title = useLocation().state.title;

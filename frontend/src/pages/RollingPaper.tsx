@@ -35,6 +35,18 @@ import Print from '@pages/Print';
 import Main from '@pages/MainPage';
 import View from '@pages/View';
 
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import LinkIcon from '@mui/icons-material/Link';
+import SaveIcon from '@mui/icons-material/Save';
+import PrintIcon from '@mui/icons-material/Print';
+import ShareIcon from '@mui/icons-material/Share';
+import EditIcon from '@mui/icons-material/Edit';
+
+import Kakao from '@assets/kakaoTalk2.png';
+import { Edit } from '@mui/icons-material';
+
 export interface IRolling {
   rollingId?: number;
   imgUrl?: string;
@@ -69,7 +81,10 @@ export default function RollingPaper(props: any) {
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
+
   let componentRef = useRef<HTMLDivElement>(null);
+  const root = 'https://k7a405.p.ssafy.io/rolling/';
+  const VITE_APP_KAKAO_KEY = import.meta.env.VITE_APP_KAKAO_KEY;
 
   function afterGetRolling(res: any) {
     const curr = new Date();
@@ -257,7 +272,7 @@ export default function RollingPaper(props: any) {
     });
   };
 
-  const changeDelivery = (param: boolean) => {
+  const openDeliveryModal = () => {
     if (userState.jwt === '') {
       MySwal.fire({
         title: '로그인 후<br/>사용 가능합니다!',
@@ -266,7 +281,20 @@ export default function RollingPaper(props: any) {
         confirmButtonText: '확인',
       });
     } else {
-      setDeliveryModal(param);
+      setDeliveryModal(true);
+    }
+  };
+
+  const closeDeliveryModal = () => {
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setDeliveryModal(false);
     }
   };
 
@@ -277,10 +305,58 @@ export default function RollingPaper(props: any) {
     navigate('/payment');
   };
 
-  const linkToSignIn = () => {
-    localStorage.setItem('url', paramCopy.url);
-    localStorage.setItem('paginationId', String(paginationId));
-    navigate('/');
+  const linkCopy = () => {
+    navigator.clipboard.writeText(root + paramCopy.url);
+    MySwal.fire({
+      title: '링크가 복사되었습니다.',
+      icon: 'success',
+      confirmButtonColor: '#16453e',
+      confirmButtonText: '확인',
+    });
+  };
+
+  const kakaoShare = () => {
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      if (window.Kakao) {
+        const kakao = window.Kakao;
+        if (!kakao.isInitialized()) {
+          kakao.init(VITE_APP_KAKAO_KEY);
+        }
+      }
+      window.Kakao.Link.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: '꽃바다 - 우리들의 이야기를 꽃에 담아',
+          description: `${rolling.title}`,
+          imageUrl:
+            'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/rollingpaper/03LO7T.png',
+          link: {
+            mobileWebUrl: `${root}${paramCopy.url}`,
+            webUrl: `${root}${paramCopy.url}`,
+          },
+        },
+        buttons: [
+          {
+            title: '롤링페이퍼 작성하기',
+            link: {
+              mobileWebUrl: `${root}${paramCopy.url}`,
+              webUrl: `${root}${paramCopy.url}`,
+            },
+          },
+        ],
+      });
+    }
+  };
+
+  const print = () => {
+    alert('프린트 만들고 연결하면 됨!');
   };
 
   useEffect(() => {
@@ -306,6 +382,52 @@ export default function RollingPaper(props: any) {
       },
     });
   };
+
+  const dateBeforeActions = [
+    { icon: <EditIcon />, name: '메시지 작성', function: moveMessageWrite },
+    { icon: <LinkIcon />, name: '링크 복사', function: linkCopy },
+    {
+      icon: (
+        <img
+          src={Kakao}
+          style={{
+            userSelect: 'none',
+            width: '1em',
+            height: '1em',
+            display: 'inline-block',
+            fill: 'currentColor',
+            flexShrink: '0',
+            fontSize: '1.5rem',
+          }}
+        />
+      ),
+      name: '카카오톡 공유',
+      function: kakaoShare,
+    },
+  ];
+
+  const dateAfterActions = [
+    { icon: <LocalShippingIcon />, name: '배송', function: openDeliveryModal },
+    { icon: <PrintIcon />, name: '프린트', function: print },
+    {
+      icon: (
+        <img
+          src={Kakao}
+          style={{
+            userSelect: 'none',
+            width: '1em',
+            height: '1em',
+            display: 'inline-block',
+            fill: 'currentColor',
+            flexShrink: '0',
+            fontSize: '1.5rem',
+          }}
+        />
+      ),
+      name: '카카오톡 공유',
+      function: kakaoShare,
+    },
+  ];
 
   useEffect(() => {
     getRolling();
@@ -341,6 +463,9 @@ export default function RollingPaper(props: any) {
       },
     );
   };
+  const check = () => {
+    alert('테스트 성공');
+  };
 
   return (
     <>
@@ -348,13 +473,6 @@ export default function RollingPaper(props: any) {
         <>
           <div>
             <div css={DetailCss}>
-              {!valid ? (
-                <div className="valid">
-                  {rolling.date} 이후로 개봉 가능합니다.
-                </div>
-              ) : (
-                <div className="valid">꽃을 눌러보세요!</div>
-              )}
               <div className={`titlezone_${type}`}>
                 <div className="title">{rolling.title}</div>
                 {bookmark ? (
@@ -418,15 +536,80 @@ export default function RollingPaper(props: any) {
                   </div>
                 </div>
               </div>
-              <div className={`dot_${type}`}>
-                <DotSlice
-                  paginationId={paginationId}
-                  setPaginationId={setPaginationId}
-                  stepNumber={stepNumber}
-                ></DotSlice>
-              </div>
+              {!valid ? (
+                <div className={`valid_${type}`}>
+                  {rolling.date} 이후로 개봉 가능합니다.
+                </div>
+              ) : (
+                <div className={`valid_${type}`}>꽃을 눌러보세요!</div>
+              )}
             </div>
-            {rollingDate <= nowDate ? (
+            {/* <div css={`dot_${type}`}> */}
+            <div css={Dot}>
+              <SpeedDial
+                ariaLabel="SpeedDial openIcon example"
+                sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                icon={<SpeedDialIcon />}
+                className="speed-dial-zone"
+              >
+                {rollingDate <= nowDate
+                  ? dateAfterActions.map((action) => (
+                      <SpeedDialAction
+                        key={action.name}
+                        icon={action.icon}
+                        onClick={action.function}
+                      />
+                    ))
+                  : dateBeforeActions.map((action) => (
+                      <SpeedDialAction
+                        key={action.name}
+                        icon={action.icon}
+                        onClick={action.function}
+                      />
+                    ))}
+              </SpeedDial>
+
+              <DotSlice
+                paginationId={paginationId}
+                setPaginationId={setPaginationId}
+                stepNumber={stepNumber}
+              ></DotSlice>
+              <Dialog open={deliveryModal}>
+                <DialogTitle id="alert-dialog-title" css={Font}>
+                  확인해주세요
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText css={Font}>
+                    현재 선택하신 페이지의 꽃들로 주문을 진행합니다.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions css={ActionCss}>
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      onClick={sendDelivery}
+                      css={Font}
+                    >
+                      확인
+                    </Button>
+                  </ThemeProvider>
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="contained"
+                      color="neutral"
+                      size="small"
+                      onClick={closeDeliveryModal}
+                      css={Font}
+                    >
+                      취소
+                    </Button>
+                  </ThemeProvider>
+                </DialogActions>
+              </Dialog>
+            </div>
+            {/* {rollingDate <= nowDate ? (
               <>
                 <div css={BottomBar}>
                   <ThemeProvider theme={theme}>
@@ -503,7 +686,7 @@ export default function RollingPaper(props: any) {
                   </IconButton>
                 </ThemeProvider>
               </div>
-            )}
+            )} */}
           </div>
         </>
       ) : (
@@ -518,70 +701,62 @@ const DetailCss = css`
   height: 100%;
   position: relative;
   transform: translate(0%, -15%);
-  .valid {
-    margin-top: 25vh;
+  .valid_1 {
     justify-content: center;
-    @media screen and (max-height: 600px) {
-      margin-top: 30vh;
-    }
-    @media screen and (max-height: 500px) {
-      margin-top: 33vh;
-    }
-    @media screen and (max-height: 400px) {
-      margin-top: 35vh;
+  }
+  .valid_2 {
+    margin-top: 15vh;
+    justify-content: center;
+    @media screen and (min-width: 1000px) {
+      margin-top: 20vh;
     }
   }
   .titlezone_1 {
     justify-content: center;
-    margin-top: 5vh;
-    margin-bottom: -100px;
+    padding-top: 150px;
+    margin-bottom: -10vh;
     font-size: 7.5vw;
     display: flex;
     @media screen and (min-width: 500px) {
-      margin-top: 50px;
+      padding-top: 180px;
       font-size: 25pt;
-      margin-bottom: -100px;
-    }
-    @media screen and (max-width: 300px) {
-      margin-top: 50px;
       margin-bottom: -50px;
     }
-    /* 
+    @media screen and (max-width: 300px) {
+      padding-top: 150px;
+      margin-bottom: -50px;
+    }
     @media screen and (min-height: 700px) {
-      padding-top: 22vh;
-      margin-bottom: -15vh;
+      padding-top: 150px;
+      margin-bottom: -50px;
     }
-    @media screen and (min-height: 800px) {
-      padding-top: 22vh;
-      margin-bottom: -12vh;
+    @media screen and (min-width: 1000px) {
+      padding-top: 150px;
+      margin-bottom: -115px;
     }
-    @media screen and (min-height: 900px) {
-      padding-top: 22vh;
-      margin-bottom: -10vh;
-    } */
   }
   .titlezone_2 {
-    padding-top: 20vh;
-    margin-bottom: -10vw;
     justify-content: center;
+    padding-top: 150px;
+    margin-bottom: 0vh;
     font-size: 7.5vw;
     display: flex;
-
+    @media screen and (min-width: 500px) {
+      padding-top: 180px;
+      margin-bottom: -20vh;
+      font-size: 25pt;
+    }
+    @media screen and (max-width: 300px) {
+      padding-top: 150px;
+      margin-bottom: -50px;
+    }
     @media screen and (min-height: 700px) {
-      padding-top: 22vh;
-      margin-bottom: -7vh;
+      padding-top: 180px;
+      margin-bottom: -50px;
     }
-    @media screen and (min-height: 800px) {
-      padding-top: 22vh;
-      margin-bottom: -5vh;
-    }
-    @media screen and (min-height: 900px) {
-      padding-top: 22vh;
-      margin-bottom: -7vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      padding-top: 22vh;
-      margin-bottom: -8vw;
+    @media screen and (min-width: 1000px) {
+      padding-top: 180px;
+      margin-bottom: -150px;
     }
   }
   .titlezone_3 {
@@ -608,46 +783,7 @@ const DetailCss = css`
       margin-bottom: -8vw;
     }
   }
-  .imgbox_1,
-  .imgbox_2 {
-    position: absolute;
-  }
-  .imgbox_3 {
-    position: absolute;
-  }
-  .imgbox_1 img {
-    position: relative;
-    z-index: 0;
-    width: 75%;
-    left: 0vw;
-    right: 0vw;
-    top: 10vw;
-    bottom: 10vw;
-    @media screen and (min-width: 500px) {
-      left: 0px;
-      top: 60px;
-    }
-  }
-  .imgbox_2 img {
-    position: relative;
-    z-index: 0;
-    width: 75%;
-    left: 0vw;
-    top: 10vw;
-    @media screen and (max-height: 700px) {
-      width: 62.5%;
-    }
-  }
-  .imgbox_3 img {
-    position: relative;
-    z-index: 0;
-    width: 90%;
-    left: 0vw;
-    top: 10vw;
-    @media screen and (max-height: 700px) {
-      width: 75%;
-    }
-  }
+
   .flowerlist {
     /* width: 100%; */
     position: static;
@@ -729,42 +865,42 @@ const DetailCss = css`
       position: relative;
       &:first-of-type {
         z-index: 10;
-        left: -15vw;
+        left: -12vw;
         top: 60vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 52vw;
+        @media screen and (min-width: 500px) {
+          left: -70px;
+          top: 400px;
         }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: -2vw;
-        top: 54vw;
+        left: 3vw;
+        top: 56vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -1vw;
-          top: 48vw;
+        @media screen and (min-width: 500px) {
+          left: 0px;
+          top: 390px;
         }
       }
       &:nth-of-type(3) {
         z-index: 8;
         left: -32vw;
-        top: 57vw;
+        top: 61vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -28vw;
-          top: 50vw;
+        @media screen and (min-width: 500px) {
+          left: -170px;
+          top: 400px;
         }
       }
       &:nth-of-type(4) {
         z-index: 7;
-        left: -12vw;
-        top: 40vw;
+        left: -11vw;
+        top: 42vw;
         transform: rotate(10deg);
-        @media screen and (max-height: 700px) {
-          left: -10vw;
-          top: 35vw;
+        @media screen and (min-width: 500px) {
+          left: -60px;
+          top: 305px;
         }
       }
       &:nth-of-type(5) {
@@ -772,19 +908,19 @@ const DetailCss = css`
         left: 16vw;
         top: 37vw;
         transform: rotate(25deg);
-        @media screen and (max-height: 700px) {
-          left: 13vw;
-          top: 32vw;
+        @media screen and (min-width: 500px) {
+          left: 70px;
+          top: 290px;
         }
       }
       &:nth-of-type(6) {
         z-index: 5;
-        left: -40vw;
-        top: 45vw;
+        left: -38vw;
+        top: 47vw;
         transform: rotate(-20deg);
-        @media screen and (max-height: 700px) {
-          left: -35vw;
-          top: 39vw;
+        @media screen and (min-width: 500px) {
+          left: -190px;
+          top: 335px;
         }
       }
       &:nth-of-type(7) {
@@ -792,9 +928,9 @@ const DetailCss = css`
         left: -24vw;
         top: 32vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -20vw;
-          top: 28vw;
+        @media screen and (min-width: 500px) {
+          left: -120px;
+          top: 255px;
         }
       }
       &:nth-of-type(8) {
@@ -802,9 +938,9 @@ const DetailCss = css`
         left: -4vw;
         top: 29vw;
         transform: rotate(5deg);
-        @media screen and (max-height: 700px) {
-          left: -2vw;
-          top: 25vw;
+        @media screen and (min-width: 500px) {
+          left: -15px;
+          top: 240px;
         }
       }
     }
@@ -912,7 +1048,8 @@ const DetailCss = css`
       }
     }
   }
-  .dot_1 {
+  /* .dot_1 {
+    position: absolute;
     margin-top: 0vh;
     bottom: 0%;
     @media screen and (min-height: 700px) {
@@ -926,6 +1063,17 @@ const DetailCss = css`
     }
     @media screen and (max-height: 660px) and (max-width: 290px) {
       margin-top: 4vh;
+    }
+    .speed-dial-zone {
+      padding-bottom: 75px;
+      .MuiButtonBase-root {
+        width: 10vw;
+        height: 10vw;
+        @media screen and (min-width: 500px) {
+          width: 50px;
+          height: 50px;
+        }
+      }
     }
   }
   .dot_2 {
@@ -959,6 +1107,49 @@ const DetailCss = css`
     @media screen and (max-height: 660px) and (max-width: 290px) {
       margin-top: -6vh;
     }
+  } */
+  .imgbox_1,
+  .imgbox_2,
+  .imgbox_3 {
+    position: absolute;
+  }
+
+  .imgbox_1 img {
+    position: relative;
+    z-index: 0;
+    width: 75%;
+    left: 0vw;
+    right: 0vw;
+    top: 10vw;
+    bottom: 10vw;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 60px;
+    }
+  }
+  .imgbox_2 img {
+    position: relative;
+    z-index: 0;
+    width: 75%;
+    left: 0vw;
+    right: 0vw;
+    top: 10vw;
+    bottom: 10vw;
+    pointer-events: none;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
+    }
+  }
+  .imgbox_3 img {
+    position: relative;
+    z-index: 0;
+    width: 90%;
+    left: 0vw;
+    top: 10vw;
+    @media screen and (max-height: 700px) {
+      width: 75%;
+    }
   }
 
   .imgbox_front_1 img {
@@ -975,9 +1166,6 @@ const DetailCss = css`
       top: 60px;
     }
   }
-  .imgbox_front_2 {
-    height: 65vh;
-  }
   .imgbox_front_2 img {
     z-index: 12;
     position: relative;
@@ -987,8 +1175,9 @@ const DetailCss = css`
     top: 10vw;
     bottom: 10vw;
     pointer-events: none;
-    @media screen and (max-height: 700px) {
-      width: 62.5%;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
     }
   }
   .imgbox_front_3 img {
@@ -1002,6 +1191,36 @@ const DetailCss = css`
     pointer-events: none;
     @media screen and (max-height: 700px) {
       width: 75%;
+    }
+  }
+`;
+
+const Dot = css`
+  position: absolute;
+  width: 100%;
+  margin-top: 0vh;
+  bottom: 0%;
+  @media screen and (min-height: 700px) {
+    margin-top: 0vh;
+  }
+  @media screen and (min-height: 800px) {
+    margin-top: 2vh;
+  }
+  @media screen and (min-height: 900px) {
+    margin-top: 4vh;
+  }
+  @media screen and (max-height: 660px) and (max-width: 290px) {
+    margin-top: 4vh;
+  }
+  .speed-dial-zone {
+    padding-bottom: 50px;
+    .MuiButtonBase-root {
+      width: 10vw;
+      height: 10vw;
+      @media screen and (min-width: 500px) {
+        width: 50px;
+        height: 50px;
+      }
     }
   }
 `;
