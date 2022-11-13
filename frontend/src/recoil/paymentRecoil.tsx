@@ -1,24 +1,32 @@
 import { atom } from 'recoil';
 
 export interface IPaymentRecoil {
-  tap: string;
+  optionType: string;
   url: string;
   paginationId: number;
   title: string;
   price: number;
-  receiver: string;
+  receiverName: string;
   receiverPhone: string;
-  reveicerAddress: string;
+  receiverAddress: string;
   senderName: string;
   senderPhone: string;
+  isAnonymous: boolean;
 }
 
-// export const paymentRecoil = atom<IPaymentRecoil>({
-//   key: 'paymentRecoil',
-//   default: {
-//     itemId: 0,
-//     itemIndex: 0,
-//     url: '',
-//     title: '',
-//   },
-// });
+export const paymentRecoil = atom<IPaymentRecoil>({
+  key: 'paymentRecoil',
+  default: {
+    optionType: 'default',
+    url: '',
+    paginationId: 0,
+    title: 'string',
+    price: 0,
+    receiverName: '',
+    receiverPhone: '',
+    receiverAddress: '',
+    senderName: '',
+    senderPhone: '',
+    isAnonymous: false,
+  },
+});

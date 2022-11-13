@@ -1,10 +1,16 @@
+import { css } from '@emotion/react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import dateFormatter from '@utils/dateFormatter';
 import paymentAPI from '@src/api/paymentAPI';
+import { useResetRecoilState } from 'recoil';
+import { paymentRecoil } from '@recoil/paymentRecoil';
+import { createTheme, ThemeProvider } from '@mui/material';
+import { Button } from '@mui/material';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
+  const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
 
   // url 분리
   const urlParams = new URLSearchParams(location.search);
@@ -23,6 +29,11 @@ const PaymentSuccess = () => {
     payment_method_type: '',
   });
 
+  // 잘못된 접근시 메인 페이지로 돌아가는 함수
+  const goMain = () => {
+    navigate('/');
+  };
+
   // 결제 완료 정보 가져오기
   useEffect(() => {
     const getPaymentInfo = async () => {
@@ -33,10 +44,9 @@ const PaymentSuccess = () => {
     getPaymentInfo();
   }, []);
 
-  // 잘못된 접근시 메인 페이지로 돌아가는 함수
-  const goMain = () => {
-    navigate('/');
-  };
+  useEffect(() => {
+    resetPaymentRecoil();
+  }, []);
 
   return (
     <div>
@@ -46,16 +56,57 @@ const PaymentSuccess = () => {
           <p>구매한 아이템 : {paymentInfo.item_name}</p>
           <p>가격 : {paymentInfo.amount.total.toLocaleString()}원</p>
           <p>결제 시간 : {dateFormatter(paymentInfo.approved_at)}</p>
-          <button onClick={goMain}>메인으로</button>
         </div>
       ) : (
         <div>
           <p>잘못된 접근입니다.</p>
-          <button onClick={goMain}>메인으로</button>
         </div>
       )}
+      <div css={ButtonBox}>
+        <div className="option-buttons">
+          <ThemeProvider theme={btnTheme}>
+            <Button
+              variant="contained"
+              color="neutral"
+              size="small"
+              onClick={goMain}
+              css={Font}
+            >
+              메인으로
+            </Button>
+          </ThemeProvider>
+        </div>
+      </div>
     </div>
   );
 };
+
+const btnTheme = createTheme({
+  status: {
+    danger: '#e53e3e',
+  },
+  palette: {
+    primary: {
+      main: '#16453E',
+    },
+    neutral: {
+      main: '#B1BDBB',
+    },
+  },
+});
+
+const Font = css`
+  font-family: 'SeoulNamsanM';
+  padding: 16px;
+  width: 90%;
+  margin: 6px;
+`;
+
+const ButtonBox = css`
+  position: fixed;
+  bottom: 5vh;
+  width: 100%;
+  /* height: 20%; */
+`;
 
 export default PaymentSuccess;

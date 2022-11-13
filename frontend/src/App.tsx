@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Payment from '@pages/Payment/Payment';
+import PaymentOption from '@pages/Payment/PaymentOption';
+import PaymentReceiverAddress from '@pages/Payment/PaymentReceiverAddress';
+import PaymentSenderAddress from '@pages/Payment/PaymentSenderAddress';
+import PaymentRequest from '@pages/Payment/PaymentRequest';
 import PaymentSuccess from '@pages/Payment/PaymentSuccess';
 import PaymentFail from '@pages/Payment/PaymentFail';
 import PaymentCancel from '@pages/Payment/PaymentCancel';
@@ -64,11 +67,20 @@ function App() {
                   <Route path="link" element={<Link />}></Route>
                 </Route>
                 <Route path="rolling/:url" element={<RollingPaper />}></Route>
-                <Route path="payment" element={<Payment />} />
-                <Route path="payment/success" element={<PaymentSuccess />} />
-                <Route path="payment/fail" element={<PaymentFail />} />
-                <Route path="payment/cancel" element={<PaymentCancel />} />
-                <Route path="rolling/message/read" element={<MessageRead />} />
+                <Route path="/payment/option" element={<PaymentOption />} />
+                <Route
+                  path="/payment/address/receiver"
+                  element={<PaymentReceiverAddress />}
+                />
+                <Route
+                  path="/payment/address/sender"
+                  element={<PaymentSenderAddress />}
+                />
+                <Route path="/payment/request" element={<PaymentRequest />} />
+                <Route path="/payment/success" element={<PaymentSuccess />} />
+                <Route path="/payment/fail" element={<PaymentFail />} />
+                <Route path="/payment/cancel" element={<PaymentCancel />} />
+                <Route path="/rolling/message/read" element={<MessageRead />} />
                 <Route
                   path="rolling/message/create"
                   element={<MessageCreate />}

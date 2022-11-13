@@ -611,6 +611,13 @@
   resolved "https://registry.npmjs.org/@types/history/-/history-4.7.11.tgz"
   integrity sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==
 
+"@types/html2canvas@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/html2canvas/-/html2canvas-1.0.0.tgz#72c638f0c4008d59d57caff02c14a5e8d416d025"
+  integrity sha512-BJpVf+FIN9UERmzhbtUgpXj6XBZpG67FMgBLLoj9HZKd9XifcCpSV+UnFcwTZfEyun4U/KmCrrVOG7829L589w==
+  dependencies:
+    html2canvas "*"
+
 "@types/json-schema@*", "@types/json-schema@^7.0.9":
   version "7.0.11"
   resolved "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.11.tgz"

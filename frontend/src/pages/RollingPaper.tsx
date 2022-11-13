@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
-import Message from '@src/components/mypage/Message';
+import Message from '@src/components/message/Message';
 import DotSlice from '@components/paging/DotSlice';
 import messageAPI from '@api/messageAPI';
 import IosShareIcon from '@mui/icons-material/IosShare';
@@ -24,8 +24,9 @@ import rollingAPI from '@api/rollingAPI';
 import Star from '@assets/Star.png';
 import EmptyStar from '@assets/EmptyStar.png';
 import Delivery from '@assets/Delivery.png';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
 import MySwal from '@components/SweetAlert';
 import { useCallback } from 'react';
 import Login from '@assets/login_btn.png';
@@ -53,6 +54,7 @@ export interface IMessage {
   writer: string;
   flowerId: number;
   messageId: number;
+  price: number;
 }
 
 export default function RollingPaper() {
@@ -71,6 +73,7 @@ export default function RollingPaper() {
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
+  const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
   let componentRef = useRef<HTMLDivElement>(null);
 
   function afterGetRolling(res: any) {
@@ -271,7 +274,7 @@ export default function RollingPaper() {
     // 로컬스토리지에 담기
     localStorage.setItem('url', paramCopy.url);
     localStorage.setItem('paginationId', paginationId.toString());
-    navigate('/payment');
+    navigate('/payment/option');
   };
 
   const linkToSignIn = () => {
@@ -287,12 +290,6 @@ export default function RollingPaper() {
     localStorage.removeItem('paginationId');
   }, []);
 
-  const shareRolling = () => {
-    navigate('/newroll/link', {
-      state: { url: paramCopy.url, title: rolling.title },
-    });
-  };
-
   const saveRolling = () => {
     navigate('/rolling/print', {
       state: {
@@ -304,8 +301,31 @@ export default function RollingPaper() {
     });
   };
 
+  const shareRolling = () => {
+    navigate('/newroll/link', { state: paramCopy.url });
+  };
+
+  useEffect(() => {
+    const paginationCheck = localStorage.getItem('paginationId');
+    if (paginationCheck) setPaginationId(+paginationCheck);
+    localStorage.removeItem('url');
+    localStorage.removeItem('paginationId');
+  }, []);
+
   useEffect(() => {
     getRolling();
+    if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
+      // 캡쳐 및 DB 저장
+      const el = document.getElementById('to-save');
+      if (el) {
+        html2canvas(el).then((canvas: any) => {
+          onSaveAs(
+            canvas.toDataURL('image/png'),
+            `final-image-` + paramCopy.url + `.png`,
+          );
+        });
+      }
+    }
   }, [paginationId]);
 
   useEffect(() => {
@@ -313,7 +333,7 @@ export default function RollingPaper() {
       // 캡쳐 및 DB 저장
       const el = document.getElementById('to-save');
       if (el) {
-        html2canvas(el).then((canvas) => {
+        html2canvas(el).then((canvas: any) => {
           onSaveAs(
             canvas.toDataURL('image/png'),
             `final-image-` + paramCopy.url + `.png`,
