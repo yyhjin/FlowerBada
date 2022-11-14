@@ -61,7 +61,7 @@ export default function GreenHouse() {
           userState.refresh,
           params,
         );
-        console.log(res.data.response.length);
+        // console.log(res.data.response.length);
         if (res.data.response.length == 0) {
           setIsFetching(true);
         }
@@ -117,7 +117,7 @@ export default function GreenHouse() {
           userState.refresh,
           params,
         );
-        console.log(res.data.response.length);
+        // console.log(res.data.response.length);
         if (res.data.response.length == 0) {
           setIsFetching(true);
         }
@@ -178,7 +178,7 @@ export default function GreenHouse() {
   };
 
   const handleScroll = useCallback((): void => {
-    console.log('핸들스크롤');
+    // console.log('핸들스크롤');
 
     const { innerHeight } = window;
     const scrollHeight = document.querySelector('.gridlist')?.scrollHeight;
@@ -200,7 +200,7 @@ export default function GreenHouse() {
   const throttleScroll = () => {
     timer.current = window.setTimeout(() => {
       if (timer.current !== null) {
-        console.log('셋타임아웃 내부');
+        // console.log('셋타임아웃 내부');
         handleScroll();
         timer.current = null;
       }
@@ -208,7 +208,7 @@ export default function GreenHouse() {
   };
 
   useEffect(() => {
-    console.log('유즈이펙트');
+    // console.log('유즈이펙트');
     // scroll event listener 등록
     const event = document.querySelector('.gridlist');
     if (event) {
