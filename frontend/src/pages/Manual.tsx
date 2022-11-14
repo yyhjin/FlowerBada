@@ -25,6 +25,7 @@ export default function Manual() {
               className="imgBox"
             ></img>
           </div>
+          <hr />
           <div>2. 제목을 입력한 후 개봉할 날짜를 선택합니다.</div>
           <div>
             <img
@@ -38,6 +39,7 @@ export default function Manual() {
               className="imgBox"
             ></img>
           </div>
+          <hr />
           <div>3. URL 및 카카오톡을 이용하여 주변에 공유합니다.</div>
           <div>
             <img
@@ -45,6 +47,7 @@ export default function Manual() {
               className="imgBox"
             ></img>
           </div>
+          <hr />
           <div>
             4. 해당 롤링페이퍼는 개봉날짜가 지나면 메세지를 작성할 수 없으며
             꽃다발 배달을 위한 결제 시스템이 열리게됩니다.
@@ -55,6 +58,7 @@ export default function Manual() {
               className="imgBox"
             ></img>
           </div>
+          <hr />
           <div>
             5. 결제를 완료하면 실제 꽃배달 서비스를 받아보실 수 있습니다.
           </div>
@@ -79,6 +83,7 @@ export default function Manual() {
               className="imgBox"
             ></img>
           </div>
+          <hr />
           <div>2. 마음에 드는 꽃을 선택합니다.</div>
           <div>
             <img
@@ -86,6 +91,7 @@ export default function Manual() {
               className="imgBox"
             ></img>
           </div>
+          <hr />
           <div>
             3. 메세지, 작성자를 작성한 후 마음에 드는 글씨체를 선택하여 메세지를
             작성합니다.
@@ -96,6 +102,7 @@ export default function Manual() {
               className="imgBox"
             ></img>
           </div>
+          <hr />
           <div>
             4. 해당 메세지는 개봉 전에 봉오리로 보이며 메세지를 볼 수 없지만,
             개봉 후에는 만개한 꽃으로 변하며 메세지를 볼 수 있게됩니다.
@@ -106,6 +113,7 @@ export default function Manual() {
               className="imgBox"
             ></img>
           </div>
+          <hr />
           <div>
             5. 한번 작성한 메세지는 수정 및 삭제가 불가하지만 신고를 통해
             관리자가 삭제할 수 있습니다.
@@ -137,6 +145,7 @@ export default function Manual() {
               className="imgBox"
             ></img>
           </div>
+          <hr />
           <div>
             2. 마음에 드는 롤링페이퍼를 즐겨찾기해서 나만의 목록을 만들어보세요.
           </div>
@@ -161,7 +170,9 @@ export default function Manual() {
               className="imgBox"
             ></img>
           </div>
+          <hr />
           <div>2. 회원가입과 매일 출석체크를 통해 포인트를 모아보세요!</div>
+          <hr />
           <div>
             3. 일반 롤링페이퍼는 한 페이지 기준 7송이, 고급 8송이, 바구니
             10송이를 담을 수 있습니다.
@@ -184,6 +195,7 @@ export default function Manual() {
               className="imgBox"
             ></img>
           </div>
+          <hr />
           <div>2. 포인트로 구매한 아이템 목록을 볼 수 있습니다.</div>
           <div>
             <img
