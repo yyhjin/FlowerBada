@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
 import messageAPI from '@src/api/messageAPI';
+import { ReactDOM } from 'react';
+import { WindowSharp } from '@mui/icons-material';
 
 const Print = () => {
   const location = useLocation();
@@ -48,52 +50,63 @@ const Print = () => {
 
   const onClickPrint = () => {
     if (printRef.current) {
-      let printContents = printRef.current.innerHTML;
-      let windowObject = window.open(
-        '',
-        'PrintWindow',
-        'width=1000, height=800, top=100, left=300, toolbars=no, scrollbars=no, status=no, resizale=no',
-      );
-      if (windowObject) {
-        windowObject.document.writeln(printContents);
-        windowObject.document.close();
-        windowObject.focus();
-        windowObject.print();
-        windowObject.close();
-      }
+      // let printContents = printRef.current.innerHTML;
+      // let windowObject = window.open(
+      //   '',
+      //   'PrintWindow',
+      //   'width=1000, height=800, top=100, left=300, toolbars=no, scrollbars=no, status=no, resizale=no',
+      // );
+      // if (windowObject) {
+      //   windowObject.document.writeln(printContents);
+      //   windowObject.document.close();
+      //   windowObject.focus();
+      //   windowObject.print();
+      //   windowObject.close();
+      // }
+      let printContent = printRef.current.innerHTML;
+      let originalContent = document.body.innerHTML;
+      console.log(printContent, originalContent);
+      document.body.innerHTML = printContent;
+      window.print();
+      document.body.innerHTML = originalContent;
+      history.go(0);
     }
   };
 
   return (
-    <div css={A4CSS}>
-      {/* <Button onClick={onClickPrint}>Print</Button> */}
-      <div ref={printRef} className="page">
-        <img
-          // className="main-img"
-          style={{
-            width: '250px',
-            transform: 'translate(0, 40%)',
-          }}
-          src={
-            'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/' +
-            mainImg
-          }
-        />
-        {/* <div style={{ position: 'relative' }}> */}
+    <>
+      <Button onClick={onClickPrint} className="btn">
+        Print
+      </Button>
+      <div ref={printRef}>
+        <div css={A4CSS}>
+          <div className="page">
+            <img
+              // className="main-img"
+              style={{
+                width: '250px',
+                transform: 'translate(0, 40%)',
+              }}
+              src={
+                'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/' +
+                mainImg
+              }
+            />
+            {/* <div style={{ position: 'relative' }}> */}
 
-        <div className="flowerlist">
-          {messages.map((message: any, index: number) => {
-            return (
-              <div key={index} className="flowerbox">
-                <img
-                  src={'/src/assets/' + message.imgUrl}
-                  className="flowerbox"
-                ></img>
-              </div>
-            );
-          })}
-        </div>
-        {/* <div
+            <div className="flowerlist">
+              {messages.map((message: any, index: number) => {
+                return (
+                  <div key={index} className="flowerbox">
+                    <img
+                      src={'/src/assets/' + message.imgUrl}
+                      className="flowerbox"
+                    ></img>
+                  </div>
+                );
+              })}
+            </div>
+            {/* <div
           style={{
             position: 'relative',
             width: '100px',
@@ -123,8 +136,8 @@ const Print = () => {
               transform: 'translate(10%, -120%)',
             }}
           /> */}
-      </div>
-      {/* <img
+          </div>
+          {/* <img
         src={
           'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/' +
           rolling.messages[1].imgUrl
@@ -134,7 +147,9 @@ const Print = () => {
           transform: 'translate(50%, 70%)',
         }}
       /> */}
-    </div>
+        </div>
+      </div>
+    </>
   );
 };
 
@@ -158,6 +173,9 @@ const A4CSS = css`
     padding: 1.5cm 1.5cm 2cm 1.5cm;
   }
 
+  .btn {
+    background-color: black;
+  }
   @page {
     size: A4 landscape;
     margin: 0;
@@ -185,6 +203,13 @@ const A4CSS = css`
   }
 
   @media print {
+    html,
+    body {
+      -webkit-print-color-adjust: exact;
+      width: 210mm;
+      height: 297mm;
+    }
+
     .page {
       margin: 0;
       border: initial;
@@ -231,11 +256,11 @@ const A4CSS = css`
     .flowerbox {
       position: relative;
       &:first-of-type {
-        /* z-index: 10; */
+        z-index: 10;
         left: 100px;
-        top: -400px;
-        width: 80px;
-        height: 80px;
+        top: -40px;
+        width: 150px;
+        height: 150px;
         transform: rotate(0deg);
         @media screen and (max-height: 700px) {
           left: -12vw;
@@ -243,9 +268,9 @@ const A4CSS = css`
         }
       }
       &:nth-of-type(2) {
-        /* z-index: 9; */
-        left: -280px;
-        top: -50px;
+        z-index: 9;
+        left: -500px;
+        top: -470px;
         transform: rotate(0deg);
         @media screen and (max-height: 700px) {
           left: -1.5vw;
@@ -253,9 +278,9 @@ const A4CSS = css`
         }
       }
       &:nth-of-type(3) {
-        /* z-index: 8; */
-        left: -34vw;
-        top: 83vw;
+        z-index: 8;
+        left: -320px;
+        top: -500px;
         transform: rotate(-10deg);
         @media screen and (max-height: 700px) {
           left: -28vw;
@@ -264,8 +289,8 @@ const A4CSS = css`
       }
       &:nth-of-type(4) {
         /* z-index: 7; */
-        left: 15vw;
-        top: 75vw;
+        left: -200px;
+        top: -300px;
         transform: rotate(15deg);
         @media screen and (max-height: 700px) {
           left: 13.5vw;
