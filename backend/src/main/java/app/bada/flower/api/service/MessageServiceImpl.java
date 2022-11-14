@@ -20,18 +20,18 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
+
     private final MessageRepository messageRepository;
     private final FlowerItemRepository flowerItemRepository;
     private final RollingPaperRepository rollingPaperRepository;
     private final S3FileUpload s3FileUpload;
 
+    @Transactional
     @Override
     public Message createMessage(MessageReqDto.MessageReq messageReq) {
-
         Message message = Message.builder()
                 .rollingPaper(rollingPaperRepository.findById(messageReq.getRollingId())
                         .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND)))
@@ -41,9 +41,9 @@ public class MessageServiceImpl implements MessageService {
                 .writer(messageReq.getWriter())
                 .font(messageReq.getFont())
                 .build();
-
         return messageRepository.save(message);
     }
+
 
     @Override
     public Message getMessage(int msgId) {

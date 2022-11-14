@@ -29,8 +29,7 @@ public class StoreController {
     @GetMapping("/flower")
     public ResponseEntity getFlowerList(@RequestHeader(value = "X-AUTH-TOKEN", required = false) String token) {
         List<FlowerResDto> response = new ArrayList<>();
-        System.out.println(token);
-        if( !token.equals("Bearer")) {
+        if(!token.equals("Bearer")) {
             User user = userService.getUserByToken(token);
             response = storeService.getFlowerList(user);
         } else {
