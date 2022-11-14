@@ -163,7 +163,7 @@ const PaymentOption = () => {
           </div>
         </div>
         <div css={SelectBtn}>
-          <p>주문 옵션 :</p>
+          <div>주문 옵션 :</div>
           <ThemeProvider theme={selectTheme}>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
               <Select
@@ -185,19 +185,19 @@ const PaymentOption = () => {
               </Select>
             </FormControl>
           </ThemeProvider>
-          <p>제목 : {rolling.title}</p>
+          <div>제목 : {rolling.title}</div>
           {totalPrice ? (
             <>
-              <p>제품 가격 : {totalPrice}원</p>
-              <p>
+              <div>제품 가격 : {totalPrice}원</div>
+              <div>
                 배송비 :&nbsp;<span className="ship-fee"> {shipPrice}원 </span>
                 &nbsp;<span className="emphasize">무료</span>
-              </p>
-              <p>
+              </div>
+              <div>
                 전체 가격 :&nbsp;
                 <span className="ship-fee">{totalPrice + shipPrice}원</span>
                 &nbsp;<span className="emphasize">{totalPrice}원</span>
-              </p>
+              </div>
             </>
           ) : (
             <></>
@@ -267,14 +267,13 @@ const OptionCSS = css`
 
   .info-box {
     position: relative;
-    height: 65vh;
+    height: 80vh;
+    width: 100vw;
     overflow-y: scroll;
   }
 
   .img-preview {
-    margin: auto;
-    width: 40%;
-    height: 40%;
+    width: 100%;
   }
 
   .option-buttons {
@@ -283,46 +282,17 @@ const OptionCSS = css`
   }
   .imgbox_1,
   .imgbox_2 {
-    width: 40%;
-    height: 40%;
-    /* width: 50vh; */
-    /* height: 70vh; */
+    width: 100%;
     position: absolute;
 
-    img {
+    /* img {
       width: 100vh;
-    }
+    } */
   }
   .imgbox_3 {
     position: absolute;
   }
-  .imgbox_1 img {
-    position: relative;
-    z-index: 0;
-    width: 75%;
-    left: 0vw;
-    top: 10vw;
-  }
-  .imgbox_2 img {
-    position: relative;
-    z-index: 0;
-    width: 75%;
-    left: 0vw;
-    top: 10vw;
-    @media screen and (max-height: 700px) {
-      width: 62.5%;
-    }
-  }
-  .imgbox_3 img {
-    position: relative;
-    z-index: 0;
-    width: 90%;
-    left: 0vw;
-    top: 10vw;
-    @media screen and (max-height: 700px) {
-      width: 75%;
-    }
-  }
+
   .flowerlist {
     /* width: 100%; */
     position: static;
@@ -332,45 +302,108 @@ const OptionCSS = css`
       position: relative;
       &:first-of-type {
         z-index: 10;
-        left: -10vw;
+        left: -5vw;
         top: 46vw;
         transform: rotate(0deg);
+        @media screen and (min-width: 350px) {
+          left: -20px;
+          top: 150px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: 9vw;
-        top: 44vw;
+        left: 18vw;
+        top: 46vw;
         transform: rotate(5deg);
+        @media screen and (min-width: 350px) {
+          left: 60px;
+          top: 150px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
       &:nth-of-type(3) {
         z-index: 8;
-        left: -25vw;
+        left: -20vw;
         top: 40vw;
         transform: rotate(20deg);
+        @media screen and (min-width: 350px) {
+          left: -70px;
+          top: 130px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
       &:nth-of-type(4) {
         z-index: 7;
-        left: -40vw;
+        left: -45vw;
         top: 50vw;
         transform: rotate(-10deg);
+        @media screen and (min-width: 350px) {
+          left: -170px;
+          top: 160px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
       &:nth-of-type(5) {
         z-index: 6;
-        left: 5vw;
+        left: 10vw;
         top: 27vw;
         transform: rotate(25deg);
+        @media screen and (min-width: 350px) {
+          left: 50px;
+          top: 75px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
       &:nth-of-type(6) {
         z-index: 5;
-        left: -21vw;
+        left: -18vw;
         top: 36vw;
         transform: rotate(-20deg);
+        @media screen and (min-width: 350px) {
+          left: -65px;
+          top: 105px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
       &:nth-of-type(7) {
         z-index: 4;
-        left: -36vw;
-        top: 33vw;
+        left: -33vw;
+        top: 31vw;
         transform: rotate(0deg);
+        @media screen and (min-width: 350px) {
+          left: -135px;
+          top: 90px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
     }
     .flowerbox_2 {
@@ -561,15 +594,41 @@ const OptionCSS = css`
     }
   }
 
-  .imgbox_front_1 img {
-    z-index: 12;
+  .imgbox_1 img {
     position: relative;
+    z-index: 0;
+    width: 40%;
+    @media screen and (min-width: 350px) {
+      width: 140px;
+    }
+  }
+  .imgbox_2 img {
+    position: relative;
+    z-index: 0;
     width: 75%;
     left: 0vw;
-    right: 0vw;
     top: 10vw;
-    bottom: 10vw;
-    pointer-events: none;
+    @media screen and (max-height: 700px) {
+      width: 62.5%;
+    }
+  }
+  .imgbox_3 img {
+    position: relative;
+    z-index: 0;
+    width: 90%;
+    left: 0vw;
+    top: 10vw;
+    @media screen and (max-height: 700px) {
+      width: 75%;
+    }
+  }
+  .imgbox_front_1 img {
+    position: relative;
+    z-index: 12;
+    width: 40%;
+    @media screen and (min-width: 350px) {
+      width: 140px;
+    }
   }
   .imgbox_front_2 {
     /* height: 65vh; */
@@ -614,17 +673,14 @@ const SelectBtn = css`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin: 2rem;
-
-  /* padding: 0.5rem; */
-  /* margin-top: 0; */
-  p {
+  margin-left: 2rem;
+  margin-bottom: -20vw;
+  div {
     display: flex;
     justify-content: left;
     align-items: end;
   }
   select {
-    margin-top: 0;
     border: 1px solid black;
     display: flex;
     justify-content: left;
@@ -645,8 +701,11 @@ const Font = css`
 
 const ButtonBox = css`
   position: fixed;
-  bottom: 5vh;
+  bottom: 2vh;
   width: 100%;
-  /* height: 20%; */
+
+  button {
+    height: 5vh;
+  }
 `;
 export default PaymentOption;
