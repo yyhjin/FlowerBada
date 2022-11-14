@@ -27,6 +27,7 @@ interface IMsg {
   writer?: string;
   font?: string;
   imgUrl?: string;
+  left?: string;
 }
 
 export default function Message(props: {
@@ -148,7 +149,7 @@ export default function Message(props: {
                       <WbTwilight color="error" />
                       &nbsp; 메시지 신고하기
                     </DialogTitle>
-                    <DialogContent left={left}>
+                    <DialogContentCustom left={left}>
                       {/* <br /> */}
                       <DialogContentText className="content">
                         신고자 : {loginUser.nickname}
@@ -162,8 +163,8 @@ export default function Message(props: {
                         placeholder="신고 사유를 입력하세요"
                         onChange={(e) => setReportContent(e.target.value)}
                       ></textarea>
-                    </DialogContent>
-                    <DialogActions className="action" left={left}>
+                    </DialogContentCustom>
+                    <DialogActionsCustom className="action" left={left}>
                       <ThemeProvider theme={theme}>
                         <Button
                           variant="contained"
@@ -186,11 +187,11 @@ export default function Message(props: {
                           취소
                         </Button>
                       </ThemeProvider>
-                    </DialogActions>
+                    </DialogActionsCustom>
                   </DialogReport>
 
                   <div>
-                    <DialogContent>
+                    <DialogContentCustom>
                       <div style={{ textAlign: 'center' }}>
                         <img
                           src={'/src/assets/' + msg.imgUrl}
@@ -230,7 +231,7 @@ export default function Message(props: {
                           </IconButton>
                         </ThemeProvider>
                       </div>
-                    </DialogContent>
+                    </DialogContentCustom>
                   </div>
                 </DialogCustom>
               </div>
@@ -311,6 +312,7 @@ const FlowerCss = (props: any) => css`
     color: white;
     text-shadow: 2px 2px 2px gray;
     font-size: 3vw;
+    pointer-events: none;
     @media screen and (min-width: 500px) {
       left: ${props.leng}px;
       top: 50px;
@@ -324,6 +326,7 @@ const FlowerCss = (props: any) => css`
     color: white;
     text-shadow: 2px 2px 2px gray;
     font-size: 3vw;
+    pointer-events: none;
     @media screen and (min-width: 500px) {
       left: ${props.leng}px;
       top: 50px;
@@ -337,6 +340,7 @@ const FlowerCss = (props: any) => css`
     color: white;
     text-shadow: 2px 2px 2px gray;
     font-size: 3vw;
+    pointer-events: none;
     @media screen and (min-width: 500px) {
       left: ${props.leng}px;
       top: 45px;
@@ -345,7 +349,7 @@ const FlowerCss = (props: any) => css`
   }
 `;
 
-const DialogCustom = styled(Dialog)((props) => ({
+const DialogCustom: any = styled(Dialog)((props: any) => ({
   '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
     backgroundColor: 'transparent',
     boxShadow: 'none',
@@ -364,7 +368,7 @@ const DialogCustom = styled(Dialog)((props) => ({
   },
 }));
 
-const DialogReport = styled(Dialog)((props) => ({
+const DialogReport: any = styled(Dialog)((props: any) => ({
   '& .css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': {
     backgroundColor: '#2F2F2F',
     left: `${props.left}`,
@@ -377,7 +381,7 @@ const DialogReport = styled(Dialog)((props) => ({
   },
 }));
 
-const DialogContentTextCustom = styled(DialogContentText)(() => ({
+const DialogContentTextCustom: any = styled(DialogContentText)(() => ({
   backgroundColor: '#FFFFFF',
   color: '#000000',
   padding: '15px',
@@ -385,10 +389,14 @@ const DialogContentTextCustom = styled(DialogContentText)(() => ({
   fontSize: '18px',
 }));
 
-const DialogConent = styled(DialogContent)(() => ({
+const DialogContentCustom: any = styled(DialogContent)(() => ({
   '& .MuiDialogTitle-root+.css-ypiqx9-MuiDialogContent-root': {
     padding: '0px',
   },
+}));
+
+const DialogActionsCustom: any = styled(DialogActions)(() => ({
+  '& .MuiDialogTitle-root+.css-ypiqx9-MuiDialogContent-root': {},
 }));
 
 const theme = createTheme({

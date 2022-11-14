@@ -1295,7 +1295,7 @@ const SaveParent = css`
   }
 `;
 
-const DialogCustom = styled(Dialog)((props) => ({
+const DialogCustom: any = styled(Dialog)((props: any) => ({
   '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
     boxShadow: 'none',
     width: '100%',
