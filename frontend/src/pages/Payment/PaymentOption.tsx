@@ -10,11 +10,15 @@ import { Button } from '@mui/material';
 import { useEffect } from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import html2canvas from 'html2canvas';
+import messageAPI from '@api/messageAPI';
 
 const PaymentOption = () => {
   const [optionType, setOptionType] = useState<string>('default');
   const [paymentState, setPaymentState] =
     useRecoilState<IPaymentRecoil>(paymentRecoil);
+  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const navigate = useNavigate();
   const location = useLocation();
   const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
@@ -31,6 +35,8 @@ const PaymentOption = () => {
     location.state;
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [shipPrice, setShipPrice] = useState<number>(3000);
+  const [imgUrl, setImgUrl] = useState<string>('');
+  const rollingUrl = localStorage.getItem('url') ?? '';
 
   const selectOption = (e: SelectChangeEvent) => {
     setOptionType(e.target.value);
@@ -50,7 +56,7 @@ const PaymentOption = () => {
       data.userToken = userToken;
       data.rollingId = rolling.rollingId;
       data.paginationId = paginationId;
-      data.imgUrl = '';
+      data.imgUrl = imgUrl;
       if (optionType === 'both') data.flowerCnt = rolling.messages.length;
       else data.flowerCnt = 0;
       return data;
@@ -90,6 +96,24 @@ const PaymentOption = () => {
     return rollingsPrice;
   };
 
+  const onSaveAs = async (uri: string): Promise<void> => {
+    let link: any = document.createElement('a');
+    document.body.appendChild(link);
+    link.href = uri;
+    // link.download = filename;
+    // link.click();
+    document.body.removeChild(link);
+    const res = await messageAPI.getRollingImgUrl(
+      userState.jwt,
+      userState.refresh,
+      rollingUrl,
+      {
+        imgUrl: uri,
+      },
+    );
+    setImgUrl(res.data.response);
+  };
+
   useEffect(() => {
     setOptionType(paymentState.optionType);
   }, []);
@@ -101,10 +125,20 @@ const PaymentOption = () => {
     else if (optionType === 'both') setTotalPrice(getBothPrice());
   }, [optionType]);
 
+  useEffect(() => {
+    // 캡쳐 및 DB 저장
+    const el = document.getElementById('to-save');
+    if (el) {
+      html2canvas(el).then((canvas: any) => {
+        onSaveAs(canvas.toDataURL('image/png'));
+      });
+    }
+  }, []);
+
   return (
     <div css={OptionCSS}>
       <div className="info-box">
-        <div className="img-preview">
+        <div id="to-save" className="img-preview">
           <div className={`imgbox_${type}`}>
             <img src={'/src/assets/' + rolling.imgBack}></img>
           </div>

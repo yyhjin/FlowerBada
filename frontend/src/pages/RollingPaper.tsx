@@ -9,7 +9,6 @@ import CreateIcon from '@mui/icons-material/Create';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
 
 import {
   Dialog,
@@ -323,18 +322,6 @@ export default function RollingPaper() {
 
   useEffect(() => {
     getRolling();
-    if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
-      // 캡쳐 및 DB 저장
-      const el = document.getElementById('to-save');
-      if (el) {
-        html2canvas(el).then((canvas: any) => {
-          onSaveAs(
-            canvas.toDataURL('image/png'),
-            `final-image-` + paramCopy.url + `.png`,
-          );
-        });
-      }
-    }
   }, [paginationId]);
 
   useEffect(() => {
@@ -353,16 +340,18 @@ export default function RollingPaper() {
   }, [rolling]);
 
   const onSaveAs = (uri: string, filename: string): void => {
-    console.log(uri);
     let link: any = document.createElement('a');
     document.body.appendChild(link);
     link.href = uri;
     // link.download = filename;
     // link.click();
     document.body.removeChild(link);
-    messageAPI.updateRollingImg(userState.jwt, userState.refresh, {
-      imgUrl: uri,
-    });
+    messageAPI.updateRollingImg(
+      userState.jwt,
+      userState.refresh,
+      paramCopy.url,
+      { imgUrl: uri },
+    );
   };
 
   return (

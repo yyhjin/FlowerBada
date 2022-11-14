@@ -61,10 +61,22 @@ const messageAPI = {
   //   });
   // },
 
-  updateRollingImg(jwt: string, refresh: string, data: IImgUrl) {
+  updateRollingImg(jwt: string, refresh: string, url: string, data: IImgUrl) {
+    return api({
+      method: 'put',
+      url: `${END_POINT}/updateimg/${url}`,
+      headers: {
+        'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
+      },
+      data: data,
+    });
+  },
+
+  getRollingImgUrl(jwt: string, refresh: string, url: string, data: IImgUrl) {
     return api({
       method: 'post',
-      url: `${END_POINT}/getimgurl`,
+      url: `${END_POINT}/getimgurl/${url}`,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
         'REFRESH-TOKEN': 'Bearer ' + refresh,

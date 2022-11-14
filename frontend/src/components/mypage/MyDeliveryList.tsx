@@ -24,7 +24,7 @@ interface IDeliver {
 export default function MyDeliveryList() {
   const navigate = useNavigate();
   const [pages, setPages] = useState<number>(0);
-  const [myList, setMyList] = useState([]);
+  const [myList, setMyList] = useState<IDeliver[]>([]);
   const [sortNumber, setSortNumber] = useState(1);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const [isFetching, setIsFetching] = useState(false);
@@ -81,6 +81,7 @@ export default function MyDeliveryList() {
         setIsFetching(true);
       }
       setMyList(myList.concat(res.data.response));
+      console.log(res.data.response);
       setPages(pages + 1);
     } catch (err: any) {
       if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
