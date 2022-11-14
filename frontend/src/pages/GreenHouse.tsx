@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
@@ -6,7 +6,6 @@ import greenhouseAPI from '@api/greenhouseAPI';
 import { css } from '@emotion/react';
 import { createTheme, Grid, MenuItem, ThemeProvider } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MySwal from '@components/SweetAlert';
 import updateTokens from '@src/utils/updateTokens';
@@ -179,6 +178,8 @@ export default function GreenHouse() {
   };
 
   const handleScroll = useCallback((): void => {
+    console.log('핸들스크롤');
+
     const { innerHeight } = window;
     const scrollHeight = document.querySelector('.gridlist')?.scrollHeight;
     const scrollTop = document.querySelector('.gridlist')?.scrollTop;
@@ -199,6 +200,7 @@ export default function GreenHouse() {
   const throttleScroll = () => {
     timer.current = window.setTimeout(() => {
       if (timer.current !== null) {
+        console.log('셋타임아웃 내부');
         handleScroll();
         timer.current = null;
       }
@@ -206,6 +208,7 @@ export default function GreenHouse() {
   };
 
   useEffect(() => {
+    console.log('유즈이펙트');
     // scroll event listener 등록
     const event = document.querySelector('.gridlist');
     if (event) {
@@ -245,10 +248,6 @@ export default function GreenHouse() {
         )}
       </div>
       <div css={SelectBtn}>
-        {/* <select className="dropdown" value={sort} onChange={handleChange}>
-          <option value={1}>최신순</option>
-          <option value={2}>오래된순</option>
-        </select> */}
         <ThemeProvider theme={theme}>
           <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <Select
@@ -364,9 +363,6 @@ const MainTab = css`
   .btn {
     background-color: #b1bdbb;
     width: 40%;
-    /* height: 4em; */
-
-    /* margin: 30px 10px 10px 10px; */
 
     &:hover {
       outline: none;
@@ -418,8 +414,6 @@ const SelectBtn = css`
   text-align: right;
   justify-content: end;
   margin-right: 1em;
-  /* padding: 0.5rem; */
-  /* margin-top: 0; */
   select {
     margin-top: 0;
     border: 1px solid black;
