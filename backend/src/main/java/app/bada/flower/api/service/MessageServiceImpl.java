@@ -21,6 +21,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
+
 @Service
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
@@ -43,6 +44,7 @@ public class MessageServiceImpl implements MessageService {
                 .build();
         return messageRepository.save(message);
     }
+
 
     @Override
     public Message getMessage(int msgId) {

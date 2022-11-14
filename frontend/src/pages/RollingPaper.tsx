@@ -738,6 +738,16 @@ const DetailCss = css`
       margin-top: 20vh;
     }
   }
+  .valid_1 {
+    justify-content: center;
+  }
+  .valid_2 {
+    margin-top: 20vh;
+    justify-content: center;
+    @media screen and (min-width: 1000px) {
+      margin-top: 25vh;
+    }
+  }
   .titlezone_1 {
     justify-content: center;
     padding-top: 150px;
@@ -1068,9 +1078,9 @@ const DetailCss = css`
         left: 15vw;
         top: 65vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: 13vw;
-          top: 55vw;
+        @media screen and (min-width: 500px) {
+          left: 80px;
+          top: 430px;
         }
       }
     }
@@ -1194,9 +1204,6 @@ const DetailCss = css`
       top: 60px;
     }
   }
-  .imgbox_front_2 {
-    height: 65vh;
-  }
   .imgbox_front_2 img {
     z-index: 12;
     position: relative;
@@ -1229,6 +1236,7 @@ const DetailCss = css`
 
 const Dot = css`
   position: absolute;
+  z-index: 20;
   width: 100%;
   margin-top: 0vh;
   bottom: 0%;
