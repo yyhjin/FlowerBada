@@ -41,6 +41,7 @@ const PaymentOption = () => {
   };
 
   const onClickNext = () => {
+    // todo: 캡쳐하고 백엔드에 보내서 url 받아오는 로직 생성 필요
     setPaymentState((prev: IPaymentRecoil) => {
       const data = { ...prev };
       data.price = totalPrice;
@@ -49,6 +50,7 @@ const PaymentOption = () => {
       data.userToken = userToken;
       data.rollingId = rolling.rollingId;
       data.paginationId = paginationId;
+      data.imgUrl = '';
       if (optionType === 'both') data.flowerCnt = rolling.messages.length;
       else data.flowerCnt = 0;
       return data;
