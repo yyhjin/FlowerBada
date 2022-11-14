@@ -269,52 +269,58 @@ export default function GreenHouse() {
             </FormControl>
           </ThemeProvider>
         </div>
-        {loading ? (
-          <div>
-            {rollings && rollings.length && rollings.length === 0
-              ? `${tab}이 없습니다`
-              : ''}
-          </div>
-        ) : (
-          <div> 로딩중 </div>
-        )}
-        {tabNum === 1 ? (
-          <Grid container columns={8} css={GridList} className="gridlist">
-            {rollings.map((rolling: IRolling, index: number) => (
-              <Grid xs={4} item key={index}>
-                <div
-                  css={GridItem}
-                  onClick={() => handleRollingPaper(rolling.url)}
-                >
-                  <img className="rolling_img" src={rolling.imgUrl} />
-                  <div className="rolling_title">{rolling.title}</div>
-                  <div className="rolling_date">({rolling.date})</div>
-                </div>
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Grid container columns={8} css={GridList} className="gridlist">
-            {bookmarks.map((rolling: IRolling, index: number) => (
-              <Grid xs={4} item key={index}>
-                <div
-                  css={GridItem}
-                  onClick={() => handleRollingPaper(rolling.url)}
-                >
-                  <img className="rolling_img" src={rolling.imgUrl} />
-                  <div className="rolling_title">{rolling.title}</div>
-                  <div className="rolling_date">({rolling.date})</div>
-                </div>
-              </Grid>
-            ))}
-          </Grid>
-        )}
+        <div className="item-box">
+          {loading ? (
+            <div>
+              {rollings && rollings.length && rollings.length === 0
+                ? `${tab}이 없습니다`
+                : ''}
+            </div>
+          ) : (
+            <div> 로딩중 </div>
+          )}
+          {tabNum === 1 ? (
+            <Grid container columns={8} css={GridList} className="gridlist">
+              {rollings.map((rolling: IRolling, index: number) => (
+                <Grid xs={4} item key={index}>
+                  <div
+                    css={GridItem}
+                    onClick={() => handleRollingPaper(rolling.url)}
+                  >
+                    <img className="rolling_img" src={rolling.imgUrl} />
+                    <div className="rolling_title">{rolling.title}</div>
+                    <div className="rolling_date">({rolling.date})</div>
+                  </div>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Grid container columns={8} css={GridList} className="gridlist">
+              {bookmarks.map((rolling: IRolling, index: number) => (
+                <Grid xs={4} item key={index}>
+                  <div
+                    css={GridItem}
+                    onClick={() => handleRollingPaper(rolling.url)}
+                  >
+                    <img className="rolling_img" src={rolling.imgUrl} />
+                    <div className="rolling_title">{rolling.title}</div>
+                    <div className="rolling_date">({rolling.date})</div>
+                  </div>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </div>
       </div>
     </>
   );
 }
 
-const totalCSS = css``;
+const totalCSS = css`
+  .item-box {
+    height: 70vh;
+  }
+`;
 
 const theme = createTheme({
   status: {
@@ -384,9 +390,22 @@ const GridList = css`
   border-radius: 15px;
   overflow-y: scroll;
   margin-top: 2vh;
+  /* border: solid 1px;
+
   &::-webkit-scrollbar {
-    display: none;
+    width: 6.5px;
   }
+
+  &::-webkit-scrollbar-track {
+    background: #ebebeb;
+    border-radius: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: black; /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+  } */
+
   @media screen and (min-height: 800px) {
     height: 70%;
   }
