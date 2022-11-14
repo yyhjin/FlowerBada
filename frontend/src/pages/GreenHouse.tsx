@@ -8,7 +8,7 @@ import { createTheme, Grid, MenuItem, ThemeProvider } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import MySwal from '@components/SweetAlert';
-import updateTokens from '@src/utils/updateTokens';
+import updateTokens from '@utils/updateTokens';
 
 interface IRolling {
   url: string;
@@ -118,7 +118,7 @@ export default function GreenHouse() {
           params,
         );
         // console.log(res.data.response.length);
-        if (res.data.response.length == 0) {
+        if (res.data.response.length === 0) {
           setIsFetching(true);
         }
         setLoading(true);
@@ -198,13 +198,12 @@ export default function GreenHouse() {
   }, [bPaginationId, rPaginationId, rollings, bookmarks]);
 
   const throttleScroll = () => {
-    timer.current = window.setTimeout(() => {
-      if (timer.current !== null) {
-        // console.log('셋타임아웃 내부');
+    if (timer.current === null) {
+      timer.current = window.setTimeout(() => {
         handleScroll();
         timer.current = null;
-      }
-    }, 300);
+      }, 300);
+    }
   };
 
   useEffect(() => {
@@ -230,88 +229,92 @@ export default function GreenHouse() {
 
   return (
     <>
-      <div>
-        {tabNum === 1 ? (
-          <div css={MainTab}>
-            <button className="active_btn">내가 만든 꽃다발</button>
-            <button className="btn" onClick={initBookmarks}>
-              즐겨찾기
-            </button>
+      <div css={totalCSS}>
+        <div>
+          {tabNum === 1 ? (
+            <div css={MainTab}>
+              <button className="active_btn">내가 만든 꽃다발</button>
+              <button className="btn" onClick={initBookmarks}>
+                즐겨찾기
+              </button>
+            </div>
+          ) : (
+            <div css={MainTab}>
+              <button className="btn" onClick={initRollings}>
+                내가 만든 꽃다발
+              </button>
+              <button className="active_btn">즐겨찾기</button>
+            </div>
+          )}
+        </div>
+        <div css={SelectBtn}>
+          <ThemeProvider theme={theme}>
+            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+              <Select
+                labelId="demo-select-small"
+                id="demo-select-small"
+                value={sort}
+                onChange={handleChange}
+                css={Font}
+                variant="standard"
+                disableUnderline
+              >
+                <MenuItem value={'1'} css={Font}>
+                  최신순
+                </MenuItem>
+                <MenuItem value={'2'} css={Font}>
+                  오래된순
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </ThemeProvider>
+        </div>
+        {loading ? (
+          <div>
+            {rollings && rollings.length && rollings.length === 0
+              ? `${tab}이 없습니다`
+              : ''}
           </div>
         ) : (
-          <div css={MainTab}>
-            <button className="btn" onClick={initRollings}>
-              내가 만든 꽃다발
-            </button>
-            <button className="active_btn">즐겨찾기</button>
-          </div>
+          <div> 로딩중 </div>
+        )}
+        {tabNum === 1 ? (
+          <Grid container columns={8} css={GridList} className="gridlist">
+            {rollings.map((rolling: IRolling, index: number) => (
+              <Grid xs={4} item key={index}>
+                <div
+                  css={GridItem}
+                  onClick={() => handleRollingPaper(rolling.url)}
+                >
+                  <img className="rolling_img" src={rolling.imgUrl} />
+                  <div className="rolling_title">{rolling.title}</div>
+                  <div className="rolling_date">({rolling.date})</div>
+                </div>
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <Grid container columns={8} css={GridList} className="gridlist">
+            {bookmarks.map((rolling: IRolling, index: number) => (
+              <Grid xs={4} item key={index}>
+                <div
+                  css={GridItem}
+                  onClick={() => handleRollingPaper(rolling.url)}
+                >
+                  <img className="rolling_img" src={rolling.imgUrl} />
+                  <div className="rolling_title">{rolling.title}</div>
+                  <div className="rolling_date">({rolling.date})</div>
+                </div>
+              </Grid>
+            ))}
+          </Grid>
         )}
       </div>
-      <div css={SelectBtn}>
-        <ThemeProvider theme={theme}>
-          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <Select
-              labelId="demo-select-small"
-              id="demo-select-small"
-              value={sort}
-              onChange={handleChange}
-              css={Font}
-              variant="standard"
-              disableUnderline
-            >
-              <MenuItem value={'1'} css={Font}>
-                최신순
-              </MenuItem>
-              <MenuItem value={'2'} css={Font}>
-                오래된순
-              </MenuItem>
-            </Select>
-          </FormControl>
-        </ThemeProvider>
-      </div>
-      {loading ? (
-        <div>
-          {rollings && rollings.length && rollings.length === 0
-            ? `${tab}이 없습니다`
-            : ''}
-        </div>
-      ) : (
-        <div> 로딩중 </div>
-      )}
-      {tabNum === 1 ? (
-        <Grid container columns={8} css={GridList} className="gridlist">
-          {rollings.map((rolling: IRolling, index: number) => (
-            <Grid xs={4} item key={index}>
-              <div
-                css={GridItem}
-                onClick={() => handleRollingPaper(rolling.url)}
-              >
-                <img className="rolling_img" src={rolling.imgUrl} />
-                <div className="rolling_title">{rolling.title}</div>
-                <div className="rolling_date">({rolling.date})</div>
-              </div>
-            </Grid>
-          ))}
-        </Grid>
-      ) : (
-        <Grid container columns={8} css={GridList} className="gridlist">
-          {bookmarks.map((rolling: IRolling, index: number) => (
-            <Grid xs={4} item key={index}>
-              <div
-                css={GridItem}
-                onClick={() => handleRollingPaper(rolling.url)}
-              >
-                <img className="rolling_img" src={rolling.imgUrl} />
-                <div className="rolling_title">{rolling.title}</div>
-                <div className="rolling_date">({rolling.date})</div>
-              </div>
-            </Grid>
-          ))}
-        </Grid>
-      )}
     </>
   );
 }
+
+const totalCSS = css``;
 
 const theme = createTheme({
   status: {
