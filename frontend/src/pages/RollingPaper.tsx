@@ -714,10 +714,10 @@ const DetailCss = css`
     justify-content: center;
   }
   .valid_2 {
-    margin-top: 15vh;
+    margin-top: 20vh;
     justify-content: center;
     @media screen and (min-width: 1000px) {
-      margin-top: 20vh;
+      margin-top: 25vh;
     }
   }
   .titlezone_1 {
@@ -1208,6 +1208,7 @@ const DetailCss = css`
 
 const Dot = css`
   position: absolute;
+  z-index: 20;
   width: 100%;
   margin-top: 0vh;
   bottom: 0%;
