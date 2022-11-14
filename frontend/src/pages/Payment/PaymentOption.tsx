@@ -411,81 +411,129 @@ const OptionCSS = css`
       &:first-of-type {
         z-index: 10;
         left: -15vw;
-        top: 60vw;
+        top: 78vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 52vw;
+        @media screen and (min-width: 350px) {
+          left: -50px;
+          top: 240px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: -2vw;
-        top: 54vw;
+        left: 3vw;
+        top: 75vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -1vw;
-          top: 48vw;
+        @media screen and (min-width: 350px) {
+          left: 12px;
+          top: 235px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(3) {
         z-index: 8;
-        left: -32vw;
-        top: 57vw;
+        left: -41vw;
+        top: 80vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -28vw;
-          top: 50vw;
+        @media screen and (min-width: 350px) {
+          left: -120px;
+          top: 240px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(4) {
         z-index: 7;
         left: -12vw;
-        top: 40vw;
+        top: 52vw;
         transform: rotate(10deg);
-        @media screen and (max-height: 700px) {
-          left: -10vw;
-          top: 35vw;
+        @media screen and (min-width: 350px) {
+          left: -40px;
+          top: 165px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(5) {
         z-index: 6;
-        left: 16vw;
-        top: 37vw;
+        left: 21vw;
+        top: 49vw;
         transform: rotate(25deg);
-        @media screen and (max-height: 700px) {
-          left: 13vw;
-          top: 32vw;
+        @media screen and (min-width: 350px) {
+          left: 60px;
+          top: 160px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(6) {
         z-index: 5;
-        left: -40vw;
-        top: 45vw;
+        left: -47vw;
+        top: 62vw;
         transform: rotate(-20deg);
-        @media screen and (max-height: 700px) {
-          left: -35vw;
-          top: 39vw;
+        @media screen and (min-width: 350px) {
+          left: -140px;
+          top: 190px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(7) {
         z-index: 4;
-        left: -24vw;
-        top: 32vw;
+        left: -30vw;
+        top: 38vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -20vw;
-          top: 28vw;
+        @media screen and (min-width: 350px) {
+          left: -90px;
+          top: 120px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(8) {
         z-index: 3;
-        left: -4vw;
-        top: 29vw;
+        left: 0vw;
+        top: 35vw;
         transform: rotate(5deg);
-        @media screen and (max-height: 700px) {
-          left: -2vw;
-          top: 25vw;
+        @media screen and (min-width: 350px) {
+          left: -10px;
+          top: 110px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
     }
@@ -605,11 +653,9 @@ const OptionCSS = css`
   .imgbox_2 img {
     position: relative;
     z-index: 0;
-    width: 75%;
-    left: 0vw;
-    top: 10vw;
-    @media screen and (max-height: 700px) {
-      width: 62.5%;
+    width: 50%;
+    @media screen and (min-width: 350px) {
+      width: 150px;
     }
   }
   .imgbox_3 img {
@@ -630,20 +676,12 @@ const OptionCSS = css`
       width: 140px;
     }
   }
-  .imgbox_front_2 {
-    /* height: 65vh; */
-  }
   .imgbox_front_2 img {
-    z-index: 12;
     position: relative;
-    width: 75%;
-    left: 0vw;
-    right: 0vw;
-    top: 10vw;
-    bottom: 10vw;
-    pointer-events: none;
-    @media screen and (max-height: 700px) {
-      width: 62.5%;
+    z-index: 12;
+    width: 50%;
+    @media screen and (min-width: 350px) {
+      width: 150px;
     }
   }
   .imgbox_front_3 img {
@@ -674,7 +712,7 @@ const SelectBtn = css`
   flex-direction: column;
   align-items: flex-start;
   margin-left: 2rem;
-  margin-bottom: -20vw;
+  margin-top: 5vw;
   div {
     display: flex;
     justify-content: left;
