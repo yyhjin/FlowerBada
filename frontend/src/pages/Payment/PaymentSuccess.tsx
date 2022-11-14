@@ -2,12 +2,13 @@ import { css } from '@emotion/react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import dateFormatter from '@utils/dateFormatter';
-import paymentAPI from '@src/api/paymentAPI';
+import paymentAPI from '@api/paymentAPI';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { paymentRecoil } from '@recoil/paymentRecoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { Button } from '@mui/material';
+import Congrats from '@assets/congrats2.gif';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
@@ -54,13 +55,11 @@ const PaymentSuccess = () => {
   }, []);
 
   return (
-    <div>
+    <div css={PaymentSuccessCSS}>
       {paymentInfo && paymentInfo.item_name ? (
-        <div>
-          <h3>결제가 정상적으로 완료되었습니다!</h3>
-          <p>구매한 아이템 : {paymentInfo.item_name}</p>
-          <p>가격 : {paymentInfo.amount.total.toLocaleString()}원</p>
-          <p>결제 시간 : {dateFormatter(paymentInfo.approved_at)}</p>
+        <div className="total-info">
+          <img src={Congrats} alt="폭죽" className="firecracker" />
+          <h3>결제가 완료되었습니다!</h3>
         </div>
       ) : (
         <div>
@@ -85,6 +84,28 @@ const PaymentSuccess = () => {
     </div>
   );
 };
+
+const PaymentSuccessCSS = css`
+  width: 100vw;
+  height: calc(100% - 20vh);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .total-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    .firecracker {
+      width: 80vw;
+    }
+    h3 {
+      margin-top: 20vh;
+      font-weight: bold;
+    }
+  }
+`;
 
 const btnTheme = createTheme({
   status: {

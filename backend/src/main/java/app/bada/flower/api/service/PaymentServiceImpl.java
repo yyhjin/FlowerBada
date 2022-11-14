@@ -5,6 +5,7 @@ import app.bada.flower.api.dto.payment.PaymentReadyResDto;
 import app.bada.flower.api.dto.payment.PaymentSuccessResDto;
 import app.bada.flower.api.entity.*;
 import app.bada.flower.api.repository.*;
+import app.bada.flower.api.util.S3FileUpload;
 import app.bada.flower.config.PropertyConfig;
 import app.bada.flower.exception.CustomException;
 import app.bada.flower.exception.ErrorCode;
@@ -32,6 +33,9 @@ public class PaymentServiceImpl implements PaymentService{
     private final UserRepository userRepository;
     private final RollingPaperRepository rollingPaperRepository;
     private final DeliveryStateRepository deliveryStateRepository;
+
+    @Autowired
+    S3FileUpload s3FileUpload;
 
     @Autowired
     private PropertyConfig propertyConfig;
