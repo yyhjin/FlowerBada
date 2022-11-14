@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
-import Message from '@src/components/mypage/Message';
+import Message from '@src/components/message/Message';
 import DotSlice from '@components/paging/DotSlice';
 import messageAPI from '@api/messageAPI';
 import IosShareIcon from '@mui/icons-material/IosShare';
@@ -9,7 +9,6 @@ import CreateIcon from '@mui/icons-material/Create';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
 
 import {
   Dialog,
@@ -23,12 +22,15 @@ import {
 import rollingAPI from '@api/rollingAPI';
 import Star from '@assets/Star.png';
 import EmptyStar from '@assets/EmptyStar.png';
-import { useRecoilState } from 'recoil';
+import Delivery from '@assets/Delivery.png';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
 import MySwal from '@components/SweetAlert';
 import { useCallback } from 'react';
+import Login from '@assets/login_btn.png';
 import html2canvas from 'html2canvas';
-import { useReactToPrint } from 'react-to-print';
+// import { useReactToPrint } from 'react-to-print';
 import updateTokens from '@utils/updateTokens';
 
 import Print from '@pages/Print';
@@ -64,6 +66,7 @@ export interface IMessage {
   writer: string;
   flowerId: number;
   messageId: number;
+  price: number;
 }
 
 export default function RollingPaper(props: any) {
@@ -82,6 +85,7 @@ export default function RollingPaper(props: any) {
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
+  const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
   const [left, setLeft] = useState<string>('0px');
 
   window.addEventListener('resize', function () {
@@ -311,7 +315,16 @@ export default function RollingPaper(props: any) {
     // 로컬스토리지에 담기
     localStorage.setItem('url', paramCopy.url);
     localStorage.setItem('paginationId', paginationId.toString());
-    navigate('/payment');
+    navigate('/payment/option', {
+      state: {
+        rolling,
+        type,
+        valid,
+        stepNumber,
+        userToken: userState.userToken,
+        paginationId,
+      },
+    });
   };
 
   const linkCopy = () => {
@@ -375,12 +388,6 @@ export default function RollingPaper(props: any) {
     localStorage.removeItem('paginationId');
   }, []);
 
-  const shareRolling = () => {
-    navigate('/newroll/link', {
-      state: { url: paramCopy.url, title: rolling.title },
-    });
-  };
-
   const saveRolling = () => {
     navigate('/rolling/print', {
       state: {
@@ -390,6 +397,10 @@ export default function RollingPaper(props: any) {
         mainImg: rolling.imgUrl,
       },
     });
+  };
+
+  const shareRolling = () => {
+    navigate('/newroll/link', { state: paramCopy.url });
   };
 
   const dateBeforeActions = [
@@ -447,7 +458,7 @@ export default function RollingPaper(props: any) {
       // 캡쳐 및 DB 저장
       const el = document.getElementById('to-save');
       if (el) {
-        html2canvas(el).then((canvas) => {
+        html2canvas(el).then((canvas: any) => {
           onSaveAs(
             canvas.toDataURL('image/png'),
             `final-image-` + paramCopy.url + `.png`,
@@ -458,18 +469,17 @@ export default function RollingPaper(props: any) {
   }, [rolling]);
 
   const onSaveAs = (uri: string, filename: string): void => {
-    // console.log(uri);
     let link: any = document.createElement('a');
     document.body.appendChild(link);
     link.href = uri;
     // link.download = filename;
     // link.click();
     document.body.removeChild(link);
-    axios.put(
-      `http://localhost:8080/api/v1/message/updateimg/${paramCopy.url}`,
-      {
-        imgUrl: uri,
-      },
+    messageAPI.updateRollingImg(
+      userState.jwt,
+      userState.refresh,
+      paramCopy.url,
+      { imgUrl: uri },
     );
   };
   const check = () => {
