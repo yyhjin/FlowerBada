@@ -46,16 +46,16 @@ export default function Message(props: {
   const [left, setLeft] = useState<string>('0px');
 
   window.addEventListener('resize', function () {
-    if (window.outerWidth >= 500) {
-      setLeft((window.outerWidth - 500) / 2 + 'px');
+    if (window.innerWidth >= 500) {
+      setLeft((window.innerWidth - 500) / 2 + 'px');
     } else {
       setLeft('0px');
     }
   });
 
   async function getMessage() {
-    if (window.outerWidth >= 500) {
-      setLeft((window.outerWidth - 500) / 2 + 'px');
+    if (window.innerWidth >= 500) {
+      setLeft((window.innerWidth - 500) / 2 + 'px');
     } else {
       setLeft('0px');
     }
