@@ -112,12 +112,6 @@ export default function RollingPaper(props: any) {
     if (rollingDate <= nowDate) {
       setValid(true);
     } else {
-      MySwal.fire({
-        title: `${res.data.response.date} 일 이후 개봉 가능`,
-        icon: 'info',
-        confirmButtonColor: '#16453e',
-        confirmButtonText: '확인',
-      });
       setValid(false);
     }
 
