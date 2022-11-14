@@ -152,6 +152,7 @@ const PaymentOption = () => {
                     writer={message.writer}
                     valid={valid}
                     writerDisplay={false}
+                    type={type}
                   ></Message>
                 </div>
               );

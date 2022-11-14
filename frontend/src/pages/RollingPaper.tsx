@@ -30,7 +30,7 @@ import MySwal from '@components/SweetAlert';
 import { useCallback } from 'react';
 import Login from '@assets/login_btn.png';
 import html2canvas from 'html2canvas';
-import { useReactToPrint } from 'react-to-print';
+// import { useReactToPrint } from 'react-to-print';
 import updateTokens from '@utils/updateTokens';
 
 import Print from '@pages/Print';
