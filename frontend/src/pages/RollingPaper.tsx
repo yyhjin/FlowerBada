@@ -81,6 +81,8 @@ export default function RollingPaper(props: any) {
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
+  let ref = useRef<HTMLDivElement>(null);
+  const [color, setColor] = useState<Boolean>(false);
   const [left, setLeft] = useState<string>('0px');
 
   window.addEventListener('resize', function () {
@@ -374,6 +376,8 @@ export default function RollingPaper(props: any) {
   };
 
   useEffect(() => {
+    setColor(false);
+
     const paginationCheck = localStorage.getItem('paginationId');
     if (paginationCheck) setPaginationId(+paginationCheck);
     localStorage.removeItem('url');
@@ -387,13 +391,21 @@ export default function RollingPaper(props: any) {
   };
 
   const saveRolling = () => {
-    navigate('/rolling/print', {
-      state: {
-        rollingUrl: paramCopy.url,
-        mainImg: rolling.imgUrl,
-      },
-    });
+    setColor(true);
   };
+
+  useEffect(() => {
+    if (color) {
+      // 캡쳐
+      // 프린트 페이지로 이동
+      navigate('/rolling/print', {
+        state: {
+          rollingUrl: paramCopy.url,
+          mainImg: rolling.imgUrl,
+        },
+      });
+    }
+  }, [color]);
 
   const dateBeforeActions = [
     { icon: <EditIcon />, name: '메시지 작성', function: moveMessageWrite },
@@ -500,7 +512,7 @@ export default function RollingPaper(props: any) {
                 )}
               </div>
 
-              <div css={SaveParent}>
+              <div css={SaveParent('color')}>
                 <div>
                   <div className={`imgbox_${type}`}>
                     <img src={'/src/assets/' + rolling.imgBack}></img>
@@ -1056,9 +1068,9 @@ const DetailCss = css`
         left: 15vw;
         top: 65vw;
         transform: rotate(0deg);
-        @media screen and (min-width: 500px) {
-          left: 80px;
-          top: 430px;
+        @media screen and (max-height: 700px) {
+          left: 13vw;
+          top: 55vw;
         }
       }
     }
@@ -1304,11 +1316,11 @@ const DialogCustom: any = styled(Dialog)((props: any) => ({
   },
 }));
 
-const SaveParent = css`
+const SaveParent = (color: any) => css`
   position: relative;
 
   .save-child {
-    background-color: #f2f0ef;
+    background-color: ${color ? '#f2f0ef' : '#ffffff'};
     height: 70vh;
     position: absolute;
     top: 0;
