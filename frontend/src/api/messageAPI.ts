@@ -16,6 +16,10 @@ interface IMessageWriteData {
   writer: string;
 }
 
+interface IImgUrl {
+  imgUrl: string;
+}
+
 const messageAPI = {
   messageCreate(messageId: number) {
     return api({
@@ -56,6 +60,17 @@ const messageAPI = {
   //     },
   //   });
   // },
+
+  updateRollingImg(jwt: string, refresh: string, data: IImgUrl) {
+    return api({
+      method: 'post',
+      url: `${END_POINT}/getimgurl`,
+      headers: {
+        'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
+      },
+    });
+  },
 };
 
 export default messageAPI;

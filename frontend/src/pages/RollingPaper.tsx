@@ -360,12 +360,9 @@ export default function RollingPaper() {
     // link.download = filename;
     // link.click();
     document.body.removeChild(link);
-    axios.put(
-      `http://localhost:8080/api/v1/message/updateimg/${paramCopy.url}`,
-      {
-        imgUrl: uri,
-      },
-    );
+    messageAPI.updateRollingImg(userState.jwt, userState.refresh, {
+      imgUrl: uri,
+    });
   };
 
   return (
