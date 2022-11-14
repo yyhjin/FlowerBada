@@ -432,7 +432,7 @@ export default function RollingPaper(props: any) {
 
   const dateAfterActions = [
     { icon: <LocalShippingIcon />, name: '배송', function: openDeliveryModal },
-    { icon: <PrintIcon />, name: '프린트', function: print },
+    { icon: <PrintIcon />, name: '프린트', function: saveRolling },
     {
       icon: (
         <img
