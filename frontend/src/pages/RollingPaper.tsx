@@ -1059,66 +1059,7 @@ const DetailCss = css`
       }
     }
   }
-  /* .dot_1 {
-    position: absolute;
-    margin-top: 0vh;
-    bottom: 0%;
-    @media screen and (min-height: 700px) {
-      margin-top: 0vh;
-    }
-    @media screen and (min-height: 800px) {
-      margin-top: 2vh;
-    }
-    @media screen and (min-height: 900px) {
-      margin-top: 4vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      margin-top: 4vh;
-    }
-    .speed-dial-zone {
-      padding-bottom: 75px;
-      .MuiButtonBase-root {
-        width: 10vw;
-        height: 10vw;
-        @media screen and (min-width: 500px) {
-          width: 50px;
-          height: 50px;
-        }
-      }
-    }
-  }
-  .dot_2 {
-    margin-top: 2vh;
-    bottom: 0%;
-    @media screen and (min-height: 700px) {
-      margin-top: 2vh;
-    }
-    @media screen and (min-height: 800px) {
-      margin-top: 2vh;
-    }
-    @media screen and (min-height: 900px) {
-      margin-top: 4vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      margin-top: 4vh;
-    }
-  }
-  .dot_3 {
-    margin-top: -8vh;
-    bottom: 0%;
-    @media screen and (min-height: 700px) {
-      margin-top: -9vh;
-    }
-    @media screen and (min-height: 800px) {
-      margin-top: -8vh;
-    }
-    @media screen and (min-height: 900px) {
-      margin-top: -9vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      margin-top: -6vh;
-    }
-  } */
+
   .imgbox_1,
   .imgbox_2,
   .imgbox_3 {
