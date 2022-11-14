@@ -81,7 +81,6 @@ export default function MyDeliveryList() {
         setIsFetching(true);
       }
       setMyList(myList.concat(res.data.response));
-      console.log(res.data.response);
       setPages(pages + 1);
     } catch (err: any) {
       if (err.response.headers.get('x-auth-token') === 'EXPIRED') {

@@ -45,7 +45,6 @@ const PaymentSuccess = () => {
         reqData,
       );
       setPaymentInfo(res.data.response);
-      console.log(res.data.response);
     };
     getPaymentInfo();
   }, []);
