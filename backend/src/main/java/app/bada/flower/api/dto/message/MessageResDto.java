@@ -25,18 +25,7 @@ public class MessageResDto {
             this.writer = message.getWriter();
             this.font = message.getFont();
         }
-
-        // QueryDSL에서 사용하는 생성자
-        public MessageDto(int messageId, int flowerId, String imgUrl, String content, String writer, String font) {
-            this.messageId = messageId;
-            this.flowerId = flowerId;
-            this.imgUrl = imgUrl;
-            this.content = content;
-            this.writer = writer;
-            this.font = font;
-        }
     }
-
 
     @Getter
     @Setter
@@ -45,6 +34,7 @@ public class MessageResDto {
         private int flowerId;
         private String writer;
         private String imgUrl;
+        private int price;
     }
 
 }
