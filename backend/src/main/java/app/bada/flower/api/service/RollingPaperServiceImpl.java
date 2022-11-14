@@ -117,6 +117,7 @@ public class RollingPaperServiceImpl implements RollingPaperService {
         rollingPaperResDto.setCapacity(capacity);
         rollingPaperResDto.setTotalMessages(messageList.size());
         rollingPaperResDto.setTitle(rollingPaper.getTitle());
+        rollingPaperResDto.setPrice(rollingPaper.getRollingPaperItem().getPrice());
         rollingPaperResDto.setImgFront(rollingPaper.getRollingPaperItem().getImgFront());
         rollingPaperResDto.setImgBack(rollingPaper.getRollingPaperItem().getImgBack());
         rollingPaperResDto.setImgUrl(rollingPaper.getImgUrl());

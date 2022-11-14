@@ -18,6 +18,7 @@ public class RollingPaperResDto {
     private int capacity;
     private int totalMessages;
     private String title;
+    private int price;
     private String imgFront;
     private String imgBack;
     private String imgUrl;
@@ -30,5 +31,5 @@ public class RollingPaperResDto {
         StringBuilder sb = new StringBuilder();
         sb.append(formatDate.substring(0,4)).append(".").append(formatDate.substring(4,6)).append(".").append(formatDate.substring(6,8));
         return sb.toString();
-    }
+}
 }
