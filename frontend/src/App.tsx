@@ -22,7 +22,6 @@ import Link from '@pages/CreateRollingPaper/RollingLink';
 import RollingPaper from '@pages/RollingPaper';
 import Layout from '@pages/Layout';
 import SignIn from '@pages/SignIn';
-import MessageRead from '@pages/MessageRead';
 import MessageCreate from '@pages/MessageCreate';
 import CaptureTest from '@pages/CaptureTest';
 import Print from '@pages/Print';
@@ -93,7 +92,6 @@ function App() {
                 <Route path="/payment/success" element={<PaymentSuccess />} />
                 <Route path="/payment/fail" element={<PaymentFail />} />
                 <Route path="/payment/cancel" element={<PaymentCancel />} />
-                <Route path="/rolling/message/read" element={<MessageRead />} />
                 <Route
                   path="rolling/message/create"
                   element={<MessageCreate />}
