@@ -124,7 +124,10 @@ export default function Message(props: {
           {props.writerDisplay ? (
             <>
               <div
-                css={FlowerCss(315 - props.writer.length * 7)}
+                css={FlowerCss({
+                  leng: 315 - props.writer.length * 7,
+                  valid: props.valid,
+                })}
                 className="f-wrap"
               >
                 <div className={`f-imgbox${props.type}`} onClick={getMessage}>
@@ -235,7 +238,10 @@ export default function Message(props: {
           ) : (
             <>
               <div
-                css={FlowerCss(315 - props.writer.length * 7)}
+                css={FlowerCss({
+                  leng: 315 - props.writer.length * 7,
+                  valid: props.valid,
+                })}
                 className="f-wrap"
               >
                 <div className={`f-imgbox${props.type}`}>
@@ -246,7 +252,13 @@ export default function Message(props: {
           )}
         </>
       ) : (
-        <div css={FlowerCss(315 - props.writer.length * 7)} className="f-wrap">
+        <div
+          css={FlowerCss({
+            leng: 315 - props.writer.length * 7,
+            valid: props.valid,
+          })}
+          className="f-wrap"
+        >
           <div className={`f-imgbox${props.type}`}>
             <img
               src={
@@ -260,12 +272,13 @@ export default function Message(props: {
     </>
   );
 }
-const FlowerCss = (props: number) => css`
+const FlowerCss = (props: any) => css`
   .f-wrap {
     width: 100%;
     position: relative;
   }
   .f-imgbox1 img {
+    cursor: ${props.valid ? 'pointer' : ''};
     position: absolute;
     width: 28vw;
     vertical-align: middle;
@@ -274,6 +287,7 @@ const FlowerCss = (props: number) => css`
     }
   }
   .f-imgbox2 img {
+    cursor: ${props.valid ? 'pointer' : ''};
     position: absolute;
     width: 28vw;
     vertical-align: middle;
@@ -282,6 +296,7 @@ const FlowerCss = (props: number) => css`
     }
   }
   .f-imgbox3 img {
+    cursor: ${props.valid ? 'pointer' : ''};
     position: absolute;
     width: 28vw;
     vertical-align: middle;
@@ -297,7 +312,7 @@ const FlowerCss = (props: number) => css`
     text-shadow: 2px 2px 2px gray;
     font-size: 3vw;
     @media screen and (min-width: 500px) {
-      left: ${props}px;
+      left: ${props.leng}px;
       top: 50px;
       font-size: 13pt;
     }
@@ -310,7 +325,7 @@ const FlowerCss = (props: number) => css`
     text-shadow: 2px 2px 2px gray;
     font-size: 3vw;
     @media screen and (min-width: 500px) {
-      left: ${props}px;
+      left: ${props.leng}px;
       top: 50px;
       font-size: 13pt;
     }
@@ -323,7 +338,7 @@ const FlowerCss = (props: number) => css`
     text-shadow: 2px 2px 2px gray;
     font-size: 3vw;
     @media screen and (min-width: 500px) {
-      left: ${props}px;
+      left: ${props.leng}px;
       top: 45px;
       font-size: 11pt;
     }

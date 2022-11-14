@@ -1249,6 +1249,7 @@ const Loading = css`
 `;
 
 const BookmarkImg = css`
+  cursor: pointer;
   position: absolute;
   left: 85%;
   width: 10vw;
