@@ -83,6 +83,7 @@ public class PaymentServiceImpl implements PaymentService{
                     .user(requestUser)
                     .rollingPaper(rollingPaper)
                     .orderId(orderId)
+                    .imgUrl(paymentReadyReqDto.getImgUrl())
                     .senderName(paymentReadyReqDto.getSenderName())
                     .senderPhone(paymentReadyReqDto.getSenderPhone())
                     .price(paymentReadyReqDto.getPrice())

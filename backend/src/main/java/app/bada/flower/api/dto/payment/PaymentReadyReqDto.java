@@ -6,6 +6,7 @@ import lombok.Data;
 public class PaymentReadyReqDto {
     private String optionType;
     private int rollingId;
+    private String imgUrl;
     private int flowerCnt;
     private int paginationId;
     private String title;

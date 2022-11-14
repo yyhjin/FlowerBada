@@ -26,6 +26,9 @@ public class Delivery extends BaseEntity{
     private String orderId;
 
     @Column(nullable = false)
+    private String imgUrl;
+
+    @Column(nullable = false)
     private String senderName;
 
     @Column(nullable = false)
