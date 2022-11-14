@@ -7,8 +7,9 @@ import SideBar from './SideBar';
 import hamburgerBtn from '@assets/hamburger.png';
 import { IuserRecoil, userReCoil } from '@src/recoil/userRecoil';
 import { useRecoilState } from 'recoil';
+import Login from '@assets/login_btn.png';
 
-export default function Header() {
+export default function Header(props: any) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
@@ -17,6 +18,12 @@ export default function Header() {
     setIsOpen(!isOpen);
   };
   const linkToMain = () => {
+    navigate('/');
+  };
+
+  const linkToSignIn = () => {
+    localStorage.setItem('url', props.props.props.url);
+    localStorage.setItem('paginationId', String(props.props.props.pageId));
     navigate('/');
   };
 
@@ -39,7 +46,12 @@ export default function Header() {
             </a>
           )}
         </span>
-        {loginUser.jwt === '' ? null : (
+        {loginUser.jwt === '' ? (
+          <span>
+            <img src={Login} css={hamburger} onClick={linkToSignIn} />
+            <div css={coverUp}></div>
+          </span>
+        ) : (
           <span>
             <img src={hamburgerBtn} css={hamburger} onClick={slideLeft} />
             <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
