@@ -103,7 +103,8 @@ public class MessageController {
         String img = dto.getImgUrl();
         System.out.println("img: "+img);
         try {
-            messageService.updateRollingImage(url, img);
+            String fileUrl = messageService.uploadRollingImage(url, img, "update");
+            messageService.updateRollingImage(url, fileUrl);
         } catch(IOException e){
             return new ResponseEntity("파일 입출력 오류", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch(IllegalArgumentException e){
@@ -111,5 +112,20 @@ public class MessageController {
             return new ResponseEntity("해당 롤링페이퍼가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/getimgurl/{rollingUrl}")
+    @ApiOperation(value="롤링페이퍼 이미지 업로드", notes="s3에 이미지를 업로드하고 url을 반환한다.")
+    public ResponseEntity getRollingImgUrl(@PathVariable("rollingUrl") String url, @RequestBody RollingImgDto dto) {
+        String img = dto.getImgUrl();
+        try {
+            String fileUrl = messageService.uploadRollingImage(url, img, "upload");
+            return new ResponseEntity<> (new ResponseDto(fileUrl), HttpStatus.OK);
+        } catch(IOException e){
+            return new ResponseEntity("파일 입출력 오류", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch(IllegalArgumentException e){
+            e.printStackTrace();
+            return new ResponseEntity("해당 꽃다발이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
     }
 }
