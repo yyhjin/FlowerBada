@@ -16,7 +16,7 @@ interface IMessageWriteData {
   writer: string;
 }
 
-interface IUpdateImgUrl {
+interface IImgUrl {
   imgUrl: string;
 }
 
@@ -51,13 +51,7 @@ const messageAPI = {
       },
     });
   },
-  updateRollingImg(rollingUrl: string, data: IUpdateImgUrl) {
-    return api({
-      method: 'put',
-      url: `${END_POINT}/updateimg/${rollingUrl}`,
-      data: data,
-    });
-  },
+
   getAllMessage(rollingUrl: string) {
     return api({
       method: 'get',
@@ -73,6 +67,30 @@ const messageAPI = {
   //     },
   //   });
   // },
+
+  updateRollingImg(jwt: string, refresh: string, url: string, data: IImgUrl) {
+    return api({
+      method: 'put',
+      url: `${END_POINT}/updateimg/${url}`,
+      headers: {
+        'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
+      },
+      data: data,
+    });
+  },
+
+  getRollingImgUrl(jwt: string, refresh: string, url: string, data: IImgUrl) {
+    return api({
+      method: 'post',
+      url: `${END_POINT}/getimgurl/${url}`,
+      headers: {
+        'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
+      },
+      data: data,
+    });
+  },
 };
 
 export default messageAPI;

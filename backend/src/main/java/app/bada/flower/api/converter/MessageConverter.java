@@ -15,6 +15,7 @@ public class MessageConverter {
         response.setFlowerId(message.getFlowerItem().getId());
         response.setWriter(message.getWriter());
         response.setImgUrl(message.getFlowerItem().getImgUrl());
+        response.setPrice(message.getFlowerItem().getPrice());
         return response;
     }
 }

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Message from '@components/mypage/Message';
+// import Message from '@components/mypage/Message';
 import type { IRolling, IMessage } from '@pages/RollingPaper';
 import type { IMsg } from '@components/mypage/Message';
 import {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
-import Message from '@src/components/mypage/Message';
+import Message from '@src/components/message/Message';
 import DotSlice from '@components/paging/DotSlice';
 import messageAPI from '@api/messageAPI';
 import IosShareIcon from '@mui/icons-material/IosShare';
@@ -24,10 +24,12 @@ import Star from '@assets/Star.png';
 import EmptyStar from '@assets/EmptyStar.png';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
 import MySwal from '@components/SweetAlert';
 import { useCallback } from 'react';
+import Login from '@assets/login_btn.png';
 import html2canvas from 'html2canvas';
-import { useReactToPrint } from 'react-to-print';
+// import { useReactToPrint } from 'react-to-print';
 import updateTokens from '@utils/updateTokens';
 
 import Print from '@pages/Print';
@@ -63,6 +65,7 @@ export interface IMessage {
   writer: string;
   flowerId: number;
   messageId: number;
+  price: number;
 }
 
 export default function RollingPaper(props: any) {
@@ -81,13 +84,14 @@ export default function RollingPaper(props: any) {
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
+  const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
   let ref = useRef<HTMLDivElement>(null);
   const [color, setColor] = useState<Boolean>(false);
   const [left, setLeft] = useState<string>('0px');
 
   window.addEventListener('resize', function () {
-    if (window.outerWidth >= 500) {
-      setLeft((window.outerWidth - 500) / 2 + 'px');
+    if (window.innerWidth >= 500) {
+      setLeft((window.innerWidth - 500) / 2 + 'px');
     } else {
       setLeft('0px');
     }
@@ -113,12 +117,6 @@ export default function RollingPaper(props: any) {
     if (rollingDate <= nowDate) {
       setValid(true);
     } else {
-      MySwal.fire({
-        title: `${res.data.response.date} 일 이후 개봉 가능`,
-        icon: 'info',
-        confirmButtonColor: '#16453e',
-        confirmButtonText: '확인',
-      });
       setValid(false);
     }
 
@@ -292,8 +290,8 @@ export default function RollingPaper(props: any) {
         confirmButtonText: '확인',
       });
     } else {
-      if (window.outerWidth >= 500) {
-        setLeft((window.outerWidth - 500) / 2 + 'px');
+      if (window.innerWidth >= 500) {
+        setLeft((window.innerWidth - 500) / 2 + 'px');
       } else {
         setLeft('0px');
       }
@@ -318,7 +316,16 @@ export default function RollingPaper(props: any) {
     // 로컬스토리지에 담기
     localStorage.setItem('url', paramCopy.url);
     localStorage.setItem('paginationId', paginationId.toString());
-    navigate('/payment');
+    navigate('/payment/option', {
+      state: {
+        rolling,
+        type,
+        valid,
+        stepNumber,
+        userToken: userState.userToken,
+        paginationId,
+      },
+    });
   };
 
   const linkCopy = () => {
@@ -384,12 +391,6 @@ export default function RollingPaper(props: any) {
     localStorage.removeItem('paginationId');
   }, []);
 
-  const shareRolling = () => {
-    navigate('/newroll/link', {
-      state: { url: paramCopy.url, title: rolling.title },
-    });
-  };
-
   const saveRolling = () => {
     setColor(true);
   };
@@ -406,6 +407,10 @@ export default function RollingPaper(props: any) {
       });
     }
   }, [color]);
+
+  const shareRolling = () => {
+    navigate('/newroll/link', { state: paramCopy.url });
+  };
 
   const dateBeforeActions = [
     { icon: <EditIcon />, name: '메시지 작성', function: moveMessageWrite },
@@ -462,7 +467,7 @@ export default function RollingPaper(props: any) {
       // 캡쳐 및 DB 저장
       const el = document.getElementById('to-save');
       if (el) {
-        html2canvas(el).then((canvas) => {
+        html2canvas(el).then((canvas: any) => {
           onSaveAs(
             canvas.toDataURL('image/png'),
             `final-image-` + paramCopy.url + `.png`,
@@ -472,8 +477,7 @@ export default function RollingPaper(props: any) {
     }
   }, [rolling]);
 
-  const onSaveAs = async (uri: string, filename: string): Promise<void> => {
-    console.log(uri);
+  const onSaveAs = (uri: string, filename: string): void => {
     let link: any = document.createElement('a');
     document.body.appendChild(link);
     link.href = uri;
@@ -481,16 +485,15 @@ export default function RollingPaper(props: any) {
     // link.click();
     document.body.removeChild(link);
 
-    messageAPI
-      .updateRollingImg(paramCopy.url, {
-        imgUrl: uri,
-      })
-      .then((res) => {
-        console.log(res.data.response);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    messageAPI.updateRollingImg(
+      userState.jwt,
+      userState.refresh,
+      paramCopy.url,
+      { imgUrl: uri },
+    );
+  };
+  const check = () => {
+    alert('테스트 성공');
   };
 
   return (
@@ -728,16 +731,6 @@ const DetailCss = css`
   height: 100%;
   position: relative;
   transform: translate(0%, -15%);
-  .valid_1 {
-    justify-content: center;
-  }
-  .valid_2 {
-    margin-top: 15vh;
-    justify-content: center;
-    @media screen and (min-width: 1000px) {
-      margin-top: 20vh;
-    }
-  }
   .valid_1 {
     justify-content: center;
   }

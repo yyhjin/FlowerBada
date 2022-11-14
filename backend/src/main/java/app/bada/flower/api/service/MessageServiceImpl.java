@@ -17,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
@@ -67,40 +69,79 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public void updateRollingImage(String url, String imgUrl) throws IOException{
-        rollingPaperRepository.findByUrl(url).orElseThrow(() -> new IllegalArgumentException());
-        final String dirname = "rollingpaper";
-        String filename = url+".png";
-        String path = "";
-        String os = System.getProperty("os.name").toLowerCase();
-        File file = null;
-        if(os.contains("win")) {
-            path = "C:\\Temp\\upload\\"+dirname;
-            file = new File(path);
-            path += "\\" + filename;
-        }
-        else if(os.contains("linux")) {
-            path = "/home/ubuntu/upload/"+dirname;
-            file = new File(path);
-            path += "/" + filename;
-        }
-        new File("C:\\Temp\\upload").mkdir();
-        file.mkdir();
-        System.out.println("path:"+path);
+    public String uploadRollingImage(String url, String imgUrl, String option) throws IOException{
+        String fileUrl = "";
+        if (option.equals("update")) {
+            rollingPaperRepository.findByUrl(url).orElseThrow(() -> new IllegalArgumentException());
+            final String dirname = "rollingpaper";
+            String filename = url+".png";
+            String path = "";
+            String os = System.getProperty("os.name").toLowerCase();
+            File file = null;
+            if(os.contains("win")) {
+                path = "C:\\Temp\\upload\\"+dirname;
+                file = new File(path);
+                path += "\\" + filename;
+            }
+            else if(os.contains("linux")) {
+                path = "/home/ubuntu/upload/"+dirname;
+                file = new File(path);
+                path += "/" + filename;
+            }
+            new File("C:\\Temp\\upload").mkdir();
+            file.mkdir();
+            System.out.println("path:"+path);
 
-        String prefix = "data:image/png;base64,";
-        byte[] imgByte = Base64.getDecoder().decode(imgUrl.substring(prefix.length()));
-        try(FileOutputStream fos = new FileOutputStream(path)){
-            fos.write(imgByte);
+            String prefix = "data:image/png;base64,";
+            byte[] imgByte = Base64.getDecoder().decode(imgUrl.substring(prefix.length()));
+            try(FileOutputStream fos = new FileOutputStream(path)){
+                fos.write(imgByte);
+            }
+            file = new File(path);
+//          s3FileUpload.deleteFile(dirname+"/"+filename);
+            fileUrl = s3FileUpload.upload2(file, "rollingpaper");
         }
-        file = new File(path);
-//        s3FileUpload.deleteFile(dirname+"/"+filename);
-        String fileUrl = s3FileUpload.upload2(file, "rollingpaper");
+        else if (option.equals("upload")) {
+            final String dirname = "paymentitem";
+            SimpleDateFormat date = new SimpleDateFormat("yyyyMMddHHmmss");
+            String filename = url+"-"+date.format(new Date())+".png";
+            String path = "";
+            String os = System.getProperty("os.name").toLowerCase();
+            File file = null;
+            if(os.contains("win")) {
+                path = "C:\\Temp\\upload\\"+dirname;
+                file = new File(path);
+                path += "\\" + filename;
+            }
+            else if(os.contains("linux")) {
+                path = "/home/ubuntu/upload/"+dirname;
+                file = new File(path);
+                path += "/" + filename;
+            }
+            new File("C:\\Temp\\upload").mkdir();
+            file.mkdir();
+            System.out.println("path:"+path);
+
+            String prefix = "data:image/png;base64,";
+            byte[] imgByte = Base64.getDecoder().decode(imgUrl.substring(prefix.length()));
+            try(FileOutputStream fos = new FileOutputStream(path)){
+                fos.write(imgByte);
+            }
+            file = new File(path);
+//          s3FileUpload.deleteFile(dirname+"/"+filename);
+            fileUrl = s3FileUpload.upload2(file, "paymentitem");
+        }
+
+        return fileUrl;
+    }
+
+    @Override
+    public void updateRollingImage(String url, String imgUrl) {
 
         // 롤링페이퍼 imgUrl 컬럼 수정
         RollingPaper rollingPaper = rollingPaperRepository.findByUrl(url)
                 .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
-        rollingPaper.imgUrlUpdate(fileUrl);
+        rollingPaper.imgUrlUpdate(imgUrl);
         rollingPaperRepository.save(rollingPaper);
     }
 
