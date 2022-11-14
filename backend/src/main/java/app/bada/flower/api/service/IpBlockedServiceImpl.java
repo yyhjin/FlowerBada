@@ -16,7 +16,7 @@ public class IpBlockedServiceImpl implements IpBlockedService{
 
     public IpBlockedServiceImpl(){
         blocksCache = CacheBuilder.newBuilder().
-                expireAfterWrite(30, TimeUnit.MINUTES).build(new CacheLoader<String, Integer>() {
+                expireAfterWrite(10, TimeUnit.SECONDS).build(new CacheLoader<String, Integer>() {
                     public Integer load(String key) {
                         return 0;
                     }
