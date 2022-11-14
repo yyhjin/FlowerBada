@@ -24,7 +24,7 @@ interface IDeliver {
 export default function MyDeliveryList() {
   const navigate = useNavigate();
   const [pages, setPages] = useState<number>(0);
-  const [myList, setMyList] = useState([]);
+  const [myList, setMyList] = useState<IDeliver[]>([]);
   const [sortNumber, setSortNumber] = useState(1);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const [isFetching, setIsFetching] = useState(false);
@@ -156,6 +156,7 @@ export default function MyDeliveryList() {
         {myList.map((deliver: IDeliver, index: number) => {
           return (
             <div className="deliverybox" key={index}>
+              <hr />
               <div className="imgbox">
                 <a href={'/rolling/' + deliver.pageUrl}>
                   <img
@@ -255,7 +256,7 @@ const outerBox = css`
   .infobox {
     text-align: left;
     margin-bottom: 20px;
-    background-color: white;
+    background-color: transparent;
     padding: 10px 0px;
   }
   .descAndPrice {

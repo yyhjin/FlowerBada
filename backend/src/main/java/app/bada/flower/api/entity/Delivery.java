@@ -23,7 +23,16 @@ public class Delivery extends BaseEntity{
     private RollingPaper rollingPaper;
 
     @Column(nullable = false)
+    private String orderId;
+
+    @Column(nullable = false)
+    private String imgUrl;
+
+    @Column(nullable = false)
     private String senderName;
+
+    @Column(nullable = false)
+    private String senderPhone;
 
     private int price;
 

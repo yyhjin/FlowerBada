@@ -15,7 +15,7 @@ public class DeliveryConverter {
         dto = DeliveryResDto.builder()
                 .paperId(delivery.getRollingPaper().getId())
                 .title(delivery.getRollingPaper().getTitle())
-                .imgUrl(s3FileUpload.File_Server_Url+delivery.getRollingPaper().getImgUrl())
+                .imgUrl(s3FileUpload.File_Server_Url+delivery.getImgUrl())
                 .pageUrl(delivery.getRollingPaper().getUrl())
                 .date(dto.changeDateToString(delivery.getCreatedDate()))
                 .sender(delivery.getSenderName())
