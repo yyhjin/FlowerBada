@@ -68,7 +68,7 @@ public class OAuthService {
                 User user = userRepository.findByKakaoUserId(user_id).orElse(null);
 
                 OAuthRes res = null;
-                String refreshToken = jwtTokenUtil.createRefreshToken(user.getToken(), user.getRoles());
+                String refreshToken = null;
                 if(user != null) {
                     // 하루에 한 번 로그인 시 10 포인트 지급 - 자정 기준
                     LocalDateTime lastLoginDate = user.getLastLoginDate();
@@ -82,6 +82,7 @@ public class OAuthService {
                     userRepository.save(user);
                     //서버에 user가 존재하면 앞으로 회원 인가 처리를 위한 jwtToken을 발급한다.
                     String jwtToken = jwtTokenUtil.createToken(user.getToken(), user.getRoles());
+                    refreshToken = jwtTokenUtil.createRefreshToken(user.getToken(), user.getRoles());
                     //액세스 토큰과 jwtToken, 이외 정보들이 담긴 자바 객체를 다시 전송한다.
                     res = OAuthRes.builder()
                             .jwtToken(jwtToken)
@@ -107,6 +108,7 @@ public class OAuthService {
                     }
 
                     String jwtToken = jwtTokenUtil.createToken(user.getToken(), user.getRoles());
+                    refreshToken = jwtTokenUtil.createRefreshToken(user.getToken(), user.getRoles());
                     res = OAuthRes.builder()
                             .jwtToken(jwtToken)
                             .refreshToken(refreshToken)
