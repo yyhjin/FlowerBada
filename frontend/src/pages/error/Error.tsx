@@ -1,12 +1,18 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import { css } from '@emotion/react';
+import { useRecoilState } from 'recoil';
+import { IstatusRecoil, statusRecoil } from '@recoil/httpStatusRecoil';
 export default function Error() {
-  const navigate = useNavigate();
   sessionStorage.setItem('url', '/error');
+  let paramCopy: any = {};
+  paramCopy = useParams();
+  const [status, setStatus] = useRecoilState<IstatusRecoil>(statusRecoil);
+  const navigate = useNavigate();
   function goToHome() {
     navigate('/');
   }
+
   return (
     <div css={ErrorBox}>
       <div className="imgBox">
@@ -16,9 +22,16 @@ export default function Error() {
         ></img>
       </div>
       <div>
-        요청이 너무 많습니다.
-        <br />
-        잠시후 다시 시도해주세요.
+        {/* {status.message} */}
+        {paramCopy.code == 429 ? (
+          <>
+            요청이 너무 많습니다.
+            <br />
+            잠시후 다시 시도해주세요.
+          </>
+        ) : (
+          <>찾을 수 없는 페이지입니다.</>
+        )}
       </div>
       <div className="buttonBox">
         <button type="button" onClick={goToHome} className="button">

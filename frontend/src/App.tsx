@@ -26,7 +26,7 @@ import MessageCreate from '@pages/MessageCreate';
 import CaptureTest from '@pages/CaptureTest';
 import Print from '@pages/Print';
 import View from './pages/View';
-
+import Error from './pages/error/Error';
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
   const [url, setUrl] = useState<string>('');
@@ -44,6 +44,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/capture" element={<CaptureTest />}></Route>
+          <Route path="/error/:code" element={<Error />}></Route>
           {loginUser.jwt === '' ? (
             <>
               <Route path="" element={<SignIn />}></Route>
