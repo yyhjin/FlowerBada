@@ -27,6 +27,16 @@ import View from './pages/View';
 
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
+  const [url, setUrl] = useState<string>('');
+  const [pageId, setPageId] = useState<number>(1);
+  const Props = {
+    url,
+    pageId,
+  };
+  const Setters = {
+    setUrl,
+    setPageId,
+  };
   return (
     <div className="App">
       <BrowserRouter>
@@ -39,8 +49,11 @@ function App() {
                 path="/user/signin/redirect"
                 element={<KakaoRedirectHandler />}
               ></Route>
-              <Route path="/" element={<Layout />}>
-                <Route path="rolling/:url" element={<RollingPaper />}></Route>
+              <Route path="/" element={<Layout props={Props} />}>
+                <Route
+                  path="rolling/:url"
+                  element={<RollingPaper Setters={Setters} />}
+                ></Route>
                 <Route
                   path="rolling/message/create"
                   element={<MessageCreate />}
