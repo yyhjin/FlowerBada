@@ -13,6 +13,7 @@ import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import html2canvas from 'html2canvas';
 import messageAPI from '@api/messageAPI';
+import MySwal from '@components/SweetAlert';
 
 const PaymentOption = () => {
   const [optionType, setOptionType] = useState<string>('default');
@@ -48,20 +49,29 @@ const PaymentOption = () => {
 
   const onClickNext = () => {
     // todo: 캡쳐하고 백엔드에 보내서 url 받아오는 로직 생성 필요
-    setPaymentState((prev: IPaymentRecoil) => {
-      const data = { ...prev };
-      data.price = totalPrice;
-      data.title = rolling.title;
-      data.optionType = optionType;
-      data.userToken = userToken;
-      data.rollingId = rolling.rollingId;
-      data.paginationId = paginationId;
-      data.imgUrl = imgUrl;
-      if (optionType === 'both') data.flowerCnt = rolling.messages.length;
-      else data.flowerCnt = 0;
-      return data;
-    });
-    navigate(`/payment/address/receiver`);
+    if (optionType === 'default') {
+      MySwal.fire({
+        title: '옵션을 선택해주세요!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setPaymentState((prev: IPaymentRecoil) => {
+        const data = { ...prev };
+        data.price = totalPrice;
+        data.title = rolling.title;
+        data.optionType = optionType;
+        data.userToken = userToken;
+        data.rollingId = rolling.rollingId;
+        data.paginationId = paginationId;
+        data.imgUrl = imgUrl;
+        if (optionType === 'both') data.flowerCnt = rolling.messages.length;
+        else data.flowerCnt = 0;
+        return data;
+      });
+      navigate(`/payment/address/receiver`);
+    }
   };
 
   const goBack = () => {
