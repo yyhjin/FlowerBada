@@ -485,7 +485,7 @@ const BuyButton = (isSeleceted: boolean) => css`
   position: relative;
   margin: auto;
   margin-bottom: 20px;
-  top: 10px;
+  top: 15vw;
   left: 0;
   border-radius: 8px;
   border: 1px solid transparent;
@@ -498,7 +498,8 @@ const BuyButton = (isSeleceted: boolean) => css`
   width: 90%;
   height: 50px;
   @media screen and (min-width: 500px) {
-    top: 120px;
+    margin-top: 5vw;
+    top: 140px;
     width: 450px;
     height: 60px;
   }
