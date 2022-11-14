@@ -600,6 +600,7 @@ export default function RollingPaper(props: any) {
                       size="small"
                       onClick={sendDelivery}
                       css={Font}
+                      id="yes"
                     >
                       확인
                     </Button>
@@ -611,6 +612,7 @@ export default function RollingPaper(props: any) {
                       size="small"
                       onClick={closeDeliveryModal}
                       css={Font}
+                      id="no"
                     >
                       취소
                     </Button>
@@ -1276,6 +1278,11 @@ const Font = css`
 const ActionCss = css`
   width: 90%;
   float: right;
+  justify-content: center;
+  * {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
 `;
 
 const SaveParent = css`
