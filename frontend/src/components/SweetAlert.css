@@ -2,11 +2,121 @@
   font-size: 14pt;
   font-family: 'SeoulNamsanM';
 }
+@media screen and (min-width: 500px) {
+  .swal2-container {
+    left: 0.75%;
+  }
+}
 
-/* 아이패드 미니 */
+@media screen and (min-width: 510px) {
+  .swal2-container {
+    left: 1.5%;
+  }
+}
+@media screen and (min-width: 520px) {
+  .swal2-container {
+    left: 2.25%;
+  }
+}
+@media screen and (min-width: 530px) {
+  .swal2-container {
+    left: 3%;
+  }
+}
+@media screen and (min-width: 540px) {
+  .swal2-container {
+    left: 3.75%;
+  }
+}
+@media screen and (min-width: 550px) {
+  .swal2-container {
+    left: 4.5%;
+  }
+}
+@media screen and (min-width: 560px) {
+  .swal2-container {
+    left: 5.25%;
+  }
+}
+@media screen and (min-width: 570px) {
+  .swal2-container {
+    left: 6%;
+  }
+}
+@media screen and (min-width: 580px) {
+  .swal2-container {
+    left: 6.75%;
+  }
+}
+@media screen and (min-width: 590px) {
+  .swal2-container {
+    left: 7.5%;
+  }
+}
+@media screen and (min-width: 600px) {
+  .swal2-container {
+    left: 8.25%;
+  }
+}
+@media screen and (min-width: 610px) {
+  .swal2-container {
+    left: 9%;
+  }
+}
+@media screen and (min-width: 620px) {
+  .swal2-container {
+    left: 10%;
+  }
+}
+@media screen and (min-width: 630px) {
+  .swal2-container {
+    left: 11%;
+  }
+}
+@media screen and (min-width: 640px) {
+  .swal2-container {
+    left: 11.5%;
+  }
+}
+@media screen and (min-width: 650px) {
+  .swal2-container {
+    left: 12.25%;
+  }
+}
+@media screen and (min-width: 660px) {
+  .swal2-container {
+    left: 13%;
+  }
+}
+@media screen and (min-width: 700px) {
+  .swal2-container {
+    left: 14%;
+  }
+}
+@media screen and (min-width: 720px) {
+  .swal2-container {
+    left: 15%;
+  }
+}
+@media screen and (min-width: 740px) {
+  .swal2-container {
+    left: 16%;
+  }
+}
+
 @media screen and (min-width: 768px) {
   .swal2-container {
     left: 17.5%;
+  }
+}
+@media screen and (min-width: 780px) {
+  .swal2-container {
+    left: 18.1%;
+  }
+}
+@media screen and (min-width: 800px) {
+  .swal2-container {
+    left: 18.8%;
   }
 }
 
@@ -16,16 +126,139 @@
     left: 19.5%;
   }
 }
+@media screen and (min-width: 840px) {
+  .swal2-container {
+    left: 20.25%;
+  }
+}
+@media screen and (min-width: 860px) {
+  .swal2-container {
+    left: 21%;
+  }
+}
+@media screen and (min-width: 880px) {
+  .swal2-container {
+    left: 21.8%;
+  }
+}
+@media screen and (min-width: 900px) {
+  .swal2-container {
+    left: 22%;
+  }
+}
+@media screen and (min-width: 920px) {
+  .swal2-container {
+    left: 23%;
+  }
+}
+@media screen and (min-width: 940px) {
+  .swal2-container {
+    left: 23.5%;
+  }
+}
+@media screen and (min-width: 960px) {
+  .swal2-container {
+    left: 24%;
+  }
+}
+@media screen and (min-width: 980px) {
+  .swal2-container {
+    left: 24.75%;
+  }
+}
 /* 오딧세이? */
 @media screen and (min-width: 1000px) {
   .swal2-container {
-    position: absolute;
-    left: 33.7%;
+    left: 25.5%;
   }
 }
-/* 더 큰 모니터 */
+@media screen and (min-width: 1050px) {
+  .swal2-container {
+    left: 26.25%;
+  }
+}
+@media screen and (min-width: 1100px) {
+  .swal2-container {
+    left: 28%;
+  }
+}
+@media screen and (min-width: 1150px) {
+  .swal2-container {
+    left: 28.5%;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .swal2-container {
+    left: 29.5%;
+  }
+}
+@media screen and (min-width: 1250px) {
+  .swal2-container {
+    left: 30.25%;
+  }
+}
+@media screen and (min-width: 1300px) {
+  .swal2-container {
+    left: 31%;
+  }
+}
+@media screen and (min-width: 1350px) {
+  .swal2-container {
+    left: 31.75%;
+  }
+}
+@media screen and (min-width: 1400px) {
+  .swal2-container {
+    left: 32.5%;
+  }
+}
+@media screen and (min-width: 1450px) {
+  .swal2-container {
+    left: 33.25%;
+  }
+}
+@media screen and (min-width: 1500px) {
+  .swal2-container {
+    left: 33.5%;
+  }
+}
+@media screen and (min-width: 1550px) {
+  .swal2-container {
+    left: 34%;
+  }
+}
 @media screen and (min-width: 1600px) {
   .swal2-container {
-    left: 35%;
+    left: 34.5%;
+  }
+}
+@media screen and (min-width: 1650px) {
+  .swal2-container {
+    left: 34.7%;
+  }
+}
+@media screen and (min-width: 1700px) {
+  .swal2-container {
+    left: 35.3%;
+  }
+}
+@media screen and (min-width: 1750px) {
+  .swal2-container {
+    left: 35.7%;
+  }
+}
+@media screen and (min-width: 1800px) {
+  .swal2-container {
+    left: 36%;
+  }
+}
+@media screen and (min-width: 1850px) {
+  .swal2-container {
+    left: 36.7%;
+  }
+}
+@media screen and (min-width: 1900px) {
+  .swal2-container {
+    left: 37.4%;
   }
 }

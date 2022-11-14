@@ -22,7 +22,7 @@ export default function MyPointList() {
   const [myPointList, setMyPointList] = useState([]);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const [open, setOpen] = useState(false);
-
+  const [isFetching, setIsFetching] = useState(false);
   const handleTooltipClose = () => {
     setOpen(false);
   };
@@ -36,6 +36,7 @@ export default function MyPointList() {
     const scrollTop = document.querySelector('.mylist')?.scrollTop;
 
     if (
+      !isFetching &&
       scrollTop &&
       scrollHeight &&
       Math.round(scrollTop + innerHeight) >= scrollHeight
@@ -67,6 +68,9 @@ export default function MyPointList() {
       );
       setMyPoint(res.data.response.myPoint);
       setMyPointList(myPointList.concat(res.data.response.myPointList));
+      if (res.data.response.myPointList.length == 0) {
+        setIsFetching(true);
+      }
       setPages(pages + 1);
     } catch (err: any) {
       if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
@@ -107,7 +111,6 @@ export default function MyPointList() {
       }
     }
   }
-
   return (
     <div css={totalCSS}>
       <div className="infobox">

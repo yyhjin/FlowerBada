@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -26,9 +27,14 @@ public class StoreController {
     private final UserService userService;
 
     @GetMapping("/flower")
-    public ResponseEntity getFlowerList(@RequestHeader(value = "X-AUTH-TOKEN") String token) {
-        User user = userService.getUserByToken(token);
-        List<FlowerResDto> response = storeService.getFlowerList(user);
+    public ResponseEntity getFlowerList(@RequestHeader(value = "X-AUTH-TOKEN", required = false) String token) {
+        List<FlowerResDto> response = new ArrayList<>();
+        if(!token.equals("Bearer")) {
+            User user = userService.getUserByToken(token);
+            response = storeService.getFlowerList(user);
+        } else {
+            response = storeService.getFlowerList();
+        }
         return new ResponseEntity(new ResponseDto(response), HttpStatus.OK);
     }
 

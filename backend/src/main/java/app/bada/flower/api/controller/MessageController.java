@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Base64;
 
 @Api(value = "메시지 API", tags = {"메시지"})
 @CrossOrigin("*")

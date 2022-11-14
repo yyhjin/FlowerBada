@@ -20,18 +20,18 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
+
     private final MessageRepository messageRepository;
     private final FlowerItemRepository flowerItemRepository;
     private final RollingPaperRepository rollingPaperRepository;
     private final S3FileUpload s3FileUpload;
 
+    @Transactional
     @Override
     public Message createMessage(MessageReqDto.MessageReq messageReq) {
-
         Message message = Message.builder()
                 .rollingPaper(rollingPaperRepository.findById(messageReq.getRollingId())
                         .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND)))
@@ -41,9 +41,9 @@ public class MessageServiceImpl implements MessageService {
                 .writer(messageReq.getWriter())
                 .font(messageReq.getFont())
                 .build();
-
         return messageRepository.save(message);
     }
+
 
     @Override
     public Message getMessage(int msgId) {
@@ -83,6 +83,7 @@ public class MessageServiceImpl implements MessageService {
             file = new File(path);
             path += "/" + filename;
         }
+        new File("C:\\Temp\\upload").mkdir();
         file.mkdir();
         System.out.println("path:"+path);
 
@@ -92,7 +93,13 @@ public class MessageServiceImpl implements MessageService {
             fos.write(imgByte);
         }
         file = new File(path);
-        s3FileUpload.deleteFile(dirname+"/"+filename);
-        s3FileUpload.upload2(file, "rollingpaper");
+//        s3FileUpload.deleteFile(dirname+"/"+filename);
+        String fileUrl = s3FileUpload.upload2(file, "rollingpaper");
+
+        // 롤링페이퍼 imgUrl 컬럼 수정
+        RollingPaper rollingPaper = rollingPaperRepository.findByUrl(url)
+                .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        rollingPaper.imgUrlUpdate(fileUrl);
+        rollingPaperRepository.save(rollingPaper);
     }
 }
