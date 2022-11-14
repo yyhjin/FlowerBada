@@ -41,12 +41,13 @@ const messageAPI = {
       data: data,
     });
   },
-  getRolling(jwt: string, url: string, paginationId: number) {
+  getRolling(jwt: string, refresh: string, url: string, paginationId: number) {
     return api({
       method: 'get',
       url: `${END_POINT}/${url}/${paginationId}`,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
     });
   },

@@ -17,11 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
@@ -31,9 +29,9 @@ public class MessageServiceImpl implements MessageService {
     private final RollingPaperRepository rollingPaperRepository;
     private final S3FileUpload s3FileUpload;
 
+    @Transactional
     @Override
     public Message createMessage(MessageReqDto.MessageReq messageReq) {
-
         Message message = Message.builder()
                 .rollingPaper(rollingPaperRepository.findById(messageReq.getRollingId())
                         .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND)))
@@ -43,7 +41,6 @@ public class MessageServiceImpl implements MessageService {
                 .writer(messageReq.getWriter())
                 .font(messageReq.getFont())
                 .build();
-
         return messageRepository.save(message);
     }
 

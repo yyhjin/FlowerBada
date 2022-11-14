@@ -37,6 +37,9 @@ const SideBar = (props: any) => {
       <div css={sideBlock(isOpen)}>
         <img src={closeBtn} css={close} onClick={test} />
         <div css={menus}>
+          <a css={menuBtn} href="/">
+            홈
+          </a>
           <a css={menuBtn} href="/newroll/item">
             새로 만들기
           </a>
@@ -95,8 +98,8 @@ const menus = css`
 `;
 
 const menuBtn = css`
-  font-size: 1pc;
-  margin-top: 1pc;
+  font-size: 1.15pc;
+  margin-bottom: 2pc;
   color: black;
   text-decoration: none;
 `;

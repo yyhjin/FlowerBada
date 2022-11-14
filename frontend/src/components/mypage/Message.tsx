@@ -27,6 +27,7 @@ export interface IMsg {
   writer?: string;
   font?: string;
   imgUrl?: string;
+  left?: string;
 }
 
 export default function Message(props: {
@@ -35,19 +36,35 @@ export default function Message(props: {
   writer: string;
   valid: Boolean;
   writerDisplay: Boolean;
+  type: number;
 }) {
   const [msg, setMsg] = useState<IMsg>({});
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openReportModal, setOpenReportModal] = useState<boolean>(false);
   const [reportContent, setReportContent] = useState<string>('');
   const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
+  const [left, setLeft] = useState<string>('0px');
+
+  window.addEventListener('resize', function () {
+    if (window.outerWidth >= 500) {
+      setLeft((window.outerWidth - 500) / 2 + 'px');
+    } else {
+      setLeft('0px');
+    }
+  });
 
   async function getMessage() {
+    if (window.outerWidth >= 500) {
+      setLeft((window.outerWidth - 500) / 2 + 'px');
+    } else {
+      setLeft('0px');
+    }
+
     messageAPI
       .messageCreate(props.messageId)
       .then((res) => {
         setMsg(res.data.response);
-        console.log(res.data.response);
+
         document.getElementById('content')!.style.fontFamily =
           res.data.response.font;
       })
@@ -84,7 +101,7 @@ export default function Message(props: {
           })
           .then((res) => {
             setMsg(res.data.response);
-            console.log(res.data.response);
+            // console.log(res.data.response);
             MySwal.fire({
               title: '신고가 접수되었습니다',
               icon: 'success',
@@ -93,7 +110,12 @@ export default function Message(props: {
             });
           })
           .catch((err) => {
-            console.log(err);
+            MySwal.fire({
+              title: '신고 접수를 실패하였습니다.',
+              icon: 'warning',
+              confirmButtonColor: '#16453e',
+              confirmButtonText: '확인',
+            });
           });
         changeReportModal(false);
         changeModal(false);
@@ -101,28 +123,47 @@ export default function Message(props: {
     }
   };
 
+  useEffect(() => {
+    let writerEls = document.getElementsByClassName('f-inner');
+    for (let el of writerEls) {
+      if (el.textContent && el.textContent.length >= 5) {
+        el.textContent = el.textContent?.substring(0, 4) + '...';
+      }
+    }
+  }, []);
+
   return (
     <>
       {props.valid ? (
         <>
           {props.writerDisplay ? (
             <>
-              <div css={FlowerCss} className="f-wrap">
-                <div className="f-imgbox" onClick={getMessage}>
+              <div
+                css={FlowerCss({
+                  leng: 315 - props.writer.length * 7,
+                  valid: props.valid,
+                })}
+                className="f-wrap"
+              >
+                <div className={`f-imgbox${props.type}`} onClick={getMessage}>
                   <img src={'/src/assets/' + props.imgUrl}></img>
                 </div>
-                <div className="f-inner">{props.writer}</div>
+                <div className={`f-inner${props.type}`}>{props.writer}</div>
               </div>
               <div>
                 {/* 메시지 조회 Modal */}
-                <DialogCustom open={openModal}>
+                <DialogCustom open={openModal} left={left}>
                   {/* 신고 Modal */}
-                  <DialogReport open={openReportModal} css={ReportDialog}>
+                  <DialogReport
+                    open={openReportModal}
+                    css={ReportDialog}
+                    left={left}
+                  >
                     <DialogTitle className="title">
                       <WbTwilight color="error" />
                       &nbsp; 메시지 신고하기
                     </DialogTitle>
-                    <DialogContent>
+                    <DialogContentCustom left={left}>
                       {/* <br /> */}
                       <DialogContentText className="content">
                         신고자 : {loginUser.nickname}
@@ -136,8 +177,8 @@ export default function Message(props: {
                         placeholder="신고 사유를 입력하세요"
                         onChange={(e) => setReportContent(e.target.value)}
                       ></textarea>
-                    </DialogContent>
-                    <DialogActions className="action">
+                    </DialogContentCustom>
+                    <DialogActionsCustom className="action" left={left}>
                       <ThemeProvider theme={theme}>
                         <Button
                           variant="contained"
@@ -160,11 +201,11 @@ export default function Message(props: {
                           취소
                         </Button>
                       </ThemeProvider>
-                    </DialogActions>
+                    </DialogActionsCustom>
                   </DialogReport>
 
                   <div>
-                    <DialogContent>
+                    <DialogContentCustom>
                       <div style={{ textAlign: 'center' }}>
                         <img
                           src={'/src/assets/' + msg.imgUrl}
@@ -175,7 +216,7 @@ export default function Message(props: {
                         <IconButton
                           css={ReportIcon}
                           color="error"
-                          aria-aria-label="report"
+                          aria-label="report"
                           onClick={(e) => changeReportModal(true)}
                         >
                           <WbTwilight />
@@ -204,15 +245,21 @@ export default function Message(props: {
                           </IconButton>
                         </ThemeProvider>
                       </div>
-                    </DialogContent>
+                    </DialogContentCustom>
                   </div>
                 </DialogCustom>
               </div>
             </>
           ) : (
             <>
-              <div css={FlowerCss} className="f-wrap">
-                <div className="f-imgbox">
+              <div
+                css={FlowerCss({
+                  leng: 315 - props.writer.length * 7,
+                  valid: props.valid,
+                })}
+                className="f-wrap"
+              >
+                <div className={`f-imgbox${props.type}`}>
                   <img src={'/src/assets/' + props.imgUrl}></img>
                 </div>
               </div>
@@ -220,75 +267,135 @@ export default function Message(props: {
           )}
         </>
       ) : (
-        <div css={FlowerCss} className="f-wrap">
-          <div className="f-imgbox">
+        <div
+          css={FlowerCss({
+            leng: 315 - props.writer.length * 7,
+            valid: props.valid,
+          })}
+          className="f-wrap"
+        >
+          <div className={`f-imgbox${props.type}`}>
             <img
               src={
                 '/src/assets/' + props.imgUrl.replaceAll('flower', 'flowerbud')
               }
             ></img>
           </div>
-          <div className="f-inner">{props.writer}</div>
+          <div className={`f-inner${props.type}`}>{props.writer}</div>
         </div>
       )}
     </>
   );
 }
-const FlowerCss = css`
+const FlowerCss = (props: any) => css`
   .f-wrap {
     width: 100%;
     position: relative;
   }
-  .f-imgbox img {
+  .f-imgbox1 img {
+    cursor: ${props.valid ? 'pointer' : ''};
     position: absolute;
-    width: 30vw;
+    width: 28vw;
     vertical-align: middle;
-    @media screen and (max-height: 700px) {
-      width: 25vw;
+    @media screen and (min-width: 500px) {
+      width: 150px;
     }
   }
-  .f-inner {
+  .f-imgbox2 img {
+    cursor: ${props.valid ? 'pointer' : ''};
     position: absolute;
-    left: 60%;
-    top: 7vw;
+    width: 28vw;
+    vertical-align: middle;
+    @media screen and (min-width: 500px) {
+      width: 150px;
+    }
+  }
+  .f-imgbox3 img {
+    cursor: ${props.valid ? 'pointer' : ''};
+    position: absolute;
+    width: 28vw;
+    vertical-align: middle;
+    @media screen and (min-width: 500px) {
+      width: 130px;
+    }
+  }
+  .f-inner1 {
+    position: absolute;
+    left: 58vw;
+    top: 10vw;
     color: white;
     text-shadow: 2px 2px 2px gray;
-    font-size: 4.5vw;
-    @media screen and (max-height: 700px) {
-      left: 60vw;
-      font-size: 4vw;
+    font-size: 3vw;
+    pointer-events: none;
+    @media screen and (min-width: 500px) {
+      left: ${props.leng}px;
+      top: 50px;
+      font-size: 13pt;
+    }
+  }
+  .f-inner2 {
+    position: absolute;
+    left: 58vw;
+    top: 8vw;
+    color: white;
+    text-shadow: 2px 2px 2px gray;
+    font-size: 3vw;
+    pointer-events: none;
+    @media screen and (min-width: 500px) {
+      left: ${props.leng}px;
+      top: 50px;
+      font-size: 13pt;
+    }
+  }
+  .f-inner3 {
+    position: absolute;
+    left: 58vw;
+    top: 8vw;
+    color: white;
+    text-shadow: 2px 2px 2px gray;
+    font-size: 3vw;
+    pointer-events: none;
+    @media screen and (min-width: 500px) {
+      left: ${props.leng}px;
+      top: 45px;
+      font-size: 11pt;
     }
   }
 `;
 
-const DialogCustom = styled(Dialog)(() => ({
+const DialogCustom: any = styled(Dialog)((props: any) => ({
   '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
     backgroundColor: 'transparent',
     boxShadow: 'none',
     width: '100%',
+    left: `${props.left}`,
   },
   '& .css-ypiqx9-MuiDialogContent-root': {
     margin: 'auto',
     width: '70%',
+    left: `${props.left}`,
   },
 
   '& .css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': {
     backgroundColor: 'rgb(0 0 0 / 80%)',
+    left: `${props.left}`,
   },
 }));
 
-const DialogReport = styled(Dialog)(() => ({
+const DialogReport: any = styled(Dialog)((props: any) => ({
   '& .css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': {
     backgroundColor: '#2F2F2F',
+    left: `${props.left}`,
   },
 
   '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
     width: '65%',
+    left: `${props.left}`,
     // height: '22em',
   },
 }));
 
-const DialogContentTextCustom = styled(DialogContentText)(() => ({
+const DialogContentTextCustom: any = styled(DialogContentText)(() => ({
   backgroundColor: '#FFFFFF',
   color: '#000000',
   padding: '15px',
@@ -296,10 +403,14 @@ const DialogContentTextCustom = styled(DialogContentText)(() => ({
   fontSize: '18px',
 }));
 
-const DialogConent = styled(DialogContent)(() => ({
+const DialogContentCustom: any = styled(DialogContent)(() => ({
   '& .MuiDialogTitle-root+.css-ypiqx9-MuiDialogContent-root': {
     padding: '0px',
   },
+}));
+
+const DialogActionsCustom: any = styled(DialogActions)(() => ({
+  '& .MuiDialogTitle-root+.css-ypiqx9-MuiDialogContent-root': {},
 }));
 
 const theme = createTheme({

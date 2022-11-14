@@ -21,12 +21,13 @@ const rollingAPI = {
       },
     });
   },
-  bookmarkRolling(jwt: string, url: string) {
+  bookmarkRolling(jwt: string, refresh: string, url: string) {
     return api({
       method: 'patch',
       url: `${END_POINT}/${BOOKMARK}/${url}`,
       headers: {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
     });
   },
