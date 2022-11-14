@@ -281,20 +281,13 @@ const OptionCSS = css`
     flex-direction: column;
   }
   .imgbox_1,
-  .imgbox_2 {
-    width: 100%;
-    position: absolute;
-
-    /* img {
-      width: 100vh;
-    } */
-  }
+  .imgbox_2,
   .imgbox_3 {
+    width: 100%;
     position: absolute;
   }
 
   .flowerlist {
-    /* width: 100%; */
     position: static;
     transform: scale(0.45);
 
@@ -479,7 +472,7 @@ const OptionCSS = css`
         transform: rotate(25deg);
         @media screen and (min-width: 350px) {
           left: 60px;
-          top: 160px;
+          top: 155px;
         }
         img {
           width: 40vw;
@@ -542,101 +535,161 @@ const OptionCSS = css`
       &:first-of-type {
         z-index: 10;
         left: -15vw;
-        top: 80vw;
+        top: 110vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 68vw;
+        @media screen and (min-width: 350px) {
+          left: -45px;
+          top: 370px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: -2vw;
-        top: 80vw;
+        left: 3vw;
+        top: 110vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -1.5vw;
-          top: 68vw;
+        @media screen and (min-width: 350px) {
+          left: 10px;
+          top: 370px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(3) {
         z-index: 8;
-        left: -34vw;
-        top: 83vw;
+        left: -38vw;
+        top: 115vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -28vw;
-          top: 70vw;
+        @media screen and (min-width: 350px) {
+          left: -120px;
+          top: 390px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(4) {
         z-index: 7;
-        left: 15vw;
-        top: 75vw;
+        left: 28vw;
+        top: 105vw;
         transform: rotate(15deg);
-        @media screen and (max-height: 700px) {
-          left: 13.5vw;
-          top: 63vw;
+        @media screen and (min-width: 350px) {
+          left: 90px;
+          top: 360px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(5) {
         z-index: 6;
-        left: -45vw;
-        top: 80vw;
+        left: -55vw;
+        top: 112vw;
         transform: rotate(-5deg);
-        @media screen and (max-height: 700px) {
-          left: -36vw;
-          top: 68vw;
+        @media screen and (min-width: 350px) {
+          left: -175px;
+          top: 380px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(6) {
         z-index: 5;
         left: -15vw;
-        top: 65vw;
+        top: 91vw;
         transform: rotate(-5deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 55vw;
+        @media screen and (min-width: 350px) {
+          left: -50px;
+          top: 310px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(7) {
-        z-index: 5;
-        left: -32vw;
-        top: 68vw;
+        z-index: 4;
+        left: -37vw;
+        top: 96vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -27vw;
-          top: 57vw;
+        @media screen and (min-width: 350px) {
+          left: -125px;
+          top: 325px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(8) {
-        z-index: 5;
-        left: 2vw;
-        top: 65vw;
+        z-index: 3;
+        left: 10vw;
+        top: 90vw;
         transform: rotate(5deg);
-        @media screen and (max-height: 700px) {
-          left: 2vw;
-          top: 55vw;
+        @media screen and (min-width: 350px) {
+          left: 35px;
+          top: 310px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(9) {
         z-index: 2;
-        left: -45vw;
-        top: 70vw;
+        left: -60vw;
+        top: 100vw;
         transform: rotate(-20deg);
-        @media screen and (max-height: 700px) {
-          left: -40vw;
-          top: 60vw;
+        @media screen and (min-width: 350px) {
+          left: -200px;
+          top: 330px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(10) {
         z-index: 1;
-        left: 15vw;
-        top: 65vw;
+        left: 30vw;
+        top: 90vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: 13vw;
-          top: 55vw;
+        @media screen and (min-width: 350px) {
+          left: 110px;
+          top: 320px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
     }
@@ -661,11 +714,9 @@ const OptionCSS = css`
   .imgbox_3 img {
     position: relative;
     z-index: 0;
-    width: 90%;
-    left: 0vw;
-    top: 10vw;
-    @media screen and (max-height: 700px) {
-      width: 75%;
+    width: 60%;
+    @media screen and (min-width: 350px) {
+      width: 200px;
     }
   }
   .imgbox_front_1 img {
@@ -685,16 +736,11 @@ const OptionCSS = css`
     }
   }
   .imgbox_front_3 img {
-    z-index: 12;
     position: relative;
-    width: 90%;
-    left: 0vw;
-    right: 0vw;
-    top: 10vw;
-    bottom: 10vw;
-    pointer-events: none;
-    @media screen and (max-height: 700px) {
-      width: 75%;
+    z-index: 12;
+    width: 60%;
+    @media screen and (min-width: 350px) {
+      width: 200px;
     }
   }
 
@@ -712,7 +758,9 @@ const SelectBtn = css`
   flex-direction: column;
   align-items: flex-start;
   margin-left: 2rem;
-  margin-top: 5vw;
+  @media screen and (max-height: 700px) {
+    margin-top: -10vw;
+  }
   div {
     display: flex;
     justify-content: left;
