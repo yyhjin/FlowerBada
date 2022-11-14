@@ -69,6 +69,7 @@ const messageAPI = {
         'X-AUTH-TOKEN': `Bearer ` + jwt,
         'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
+      data: data,
     });
   },
 };
