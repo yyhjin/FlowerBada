@@ -156,7 +156,6 @@ export default function MyDeliveryList() {
         {myList.map((deliver: IDeliver, index: number) => {
           return (
             <div className="deliverybox" key={index}>
-              <hr />
               <div className="imgbox">
                 <a href={'/rolling/' + deliver.pageUrl}>
                   <img
@@ -256,7 +255,7 @@ const outerBox = css`
   .infobox {
     text-align: left;
     margin-bottom: 20px;
-    background-color: transparent;
+    background-color: white;
     padding: 10px 0px;
   }
   .descAndPrice {
