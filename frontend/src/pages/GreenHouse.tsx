@@ -61,7 +61,7 @@ export default function GreenHouse() {
           userState.refresh,
           params,
         );
-        console.log(res.data.response.length);
+        // console.log(res.data.response.length);
         if (res.data.response.length == 0) {
           setIsFetching(true);
         }
@@ -117,7 +117,7 @@ export default function GreenHouse() {
           userState.refresh,
           params,
         );
-        console.log(res.data.response.length);
+        // console.log(res.data.response.length);
         if (res.data.response.length == 0) {
           setIsFetching(true);
         }
