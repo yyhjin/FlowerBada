@@ -24,14 +24,16 @@ interface IDeliver {
 export default function MyDeliveryList() {
   const navigate = useNavigate();
   const [pages, setPages] = useState<number>(0);
-  const [myList, setMyList] = useState([]);
+  const [myList, setMyList] = useState<IDeliver[]>([]);
   const [sortNumber, setSortNumber] = useState(1);
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+  const [isFetching, setIsFetching] = useState(false);
 
   const handleChange = (event: SelectChangeEvent) => {
     setSortNumber(+event.target.value);
     setPages(0);
     setMyList([]);
+    setIsFetching(false);
     deliveryListFunc(+event.target.value);
   };
 
@@ -41,6 +43,7 @@ export default function MyDeliveryList() {
     const scrollTop = document.querySelector('.mylist')?.scrollTop;
 
     if (
+      !isFetching &&
       scrollTop &&
       scrollHeight &&
       Math.round(scrollTop + innerHeight) >= scrollHeight
@@ -74,6 +77,9 @@ export default function MyDeliveryList() {
         userState.refresh,
         params,
       );
+      if (res.data.response.length == 0) {
+        setIsFetching(true);
+      }
       setMyList(myList.concat(res.data.response));
       setPages(pages + 1);
     } catch (err: any) {

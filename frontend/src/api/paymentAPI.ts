@@ -1,4 +1,5 @@
 import api from './api';
+import { IPaymentRecoil } from '@recoil/paymentRecoil';
 
 const END_POINT = 'payment';
 
@@ -8,14 +9,14 @@ interface ISuccessPayment {
 }
 
 const paymentAPI = {
-  requestPayment() {
+  requestPayment(jwt: string, refresh: string, data: IPaymentRecoil) {
     return api({
       method: 'post',
-      url: `${END_POINT}/1`,
-      data: null,
+      url: `${END_POINT}/request`,
+      data: data,
       headers: {
-        'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
-        'Access-Control-Allow-Origin': '*',
+        'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
       },
     });
   },
@@ -30,11 +31,15 @@ const paymentAPI = {
   //     }
   //   });
   // }
-  successPayment(data: ISuccessPayment) {
+  successPayment(jwt: string, refresh: string, data: ISuccessPayment) {
     return api({
       method: 'post',
       url: `${END_POINT}/success`,
       data: data,
+      headers: {
+        'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
+      },
     });
   },
 };

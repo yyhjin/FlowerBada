@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Payment from '@pages/Payment/Payment';
+import PaymentOption from '@pages/Payment/PaymentOption';
+import PaymentReceiverAddress from '@pages/Payment/PaymentReceiverAddress';
+import PaymentSenderAddress from '@pages/Payment/PaymentSenderAddress';
+import PaymentRequest from '@pages/Payment/PaymentRequest';
 import PaymentSuccess from '@pages/Payment/PaymentSuccess';
 import PaymentFail from '@pages/Payment/PaymentFail';
 import PaymentCancel from '@pages/Payment/PaymentCancel';
@@ -21,10 +24,22 @@ import Layout from '@pages/Layout';
 import SignIn from '@pages/SignIn';
 import MessageRead from '@pages/MessageRead';
 import MessageCreate from '@pages/MessageCreate';
-import CaptureTest from './pages/CaptureTest';
+import CaptureTest from '@pages/CaptureTest';
+import Print from '@pages/Print';
+import View from './pages/View';
 
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
+  const [url, setUrl] = useState<string>('');
+  const [pageId, setPageId] = useState<number>(1);
+  const Props = {
+    url,
+    pageId,
+  };
+  const Setters = {
+    setUrl,
+    setPageId,
+  };
   return (
     <div className="App">
       <BrowserRouter>
@@ -37,8 +52,18 @@ function App() {
                 path="/user/signin/redirect"
                 element={<KakaoRedirectHandler />}
               ></Route>
-              <Route path="/" element={<Layout />}>
-                <Route path="rolling/:url" element={<RollingPaper />}></Route>
+              <Route path="/" element={<Layout props={Props} />}>
+                <Route
+                  path="rolling/:url"
+                  element={<RollingPaper Setters={Setters} />}
+                ></Route>
+                <Route
+                  path="rolling/message/create"
+                  element={<MessageCreate />}
+                />
+                <Route path="newroll/">
+                  <Route path="link" element={<Link />}></Route>
+                </Route>
               </Route>
             </>
           ) : (
@@ -55,16 +80,27 @@ function App() {
                   <Route path="link" element={<Link />}></Route>
                 </Route>
                 <Route path="rolling/:url" element={<RollingPaper />}></Route>
-                <Route path="/payment" element={<Payment />} />
+                <Route path="/payment/option" element={<PaymentOption />} />
+                <Route
+                  path="/payment/address/receiver"
+                  element={<PaymentReceiverAddress />}
+                />
+                <Route
+                  path="/payment/address/sender"
+                  element={<PaymentSenderAddress />}
+                />
+                <Route path="/payment/request" element={<PaymentRequest />} />
                 <Route path="/payment/success" element={<PaymentSuccess />} />
                 <Route path="/payment/fail" element={<PaymentFail />} />
                 <Route path="/payment/cancel" element={<PaymentCancel />} />
                 <Route path="/rolling/message/read" element={<MessageRead />} />
                 <Route
-                  path="/rolling/message/create"
+                  path="rolling/message/create"
                   element={<MessageCreate />}
                 />
               </Route>
+              <Route path="/rolling/print" element={<Print />} />
+              <Route path="/rolling/view" element={<View />} />
             </>
           )}
         </Routes>

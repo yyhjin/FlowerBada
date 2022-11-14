@@ -7,37 +7,40 @@ import { Button } from '@mui/material';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 
-const PaymentReceiverAddress = () => {
+const PaymentSenderAddress = () => {
   const [paymentState, setPaymentState] =
     useRecoilState<IPaymentRecoil>(paymentRecoil);
-  const [receiverName, setReceiverName] = useState<string>('');
-  const [receiverPhone, setReceiverPhone] = useState<string>('');
-  const [receiverAddress, setReceiverAddress] = useState<string>('');
+  const [senderName, setSenderName] = useState<string>('');
+  const [senderPhone, setSenderPhone] = useState<string>('');
+  const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
+  const navigate = useNavigate();
   const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
 
-  const navigate = useNavigate();
-
-  const onChangeReceiverName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setReceiverName(e.target.value);
+  const onChangeSenderName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSenderName(e.target.value);
   };
 
-  const onChangeReceiverPhone = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setReceiverPhone(e.target.value);
+  const onChangeSenderPhone = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSenderPhone(e.target.value);
   };
 
-  const onChangeReceiverAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setReceiverAddress(e.target.value);
+  const onChangeIsAnonymous = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isAnonymous) {
+      setSenderName('');
+      setSenderPhone('');
+    }
+    setIsAnonymous(!isAnonymous);
   };
 
   const onClickNext = () => {
     setPaymentState((prev: IPaymentRecoil) => {
       const data = { ...prev };
-      data.receiverName = receiverName;
-      data.receiverPhone = receiverPhone;
-      data.receiverAddress = receiverAddress;
+      data.senderName = senderName;
+      data.senderPhone = senderPhone;
+      data.isAnonymous = isAnonymous;
       return data;
     });
-    navigate(`/payment/address/sender`);
+    navigate(`/payment/request`);
   };
 
   const goBack = () => {
@@ -47,24 +50,36 @@ const PaymentReceiverAddress = () => {
   };
 
   useEffect(() => {
-    setReceiverName(paymentState.receiverName);
-    setReceiverPhone(paymentState.receiverPhone);
-    setReceiverAddress(paymentState.receiverAddress);
+    setSenderName(paymentState.senderName);
+    setSenderPhone(paymentState.senderPhone);
+    setIsAnonymous(paymentState.isAnonymous);
   }, []);
 
   return (
     <div css={InputCSS}>
-      <div className="receiver-name">
-        <p>받는 사람</p>
-        <input onChange={onChangeReceiverName} value={receiverName} />
+      <div className="sender-name">
+        <p>보내는 사람</p>
+        <input
+          onChange={onChangeSenderName}
+          value={senderName}
+          disabled={isAnonymous}
+        />
       </div>
-      <div className="receiver-phone">
+      <div className="sender-phone">
         <p>연락처</p>
-        <input onChange={onChangeReceiverPhone} value={receiverPhone} />
+        <input
+          onChange={onChangeSenderPhone}
+          value={senderPhone}
+          disabled={isAnonymous}
+        />
       </div>
-      <div className="receiver-address">
-        <p>배송 주소</p>
-        <input onChange={onChangeReceiverAddress} value={receiverAddress} />
+      <div className="sender-checkbox">
+        <p>익명으로 보내기</p>
+        <input
+          type="checkbox"
+          onChange={onChangeIsAnonymous}
+          checked={isAnonymous}
+        />
       </div>
       <div css={ButtonBox}>
         <div className="option-buttons">
@@ -76,7 +91,7 @@ const PaymentReceiverAddress = () => {
               onClick={onClickNext}
               css={Font}
             >
-              보내는 분 정보 입력하러 가기
+              결제 선택창으로 이동하기
             </Button>
           </ThemeProvider>
           <ThemeProvider theme={btnTheme}>
@@ -101,14 +116,24 @@ const InputCSS = css`
   flex-direction: column;
   padding: 2rem;
 
-  .receiver-name,
-  .receiver-phone,
-  .receiver-address {
+  .sender-name,
+  .sender-phone {
     width: calc(100vw - 4rem);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .sender-checkbox {
+    width: calc(100vw - 4rem);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    & > * {
+      margin-right: 1rem;
+    }
   }
 `;
 
@@ -140,4 +165,4 @@ const ButtonBox = css`
   /* height: 20%; */
 `;
 
-export default PaymentReceiverAddress;
+export default PaymentSenderAddress;

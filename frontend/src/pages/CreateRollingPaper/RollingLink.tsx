@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import copy from '@assets/copy.png';
@@ -14,7 +13,6 @@ import MySwal from '@components/SweetAlert';
 
 export default function RollingLink() {
   const VITE_APP_KAKAO_KEY = import.meta.env.VITE_APP_KAKAO_KEY;
-  console.log(VITE_APP_KAKAO_KEY);
 
   const url = useLocation().state.url;
   const title = useLocation().state.title;
@@ -56,7 +54,7 @@ export default function RollingLink() {
       },
       buttons: [
         {
-          title: '게시글확인',
+          title: '롤링페이퍼 작성하기',
           link: {
             mobileWebUrl: `${root}${url}`,
             webUrl: `${root}${url}`,

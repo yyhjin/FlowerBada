@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
-import Message from '@src/components/mypage/Message';
+import Message from '@src/components/message/Message';
 import DotSlice from '@components/paging/DotSlice';
 import messageAPI from '@api/messageAPI';
 import IosShareIcon from '@mui/icons-material/IosShare';
@@ -9,6 +9,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 import {
   Dialog,
   DialogActions,
@@ -22,13 +23,34 @@ import rollingAPI from '@api/rollingAPI';
 import Star from '@assets/Star.png';
 import EmptyStar from '@assets/EmptyStar.png';
 import Delivery from '@assets/Delivery.png';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
 import MySwal from '@components/SweetAlert';
 import { useCallback } from 'react';
 import Login from '@assets/login_btn.png';
+import html2canvas from 'html2canvas';
+// import { useReactToPrint } from 'react-to-print';
+import updateTokens from '@utils/updateTokens';
 
-interface IRolling {
+import Print from '@pages/Print';
+import Main from '@pages/MainPage';
+import View from '@pages/View';
+
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import LinkIcon from '@mui/icons-material/Link';
+import SaveIcon from '@mui/icons-material/Save';
+import PrintIcon from '@mui/icons-material/Print';
+import ShareIcon from '@mui/icons-material/Share';
+import EditIcon from '@mui/icons-material/Edit';
+
+import Kakao from '@assets/kakaoTalk2.png';
+import { Edit } from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
+
+export interface IRolling {
   rollingId?: number;
   imgUrl?: string;
   imgFront?: string;
@@ -39,14 +61,15 @@ interface IRolling {
   messages?: IMessage[];
 }
 
-interface IMessage {
+export interface IMessage {
   imgUrl: string;
   writer: string;
   flowerId: number;
   messageId: number;
+  price: number;
 }
 
-export default function RollingPaper() {
+export default function RollingPaper(props: any) {
   const [loading, setLoading] = useState<Boolean>(false);
   const [rolling, setRolling] = useState<IRolling>({});
   const [paginationId, setPaginationId] = useState<number>(1);
@@ -62,72 +85,131 @@ export default function RollingPaper() {
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
+  const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
+  const [left, setLeft] = useState<string>('0px');
+
+  window.addEventListener('resize', function () {
+    if (window.innerWidth >= 500) {
+      setLeft((window.innerWidth - 500) / 2 + 'px');
+    } else {
+      setLeft('0px');
+    }
+  });
+
+  let componentRef = useRef<HTMLDivElement>(null);
+  const root = 'https://k7a405.p.ssafy.io/rolling/';
+  const VITE_APP_KAKAO_KEY = import.meta.env.VITE_APP_KAKAO_KEY;
+
+  function afterGetRolling(res: any) {
+    const curr = new Date();
+    const open = new Date(res.data.response.date.replaceAll('.', '-'));
+
+    const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+    const utcOpen = open.getTime() + open.getTimezoneOffset() * 60 * 1000;
+    const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+
+    const nowDate = new Date(utc + KR_TIME_DIFF);
+    setNowDate(nowDate);
+    const rollingDate = new Date(utcOpen);
+    setRollingDate(rollingDate);
+
+    if (rollingDate <= nowDate) {
+      setValid(true);
+    } else {
+      setValid(false);
+    }
+
+    setRolling(res.data.response);
+    setLoading(true);
+    setStepNumber(
+      Math.floor(
+        res.data.response.totalMessages <= res.data.response.capacity
+          ? 1
+          : Number(res.data.response.totalMessages - 1) /
+              Number(res.data.response.capacity) +
+              1,
+      ),
+    );
+    if (res.data.response.bookmark) {
+      setBookmark(true);
+    }
+    const tmpType = res.data.response.imgFront.split('_')[2];
+    if (Number(tmpType) >= 1 && Number(tmpType) <= 4) {
+      setType(1);
+    } else if (Number(tmpType) >= 5 && Number(tmpType) <= 7) {
+      setType(2);
+    } else {
+      setType(3);
+    }
+  }
 
   async function getRolling() {
     url = paramCopy.url;
+    if (userState.jwt === '') {
+      props.Setters.setUrl(paramCopy.url);
+      props.Setters.setPageId(paginationId);
+    }
+
     setLoading(false);
     setDeliveryModal(false);
     try {
       const res: any = await messageAPI.getRolling(
         userState.jwt,
+        userState.refresh,
         url,
         paginationId,
       );
-
-      const curr = new Date();
-      const open = new Date(res.data.response.date.replaceAll('.', '-'));
-
-      const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
-      const utcOpen = open.getTime() + open.getTimezoneOffset() * 60 * 1000;
-      const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-
-      const nowDate = new Date(utc + KR_TIME_DIFF);
-      setNowDate(nowDate);
-      const rollingDate = new Date(utcOpen);
-      setRollingDate(rollingDate);
-
-      if (rollingDate <= nowDate) {
-        setValid(true);
-      } else {
+      afterGetRolling(res);
+    } catch (err: any) {
+      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
         MySwal.fire({
-          title: `${res.data.response.date} 일 이후 개봉 가능`,
-          icon: 'info',
+          title: '로그아웃 되었습니다!',
+          icon: 'warning',
           confirmButtonColor: '#16453e',
           confirmButtonText: '확인',
+        }).then(async () => {
+          setUserState((prev: IuserRecoil) => {
+            const variable = { ...prev };
+            variable.id = 0;
+            variable.userToken = '';
+            variable.nickname = '';
+            variable.points = 0;
+            variable.jwt = '';
+            variable.refresh = '';
+            return variable;
+          });
+          const res: any = await messageAPI.getRolling(
+            '',
+            '',
+            url,
+            paginationId,
+          );
+          afterGetRolling(res);
         });
-        setValid(false);
-      }
-      console.log(res.data.response);
-
-      setRolling(res.data.response);
-      setLoading(true);
-      setStepNumber(
-        Math.floor(
-          res.data.response.totalMessages <= res.data.response.capacity
-            ? 1
-            : Number(res.data.response.totalMessages - 1) /
-                Number(res.data.response.capacity) +
-                1,
-        ),
-      );
-      if (res.data.response.bookmark) {
-        setBookmark(true);
-      }
-      const tmpType = res.data.response.imgFront.split('_')[2];
-      if (Number(tmpType) >= 1 && Number(tmpType) <= 4) {
-        setType(1);
-      } else if (Number(tmpType) >= 5 && Number(tmpType) <= 7) {
-        setType(2);
       } else {
-        setType(3);
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setUserState);
+          const res: any = await messageAPI.getRolling(
+            accessToken,
+            refreshToken,
+            url,
+            paginationId,
+          );
+          afterGetRolling(res);
+        } else {
+          MySwal.fire({
+            title: '불러오기 실패...',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
+          navigate('/');
+        }
       }
-    } catch (err: any) {
-      MySwal.fire({
-        title: '불러오기 실패...',
-        icon: 'warning',
-        confirmButtonColor: '#16453e',
-        confirmButtonText: '확인',
-      });
     }
   }
   const bookmarkSwitch = async () => {
@@ -142,18 +224,49 @@ export default function RollingPaper() {
     }
     //로그인시
     else {
+      const url = paramCopy.url;
       try {
-        let url = paramCopy.url;
-        const res: any = await rollingAPI.bookmarkRolling(userState.jwt, url);
+        await rollingAPI.bookmarkRolling(userState.jwt, userState.refresh, url);
         setBookmark(!bookmark);
         // console.log('북마크 스위치 성공!');
       } catch (err: any) {
-        MySwal.fire({
-          title: '북마크 실패...',
-          icon: 'warning',
-          confirmButtonColor: '#16453e',
-          confirmButtonText: '확인',
-        });
+        if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+          MySwal.fire({
+            title: '로그인이 필요합니다!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          });
+          setUserState((prev: IuserRecoil) => {
+            const variable = { ...prev };
+            variable.id = 0;
+            variable.userToken = '';
+            variable.nickname = '';
+            variable.points = 0;
+            variable.jwt = '';
+            variable.refresh = '';
+            return variable;
+          });
+          navigate('/');
+        } else {
+          let accessToken: string = err.response.headers.get('x-auth-token');
+          let refreshToken: string = err.response.headers.get('refresh-token');
+          if (accessToken && refreshToken) {
+            accessToken = accessToken.split(' ')[1];
+            refreshToken = refreshToken.split(' ')[1];
+            updateTokens(accessToken, refreshToken, setUserState);
+            await rollingAPI.bookmarkRolling(accessToken, refreshToken, url);
+            setBookmark(!bookmark);
+          } else {
+            MySwal.fire({
+              title: '북마크 실패...',
+              icon: 'warning',
+              confirmButtonColor: '#16453e',
+              confirmButtonText: '확인',
+            });
+            navigate('/');
+          }
+        }
       }
     }
   };
@@ -167,7 +280,7 @@ export default function RollingPaper() {
     });
   };
 
-  const changeDelivery = (param: boolean) => {
+  const openDeliveryModal = () => {
     if (userState.jwt === '') {
       MySwal.fire({
         title: '로그인 후<br/>사용 가능합니다!',
@@ -176,7 +289,25 @@ export default function RollingPaper() {
         confirmButtonText: '확인',
       });
     } else {
-      setDeliveryModal(param);
+      if (window.innerWidth >= 500) {
+        setLeft((window.innerWidth - 500) / 2 + 'px');
+      } else {
+        setLeft('0px');
+      }
+      setDeliveryModal(true);
+    }
+  };
+
+  const closeDeliveryModal = () => {
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setDeliveryModal(false);
     }
   };
 
@@ -184,13 +315,70 @@ export default function RollingPaper() {
     // 로컬스토리지에 담기
     localStorage.setItem('url', paramCopy.url);
     localStorage.setItem('paginationId', paginationId.toString());
-    navigate('/payment');
+    navigate('/payment/option', {
+      state: {
+        rolling,
+        type,
+        valid,
+        stepNumber,
+        userToken: userState.userToken,
+        paginationId,
+      },
+    });
   };
 
-  const linkToSignIn = () => {
-    localStorage.setItem('url', paramCopy.url);
-    localStorage.setItem('paginationId', String(paginationId));
-    navigate('/');
+  const linkCopy = () => {
+    navigator.clipboard.writeText(root + paramCopy.url);
+    MySwal.fire({
+      title: '링크가 복사되었습니다.',
+      icon: 'success',
+      confirmButtonColor: '#16453e',
+      confirmButtonText: '확인',
+    });
+  };
+
+  const kakaoShare = () => {
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      if (window.Kakao) {
+        const kakao = window.Kakao;
+        if (!kakao.isInitialized()) {
+          kakao.init(VITE_APP_KAKAO_KEY);
+        }
+      }
+      window.Kakao.Link.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: '꽃바다 - 우리들의 이야기를 꽃에 담아',
+          description: `${rolling.title}`,
+          imageUrl:
+            'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/rollingpaper/03LO7T.png',
+          link: {
+            mobileWebUrl: `${root}${paramCopy.url}`,
+            webUrl: `${root}${paramCopy.url}`,
+          },
+        },
+        buttons: [
+          {
+            title: '롤링페이퍼 작성하기',
+            link: {
+              mobileWebUrl: `${root}${paramCopy.url}`,
+              webUrl: `${root}${paramCopy.url}`,
+            },
+          },
+        ],
+      });
+    }
+  };
+
+  const print = () => {
+    alert('프린트 만들고 연결하면 됨!');
   };
 
   useEffect(() => {
@@ -200,69 +388,249 @@ export default function RollingPaper() {
     localStorage.removeItem('paginationId');
   }, []);
 
+  const saveRolling = () => {
+    navigate('/rolling/print', {
+      state: {
+        rolling,
+        type,
+        valid,
+        mainImg: rolling.imgUrl,
+      },
+    });
+  };
+
+  const shareRolling = () => {
+    navigate('/newroll/link', { state: paramCopy.url });
+  };
+
+  const dateBeforeActions = [
+    { icon: <EditIcon />, name: '메시지 작성', function: moveMessageWrite },
+    { icon: <LinkIcon />, name: '링크 복사', function: linkCopy },
+    {
+      icon: (
+        <img
+          src={Kakao}
+          style={{
+            userSelect: 'none',
+            width: '1em',
+            height: '1em',
+            display: 'inline-block',
+            fill: 'currentColor',
+            flexShrink: '0',
+            fontSize: '1.5rem',
+          }}
+        />
+      ),
+      name: '카카오톡 공유',
+      function: kakaoShare,
+    },
+  ];
+
+  const dateAfterActions = [
+    { icon: <LocalShippingIcon />, name: '배송', function: openDeliveryModal },
+    { icon: <PrintIcon />, name: '프린트', function: print },
+    {
+      icon: (
+        <img
+          src={Kakao}
+          style={{
+            userSelect: 'none',
+            width: '1em',
+            height: '1em',
+            display: 'inline-block',
+            fill: 'currentColor',
+            flexShrink: '0',
+            fontSize: '1.5rem',
+          }}
+        />
+      ),
+      name: '카카오톡 공유',
+      function: kakaoShare,
+    },
+  ];
+
   useEffect(() => {
     getRolling();
   }, [paginationId]);
 
+  useEffect(() => {
+    if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
+      // 캡쳐 및 DB 저장
+      const el = document.getElementById('to-save');
+      if (el) {
+        html2canvas(el).then((canvas: any) => {
+          onSaveAs(
+            canvas.toDataURL('image/png'),
+            `final-image-` + paramCopy.url + `.png`,
+          );
+        });
+      }
+    }
+  }, [rolling]);
+
+  const onSaveAs = (uri: string, filename: string): void => {
+    let link: any = document.createElement('a');
+    document.body.appendChild(link);
+    link.href = uri;
+    // link.download = filename;
+    // link.click();
+    document.body.removeChild(link);
+    messageAPI.updateRollingImg(
+      userState.jwt,
+      userState.refresh,
+      paramCopy.url,
+      { imgUrl: uri },
+    );
+  };
+  const check = () => {
+    alert('테스트 성공');
+  };
+
   return (
     <>
-      {userState.jwt === '' ? (
-        <img src={Login} css={LoginBtn} onClick={linkToSignIn} />
-      ) : null}
       {loading && rolling && rolling.messages && type ? (
         <>
-          <div css={DetailCss}>
-            <div className={`titlezone_${type}`}>
-              <div className="title">{rolling.title}</div>
-              {bookmark ? (
-                <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
+          <div>
+            <div css={DetailCss}>
+              <div className={`titlezone_${type}`}>
+                <div className="title">{rolling.title}</div>
+                {bookmark ? (
+                  <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
+                ) : (
+                  <img
+                    src={EmptyStar}
+                    css={BookmarkImg}
+                    onClick={bookmarkSwitch}
+                  />
+                )}
+              </div>
+
+              <div css={SaveParent}>
+                <div>
+                  <div className={`imgbox_${type}`}>
+                    <img src={'/src/assets/' + rolling.imgBack}></img>
+                  </div>
+                  <div className="flowerlist">
+                    {rolling.messages.map((message, index) => {
+                      return (
+                        <div key={index} className={`flowerbox_${type}`}>
+                          <Message
+                            imgUrl={message.imgUrl}
+                            messageId={message.messageId}
+                            writer={message.writer}
+                            valid={valid}
+                            writerDisplay={true}
+                            type={type}
+                          ></Message>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className={`imgbox_front_${type}`}>
+                  <img src={'/src/assets/' + rolling.imgFront}></img>
+                </div>
+                <div id="to-save" className="save-child">
+                  <div className={`imgbox_${type}`}>
+                    <img src={'/src/assets/' + rolling.imgBack}></img>
+                  </div>
+                  <div className="flowerlist">
+                    {rolling.messages.map((message, index) => {
+                      return (
+                        <div key={index} className={`flowerbox_${type}`}>
+                          <Message
+                            imgUrl={message.imgUrl}
+                            messageId={message.messageId}
+                            writer={message.writer}
+                            valid={valid}
+                            writerDisplay={false}
+                            type={type}
+                          ></Message>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className={`imgbox_front_${type}`}>
+                    <img src={'/src/assets/' + rolling.imgFront}></img>
+                  </div>
+                </div>
+              </div>
+              {!valid ? (
+                <div className={`valid_${type}`}>
+                  {rolling.date} 이후로 개봉 가능합니다.
+                </div>
               ) : (
-                <img
-                  src={EmptyStar}
-                  css={BookmarkImg}
-                  onClick={bookmarkSwitch}
-                />
+                <div className={`valid_${type}`}>꽃을 눌러보세요!</div>
               )}
             </div>
-            {!valid ? (
-              <div className="valid">
-                {rolling.date} 이후로 개봉 가능합니다.
-              </div>
-            ) : (
-              <div className="valid">꽃을 눌러보세요!</div>
-            )}
-            <div className="fixbox">
-              <div className={`imgbox_${type}`}>
-                <img src={'/src/assets/' + rolling.imgBack}></img>
-              </div>
-              <div className="flowerlist">
-                {rolling.messages.map((message, index) => {
-                  return (
-                    <div key={index} className={`flowerbox_${type}`}>
-                      <Message
-                        imgUrl={message.imgUrl}
-                        messageId={message.messageId}
-                        writer={message.writer}
-                        valid={valid}
-                      ></Message>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-            <div className={`imgbox_front_${type}`}>
-              <img src={'/src/assets/' + rolling.imgFront}></img>
-            </div>
-            <div className={`dot_${type}`}>
+            {/* <div css={`dot_${type}`}> */}
+            <div css={Dot}>
+              <SpeedDial
+                ariaLabel="SpeedDial openIcon example"
+                sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                icon={<SpeedDialIcon />}
+                className="speed-dial-zone"
+              >
+                {rollingDate <= nowDate
+                  ? dateAfterActions.map((action) => (
+                      <SpeedDialAction
+                        key={action.name}
+                        icon={action.icon}
+                        onClick={action.function}
+                      />
+                    ))
+                  : dateBeforeActions.map((action) => (
+                      <SpeedDialAction
+                        key={action.name}
+                        icon={action.icon}
+                        onClick={action.function}
+                      />
+                    ))}
+              </SpeedDial>
+
               <DotSlice
                 paginationId={paginationId}
                 setPaginationId={setPaginationId}
                 stepNumber={stepNumber}
               ></DotSlice>
+              <DialogCustom open={deliveryModal} left={left}>
+                <DialogTitle id="alert-dialog-title" css={Font}>
+                  확인해주세요
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText css={Font}>
+                    현재 선택하신 페이지의 꽃들로 주문을 진행합니다.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions css={ActionCss}>
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      onClick={sendDelivery}
+                      css={Font}
+                    >
+                      확인
+                    </Button>
+                  </ThemeProvider>
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="contained"
+                      color="neutral"
+                      size="small"
+                      onClick={closeDeliveryModal}
+                      css={Font}
+                    >
+                      취소
+                    </Button>
+                  </ThemeProvider>
+                </DialogActions>
+              </DialogCustom>
             </div>
-            {rollingDate <= nowDate ? (
+            {/* {rollingDate <= nowDate ? (
               <>
-                <div className="bottom-bar">
+                <div css={BottomBar}>
                   <ThemeProvider theme={theme}>
                     <IconButton
                       size="large"
@@ -317,12 +685,13 @@ export default function RollingPaper() {
                 </Dialog>
               </>
             ) : (
-              <div className="bottom-bar">
+              <div css={BottomBar}>
                 <ThemeProvider theme={theme}>
                   <IconButton
                     size="large"
                     color="primary"
                     className="share-btn"
+                    onClick={shareRolling}
                   >
                     <IosShareIcon fontSize="large" />
                   </IconButton>
@@ -336,7 +705,7 @@ export default function RollingPaper() {
                   </IconButton>
                 </ThemeProvider>
               </div>
-            )}
+            )} */}
           </div>
         </>
       ) : (
@@ -346,124 +715,94 @@ export default function RollingPaper() {
   );
 }
 
-const LoginBtn = css`
-  position: absolute;
-  width: 35px;
-  top: 2%;
-  right: 5%;
-  z-index: 999999;
-`;
-
 const DetailCss = css`
   width: 100%;
-  height: 115%;
+  height: 100%;
   position: relative;
   transform: translate(0%, -15%);
-
-  .titlezone_1 {
-    padding-top: 20vh;
-    margin-bottom: -30vw;
+  .valid_1 {
     justify-content: center;
+  }
+  .valid_2 {
+    margin-top: 20vh;
+    justify-content: center;
+    @media screen and (min-width: 1000px) {
+      margin-top: 25vh;
+    }
+  }
+  .titlezone_1 {
+    justify-content: center;
+    padding-top: 150px;
+    margin-bottom: -10vh;
     font-size: 7.5vw;
     display: flex;
-
+    @media screen and (min-width: 500px) {
+      padding-top: 180px;
+      font-size: 25pt;
+      margin-bottom: -50px;
+    }
+    @media screen and (max-width: 300px) {
+      padding-top: 150px;
+      margin-bottom: -50px;
+    }
     @media screen and (min-height: 700px) {
-      padding-top: 22vh;
-      margin-bottom: -15vh;
+      padding-top: 150px;
+      margin-bottom: -50px;
     }
-    @media screen and (min-height: 800px) {
-      padding-top: 22vh;
-      margin-bottom: -12vh;
-    }
-    @media screen and (min-height: 900px) {
-      padding-top: 22vh;
-      margin-bottom: -10vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      padding-top: 22vh;
-      margin-bottom: -25vw;
+    @media screen and (min-width: 1000px) {
+      padding-top: 150px;
+      margin-bottom: -115px;
     }
   }
   .titlezone_2 {
-    padding-top: 20vh;
-    margin-bottom: -10vw;
     justify-content: center;
+    padding-top: 150px;
+    margin-bottom: 0vh;
     font-size: 7.5vw;
     display: flex;
-
+    @media screen and (min-width: 500px) {
+      padding-top: 180px;
+      margin-bottom: -20vh;
+      font-size: 25pt;
+    }
+    @media screen and (max-width: 300px) {
+      padding-top: 150px;
+      margin-bottom: -50px;
+    }
     @media screen and (min-height: 700px) {
-      padding-top: 22vh;
-      margin-bottom: -7vh;
+      padding-top: 180px;
+      margin-bottom: -50px;
     }
-    @media screen and (min-height: 800px) {
-      padding-top: 22vh;
-      margin-bottom: -5vh;
-    }
-    @media screen and (min-height: 900px) {
-      padding-top: 22vh;
-      margin-bottom: -7vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      padding-top: 22vh;
-      margin-bottom: -8vw;
+    @media screen and (min-width: 1000px) {
+      padding-top: 180px;
+      margin-bottom: -150px;
     }
   }
   .titlezone_3 {
-    padding-top: 20vh;
-    margin-bottom: -10vw;
     justify-content: center;
+    padding-top: 150px;
+    margin-bottom: 0vh;
     font-size: 7.5vw;
     display: flex;
-
+    @media screen and (min-width: 500px) {
+      padding-top: 180px;
+      margin-bottom: -20vh;
+      font-size: 25pt;
+    }
+    @media screen and (max-width: 300px) {
+      padding-top: 150px;
+      margin-bottom: -50px;
+    }
     @media screen and (min-height: 700px) {
-      padding-top: 22vh;
-      margin-bottom: -12vh;
+      padding-top: 180px;
+      margin-bottom: -50px;
     }
-    @media screen and (min-height: 800px) {
-      padding-top: 22vh;
-      margin-bottom: -10vh;
-    }
-    @media screen and (min-height: 900px) {
-      padding-top: 22vh;
-      margin-bottom: -7vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      padding-top: 22vh;
-      margin-bottom: -8vw;
+    @media screen and (min-width: 1000px) {
+      padding-top: 180px;
+      margin-bottom: -150px;
     }
   }
-  .imgbox_1,
-  .imgbox_2,
-  .imgbox_3 {
-    position: absolute;
-  }
-  .imgbox_1 img {
-    position: relative;
-    z-index: 0;
-    width: 75%;
-    left: 0vw;
-    top: 10vw;
-  }
-  .imgbox_2 img {
-    position: relative;
-    z-index: 0;
-    width: 75%;
-    left: 0vw;
-    top: 10vw;
-    @media screen and (max-height: 700px) {
-      width: 62.5%;
-    }
-  }
-  .imgbox_3 img {
-    position: relative;
-    z-index: 0;
-    width: 90%;
-    left: 0vw;
-    top: 10vw;
-    @media screen and (max-height: 700px) {
-      width: 75%;
-    }
-  }
+
   .flowerlist {
     /* width: 100%; */
     position: static;
@@ -472,87 +811,115 @@ const DetailCss = css`
       position: relative;
       &:first-of-type {
         z-index: 10;
-        left: -10vw;
+        left: -5vw;
         top: 46vw;
         transform: rotate(0deg);
+        @media screen and (min-width: 500px) {
+          left: -25px;
+          top: 230px;
+        }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: 9vw;
-        top: 44vw;
+        left: 16vw;
+        top: 45vw;
         transform: rotate(5deg);
+        @media screen and (min-width: 500px) {
+          left: 75px;
+          top: 230px;
+        }
       }
       &:nth-of-type(3) {
         z-index: 8;
-        left: -25vw;
+        left: -16vw;
         top: 40vw;
         transform: rotate(20deg);
+        @media screen and (min-width: 500px) {
+          left: -90px;
+          top: 200px;
+        }
       }
       &:nth-of-type(4) {
         z-index: 7;
         left: -40vw;
         top: 50vw;
         transform: rotate(-10deg);
+        @media screen and (min-width: 500px) {
+          left: -220px;
+          top: 250px;
+        }
       }
       &:nth-of-type(5) {
         z-index: 6;
-        left: 5vw;
+        left: 12vw;
         top: 27vw;
         transform: rotate(25deg);
+        @media screen and (min-width: 500px) {
+          left: 70px;
+          top: 120px;
+        }
       }
       &:nth-of-type(6) {
         z-index: 5;
-        left: -21vw;
+        left: -15vw;
         top: 36vw;
         transform: rotate(-20deg);
+        @media screen and (min-width: 500px) {
+          left: -80px;
+          top: 165px;
+        }
       }
       &:nth-of-type(7) {
         z-index: 4;
-        left: -36vw;
-        top: 33vw;
+        left: -31vw;
+        top: 32vw;
         transform: rotate(0deg);
+        @media screen and (min-width: 500px) {
+          left: -170px;
+          top: 140px;
+        }
       }
     }
     .flowerbox_2 {
       position: relative;
       &:first-of-type {
         z-index: 10;
-        left: -15vw;
+        left: -12vw;
         top: 60vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 52vw;
+        @media screen and (min-width: 500px) {
+          left: -70px;
+          top: 400px;
         }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: -2vw;
-        top: 54vw;
+        left: 3vw;
+        top: 56vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -1vw;
-          top: 48vw;
+        @media screen and (min-width: 500px) {
+          left: 0px;
+          top: 390px;
         }
       }
       &:nth-of-type(3) {
         z-index: 8;
         left: -32vw;
-        top: 57vw;
+        top: 61vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -28vw;
-          top: 50vw;
+        @media screen and (min-width: 500px) {
+          left: -170px;
+          top: 400px;
         }
       }
       &:nth-of-type(4) {
         z-index: 7;
-        left: -12vw;
-        top: 40vw;
+        left: -11vw;
+        top: 42vw;
         transform: rotate(10deg);
-        @media screen and (max-height: 700px) {
-          left: -10vw;
-          top: 35vw;
+        @media screen and (min-width: 500px) {
+          left: -60px;
+          top: 305px;
         }
       }
       &:nth-of-type(5) {
@@ -560,19 +927,19 @@ const DetailCss = css`
         left: 16vw;
         top: 37vw;
         transform: rotate(25deg);
-        @media screen and (max-height: 700px) {
-          left: 13vw;
-          top: 32vw;
+        @media screen and (min-width: 500px) {
+          left: 70px;
+          top: 290px;
         }
       }
       &:nth-of-type(6) {
         z-index: 5;
-        left: -40vw;
-        top: 45vw;
+        left: -38vw;
+        top: 47vw;
         transform: rotate(-20deg);
-        @media screen and (max-height: 700px) {
-          left: -35vw;
-          top: 39vw;
+        @media screen and (min-width: 500px) {
+          left: -190px;
+          top: 335px;
         }
       }
       &:nth-of-type(7) {
@@ -580,9 +947,9 @@ const DetailCss = css`
         left: -24vw;
         top: 32vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -20vw;
-          top: 28vw;
+        @media screen and (min-width: 500px) {
+          left: -120px;
+          top: 255px;
         }
       }
       &:nth-of-type(8) {
@@ -590,9 +957,9 @@ const DetailCss = css`
         left: -4vw;
         top: 29vw;
         transform: rotate(5deg);
-        @media screen and (max-height: 700px) {
-          left: -2vw;
-          top: 25vw;
+        @media screen and (min-width: 500px) {
+          left: -15px;
+          top: 240px;
         }
       }
     }
@@ -603,19 +970,19 @@ const DetailCss = css`
         left: -15vw;
         top: 80vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 68vw;
+        @media screen and (min-width: 500px) {
+          left: -65px;
+          top: 510px;
         }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: -2vw;
+        left: -1vw;
         top: 80vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -1.5vw;
-          top: 68vw;
+        @media screen and (min-width: 500px) {
+          left: 0px;
+          top: 510px;
         }
       }
       &:nth-of-type(3) {
@@ -623,19 +990,19 @@ const DetailCss = css`
         left: -34vw;
         top: 83vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -28vw;
-          top: 70vw;
+        @media screen and (min-width: 500px) {
+          left: -150px;
+          top: 525px;
         }
       }
       &:nth-of-type(4) {
         z-index: 7;
-        left: 15vw;
+        left: 17vw;
         top: 75vw;
         transform: rotate(15deg);
-        @media screen and (max-height: 700px) {
-          left: 13.5vw;
-          top: 63vw;
+        @media screen and (min-width: 500px) {
+          left: 90px;
+          top: 485px;
         }
       }
       &:nth-of-type(5) {
@@ -643,9 +1010,9 @@ const DetailCss = css`
         left: -45vw;
         top: 80vw;
         transform: rotate(-5deg);
-        @media screen and (max-height: 700px) {
-          left: -36vw;
-          top: 68vw;
+        @media screen and (min-width: 500px) {
+          left: -220px;
+          top: 505px;
         }
       }
       &:nth-of-type(6) {
@@ -653,29 +1020,29 @@ const DetailCss = css`
         left: -15vw;
         top: 65vw;
         transform: rotate(-5deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 55vw;
+        @media screen and (min-width: 500px) {
+          left: -70px;
+          top: 430px;
         }
       }
       &:nth-of-type(7) {
-        z-index: 5;
+        z-index: 4;
         left: -32vw;
         top: 68vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -27vw;
-          top: 57vw;
+        @media screen and (min-width: 500px) {
+          left: -150px;
+          top: 440px;
         }
       }
       &:nth-of-type(8) {
-        z-index: 5;
+        z-index: 3;
         left: 2vw;
         top: 65vw;
         transform: rotate(5deg);
-        @media screen and (max-height: 700px) {
-          left: 2vw;
-          top: 55vw;
+        @media screen and (min-width: 500px) {
+          left: 10px;
+          top: 425px;
         }
       }
       &:nth-of-type(9) {
@@ -683,9 +1050,9 @@ const DetailCss = css`
         left: -45vw;
         top: 70vw;
         transform: rotate(-20deg);
-        @media screen and (max-height: 700px) {
-          left: -40vw;
-          top: 60vw;
+        @media screen and (min-width: 500px) {
+          left: -230px;
+          top: 450px;
         }
       }
       &:nth-of-type(10) {
@@ -693,14 +1060,41 @@ const DetailCss = css`
         left: 15vw;
         top: 65vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: 13vw;
-          top: 55vw;
+        @media screen and (min-width: 500px) {
+          left: 80px;
+          top: 430px;
         }
       }
     }
   }
-  .dot_1,
+  /* .dot_1 {
+    position: absolute;
+    margin-top: 0vh;
+    bottom: 0%;
+    @media screen and (min-height: 700px) {
+      margin-top: 0vh;
+    }
+    @media screen and (min-height: 800px) {
+      margin-top: 2vh;
+    }
+    @media screen and (min-height: 900px) {
+      margin-top: 4vh;
+    }
+    @media screen and (max-height: 660px) and (max-width: 290px) {
+      margin-top: 4vh;
+    }
+    .speed-dial-zone {
+      padding-bottom: 75px;
+      .MuiButtonBase-root {
+        width: 10vw;
+        height: 10vw;
+        @media screen and (min-width: 500px) {
+          width: 50px;
+          height: 50px;
+        }
+      }
+    }
+  }
   .dot_2 {
     margin-top: 2vh;
     bottom: 0%;
@@ -732,6 +1126,50 @@ const DetailCss = css`
     @media screen and (max-height: 660px) and (max-width: 290px) {
       margin-top: -6vh;
     }
+  } */
+  .imgbox_1,
+  .imgbox_2,
+  .imgbox_3 {
+    position: absolute;
+  }
+
+  .imgbox_1 img {
+    position: relative;
+    z-index: 0;
+    width: 75%;
+    left: 0vw;
+    right: 0vw;
+    top: 10vw;
+    bottom: 10vw;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 60px;
+    }
+  }
+  .imgbox_2 img {
+    position: relative;
+    z-index: 0;
+    width: 75%;
+    left: 0vw;
+    right: 0vw;
+    top: 10vw;
+    bottom: 10vw;
+    pointer-events: none;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
+    }
+  }
+  .imgbox_3 img {
+    position: relative;
+    z-index: 0;
+    width: 90%;
+    left: 0vw;
+    top: 10vw;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
+    }
   }
 
   .imgbox_front_1 img {
@@ -743,6 +1181,10 @@ const DetailCss = css`
     top: 10vw;
     bottom: 10vw;
     pointer-events: none;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 60px;
+    }
   }
   .imgbox_front_2 img {
     z-index: 12;
@@ -753,8 +1195,9 @@ const DetailCss = css`
     top: 10vw;
     bottom: 10vw;
     pointer-events: none;
-    @media screen and (max-height: 700px) {
-      width: 62.5%;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
     }
   }
   .imgbox_front_3 img {
@@ -766,41 +1209,59 @@ const DetailCss = css`
     top: 10vw;
     bottom: 10vw;
     pointer-events: none;
-    @media screen and (max-height: 700px) {
-      width: 75%;
-    }
-  }
-
-  .bottom-bar {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    bottom: 0;
-    .share-btn {
-      float: left;
-      margin-left: 1em;
-    }
-    .write-btn {
-      float: right;
-      margin-right: 1em;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
     }
   }
 `;
+
+const Dot = css`
+  position: absolute;
+  z-index: 20;
+  width: 100%;
+  margin-top: 0vh;
+  bottom: 0%;
+  .speed-dial-zone {
+    padding-bottom: 50px;
+    .MuiButtonBase-root {
+      width: 10vw;
+      height: 10vw;
+      @media screen and (min-width: 500px) {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  }
+`;
+
+// const BottomBar = css`
+//   position: absolute;
+//   width: 100%;
+//   bottom: 0;
+//   .share-btn {
+//     float: left;
+//     margin-left: 1em;
+//   }
+//   .write-btn {
+//     float: right;
+//     margin-right: 1em;
+//   }
+// `;
 
 const Loading = css`
   width: 100vw;
 `;
 
-const DeliveryIcon = css`
-  width: 10vw;
-  margin-left: 75vw;
-`;
-
 const BookmarkImg = css`
+  cursor: pointer;
   position: absolute;
   left: 85%;
   width: 10vw;
   z-index: 1;
+  @media screen and (min-width: 500px) {
+    width: 45px;
+  }
 `;
 
 const theme = createTheme({
@@ -826,3 +1287,33 @@ const ActionCss = css`
   width: 90%;
   float: right;
 `;
+
+const SaveParent = css`
+  position: relative;
+
+  .save-child {
+    background-color: #f2f0ef;
+    height: 70vh;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+  }
+`;
+
+const DialogCustom: any = styled(Dialog)((props: any) => ({
+  '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
+    boxShadow: 'none',
+    width: '100%',
+    left: `${props.left}`,
+  },
+  '& .css-ypiqx9-MuiDialogContent-root': {
+    margin: 'auto',
+    width: '70%',
+    left: `${props.left}`,
+  },
+
+  '& .css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': {
+    backgroundColor: 'rgb(0 0 0 / 80%)',
+    left: `${props.left}`,
+  },
+}));
