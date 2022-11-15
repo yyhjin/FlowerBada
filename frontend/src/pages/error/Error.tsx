@@ -1,13 +1,10 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
 import { css } from '@emotion/react';
-import { useRecoilState } from 'recoil';
-import { IstatusRecoil, statusRecoil } from '@recoil/httpStatusRecoil';
 export default function Error() {
   sessionStorage.setItem('url', '/error');
   let paramCopy: any = {};
   paramCopy = useParams();
-  const [status, setStatus] = useRecoilState<IstatusRecoil>(statusRecoil);
+
   const navigate = useNavigate();
   function goToHome() {
     navigate('/');
@@ -16,13 +13,19 @@ export default function Error() {
   return (
     <div css={ErrorBox}>
       <div className="imgBox">
-        <img
-          className="img"
-          src={'/src/assets/fixed-size/flower/flower_2_fixed.png'}
-        ></img>
+        {paramCopy.code == 429 ? (
+          <img
+            className="img"
+            src={'/src/assets/fixed-size/flower/flower_9_fixed.png'}
+          ></img>
+        ) : (
+          <img
+            className="img"
+            src={'/src/assets/fixed-size/flower/flower_7_fixed.png'}
+          ></img>
+        )}
       </div>
       <div>
-        {/* {status.message} */}
         {paramCopy.code == 429 ? (
           <>
             요청이 너무 많습니다.
@@ -45,12 +48,12 @@ export default function Error() {
 const ErrorBox = css`
   width: 100vw;
   .imgBox {
-    margin-top: 30%;
+    margin-top: 50%;
   }
   .img {
-    width: 80vw;
+    width: 40vw;
     @media screen and (min-width: 500px) {
-      width: 80%;
+      width: 70%;
     }
   }
   .buttonBox {

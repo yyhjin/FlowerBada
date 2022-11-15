@@ -79,7 +79,7 @@ export default function Manual() {
           </div>
           <div>
             <img
-              src="https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/manual/2-1.png"
+              src="https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/manual/2-7.png"
               className="imgBox"
             ></img>
           </div>

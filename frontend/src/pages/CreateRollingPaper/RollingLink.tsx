@@ -61,7 +61,7 @@ export default function RollingLink() {
       <div css={Background}>
         <div css={Info}>
           <div css={Writing}>링크를 복사해</div>
-          <div css={Writing}>롤링페이퍼를 공유하세요</div>
+          <div css={Writing}>롤링페이퍼를 공유하세요.</div>
         </div>
         <div css={Link}>
           <div css={Url}>
@@ -116,8 +116,8 @@ const Url = css`
   font-size: 20px;
   background-color: white;
   padding: 10px 10px 10px 20px;
-  border-radius: 2vw;
-  overflow: scroll;
+  border-radius: 8px;
+  overflow-x: scroll;
   display: flex;
 `;
 
@@ -152,22 +152,27 @@ const KakaoButton = css`
 `;
 
 const GoRollingButton = css`
-  margin-top: 20vh;
-  height: 7vh;
-  width: 94%;
-  border-radius: 3vw;
-  color: white;
-  font-size: 20px;
-  background-color: #16453e;
+  position: relative;
+  margin: auto;
+  margin-top: 13vh;
+  top: 15vw;
+  left: 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
   cursor: pointer;
-  @media screen and (max-height: 500px) {
-    margin-top: 5vh;
-  }
-  @media screen and (max-height: 600px) {
-    margin-top: 7vh;
-  }
-  @media screen and (max-height: 700px) {
-    margin-top: 10vh;
+  color: white;
+  background-color: #16453e;
+  height: 7vh;
+  width: 94vw;
+  @media screen and (min-width: 500px) {
+    /* margin-top: 5vh; */
+    top: 140px;
+    width: 450px;
+    height: 60px;
   }
 `;
 
