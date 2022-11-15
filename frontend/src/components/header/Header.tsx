@@ -76,6 +76,10 @@ const HeaderNav = css`
   background-color: #f2f0ef;
   z-index: 999;
 
+  nav {
+    height: 60px;
+  }
+
   .dropdown {
     position: relative;
   }
@@ -134,6 +138,7 @@ const MainLogo = css`
 
 const BackArrow = css`
   text-decoration: none;
+  cursor: pointer;
   float: left;
 `;
 
@@ -143,6 +148,7 @@ const hamburger = css`
   width: 30px;
   top: 15px;
   right: 20px;
+  cursor: pointer;
 `;
 
 const coverUp = css`

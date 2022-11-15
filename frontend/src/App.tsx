@@ -14,7 +14,7 @@ import KakaoRedirectHandler from '@kakao/KakaoRedirectHandler';
 import MainPage from '@pages/MainPage';
 import GreenHouse from '@pages/GreenHouse';
 import Store from '@pages/Store';
-import MyPage from './pages/MyPage';
+import MyPage from '@pages/MyPage';
 import Item from '@pages/CreateRollingPaper/SelectItem';
 import Title from '@pages/CreateRollingPaper/SetTitle';
 import Date from '@pages/CreateRollingPaper/SetOpenDate';
@@ -22,10 +22,12 @@ import Link from '@pages/CreateRollingPaper/RollingLink';
 import RollingPaper from '@pages/RollingPaper';
 import Layout from '@pages/Layout';
 import SignIn from '@pages/SignIn';
-import MessageRead from '@pages/MessageRead';
 import MessageCreate from '@pages/MessageCreate';
 import CaptureTest from '@pages/CaptureTest';
 import Print from '@pages/Print';
+import View from '@pages/View';
+import Error from '@pages/error/Error';
+import Manual from '@pages/Manual';
 import View from '@pages/View';
 import CaptureRolling from '@pages/CaptureRolling';
 
@@ -46,6 +48,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/capture" element={<CaptureTest />}></Route>
+          <Route path="/error/:code" element={<Error />}></Route>
           {loginUser.jwt === '' ? (
             <>
               <Route path="" element={<SignIn />}></Route>
@@ -71,6 +74,7 @@ function App() {
             <>
               <Route path="" element={<MainPage />}></Route>
               <Route path="/" element={<Layout />}>
+                <Route path="/manual" element={<Manual />}></Route>
                 <Route path="greenhouse" element={<GreenHouse />}></Route>
                 <Route path="store" element={<Store />}></Route>
                 <Route path="mypage" element={<MyPage />}></Route>
@@ -94,7 +98,6 @@ function App() {
                 <Route path="/payment/success" element={<PaymentSuccess />} />
                 <Route path="/payment/fail" element={<PaymentFail />} />
                 <Route path="/payment/cancel" element={<PaymentCancel />} />
-                <Route path="/rolling/message/read" element={<MessageRead />} />
                 <Route
                   path="rolling/message/create"
                   element={<MessageCreate />}
