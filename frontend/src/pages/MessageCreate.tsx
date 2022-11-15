@@ -388,6 +388,7 @@ const GridStyle = css`
   height: 30vw;
 
   .item-image {
+    z-index: 1;
     width: 20vw;
     position: absolute;
     margin-top: 3vw;
@@ -398,6 +399,7 @@ const GridStyle = css`
     align-items: center;
   }
   .locked-image {
+    z-index: 2;
     cursor: pointer;
     width: 25vw;
     opacity: 100%;
