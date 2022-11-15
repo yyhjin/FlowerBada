@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Api(value = "메시지 API", tags = {"메시지"})
 @CrossOrigin("*")
@@ -51,14 +53,21 @@ public class MessageController {
     public ResponseEntity<ResponseDto> getMsg(@PathVariable Integer msgId) {
 
         Message message = messageService.getMessage(msgId);
-        MessageResDto.MessageDto messageResDto = new MessageResDto.MessageDto(message);
+        Date nowDate = Date.valueOf(LocalDateTime.now().toLocalDate());
+        Date openDate = Date.valueOf(message.getRollingPaper().getOpenDate().toLocalDate());
+        if(nowDate.compareTo(openDate)>=0){
+            MessageResDto.MessageDto messageResDto = new MessageResDto.MessageDto(message);
 
-        if(messageResDto.getMessageId() != 0) {
-            return new ResponseEntity<>(new ResponseDto(messageResDto), HttpStatus.OK);
+            if(messageResDto.getMessageId() != 0) {
+                return new ResponseEntity<>(new ResponseDto(messageResDto), HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(new ResponseDto("message get fail"), HttpStatus.FORBIDDEN);
+            }
+        }else{
+            return new ResponseEntity<>(new ResponseDto("아직 개봉날짜 전입니다."), HttpStatus.FORBIDDEN);
         }
-        else {
-            return new ResponseEntity<>(new ResponseDto("message get fail"), HttpStatus.FORBIDDEN);
-        }
+
     }
 
 
@@ -101,7 +110,7 @@ public class MessageController {
     @ApiOperation(value="롤링페이퍼 이미지 갱신", notes="롤링페이퍼의 현재 s3 버킷에 저장된 이미지를 갱신한다.")
     public ResponseEntity updateRollingImg(@PathVariable("rollingUrl") String url, @RequestBody RollingImgDto dto) {
         String img = dto.getImgUrl();
-        System.out.println("img: "+img);
+//        System.out.println("img: "+img);
         try {
             String fileUrl = messageService.uploadRollingImage(url, img, "update");
             messageService.updateRollingImage(url, fileUrl);
