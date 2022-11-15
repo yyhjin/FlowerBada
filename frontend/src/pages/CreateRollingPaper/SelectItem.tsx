@@ -372,6 +372,8 @@ const modal = css`
 const StoreDiv = css`
   width: 100vw;
   height: 100vw;
+  min-height: -webkit-fill-available;
+  max-height: -webkit-fill-available;
 `;
 
 const points = css`
@@ -512,6 +514,7 @@ const BuyButton = (isSeleceted: boolean) => css`
   background-color: ${!isSeleceted ? '#16453e' : '#9c9c9c'};
   width: 90%;
   height: 50px;
+  /* margin-bottom: 200px; */
   @media screen and (min-width: 500px) {
     margin-top: 5vw;
     top: 140px;
