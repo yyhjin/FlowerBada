@@ -332,7 +332,7 @@ export default function SelectItem() {
         </Grid>
       </div>
 
-      <div>
+      <div className="button-div">
         {isOwned(selectIdx) ? (
           <button
             css={BuyButton(selectedImg === '')}
@@ -371,9 +371,12 @@ const modal = css`
 
 const StoreDiv = css`
   width: 100vw;
-  height: 100vw;
   min-height: -webkit-fill-available;
   max-height: -webkit-fill-available;
+
+  .button-div {
+    height: 100px;
+  }
 `;
 
 const points = css`
@@ -432,7 +435,7 @@ const empty = css`
 
 const selectBox = css`
   position: relative;
-  top: 10vw;
+  top: 50px;
 `;
 
 const GridContainer = css`
@@ -502,26 +505,25 @@ const GridStyle = css`
   }
 `;
 
-const BuyButton = (isSeleceted: boolean) => css`
+const BuyButton = (isOwned: boolean) => css`
   position: relative;
-  margin: auto;
   margin-bottom: 20px;
-  top: 15vw;
+  top: 10px;
   left: 0;
-  border: 1px solid transparent;
   border-radius: 8px;
+  border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
-  background-color: ${!isSeleceted ? '#16453e' : '#9c9c9c'};
-  height: 7vh;
-  width: 94vw;
-  /* margin-bottom: 200px; */
+  /* transition: border-color 0.25s; */
+  background-color: ${!isOwned ? '#16453e' : '#9c9c9c'};
+  width: 90%;
+  height: 50px;
   @media screen and (min-width: 500px) {
-    margin-top: 5vw;
-    top: 140px;
+    margin-top: 80px;
+    margin-bottom: 30px;
     width: 450px;
     height: 60px;
   }
