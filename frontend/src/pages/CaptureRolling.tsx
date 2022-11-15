@@ -2,232 +2,159 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import Message from '@src/components/message/Message';
-import messageAPI from '@api/messageAPI';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import MySwal from '@components/SweetAlert';
 import html2canvas from 'html2canvas';
 import updateTokens from '@utils/updateTokens';
+import messageAPI from '@api/messageAPI';
 import type { IMessage, IRolling } from './RollingPaper';
 
-export default function CaptureRolling(props: any) {
-  let paramCopy: any = {};
-  let url: string;
-  paramCopy = useParams();
+export default function CaptureRolling(props: {
+  type: number;
+  rolling: IRolling;
+  nowDate: Date;
+  rollingDate: Date;
+  url: string;
+  color: Boolean;
+}) {
   const navigate = useNavigate();
-  const [left, setLeft] = useState<string>('0px');
-  const [imgWidth, setImgWidth] = useState<number>(0);
   const [imgHeight, setImgHeight] = useState<number>(0);
-  const [color, setColor] = useState<Boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const location = useLocation();
+  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
 
-  location.state as {
-    type: number;
-    valid: Boolean;
-    rolling: IRolling;
-  };
-  const { type, valid, rolling } = location.state;
-  let img = document.getElementById('base-img');
+  const location = useLocation();
+  // location.state as {
+  //   type: number;
+  //   valid: Boolean;
+  //   rolling: IRolling;
+  //   nowDate: Date;
+  //   rollingDate: Date;
+  // };
+  // const { type, valid, rolling, nowDate, rollingDate } = location.state;
+
+  // window.addEventListener('resize', function () {
+  //   get();
+  // });
+
+  const type = props.type;
+  const rolling = props.rolling;
+  const nowDate = props.nowDate;
+  const rollingDate = props.rollingDate;
+  const url = props.url;
+  const color = props.color;
 
   const get = () => {
-    // console.log(type, valid, rolling);
-    img = document.getElementById('base-img');
-    if (img?.clientWidth) {
-      console.log(img);
-      console.log(+img?.clientWidth, +img?.clientHeight);
-      setTimeout(() => {
-        if (img) {
-          console.log(+img?.clientWidth, +img?.clientHeight);
-        }
-      }, 1000);
-
-      setImgWidth(+img?.clientWidth);
-      setImgHeight(+img?.clientHeight);
-    }
-    setLoading(false);
+    let img = document.getElementById('base-img');
+    setTimeout(() => {
+      if (img) {
+        console.log(+img?.clientWidth, +img?.clientHeight);
+        setImgHeight(+img?.clientHeight);
+      }
+    }, 50);
   };
-
-  useEffect(() => {
-    if (img?.clientWidth) {
-      console.log('잘 되나?');
-      console.log(img?.clientWidth);
-    }
-  }, [img?.clientWidth]);
 
   useEffect(() => {
     get();
   }, []);
 
-  // window.addEventListener('resize', function () {
-  //   if (window.innerWidth >= 500) {
-  //     setLeft((window.innerWidth - 500) / 2 + 'px');
-  //   } else {
-  //     setLeft('0px');
-  //   }
-  // });
+  useEffect(() => {
+    console.log(imgHeight);
 
-  // useEffect(() => {
-  //   if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
-  //     // 캡쳐 및 DB 저장
-  //     const el = document.getElementById('to-save');
-  //     if (el) {
-  //       html2canvas(el).then((canvas: any) => {
-  //         onSaveAs(
-  //           canvas.toDataURL('image/png'),
-  //           `final-image-` + paramCopy.url + `.png`,
-  //         );
-  //       });
-  //     }
-  //   }
-  // }, [rolling]);
+    if (imgHeight != 0) {
+      if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
+        // 캡쳐 및 DB 저장
+        const el = document.getElementById('capture-box');
+        if (el) {
+          html2canvas(el).then((canvas: any) => {
+            onSaveAs(
+              canvas.toDataURL('image/png'),
+              `final-image-` + url + `.png`,
+            );
+          });
+        }
+      }
+    }
+  }, [imgHeight]);
 
-  // const onSaveAs = (uri: string, filename: string): void => {
-  //   let link: any = document.createElement('a');
-  //   document.body.appendChild(link);
-  //   link.href = uri;
-  //   // link.download = filename;
-  //   // link.click();
-  //   document.body.removeChild(link);
+  const onSaveAs = (uri: string, filename: string): void => {
+    let link: any = document.createElement('a');
+    document.body.appendChild(link);
+    link.href = uri;
+    // link.download = filename;
+    // link.click();
+    document.body.removeChild(link);
 
-  //   messageAPI.updateRollingImg(
-  //     userState.jwt,
-  //     userState.refresh,
-  //     paramCopy.url,
-  //     { imgUrl: uri },
-  //   );
-  // };
+    messageAPI.updateRollingImg(userState.jwt, userState.refresh, url, {
+      imgUrl: uri,
+    });
+  };
 
   return (
     <>
-      {loading ? null : (
-        <div
-          css={DetailCss({
-            width: imgWidth,
-            height: imgHeight,
-          })}
-        >
-          <div>
-            <div>
-              <div className={`imgbox_${type}`}>
-                <img id="base-img" src={'/src/assets/' + rolling.imgBack}></img>
-              </div>
-              <div className="flowerlist">
-                {rolling.messages.map((message: IMessage, index: number) => {
-                  return (
-                    <div key={index} className={`flowerbox_${type}`}>
-                      <Message
-                        imgUrl={message.imgUrl}
-                        messageId={message.messageId}
-                        writer={message.writer}
-                        valid={valid}
-                        writerDisplay={false}
-                        type={type}
-                      ></Message>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className={`imgbox_front_${type}`}>
-                <img src={'/src/assets/' + rolling.imgFront}></img>
-              </div>
-            </div>
+      <div
+        css={DetailCss({
+          height: imgHeight,
+          color: color,
+        })}
+      >
+        <div id="capture-box" className={`DetailBox_${type}`}>
+          <div className={`imgbox_${type}`}>
+            <img id="base-img" src={'/src/assets/' + rolling.imgBack} />
+          </div>
+          <div className="flowerlist">
+            {rolling.messages?.map((message: IMessage, index: number) => {
+              return (
+                <div key={index} className={`flowerbox_${type}`}>
+                  <Message
+                    imgUrl={message.imgUrl}
+                    messageId={message.messageId}
+                    writer={message.writer}
+                    valid={true}
+                    writerDisplay={false}
+                    type={type}
+                  ></Message>
+                </div>
+              );
+            })}
+          </div>
+          <div className={`imgbox_front_${type}`}>
+            <img src={'/src/assets/' + rolling.imgFront}></img>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 }
 
 const DetailCss = (props: any) => css`
-  background-color: white;
-  /* width: 100%;
-  height: 100%; */
-  width: ${props.width === 0 ? '100%' : props.width + 'px'};
-  /* width: ${props.imgWidth}px; */
-  height: ${props.height == 0 ? '100%' : props.height + 'px'};
-  position: relative;
-  transform: translate(0%, -15%);
-  .valid_1 {
-    justify-content: center;
+  /* height: 100%; */
+  .DetailBox_1 {
+    margin-top: 200px;
+    background-color: ${props.color ? '#ffffff' : '#f2f0ef'};
+    height: ${props.height == 0 ? '100%' : props.height + 110 + 'px'};
+    position: relative;
+    transform: translate(0%, -15%);
   }
-  .valid_2 {
-    margin-top: 20vh;
-    justify-content: center;
-    @media screen and (min-width: 1000px) {
-      margin-top: 25vh;
-    }
-  }
-  .titlezone_1 {
-    justify-content: center;
-    padding-top: 150px;
-    margin-bottom: -10vh;
-    font-size: 7.5vw;
-    display: flex;
+  .DetailBox_2 {
+    margin-top: 200px;
+    background-color: ${props.color ? '#ffffff' : '#f2f0ef'};
+    height: ${props.height == 0 ? '100%' : props.height + 120 + 'px'};
+    position: relative;
+    transform: translate(0%, -15%);
     @media screen and (min-width: 500px) {
-      padding-top: 180px;
-      font-size: 25pt;
-      margin-bottom: -50px;
-    }
-    @media screen and (max-width: 300px) {
-      padding-top: 150px;
-      margin-bottom: -50px;
-    }
-    @media screen and (min-height: 700px) {
-      padding-top: 150px;
-      margin-bottom: -50px;
-    }
-    @media screen and (min-width: 1000px) {
-      padding-top: 150px;
-      margin-bottom: -115px;
+      height: 980px;
+      margin-top: 200px;
     }
   }
-  .titlezone_2 {
-    justify-content: center;
-    padding-top: 150px;
-    margin-bottom: 0vh;
-    font-size: 7.5vw;
-    display: flex;
+  .DetailBox_3 {
+    margin-top: 200px;
+    background-color: ${props.color ? '#ffffff' : '#f2f0ef'};
+    height: ${props.height == 0 ? '100%' : props.height + 50 + 'px'};
+    position: relative;
+    transform: translate(0%, -15%);
     @media screen and (min-width: 500px) {
-      padding-top: 180px;
-      margin-bottom: -20vh;
-      font-size: 25pt;
-    }
-    @media screen and (max-width: 300px) {
-      padding-top: 150px;
-      margin-bottom: -50px;
-    }
-    @media screen and (min-height: 700px) {
-      padding-top: 180px;
-      margin-bottom: -50px;
-    }
-    @media screen and (min-width: 1000px) {
-      padding-top: 180px;
-      margin-bottom: -150px;
-    }
-  }
-  .titlezone_3 {
-    justify-content: center;
-    padding-top: 150px;
-    margin-bottom: 0vh;
-    font-size: 7.5vw;
-    display: flex;
-    @media screen and (min-width: 500px) {
-      padding-top: 180px;
-      margin-bottom: -20vh;
-      font-size: 25pt;
-    }
-    @media screen and (max-width: 300px) {
-      padding-top: 150px;
-      margin-bottom: -50px;
-    }
-    @media screen and (min-height: 700px) {
-      padding-top: 180px;
-      margin-bottom: -50px;
-    }
-    @media screen and (min-width: 1000px) {
-      padding-top: 180px;
-      margin-bottom: -150px;
+      height: 1030px;
+      margin-top: 200px;
     }
   }
 
@@ -309,6 +236,7 @@ const DetailCss = (props: any) => css`
         }
       }
     }
+
     .flowerbox_2 {
       position: relative;
       &:first-of-type {
@@ -516,31 +444,6 @@ const DetailCss = (props: any) => css`
       top: 60px;
     }
   }
-  .imgbox_2 img {
-    position: relative;
-    z-index: 0;
-    width: 75%;
-    left: 0vw;
-    right: 0vw;
-    top: 10vw;
-    bottom: 10vw;
-    pointer-events: none;
-    @media screen and (min-width: 500px) {
-      left: 0px;
-      top: 150px;
-    }
-  }
-  .imgbox_3 img {
-    position: relative;
-    z-index: 0;
-    width: 90%;
-    left: 0vw;
-    top: 10vw;
-    @media screen and (min-width: 500px) {
-      left: 0px;
-      top: 150px;
-    }
-  }
 
   .imgbox_front_1 img {
     z-index: 12;
@@ -556,6 +459,22 @@ const DetailCss = (props: any) => css`
       top: 60px;
     }
   }
+
+  .imgbox_2 img {
+    position: relative;
+    z-index: 0;
+    width: 75%;
+    left: 0vw;
+    right: 0vw;
+    top: 10vw;
+    bottom: 10vw;
+    pointer-events: none;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
+    }
+  }
+
   .imgbox_front_2 img {
     z-index: 12;
     position: relative;
@@ -570,6 +489,20 @@ const DetailCss = (props: any) => css`
       top: 150px;
     }
   }
+
+  .imgbox_3 img {
+    position: relative;
+    z-index: 0;
+    width: 90%;
+    left: 0vw;
+    top: 10vw;
+
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
+    }
+  }
+
   .imgbox_front_3 img {
     z-index: 12;
     position: relative;
@@ -583,23 +516,5 @@ const DetailCss = (props: any) => css`
       left: 0px;
       top: 150px;
     }
-  }
-`;
-
-const Loading = css`
-  width: 100vw;
-`;
-
-const SaveParent = (color: Boolean) => css`
-  position: relative;
-
-  .save-child {
-    background-color: ${color ? '#ffffff' : '#f2f0ef'};
-    height: 100vh;
-    position: absolute;
-    /* top: 0; */
-    /* margin-top: -10vh; */
-    /* padding-top: 300px; */
-    z-index: -1;
   }
 `;

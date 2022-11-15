@@ -9,6 +9,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CaptureRolling from '@pages/CaptureRolling';
 
 import {
   Dialog,
@@ -29,12 +30,7 @@ import MySwal from '@components/SweetAlert';
 import { useCallback } from 'react';
 import Login from '@assets/login_btn.png';
 import html2canvas from 'html2canvas';
-// import { useReactToPrint } from 'react-to-print';
 import updateTokens from '@utils/updateTokens';
-
-import Print from '@pages/Print';
-import Main from '@pages/MainPage';
-import View from '@pages/View';
 
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
@@ -87,8 +83,7 @@ export default function RollingPaper(props: any) {
   const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
   const [color, setColor] = useState<Boolean>(false);
   const [left, setLeft] = useState<string>('0px');
-  const [imgWidth, setImgWidth] = useState<number>(0);
-  const [imgHeight, setImgHeight] = useState<number>(0);
+  const [capture, setCapture] = useState<Boolean>(false);
 
   window.addEventListener('resize', function () {
     if (window.innerWidth >= 500) {
@@ -378,43 +373,16 @@ export default function RollingPaper(props: any) {
     }
   };
 
-  const print = () => {
-    alert('프린트 만들고 연결하면 됨!');
+  const saveRolling = () => {
+    setColor(true);
   };
 
   useEffect(() => {
-    setColor(false);
-
-    var img = document.getElementById('base-img');
-    // const img = new Image();
-    // img.src = '/src/assets/' + rolling.imgBack;
-    console.log('들어가나');
-    if (img) {
-      setImgWidth(+img?.clientWidth);
-      setImgHeight(+img?.clientHeight);
-      console.log(+img?.clientWidth, +img?.clientWidth);
-      let el = document.getElementById('to-save');
-      if (el) {
-        console.log('변경');
-        el.setAttribute(
-          'style',
-          'background-color:red; border: 1px solid blue;',
-        );
-        // el.style.cssWidth = img?.clientWidth + 'px';
-        // el.style.csscssHeight = img?.clientHeight + 'px';
-        // el.style.backgroundColor = '#000000';
-      }
-    }
-
     const paginationCheck = localStorage.getItem('paginationId');
     if (paginationCheck) setPaginationId(+paginationCheck);
     localStorage.removeItem('url');
     localStorage.removeItem('paginationId');
   }, []);
-
-  const saveRolling = () => {
-    setColor(true);
-  };
 
   useEffect(() => {
     if (color) {
@@ -487,34 +455,12 @@ export default function RollingPaper(props: any) {
 
   useEffect(() => {
     if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
-      // 캡쳐 및 DB 저장
-      const el = document.getElementById('to-save');
-      if (el) {
-        html2canvas(el).then((canvas: any) => {
-          onSaveAs(
-            canvas.toDataURL('image/png'),
-            `final-image-` + paramCopy.url + `.png`,
-          );
-        });
-      }
+      setCapture(true);
+    } else {
+      setCapture(false);
     }
-  }, [rolling]);
+  }, [rolling.imgUrl]);
 
-  const onSaveAs = (uri: string, filename: string): void => {
-    let link: any = document.createElement('a');
-    document.body.appendChild(link);
-    link.href = uri;
-    // link.download = filename;
-    // link.click();
-    document.body.removeChild(link);
-
-    messageAPI.updateRollingImg(
-      userState.jwt,
-      userState.refresh,
-      paramCopy.url,
-      { imgUrl: uri },
-    );
-  };
   const captureGo = () => {
     navigate('/rolling/capture', {
       state: {
@@ -523,6 +469,8 @@ export default function RollingPaper(props: any) {
         type,
         valid,
         rolling,
+        nowDate,
+        rollingDate,
       },
     });
   };
@@ -549,35 +497,36 @@ export default function RollingPaper(props: any) {
                 )}
               </div>
 
-              <div css={SaveParent(color, imgWidth, imgHeight)}>
-                <div>
-                  <div className={`imgbox_${type}`}>
-                    <img
-                      id="base-img"
-                      src={'/src/assets/' + rolling.imgBack}
-                    ></img>
-                  </div>
-                  <div className="flowerlist">
-                    {rolling.messages.map((message, index) => {
-                      return (
-                        <div key={index} className={`flowerbox_${type}`}>
-                          <Message
-                            imgUrl={message.imgUrl}
-                            messageId={message.messageId}
-                            writer={message.writer}
-                            valid={valid}
-                            writerDisplay={true}
-                            type={type}
-                          ></Message>
-                        </div>
-                      );
-                    })}
-                  </div>
+              {/* <div css={SaveParent(color, imgWidth, imgHeight)}> */}
+              <div>
+                <div className={`imgbox_${type}`}>
+                  <img
+                    id="base-img"
+                    src={'/src/assets/' + rolling.imgBack}
+                  ></img>
                 </div>
-                <div className={`imgbox_front_${type}`}>
-                  <img src={'/src/assets/' + rolling.imgFront}></img>
+                <div className="flowerlist">
+                  {rolling.messages.map((message, index) => {
+                    return (
+                      <div key={index} className={`flowerbox_${type}`}>
+                        <Message
+                          imgUrl={message.imgUrl}
+                          messageId={message.messageId}
+                          writer={message.writer}
+                          valid={valid}
+                          writerDisplay={true}
+                          type={type}
+                        ></Message>
+                      </div>
+                    );
+                  })}
                 </div>
-                <div id="to-save" className="save-child">
+              </div>
+              <div className={`imgbox_front_${type}`}>
+                <img src={'/src/assets/' + rolling.imgFront}></img>
+              </div>
+
+              {/* <div id="to-save" className="save-child">
                   <div className={`imgbox_${type}`}>
                     <img src={'/src/assets/' + rolling.imgBack}></img>
                   </div>
@@ -600,8 +549,8 @@ export default function RollingPaper(props: any) {
                   <div className={`imgbox_front_${type}`}>
                     <img src={'/src/assets/' + rolling.imgFront}></img>
                   </div>
-                </div>
-              </div>
+                </div> */}
+              {/* </div> */}
               {!valid ? (
                 <div className={`valid_${type}`}>
                   {rolling.date} 이후로 개봉 가능합니다.
@@ -758,6 +707,18 @@ export default function RollingPaper(props: any) {
               </div>
             )} */}
           </div>
+          {capture ? (
+            <div css={CapturePage}>
+              <CaptureRolling
+                type={type}
+                rolling={rolling}
+                nowDate={nowDate}
+                rollingDate={rollingDate}
+                url={paramCopy.url}
+                color={false}
+              />
+            </div>
+          ) : null}
         </>
       ) : (
         <div css={Loading}>로딩중</div>
@@ -1304,20 +1265,8 @@ const DialogCustom: any = styled(Dialog)((props: any) => ({
   },
 }));
 
-const SaveParent = (color: Boolean, width: number, height: number) => css`
-  position: relative;
-  /* height: ${height}px; */
-  /* width: ${width}px; */
-
-  .save-child {
-    background-color: ${color ? '#ffffff' : '#f2f0ef'};
-    height: 100vh;
-    /* height: ${height + 100}px; */
-    /* width: ${width}px; */
-    position: absolute;
-    /* top: 0; */
-    /* margin-top: -10vh; */
-    /* padding-top: 300px; */
-    z-index: -1;
-  }
+const CapturePage = css`
+  position: absolute;
+  top: 0;
+  z-index: -2;
 `;
