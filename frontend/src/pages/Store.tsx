@@ -265,6 +265,35 @@ const Store = () => {
           </div>
         </ClickAwayListener>
       </div>
+      <div css={tabs}>
+        {isFlower ? (
+          <div className="m_tabs">
+            <button css={tabActive(false)} className="btn" onClick={setRolling}>
+              꽃다발
+            </button>
+            <button
+              css={tabActive(true)}
+              className="active_btn"
+              onClick={setFlower}
+            >
+              꽃
+            </button>
+          </div>
+        ) : (
+          <div className="m_tabs">
+            <button
+              css={tabActive(true)}
+              className="active_btn"
+              onClick={setRolling}
+            >
+              꽃다발
+            </button>
+            <button css={tabActive(false)} className="btn" onClick={setFlower}>
+              꽃
+            </button>
+          </div>
+        )}
+      </div>
       <div css={selectBox}>
         <Grid container columns={12} css={GridContainer}>
           {imgList.map((image: string, index: number) => (
@@ -290,45 +319,8 @@ const Store = () => {
             </Grid>
           ))}
         </Grid>
-        <div css={tabs}>
-          {isFlower ? (
-            <div className="m_tabs">
-              <button
-                css={tabActive(false)}
-                className="btn"
-                onClick={setRolling}
-              >
-                꽃다발
-              </button>
-              <button
-                css={tabActive(true)}
-                className="active_btn"
-                onClick={setFlower}
-              >
-                꽃
-              </button>
-            </div>
-          ) : (
-            <div className="m_tabs">
-              <button
-                css={tabActive(true)}
-                className="active_btn"
-                onClick={setRolling}
-              >
-                꽃다발
-              </button>
-              <button
-                css={tabActive(false)}
-                className="btn"
-                onClick={setFlower}
-              >
-                꽃
-              </button>
-            </div>
-          )}
-        </div>
       </div>
-      <div>
+      <div className="button-div">
         {selectedImg && !owned ? (
           <button css={BuyButton(owned)} type="button" onClick={handleBuying}>
             <span css={BuyText}>구매하기</span>
@@ -366,7 +358,20 @@ const modal = css`
 
 const StoreDiv = css`
   width: 100vw;
-  height: 100vw;
+
+  .button-div {
+    height: 0px;
+  }
+
+  &::-webkit-scrollbar {
+    width: 3px;
+    background-color: #ffffff;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 3px;
+    background-color: rgba(0, 0, 0, 0.25);
+  }
 `;
 
 const points = css`
@@ -429,9 +434,8 @@ const empty = css`
 
 const selectBox = css`
   position: relative;
-  top: 10vw;
+  margin-top: 60px;
 `;
-
 const GridContainer = css`
   width: 90%;
   aspect-ratio: 1/1;
@@ -440,10 +444,23 @@ const GridContainer = css`
   margin: 0 auto;
   background-color: white;
   border-radius: 0 0 15px 15px;
+
+  &::-webkit-scrollbar {
+    width: 3px;
+    background-color: #ffffff;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 3px;
+    background-color: rgba(0, 0, 0, 0.25);
+  }
 `;
 
 const GridStyle = css`
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 30vw;
 
   .item_image {
@@ -452,16 +469,18 @@ const GridStyle = css`
     margin-top: 3vw;
     margin-left: 3vw;
     z-index: 1;
-    left: 2vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
   }
   .locked_image {
-    position: absolute;
     z-index: 2;
     width: 25vw;
     opacity: 100%;
-    display: grid;
-    left: 2.5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
   }
   @media screen and (min-width: 500px) {
@@ -485,7 +504,7 @@ const GridStyle = css`
 
 const tabs = css`
   /* position: absolute; */
-  margin: 0 auto;
+  height: 0px;
   .btn {
     cursor: pointer;
   }
@@ -496,16 +515,14 @@ const tabs = css`
 
 const tabActive = (isActive: boolean) => css`
   position: relative;
-  top: -100vw;
   width: 45vw;
-  height: 10vw;
+  height: 60px;
   border-radius: 15px 15px 0 0;
   border: none;
   background-color: ${isActive
     ? 'rgba(255,255,255,1)'
     : 'rgba(255,255,255,0.5)'};
   @media screen and (min-width: 500px) {
-    top: -500px;
     width: 225px;
     height: 60px;
   }
@@ -513,7 +530,6 @@ const tabActive = (isActive: boolean) => css`
 
 const BuyButton = (isOwned: boolean) => css`
   position: relative;
-  margin: auto;
   margin-bottom: 20px;
   top: 10px;
   left: 0;
@@ -529,7 +545,7 @@ const BuyButton = (isOwned: boolean) => css`
   width: 90%;
   height: 50px;
   @media screen and (min-width: 500px) {
-    top: 120px;
+    margin-top: 30px;
     width: 450px;
     height: 60px;
   }

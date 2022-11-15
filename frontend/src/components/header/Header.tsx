@@ -76,6 +76,10 @@ const HeaderNav = css`
   background-color: #f2f0ef;
   z-index: 999;
 
+  nav {
+    height: 60px;
+  }
+
   .dropdown {
     position: relative;
   }

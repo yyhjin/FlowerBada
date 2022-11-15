@@ -110,7 +110,6 @@ public class MessageController {
     @ApiOperation(value="롤링페이퍼 이미지 갱신", notes="롤링페이퍼의 현재 s3 버킷에 저장된 이미지를 갱신한다.")
     public ResponseEntity updateRollingImg(@PathVariable("rollingUrl") String url, @RequestBody RollingImgDto dto) {
         String img = dto.getImgUrl();
-//        System.out.println("img: "+img);
         try {
             String fileUrl = messageService.uploadRollingImage(url, img, "update");
             messageService.updateRollingImage(url, fileUrl);

@@ -109,14 +109,18 @@ export default function MyDeliveryList() {
           accessToken = accessToken.split(' ')[1];
           refreshToken = refreshToken.split(' ')[1];
           updateTokens(accessToken, refreshToken, setUserState);
-          MySwal.fire({
-            title: '액세스 토큰이 만료되었습니다!',
-            icon: 'warning',
-            confirmButtonColor: '#16453e',
-            confirmButtonText: '갱신',
-          }).then(() => {
-            navigate('/');
-          });
+          setSortNumber(sortNumber);
+          const params = { sort: sortNumber, paginationId: pages };
+          const res: any = await mypageAPI.getDelivery(
+            accessToken,
+            refreshToken,
+            params,
+          );
+          if (res.data.response.length == 0) {
+            setIsFetching(true);
+          }
+          setMyList(myList.concat(res.data.response));
+          setPages(pages + 1);
         }
       }
     }
@@ -216,11 +220,17 @@ const outerBox = css`
   }
   .mylist {
     position: relative;
-    height: calc(100vh - 132px);
-    overflow-y: scroll;
+    height: calc(100vh - 150px);
+    overflow-y: auto;
   }
   .mylist::-webkit-scrollbar {
-    display: none;
+    width: 3px;
+    background-color: #b1bdbb;
+  }
+
+  .mylist::-webkit-scrollbar-thumb {
+    width: 3px;
+    background-color: #16453e;
   }
   .deliverybox {
     position: relative;
