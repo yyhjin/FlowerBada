@@ -8,7 +8,8 @@ export default function RollingLink() {
 
   const url = useLocation().state.url;
   const title = useLocation().state.title;
-  const root = 'https://k7a405.p.ssafy.io/rolling/';
+  // const root = 'https://k7a405.p.ssafy.io/rolling/';
+  const root = 'http://localhost:5173/rolling/';
   const navigate = useNavigate();
   const handleRollingPaper = (): void => {
     navigate(`/rolling/${url}`);
