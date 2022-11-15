@@ -9,6 +9,8 @@ import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { Button } from '@mui/material';
 import Congrats from '@assets/congrats2.gif';
+import MySwal from '@components/SweetAlert';
+import updateTokens from '@src/utils/updateTokens';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
@@ -40,12 +42,23 @@ const PaymentSuccess = () => {
   // 결제 완료 정보 가져오기
   useEffect(() => {
     const getPaymentInfo = async () => {
-      const res = await paymentAPI.successPayment(
-        userState.jwt,
-        userState.refresh,
-        reqData,
-      );
-      setPaymentInfo(res.data.response);
+      try {
+        const res = await paymentAPI.successPayment(
+          userState.jwt,
+          userState.refresh,
+          reqData,
+        );
+        setPaymentInfo(res.data.response);
+      } catch (err: any) {
+        MySwal.fire({
+          title: '결제 정보 가져오기 실패',
+          icon: 'warning',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        }).then(() => {
+          navigate('/');
+        });
+      }
     };
     getPaymentInfo();
   }, []);
