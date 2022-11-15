@@ -410,6 +410,7 @@ const GridList = css`
   height: 90%;
   margin: auto;
   border-radius: 15px;
+  overflow-x: hidden;
   overflow-y: scroll;
   margin-top: 2vh;
 
