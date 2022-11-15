@@ -222,6 +222,7 @@ const outerBox = css`
     position: relative;
     height: calc(100vh - 150px);
     overflow-y: auto;
+    overflow-x: hidden;
   }
   .mylist::-webkit-scrollbar {
     width: 3px;

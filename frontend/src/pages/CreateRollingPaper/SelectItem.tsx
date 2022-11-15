@@ -471,6 +471,7 @@ const GridStyle = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
   }
   .locked_image {
     z-index: 2;
@@ -479,6 +480,7 @@ const GridStyle = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
   }
   @media screen and (min-width: 500px) {
     height: 155px;
@@ -487,6 +489,7 @@ const GridStyle = css`
       margin-left: 0px;
       z-index: 1;
       width: 80%;
+      cursor: pointer;
     }
     .locked_image {
       z-index: 2;
@@ -494,6 +497,7 @@ const GridStyle = css`
       opacity: 100%;
       display: grid;
       left: 25px;
+      cursor: pointer;
     }
   }
 `;
