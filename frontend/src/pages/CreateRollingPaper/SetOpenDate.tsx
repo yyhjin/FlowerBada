@@ -15,8 +15,14 @@ import updateTokens from '@src/utils/updateTokens';
 import MySwal from '@components/SweetAlert';
 
 export default function SetOpenDate() {
-  const today = new Date();
-  const tomorrow = new Date(today);
+  const curr = new Date();
+  const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+  const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+
+  const today = new Date(utc + KR_TIME_DIFF);
+  const tomorrow = new Date(utc + KR_TIME_DIFF);
+  console.log(today);
+
   tomorrow.setDate(today.getDate() + 1);
   const navigate = useNavigate();
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
@@ -126,11 +132,11 @@ export default function SetOpenDate() {
   };
 
   const datePickerFocus = (e: any) => {
-    console.log((e.target.readOnly = true));
+    // console.log((e.target.readOnly = true));
   };
 
   const datePickerFocusOut = (e: any) => {
-    console.log((e.target.readOnly = false));
+    // console.log((e.target.readOnly = false));
   };
 
   return (
