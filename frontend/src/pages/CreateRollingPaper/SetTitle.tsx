@@ -76,7 +76,7 @@ const TitleInput = css`
   font-size: 100%;
   margin-top: 10vh;
   width: 50vw;
-  border-radius: 2vw;
+  border-radius: 8px;
   border: 0;
   height: 5vh;
   text-align: center;
@@ -97,17 +97,27 @@ const SelectImage = css`
 `;
 
 const NextButton = css`
-  margin-top: 20vh;
+  position: relative;
+  margin: auto;
+  margin-bottom: 20px;
+  top: 15vw;
+  left: 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  color: white;
+  background-color: #16453e;
   height: 7vh;
   width: 94vw;
-  border-radius: 3vw;
-  color: white;
-  font-size: 100%;
-  background-color: #16453e;
-  cursor: pointer;
+  /* margin-bottom: 200px; */
   @media screen and (min-width: 500px) {
-    padding-left: 20px;
-    padding-right: 20px;
-    width: 80%;
+    margin-top: 5vw;
+    top: 140px;
+    width: 450px;
+    height: 60px;
   }
 `;

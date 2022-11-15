@@ -49,7 +49,7 @@ export default function SetOpenDate() {
     if (String(day).length === 1) {
       day = '0' + day;
     }
-    let localDateTime = year + '-' + month + '-' + day + 'T10:00';
+    let localDateTime = year + '-' + month + '-' + day + 'T00:00';
     try {
       const res: any = await rollingAPI.makeRolling(
         userState.jwt,
@@ -137,7 +137,7 @@ export default function SetOpenDate() {
     <div css={Background}>
       <div css={Info}>
         <div css={Writing}>롤링페이퍼 개봉 날짜를</div>
-        <div css={Writing}> 선택해주세요</div>
+        <div css={Writing}>선택해주세요.</div>
       </div>
       <div css={Calendar}>
         <DatePicker
@@ -166,35 +166,49 @@ const Background = css`
 `;
 
 const Info = css`
-  padding-top: 10vh;
-  font-weight: bold;
-  font-size: 200%;
+  padding-top: 15vh;
+  font-size: 30px;
+  @media screen and (max-width: 300px) {
+    font-size: 20px;
+  }
 `;
 
 const Writing = css`
   margin-top: 1vh;
   padding: 1vw;
+  font-size: 1em;
 `;
 
 const Calendar = css`
+  position: relative;
   margin-top: 5vh;
   text-align: center;
   @media screen and (min-width: 500px) {
-    position: absolute;
-    left: 44vw;
+    margin: 0 auto;
   }
 `;
 
 const CreateButton = css`
-  margin-top: 53vh;
+  position: relative;
+  margin: auto;
+  margin-top: 40vh;
+  top: 15vw;
+  left: 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  color: white;
+  background-color: #16453e;
   height: 7vh;
   width: 94vw;
-  border-radius: 3vw;
-  color: white;
-  font-size: 100%;
-  background-color: #16453e;
-  cursor: pointer;
   @media screen and (min-width: 500px) {
-    width: 80%;
+    margin-top: 33vh;
+    top: 140px;
+    width: 450px;
+    height: 60px;
   }
 `;
