@@ -22,7 +22,7 @@ import {
 import rollingAPI from '@api/rollingAPI';
 import Star from '@assets/Star.png';
 import EmptyStar from '@assets/EmptyStar.png';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
 import MySwal from '@components/SweetAlert';
@@ -85,9 +85,10 @@ export default function RollingPaper(props: any) {
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
   const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
-  let ref = useRef<HTMLDivElement>(null);
   const [color, setColor] = useState<Boolean>(false);
   const [left, setLeft] = useState<string>('0px');
+  const [imgWidth, setImgWidth] = useState<number>(0);
+  const [imgHeight, setImgHeight] = useState<number>(0);
 
   window.addEventListener('resize', function () {
     if (window.innerWidth >= 500) {
@@ -97,7 +98,6 @@ export default function RollingPaper(props: any) {
     }
   });
 
-  let componentRef = useRef<HTMLDivElement>(null);
   const root = 'https://k7a405.p.ssafy.io/rolling/';
   const VITE_APP_KAKAO_KEY = import.meta.env.VITE_APP_KAKAO_KEY;
 
@@ -385,6 +385,27 @@ export default function RollingPaper(props: any) {
   useEffect(() => {
     setColor(false);
 
+    var img = document.getElementById('base-img');
+    // const img = new Image();
+    // img.src = '/src/assets/' + rolling.imgBack;
+    console.log('들어가나');
+    if (img) {
+      setImgWidth(+img?.clientWidth);
+      setImgHeight(+img?.clientHeight);
+      console.log(+img?.clientWidth, +img?.clientWidth);
+      let el = document.getElementById('to-save');
+      if (el) {
+        console.log('변경');
+        el.setAttribute(
+          'style',
+          'background-color:red; border: 1px solid blue;',
+        );
+        // el.style.cssWidth = img?.clientWidth + 'px';
+        // el.style.csscssHeight = img?.clientHeight + 'px';
+        // el.style.backgroundColor = '#000000';
+      }
+    }
+
     const paginationCheck = localStorage.getItem('paginationId');
     if (paginationCheck) setPaginationId(+paginationCheck);
     localStorage.removeItem('url');
@@ -403,6 +424,8 @@ export default function RollingPaper(props: any) {
         state: {
           rollingUrl: paramCopy.url,
           mainImg: rolling.imgUrl,
+          type,
+          rolling,
         },
       });
     }
@@ -515,10 +538,13 @@ export default function RollingPaper(props: any) {
                 )}
               </div>
 
-              <div css={SaveParent('color')}>
+              <div css={SaveParent(color, imgWidth, imgHeight)}>
                 <div>
                   <div className={`imgbox_${type}`}>
-                    <img src={'/src/assets/' + rolling.imgBack}></img>
+                    <img
+                      id="base-img"
+                      src={'/src/assets/' + rolling.imgBack}
+                    ></img>
                   </div>
                   <div className="flowerlist">
                     {rolling.messages.map((message, index) => {
@@ -1317,12 +1343,16 @@ const DialogCustom: any = styled(Dialog)((props: any) => ({
   },
 }));
 
-const SaveParent = (color: any) => css`
+const SaveParent = (color: Boolean, width: number, height: number) => css`
   position: relative;
+  /* height: ${height}px; */
+  /* width: ${width}px; */
 
   .save-child {
-    background-color: ${color ? '#f2f0ef' : '#ffffff'};
+    background-color: ${color ? '#ffffff' : '#f2f0ef'};
     height: 70vh;
+    /* height: ${height + 50}px; */
+    /* width: ${width}px; */
     position: absolute;
     top: 0;
     z-index: -1;
