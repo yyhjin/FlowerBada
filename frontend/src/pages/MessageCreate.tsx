@@ -391,12 +391,12 @@ const GridStyle = css`
     position: absolute;
     margin-top: 3vw;
     margin-left: 3vw;
-    /* z-index: 1; */
+    cursor: pointer;
     left: 2vw;
   }
   .locked-image {
     position: absolute;
-    /* z-index: 2; */
+    cursor: pointer;
     width: 25vw;
     opacity: 100%;
     display: grid;

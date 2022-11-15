@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Api(value = "메시지 API", tags = {"메시지"})
 @CrossOrigin("*")
@@ -51,14 +53,21 @@ public class MessageController {
     public ResponseEntity<ResponseDto> getMsg(@PathVariable Integer msgId) {
 
         Message message = messageService.getMessage(msgId);
-        MessageResDto.MessageDto messageResDto = new MessageResDto.MessageDto(message);
+        Date nowDate = Date.valueOf(LocalDateTime.now().toLocalDate());
+        Date openDate = Date.valueOf(message.getRollingPaper().getOpenDate().toLocalDate());
+        if(nowDate.compareTo(openDate)>=0){
+            MessageResDto.MessageDto messageResDto = new MessageResDto.MessageDto(message);
 
-        if(messageResDto.getMessageId() != 0) {
-            return new ResponseEntity<>(new ResponseDto(messageResDto), HttpStatus.OK);
+            if(messageResDto.getMessageId() != 0) {
+                return new ResponseEntity<>(new ResponseDto(messageResDto), HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(new ResponseDto("message get fail"), HttpStatus.FORBIDDEN);
+            }
+        }else{
+            return new ResponseEntity<>(new ResponseDto("아직 개봉날짜 전입니다."), HttpStatus.FORBIDDEN);
         }
-        else {
-            return new ResponseEntity<>(new ResponseDto("message get fail"), HttpStatus.FORBIDDEN);
-        }
+
     }
 
 

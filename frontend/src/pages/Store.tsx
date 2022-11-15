@@ -489,6 +489,12 @@ const GridStyle = css`
 const tabs = css`
   /* position: absolute; */
   height: 0px;
+  .btn {
+    cursor: pointer;
+  }
+  .active_btn {
+    cursor: pointer;
+  }
 `;
 
 const tabActive = (isActive: boolean) => css`

@@ -164,9 +164,12 @@ const Font = css`
 
 const ButtonBox = css`
   position: fixed;
-  bottom: 5vh;
+  bottom: 2vh;
   width: 100%;
-  /* height: 20%; */
+
+  button {
+    height: 5vh;
+  }
 `;
 
 export default PaymentSenderAddress;

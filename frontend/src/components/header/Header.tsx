@@ -138,6 +138,7 @@ const MainLogo = css`
 
 const BackArrow = css`
   text-decoration: none;
+  cursor: pointer;
   float: left;
 `;
 
@@ -147,6 +148,7 @@ const hamburger = css`
   width: 30px;
   top: 15px;
   right: 20px;
+  cursor: pointer;
 `;
 
 const coverUp = css`

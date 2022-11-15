@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { Button } from '@mui/material';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
+import MySwal from '@components/SweetAlert';
 
 const PaymentReceiverAddress = () => {
   const [paymentState, setPaymentState] =
@@ -30,6 +31,33 @@ const PaymentReceiverAddress = () => {
   };
 
   const onClickNext = () => {
+    if (receiverName.replaceAll(' ', '').length === 0) {
+      MySwal.fire({
+        title: '받는 분의 성함을 입력해주세요!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+      return;
+    }
+    if (receiverPhone.replaceAll(' ', '').length === 0) {
+      MySwal.fire({
+        title: '받는 분의 전화번호를 입력해주세요!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+      return;
+    }
+    if (receiverAddress.replaceAll(' ', '').length === 0) {
+      MySwal.fire({
+        title: '받는 분의 주소를 입력해주세요!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+      return;
+    }
     setPaymentState((prev: IPaymentRecoil) => {
       const data = { ...prev };
       data.receiverName = receiverName;
@@ -139,9 +167,12 @@ const Font = css`
 
 const ButtonBox = css`
   position: fixed;
-  bottom: 5vh;
+  bottom: 2vh;
   width: 100%;
-  /* height: 20%; */
+
+  button {
+    height: 5vh;
+  }
 `;
 
 export default PaymentReceiverAddress;
