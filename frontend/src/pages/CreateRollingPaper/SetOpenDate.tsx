@@ -177,6 +177,7 @@ const Info = css`
   @media screen and (max-width: 300px) {
     font-size: 20px;
   }
+  margin-bottom: 2rem;
 `;
 
 const Writing = css`
@@ -191,6 +192,19 @@ const Calendar = css`
   text-align: center;
   @media screen and (min-width: 500px) {
     margin: 0 auto;
+  }
+
+  .react-datepicker-wrapper {
+    margin-top: 2rem;
+    input {
+      height: 36px;
+      text-align: center;
+      border: solid 2px;
+      border-radius: 5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
   }
 `;
 
@@ -213,7 +227,7 @@ const CreateButton = css`
   width: 94vw;
   @media screen and (min-width: 500px) {
     margin-top: 33vh;
-    top: 140px;
+    top: 120px;
     width: 450px;
     height: 60px;
   }
