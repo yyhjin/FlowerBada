@@ -85,6 +85,7 @@ const close = css`
   margin-top: 5px;
   top: 15px;
   right: 20px;
+  cursor: pointer;
 `;
 
 const menus = css`

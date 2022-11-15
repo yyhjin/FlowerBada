@@ -104,6 +104,7 @@ const NextButton = css`
   color: white;
   font-size: 100%;
   background-color: #16453e;
+  cursor: pointer;
   @media screen and (min-width: 500px) {
     padding-left: 20px;
     padding-right: 20px;

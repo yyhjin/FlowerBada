@@ -193,6 +193,7 @@ const CreateButton = css`
   color: white;
   font-size: 100%;
   background-color: #16453e;
+  cursor: pointer;
   @media screen and (min-width: 500px) {
     width: 80%;
   }
