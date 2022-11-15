@@ -224,12 +224,13 @@ const TestCSS = css`
   }
   .only_web {
     display: none;
+    margin-bottom: 2rem;
   }
   @media screen and (min-width: 500px) {
     .only_web {
       display: block;
       color: #16453e;
-      text-shadow: 2px 2px 2px gray;
+      text-shadow: 6px 6px 6px gray;
     }
   }
 `;

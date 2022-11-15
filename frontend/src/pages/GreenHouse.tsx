@@ -390,7 +390,6 @@ const GridList = css`
   border-radius: 15px;
   overflow-y: scroll;
   margin-top: 2vh;
-  border: solid 1px;
 
   /* &::-webkit-scrollbar {
     width: 6.5px;
@@ -416,6 +415,14 @@ const GridList = css`
 
 const GridItem = css`
   position: relative;
+  cursor: pointer;
+
+  &:hover,
+  &:active {
+    transform: scale(1.05, 1.05);
+    transition: all ease 0.2s;
+    cursor: pointer;
+  }
 
   .rolling_img {
     width: 80%;
