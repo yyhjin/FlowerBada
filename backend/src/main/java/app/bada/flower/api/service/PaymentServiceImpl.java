@@ -34,6 +34,10 @@ public class PaymentServiceImpl implements PaymentService{
     private final RollingPaperRepository rollingPaperRepository;
     private final DeliveryStateRepository deliveryStateRepository;
 
+    static String DEV = "http://localhost:5173/";
+    static String SERVER = "https://k7a405.p.ssafy.io/";
+
+
     @Autowired
     S3FileUpload s3FileUpload;
 
@@ -68,9 +72,9 @@ public class PaymentServiceImpl implements PaymentService{
         params.add("quantity", "1");
         params.add("total_amount", paymentReadyReqDto.getPrice() + "");
         params.add("tax_free_amount", paymentReadyReqDto.getPrice() + "");
-        params.add("approval_url", "http://localhost:5173/payment/success?order_id=" + orderId);
-        params.add("fail_url", "http://localhost:5173/payment/fail");
-        params.add("cancel_url", "http://localhost:5173/payment/cancel");
+        params.add("approval_url", SERVER + "payment/success?order_id=" + orderId);
+        params.add("fail_url", SERVER + "payment/fail");
+        params.add("cancel_url", SERVER + "payment/cancel");
 
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, headers);
 

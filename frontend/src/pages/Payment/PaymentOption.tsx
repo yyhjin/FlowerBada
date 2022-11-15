@@ -13,6 +13,7 @@ import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import html2canvas from 'html2canvas';
 import messageAPI from '@api/messageAPI';
+import MySwal from '@components/SweetAlert';
 
 const PaymentOption = () => {
   const [optionType, setOptionType] = useState<string>('default');
@@ -48,20 +49,29 @@ const PaymentOption = () => {
 
   const onClickNext = () => {
     // todo: 캡쳐하고 백엔드에 보내서 url 받아오는 로직 생성 필요
-    setPaymentState((prev: IPaymentRecoil) => {
-      const data = { ...prev };
-      data.price = totalPrice;
-      data.title = rolling.title;
-      data.optionType = optionType;
-      data.userToken = userToken;
-      data.rollingId = rolling.rollingId;
-      data.paginationId = paginationId;
-      data.imgUrl = imgUrl;
-      if (optionType === 'both') data.flowerCnt = rolling.messages.length;
-      else data.flowerCnt = 0;
-      return data;
-    });
-    navigate(`/payment/address/receiver`);
+    if (optionType === 'default') {
+      MySwal.fire({
+        title: '옵션을 선택해주세요!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setPaymentState((prev: IPaymentRecoil) => {
+        const data = { ...prev };
+        data.price = totalPrice;
+        data.title = rolling.title;
+        data.optionType = optionType;
+        data.userToken = userToken;
+        data.rollingId = rolling.rollingId;
+        data.paginationId = paginationId;
+        data.imgUrl = imgUrl;
+        if (optionType === 'both') data.flowerCnt = rolling.messages.length;
+        else data.flowerCnt = 0;
+        return data;
+      });
+      navigate(`/payment/address/receiver`);
+    }
   };
 
   const goBack = () => {
@@ -163,7 +173,7 @@ const PaymentOption = () => {
           </div>
         </div>
         <div css={SelectBtn}>
-          <p>주문 옵션 :</p>
+          <div>주문 옵션 :</div>
           <ThemeProvider theme={selectTheme}>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
               <Select
@@ -185,19 +195,19 @@ const PaymentOption = () => {
               </Select>
             </FormControl>
           </ThemeProvider>
-          <p>제목 : {rolling.title}</p>
+          <div>제목 : {rolling.title}</div>
           {totalPrice ? (
             <>
-              <p>제품 가격 : {totalPrice}원</p>
-              <p>
+              <div>제품 가격 : {totalPrice}원</div>
+              <div>
                 배송비 :&nbsp;<span className="ship-fee"> {shipPrice}원 </span>
                 &nbsp;<span className="emphasize">무료</span>
-              </p>
-              <p>
+              </div>
+              <div>
                 전체 가격 :&nbsp;
                 <span className="ship-fee">{totalPrice + shipPrice}원</span>
                 &nbsp;<span className="emphasize">{totalPrice}원</span>
-              </p>
+              </div>
             </>
           ) : (
             <></>
@@ -267,14 +277,13 @@ const OptionCSS = css`
 
   .info-box {
     position: relative;
-    height: 65vh;
+    height: 80vh;
+    width: 100vw;
     overflow-y: scroll;
   }
 
   .img-preview {
-    margin: auto;
-    width: 40%;
-    height: 40%;
+    width: 100%;
   }
 
   .option-buttons {
@@ -282,49 +291,13 @@ const OptionCSS = css`
     flex-direction: column;
   }
   .imgbox_1,
-  .imgbox_2 {
-    width: 40%;
-    height: 40%;
-    /* width: 50vh; */
-    /* height: 70vh; */
-    position: absolute;
-
-    img {
-      width: 100vh;
-    }
-  }
+  .imgbox_2,
   .imgbox_3 {
+    width: 100%;
     position: absolute;
   }
-  .imgbox_1 img {
-    position: relative;
-    z-index: 0;
-    width: 75%;
-    left: 0vw;
-    top: 10vw;
-  }
-  .imgbox_2 img {
-    position: relative;
-    z-index: 0;
-    width: 75%;
-    left: 0vw;
-    top: 10vw;
-    @media screen and (max-height: 700px) {
-      width: 62.5%;
-    }
-  }
-  .imgbox_3 img {
-    position: relative;
-    z-index: 0;
-    width: 90%;
-    left: 0vw;
-    top: 10vw;
-    @media screen and (max-height: 700px) {
-      width: 75%;
-    }
-  }
+
   .flowerlist {
-    /* width: 100%; */
     position: static;
     transform: scale(0.45);
 
@@ -332,45 +305,108 @@ const OptionCSS = css`
       position: relative;
       &:first-of-type {
         z-index: 10;
-        left: -10vw;
+        left: -5vw;
         top: 46vw;
         transform: rotate(0deg);
+        @media screen and (min-width: 350px) {
+          left: -20px;
+          top: 150px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: 9vw;
-        top: 44vw;
+        left: 18vw;
+        top: 46vw;
         transform: rotate(5deg);
+        @media screen and (min-width: 350px) {
+          left: 60px;
+          top: 150px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
       &:nth-of-type(3) {
         z-index: 8;
-        left: -25vw;
+        left: -20vw;
         top: 40vw;
         transform: rotate(20deg);
+        @media screen and (min-width: 350px) {
+          left: -70px;
+          top: 130px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
       &:nth-of-type(4) {
         z-index: 7;
-        left: -40vw;
+        left: -45vw;
         top: 50vw;
         transform: rotate(-10deg);
+        @media screen and (min-width: 350px) {
+          left: -170px;
+          top: 160px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
       &:nth-of-type(5) {
         z-index: 6;
-        left: 5vw;
+        left: 10vw;
         top: 27vw;
         transform: rotate(25deg);
+        @media screen and (min-width: 350px) {
+          left: 50px;
+          top: 75px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
       &:nth-of-type(6) {
         z-index: 5;
-        left: -21vw;
+        left: -18vw;
         top: 36vw;
         transform: rotate(-20deg);
+        @media screen and (min-width: 350px) {
+          left: -65px;
+          top: 105px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
       &:nth-of-type(7) {
         z-index: 4;
-        left: -36vw;
-        top: 33vw;
+        left: -33vw;
+        top: 31vw;
         transform: rotate(0deg);
+        @media screen and (min-width: 350px) {
+          left: -135px;
+          top: 90px;
+        }
+        img {
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
+        }
       }
     }
     .flowerbox_2 {
@@ -378,81 +414,129 @@ const OptionCSS = css`
       &:first-of-type {
         z-index: 10;
         left: -15vw;
-        top: 60vw;
+        top: 78vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 52vw;
+        @media screen and (min-width: 350px) {
+          left: -50px;
+          top: 240px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: -2vw;
-        top: 54vw;
+        left: 3vw;
+        top: 75vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -1vw;
-          top: 48vw;
+        @media screen and (min-width: 350px) {
+          left: 12px;
+          top: 235px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(3) {
         z-index: 8;
-        left: -32vw;
-        top: 57vw;
+        left: -41vw;
+        top: 80vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -28vw;
-          top: 50vw;
+        @media screen and (min-width: 350px) {
+          left: -120px;
+          top: 240px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(4) {
         z-index: 7;
         left: -12vw;
-        top: 40vw;
+        top: 52vw;
         transform: rotate(10deg);
-        @media screen and (max-height: 700px) {
-          left: -10vw;
-          top: 35vw;
+        @media screen and (min-width: 350px) {
+          left: -40px;
+          top: 165px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(5) {
         z-index: 6;
-        left: 16vw;
-        top: 37vw;
+        left: 21vw;
+        top: 49vw;
         transform: rotate(25deg);
-        @media screen and (max-height: 700px) {
-          left: 13vw;
-          top: 32vw;
+        @media screen and (min-width: 350px) {
+          left: 60px;
+          top: 155px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(6) {
         z-index: 5;
-        left: -40vw;
-        top: 45vw;
+        left: -47vw;
+        top: 62vw;
         transform: rotate(-20deg);
-        @media screen and (max-height: 700px) {
-          left: -35vw;
-          top: 39vw;
+        @media screen and (min-width: 350px) {
+          left: -140px;
+          top: 190px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(7) {
         z-index: 4;
-        left: -24vw;
-        top: 32vw;
+        left: -30vw;
+        top: 38vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -20vw;
-          top: 28vw;
+        @media screen and (min-width: 350px) {
+          left: -90px;
+          top: 120px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
       &:nth-of-type(8) {
         z-index: 3;
-        left: -4vw;
-        top: 29vw;
+        left: 0vw;
+        top: 35vw;
         transform: rotate(5deg);
-        @media screen and (max-height: 700px) {
-          left: -2vw;
-          top: 25vw;
+        @media screen and (min-width: 350px) {
+          left: -10px;
+          top: 110px;
+        }
+        img {
+          width: 40vw;
+          @media screen and (min-width: 350px) {
+            width: 110px;
+          }
         }
       }
     }
@@ -461,143 +545,212 @@ const OptionCSS = css`
       &:first-of-type {
         z-index: 10;
         left: -15vw;
-        top: 80vw;
+        top: 110vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 68vw;
+        @media screen and (min-width: 350px) {
+          left: -45px;
+          top: 370px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: -2vw;
-        top: 80vw;
+        left: 3vw;
+        top: 110vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -1.5vw;
-          top: 68vw;
+        @media screen and (min-width: 350px) {
+          left: 10px;
+          top: 370px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(3) {
         z-index: 8;
-        left: -34vw;
-        top: 83vw;
+        left: -38vw;
+        top: 115vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -28vw;
-          top: 70vw;
+        @media screen and (min-width: 350px) {
+          left: -120px;
+          top: 390px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(4) {
         z-index: 7;
-        left: 15vw;
-        top: 75vw;
+        left: 28vw;
+        top: 105vw;
         transform: rotate(15deg);
-        @media screen and (max-height: 700px) {
-          left: 13.5vw;
-          top: 63vw;
+        @media screen and (min-width: 350px) {
+          left: 90px;
+          top: 360px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(5) {
         z-index: 6;
-        left: -45vw;
-        top: 80vw;
+        left: -55vw;
+        top: 112vw;
         transform: rotate(-5deg);
-        @media screen and (max-height: 700px) {
-          left: -36vw;
-          top: 68vw;
+        @media screen and (min-width: 350px) {
+          left: -175px;
+          top: 380px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(6) {
         z-index: 5;
         left: -15vw;
-        top: 65vw;
+        top: 91vw;
         transform: rotate(-5deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 55vw;
+        @media screen and (min-width: 350px) {
+          left: -50px;
+          top: 310px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(7) {
-        z-index: 5;
-        left: -32vw;
-        top: 68vw;
+        z-index: 4;
+        left: -37vw;
+        top: 96vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -27vw;
-          top: 57vw;
+        @media screen and (min-width: 350px) {
+          left: -125px;
+          top: 325px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(8) {
-        z-index: 5;
-        left: 2vw;
-        top: 65vw;
+        z-index: 3;
+        left: 10vw;
+        top: 90vw;
         transform: rotate(5deg);
-        @media screen and (max-height: 700px) {
-          left: 2vw;
-          top: 55vw;
+        @media screen and (min-width: 350px) {
+          left: 35px;
+          top: 310px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(9) {
         z-index: 2;
-        left: -45vw;
-        top: 70vw;
+        left: -60vw;
+        top: 100vw;
         transform: rotate(-20deg);
-        @media screen and (max-height: 700px) {
-          left: -40vw;
-          top: 60vw;
+        @media screen and (min-width: 350px) {
+          left: -200px;
+          top: 330px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
       &:nth-of-type(10) {
         z-index: 1;
-        left: 15vw;
-        top: 65vw;
+        left: 30vw;
+        top: 90vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: 13vw;
-          top: 55vw;
+        @media screen and (min-width: 350px) {
+          left: 110px;
+          top: 320px;
+        }
+        img {
+          width: 32vw;
+          @media screen and (min-width: 350px) {
+            width: 100px;
+          }
         }
       }
     }
   }
 
-  .imgbox_front_1 img {
-    z-index: 12;
+  .imgbox_1 img {
     position: relative;
-    width: 75%;
-    left: 0vw;
-    right: 0vw;
-    top: 10vw;
-    bottom: 10vw;
-    pointer-events: none;
+    z-index: 0;
+    width: 40%;
+    @media screen and (min-width: 350px) {
+      width: 140px;
+    }
   }
-  .imgbox_front_2 {
-    /* height: 65vh; */
+  .imgbox_2 img {
+    position: relative;
+    z-index: 0;
+    width: 50%;
+    @media screen and (min-width: 350px) {
+      width: 150px;
+    }
+  }
+  .imgbox_3 img {
+    position: relative;
+    z-index: 0;
+    width: 60%;
+    @media screen and (min-width: 350px) {
+      width: 200px;
+    }
+  }
+  .imgbox_front_1 img {
+    position: relative;
+    z-index: 12;
+    width: 40%;
+    @media screen and (min-width: 350px) {
+      width: 140px;
+    }
   }
   .imgbox_front_2 img {
-    z-index: 12;
     position: relative;
-    width: 75%;
-    left: 0vw;
-    right: 0vw;
-    top: 10vw;
-    bottom: 10vw;
-    pointer-events: none;
-    @media screen and (max-height: 700px) {
-      width: 62.5%;
+    z-index: 12;
+    width: 50%;
+    @media screen and (min-width: 350px) {
+      width: 150px;
     }
   }
   .imgbox_front_3 img {
-    z-index: 12;
     position: relative;
-    width: 90%;
-    left: 0vw;
-    right: 0vw;
-    top: 10vw;
-    bottom: 10vw;
-    pointer-events: none;
-    @media screen and (max-height: 700px) {
-      width: 75%;
+    z-index: 12;
+    width: 60%;
+    @media screen and (min-width: 350px) {
+      width: 200px;
     }
   }
 
@@ -614,17 +767,16 @@ const SelectBtn = css`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin: 2rem;
-
-  /* padding: 0.5rem; */
-  /* margin-top: 0; */
-  p {
+  margin-left: 2rem;
+  @media screen and (max-height: 700px) {
+    margin-top: -10vw;
+  }
+  div {
     display: flex;
     justify-content: left;
     align-items: end;
   }
   select {
-    margin-top: 0;
     border: 1px solid black;
     display: flex;
     justify-content: left;
@@ -645,8 +797,11 @@ const Font = css`
 
 const ButtonBox = css`
   position: fixed;
-  bottom: 5vh;
+  bottom: 2vh;
   width: 100%;
-  /* height: 20%; */
+
+  button {
+    height: 5vh;
+  }
 `;
 export default PaymentOption;

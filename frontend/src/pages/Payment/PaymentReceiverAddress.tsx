@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { Button } from '@mui/material';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
+import MySwal from '@components/SweetAlert';
 
 const PaymentReceiverAddress = () => {
   const [paymentState, setPaymentState] =
@@ -30,6 +31,33 @@ const PaymentReceiverAddress = () => {
   };
 
   const onClickNext = () => {
+    if (receiverName.replaceAll(' ', '').length === 0) {
+      MySwal.fire({
+        title: '받는 분의 성함을 입력해주세요!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+      return;
+    }
+    if (receiverPhone.replaceAll(' ', '').length === 0) {
+      MySwal.fire({
+        title: '받는 분의 전화번호를 입력해주세요!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+      return;
+    }
+    if (receiverAddress.replaceAll(' ', '').length === 0) {
+      MySwal.fire({
+        title: '받는 분의 주소를 입력해주세요!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+      return;
+    }
     setPaymentState((prev: IPaymentRecoil) => {
       const data = { ...prev };
       data.receiverName = receiverName;
@@ -53,58 +81,62 @@ const PaymentReceiverAddress = () => {
   }, []);
 
   return (
-    <div css={InputCSS}>
-      <div className="receiver-name">
-        <p>받는 사람</p>
-        <input onChange={onChangeReceiverName} value={receiverName} />
-      </div>
-      <div className="receiver-phone">
-        <p>연락처</p>
-        <input onChange={onChangeReceiverPhone} value={receiverPhone} />
-      </div>
-      <div className="receiver-address">
-        <p>배송 주소</p>
-        <input onChange={onChangeReceiverAddress} value={receiverAddress} />
-      </div>
-      <div css={ButtonBox}>
-        <div className="option-buttons">
-          <ThemeProvider theme={btnTheme}>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={onClickNext}
-              css={Font}
-            >
-              보내는 분 정보 입력하러 가기
-            </Button>
-          </ThemeProvider>
-          <ThemeProvider theme={btnTheme}>
-            <Button
-              variant="contained"
-              color="neutral"
-              size="small"
-              onClick={goBack}
-              css={Font}
-            >
-              롤링페이퍼로 돌아가기
-            </Button>
-          </ThemeProvider>
+    <>
+      <div css={InputCSS}>
+        <div className="receiver-name">
+          <p>받는 사람</p>
+          <input onChange={onChangeReceiverName} value={receiverName} />
+        </div>
+        <div className="receiver-phone">
+          <p>연락처</p>
+          <input onChange={onChangeReceiverPhone} value={receiverPhone} />
+        </div>
+        <div className="receiver-address">
+          <p>배송 주소</p>
+          <input onChange={onChangeReceiverAddress} value={receiverAddress} />
         </div>
       </div>
-    </div>
+      <div>
+        <div css={ButtonBox}>
+          <div className="option-buttons">
+            <ThemeProvider theme={btnTheme}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={onClickNext}
+                css={Font}
+              >
+                보내는 분 정보 입력하러 가기
+              </Button>
+            </ThemeProvider>
+            <ThemeProvider theme={btnTheme}>
+              <Button
+                variant="contained"
+                color="neutral"
+                size="small"
+                onClick={goBack}
+                css={Font}
+              >
+                롤링페이퍼로 돌아가기
+              </Button>
+            </ThemeProvider>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
 const InputCSS = css`
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  width: 100vw;
 
   .receiver-name,
   .receiver-phone,
   .receiver-address {
-    width: calc(100vw - 4rem);
+    width: 90%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -135,9 +167,12 @@ const Font = css`
 
 const ButtonBox = css`
   position: fixed;
-  bottom: 5vh;
+  bottom: 2vh;
   width: 100%;
-  /* height: 20%; */
+
+  button {
+    height: 5vh;
+  }
 `;
 
 export default PaymentReceiverAddress;
