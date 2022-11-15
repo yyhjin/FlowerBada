@@ -7,6 +7,8 @@ import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { Button } from '@mui/material';
 import KakaoPayBtn from '@assets/kakaoPay.png';
+import MySwal from '@components/SweetAlert';
+import updateTokens from '@src/utils/updateTokens';
 
 const PaymentRequest = () => {
   const navigate = useNavigate();
@@ -17,12 +19,58 @@ const PaymentRequest = () => {
   const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
 
   const onClickPayment = async () => {
-    const res = await paymentAPI.requestPayment(
-      userState.jwt,
-      userState.refresh,
-      paymentState,
-    );
-    window.location.href = res.data.response;
+    try {
+      const res = await paymentAPI.requestPayment(
+        userState.jwt,
+        userState.refresh,
+        paymentState,
+      );
+      window.location.href = res.data.response;
+    } catch (err: any) {
+      if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
+        MySwal.fire({
+          title: '로그인이 필요합니다!',
+          icon: 'warning',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        }).then(() => {
+          navigate('/');
+        });
+        setUserState((prev: IuserRecoil) => {
+          const variable = { ...prev };
+          variable.id = 0;
+          variable.userToken = '';
+          variable.nickname = '';
+          variable.points = 0;
+          variable.jwt = '';
+          variable.refresh = '';
+          return variable;
+        });
+      } else {
+        let accessToken: string = err.response.headers.get('x-auth-token');
+        let refreshToken: string = err.response.headers.get('refresh-token');
+        if (accessToken && refreshToken) {
+          accessToken = accessToken.split(' ')[1];
+          refreshToken = refreshToken.split(' ')[1];
+          updateTokens(accessToken, refreshToken, setUserState);
+          const res = await paymentAPI.requestPayment(
+            accessToken,
+            refreshToken,
+            paymentState,
+          );
+          window.location.href = res.data.response;
+        } else {
+          MySwal.fire({
+            title: '결제 요청 실패!',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          }).then(() => {
+            navigate('/');
+          });
+        }
+      }
+    }
   };
 
   const goBack = () => {
@@ -73,6 +121,7 @@ const PaymentRequestCSS = () => css`
 
   .kakao-btn {
     width: 120px;
+    cursor: pointer;
   }
 `;
 

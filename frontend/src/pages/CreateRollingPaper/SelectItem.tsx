@@ -372,6 +372,8 @@ const modal = css`
 const StoreDiv = css`
   width: 100vw;
   height: 100vw;
+  min-height: -webkit-fill-available;
+  max-height: -webkit-fill-available;
 `;
 
 const points = css`
@@ -441,10 +443,23 @@ const GridContainer = css`
   margin: 0 auto;
   background-color: white;
   border-radius: 15px;
+
+  &::-webkit-scrollbar {
+    width: 3px;
+    background-color: #ffffff;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 3px;
+    background-color: rgba(0, 0, 0, 0.25);
+  }
 `;
 
 const GridStyle = css`
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 30vw;
 
   .item_image {
@@ -453,15 +468,17 @@ const GridStyle = css`
     margin-top: 3vw;
     margin-left: 3vw;
     z-index: 1;
-    left: 2vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .locked_image {
-    position: absolute;
     z-index: 2;
     width: 25vw;
     opacity: 100%;
-    display: grid;
-    left: 2.5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   @media screen and (min-width: 500px) {
     height: 155px;
@@ -485,7 +502,7 @@ const BuyButton = (isSeleceted: boolean) => css`
   position: relative;
   margin: auto;
   margin-bottom: 20px;
-  top: 10px;
+  top: 15vw;
   left: 0;
   border-radius: 8px;
   border: 1px solid transparent;
@@ -497,8 +514,10 @@ const BuyButton = (isSeleceted: boolean) => css`
   background-color: ${!isSeleceted ? '#16453e' : '#9c9c9c'};
   width: 90%;
   height: 50px;
+  /* margin-bottom: 200px; */
   @media screen and (min-width: 500px) {
-    top: 120px;
+    margin-top: 5vw;
+    top: 140px;
     width: 450px;
     height: 60px;
   }

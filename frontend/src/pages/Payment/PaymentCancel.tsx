@@ -20,7 +20,7 @@ const PaymentCancel = () => {
   }, []);
 
   return (
-    <div>
+    <div css={PaymentCancelCSS}>
       <p>결제를 취소하셨습니다.</p>
       <div css={ButtonBox}>
         <div className="option-buttons">
@@ -54,6 +54,15 @@ const btnTheme = createTheme({
     },
   },
 });
+
+const PaymentCancelCSS = css`
+  width: 100vw;
+  height: calc(100% - 20vh);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 
 const Font = css`
   font-family: 'SeoulNamsanM';

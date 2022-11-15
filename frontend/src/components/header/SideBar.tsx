@@ -52,6 +52,9 @@ const SideBar = (props: any) => {
           <a css={menuBtn} href="/mypage">
             마이페이지
           </a>
+          <a css={menuBtn} href="/manual">
+            이용가이드
+          </a>
           <a css={menuBtn} href="#" onClick={logout}>
             <span className="logout_text">로그아웃</span>
           </a>
@@ -82,6 +85,7 @@ const close = css`
   margin-top: 5px;
   top: 15px;
   right: 20px;
+  cursor: pointer;
 `;
 
 const menus = css`

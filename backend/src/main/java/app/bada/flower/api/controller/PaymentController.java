@@ -4,7 +4,9 @@ import app.bada.flower.api.dto.ResponseDto;
 import app.bada.flower.api.dto.payment.PaymentReadyReqDto;
 import app.bada.flower.api.dto.payment.PaymentSuccessReqDto;
 import app.bada.flower.api.dto.payment.PaymentSuccessResDto;
+import app.bada.flower.api.entity.User;
 import app.bada.flower.api.service.PaymentService;
+import app.bada.flower.api.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +21,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PaymentController {
     private final PaymentService paymentService;
+    private final UserService userService;
 
     @PostMapping("/request")
     @ApiOperation(value="결제요청", notes="결제 요청을 보냄")
     public ResponseEntity<ResponseDto> requestPayment(@RequestHeader(value = "X-AUTH-TOKEN", required = false) String jwtToken, @RequestBody PaymentReadyReqDto paymentReadyReqDto) {
+        User user = userService.getUserByToken(jwtToken); // 토큰 만료 여부 검사 위함
         String res = paymentService.paymentReady(paymentReadyReqDto);
         return new ResponseEntity<>(new ResponseDto(res), HttpStatus.OK);
     }

@@ -20,7 +20,7 @@ const PaymentFail = () => {
   }, []);
 
   return (
-    <div>
+    <div css={PaymentFailCSS}>
       <p>결제에 실패했습니다.</p>
       <div css={ButtonBox}>
         <div className="option-buttons">
@@ -40,6 +40,15 @@ const PaymentFail = () => {
     </div>
   );
 };
+
+const PaymentFailCSS = css`
+  width: 100vw;
+  height: calc(100% - 20vh);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 
 const btnTheme = createTheme({
   status: {
