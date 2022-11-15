@@ -81,58 +81,62 @@ const PaymentReceiverAddress = () => {
   }, []);
 
   return (
-    <div css={InputCSS}>
-      <div className="receiver-name">
-        <p>받는 사람</p>
-        <input onChange={onChangeReceiverName} value={receiverName} />
-      </div>
-      <div className="receiver-phone">
-        <p>연락처</p>
-        <input onChange={onChangeReceiverPhone} value={receiverPhone} />
-      </div>
-      <div className="receiver-address">
-        <p>배송 주소</p>
-        <input onChange={onChangeReceiverAddress} value={receiverAddress} />
-      </div>
-      <div css={ButtonBox}>
-        <div className="option-buttons">
-          <ThemeProvider theme={btnTheme}>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={onClickNext}
-              css={Font}
-            >
-              보내는 분 정보 입력하러 가기
-            </Button>
-          </ThemeProvider>
-          <ThemeProvider theme={btnTheme}>
-            <Button
-              variant="contained"
-              color="neutral"
-              size="small"
-              onClick={goBack}
-              css={Font}
-            >
-              롤링페이퍼로 돌아가기
-            </Button>
-          </ThemeProvider>
+    <>
+      <div css={InputCSS}>
+        <div className="receiver-name">
+          <p>받는 사람</p>
+          <input onChange={onChangeReceiverName} value={receiverName} />
+        </div>
+        <div className="receiver-phone">
+          <p>연락처</p>
+          <input onChange={onChangeReceiverPhone} value={receiverPhone} />
+        </div>
+        <div className="receiver-address">
+          <p>배송 주소</p>
+          <input onChange={onChangeReceiverAddress} value={receiverAddress} />
         </div>
       </div>
-    </div>
+      <div>
+        <div css={ButtonBox}>
+          <div className="option-buttons">
+            <ThemeProvider theme={btnTheme}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={onClickNext}
+                css={Font}
+              >
+                보내는 분 정보 입력하러 가기
+              </Button>
+            </ThemeProvider>
+            <ThemeProvider theme={btnTheme}>
+              <Button
+                variant="contained"
+                color="neutral"
+                size="small"
+                onClick={goBack}
+                css={Font}
+              >
+                롤링페이퍼로 돌아가기
+              </Button>
+            </ThemeProvider>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
 const InputCSS = css`
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  width: 100vw;
 
   .receiver-name,
   .receiver-phone,
   .receiver-address {
-    width: calc(100vw - 4rem);
+    width: 90%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
