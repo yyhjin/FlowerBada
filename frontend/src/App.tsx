@@ -45,9 +45,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/capture" element={<CaptureTest />}></Route>
-          <Route path="/error/:code" element={<Error />}></Route>
           {loginUser.jwt === '' ? (
             <>
+              <Route path="/error/:code" element={<Error />}></Route>
+              <Route path="*" element={<Error />}></Route>
               <Route path="" element={<SignIn />}></Route>
               <Route
                 path="/user/signin/redirect"
@@ -71,6 +72,8 @@ function App() {
             <>
               <Route path="" element={<MainPage />}></Route>
               <Route path="/" element={<Layout />}>
+                <Route path="/error/:code" element={<Error />}></Route>
+                <Route path="*" element={<Error />}></Route>
                 <Route path="/manual" element={<Manual />}></Route>
                 <Route path="greenhouse" element={<GreenHouse />}></Route>
                 <Route path="store" element={<Store />}></Route>

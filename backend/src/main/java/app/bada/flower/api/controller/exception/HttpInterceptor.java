@@ -20,34 +20,31 @@ public class HttpInterceptor implements HandlerInterceptor {
     private TimeCheckService timeCheckService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        try{
-            String ip = request.getHeader("X-Forwarded-For");
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-            if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getHeader("Proxy-Client-IP");
-            }
-            if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getHeader("WL-Proxy-Client-IP");
-            }
-            if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getHeader("HTTP_CLIENT_IP");
-            }
-            if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-            }
-            if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getRemoteAddr();
-            }
+        String ip = request.getHeader("X-Forwarded-For");
 
-            Integer oneIPAccessCountPerTime = timeCheckService.IpAccess(ip);
-            if(ipBlockedService.isBlocked(ip, oneIPAccessCountPerTime)){
-                throw new CustomException(ErrorCode.BLOCKED_IP);
-            }
-            return true;
-        }catch (Exception e){
-            log.info(e.toString());
-            return false;
+        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
         }
+        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+
+        Integer oneIPAccessCountPerTime = timeCheckService.IpAccess(ip);
+        if(ipBlockedService.isBlocked(ip, oneIPAccessCountPerTime)){
+            throw new CustomException(ErrorCode.BLOCKED_IP);
+        }
+        return true;
+
     }
 }
