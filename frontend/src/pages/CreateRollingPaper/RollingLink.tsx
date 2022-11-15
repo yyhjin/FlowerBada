@@ -3,14 +3,6 @@ import { css } from '@emotion/react';
 import copy from '@assets/copy.png';
 import MySwal from '@components/SweetAlert';
 
-{
-  /* <script
-  src="https://t1.kakaocdn.net/kakao_js_sdk/2.0.1/kakao.min.js"
-  integrity="sha384-eKjgHJ9+vwU/FCSUG3nV1RKFolUXLsc6nLQ2R1tD0t4YFPCvRmkcF8saIfOZNWf/"
-  crossOrigin="anonymous"
-></script>; */
-}
-
 export default function RollingLink() {
   const VITE_APP_KAKAO_KEY = import.meta.env.VITE_APP_KAKAO_KEY;
 
@@ -39,7 +31,7 @@ export default function RollingLink() {
         kakao.init(VITE_APP_KAKAO_KEY);
       }
     }
-    console.log(root + url);
+
     window.Kakao.Link.sendDefault({
       objectType: 'feed',
       content: {
@@ -63,12 +55,6 @@ export default function RollingLink() {
       ],
     });
   }
-
-  // const Explain = useEffect(() => {
-  //   if (!Window.Kakao.init) {
-  //     Kakao.init('a452135df47a8eef043c1b08491c2c34');
-  //   }
-  // }, []);
 
   return (
     <>
@@ -173,6 +159,7 @@ const GoRollingButton = css`
   color: white;
   font-size: 20px;
   background-color: #16453e;
+  cursor: pointer;
   @media screen and (max-height: 500px) {
     margin-top: 5vh;
   }

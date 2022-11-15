@@ -453,6 +453,7 @@ const GridStyle = css`
     margin-left: 3vw;
     z-index: 1;
     left: 2vw;
+    cursor: pointer;
   }
   .locked_image {
     position: absolute;
@@ -461,6 +462,7 @@ const GridStyle = css`
     opacity: 100%;
     display: grid;
     left: 2.5vw;
+    cursor: pointer;
   }
   @media screen and (min-width: 500px) {
     height: 155px;
@@ -484,6 +486,12 @@ const GridStyle = css`
 const tabs = css`
   /* position: absolute; */
   margin: 0 auto;
+  .btn {
+    cursor: pointer;
+  }
+  .active_btn {
+    cursor: pointer;
+  }
 `;
 
 const tabActive = (isActive: boolean) => css`
