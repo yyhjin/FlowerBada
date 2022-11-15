@@ -441,10 +441,23 @@ const GridContainer = css`
   margin: 0 auto;
   background-color: white;
   border-radius: 15px;
+
+  &::-webkit-scrollbar {
+    width: 3px;
+    background-color: #ffffff;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 3px;
+    background-color: rgba(0, 0, 0, 0.25);
+  }
 `;
 
 const GridStyle = css`
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 30vw;
 
   .item_image {
@@ -453,17 +466,17 @@ const GridStyle = css`
     margin-top: 3vw;
     margin-left: 3vw;
     z-index: 1;
-    left: 2vw;
-    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .locked_image {
-    position: absolute;
     z-index: 2;
     width: 25vw;
     opacity: 100%;
-    display: grid;
-    left: 2.5vw;
-    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   @media screen and (min-width: 500px) {
     height: 155px;

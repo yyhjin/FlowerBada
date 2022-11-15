@@ -73,6 +73,7 @@ const PaymentRequestCSS = () => css`
 
   .kakao-btn {
     width: 120px;
+    cursor: pointer;
   }
 `;
 

@@ -56,69 +56,73 @@ const PaymentSenderAddress = () => {
   }, []);
 
   return (
-    <div css={InputCSS}>
-      <div className="sender-name">
-        <p>보내는 사람</p>
-        <input
-          onChange={onChangeSenderName}
-          value={senderName}
-          disabled={isAnonymous}
-        />
-      </div>
-      <div className="sender-phone">
-        <p>연락처</p>
-        <input
-          onChange={onChangeSenderPhone}
-          value={senderPhone}
-          disabled={isAnonymous}
-        />
-      </div>
-      <div className="sender-checkbox">
-        <p>익명으로 보내기</p>
-        <input
-          type="checkbox"
-          onChange={onChangeIsAnonymous}
-          checked={isAnonymous}
-        />
-      </div>
-      <div css={ButtonBox}>
-        <div className="option-buttons">
-          <ThemeProvider theme={btnTheme}>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={onClickNext}
-              css={Font}
-            >
-              결제 선택창으로 이동하기
-            </Button>
-          </ThemeProvider>
-          <ThemeProvider theme={btnTheme}>
-            <Button
-              variant="contained"
-              color="neutral"
-              size="small"
-              onClick={goBack}
-              css={Font}
-            >
-              롤링페이퍼로 돌아가기
-            </Button>
-          </ThemeProvider>
+    <>
+      <div css={InputCSS}>
+        <div className="sender-name">
+          <p>보내는 사람</p>
+          <input
+            onChange={onChangeSenderName}
+            value={senderName}
+            disabled={isAnonymous}
+          />
+        </div>
+        <div className="sender-phone">
+          <p>연락처</p>
+          <input
+            onChange={onChangeSenderPhone}
+            value={senderPhone}
+            disabled={isAnonymous}
+          />
+        </div>
+        <div className="sender-checkbox">
+          <p>익명으로 보내기</p>
+          <input
+            type="checkbox"
+            onChange={onChangeIsAnonymous}
+            checked={isAnonymous}
+          />
         </div>
       </div>
-    </div>
+      <div>
+        <div css={ButtonBox}>
+          <div className="option-buttons">
+            <ThemeProvider theme={btnTheme}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={onClickNext}
+                css={Font}
+              >
+                결제 선택창으로 이동하기
+              </Button>
+            </ThemeProvider>
+            <ThemeProvider theme={btnTheme}>
+              <Button
+                variant="contained"
+                color="neutral"
+                size="small"
+                onClick={goBack}
+                css={Font}
+              >
+                롤링페이퍼로 돌아가기
+              </Button>
+            </ThemeProvider>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
 const InputCSS = css`
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  width: 100vw;
 
   .sender-name,
   .sender-phone {
-    width: calc(100vw - 4rem);
+    width: 90%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -126,7 +130,7 @@ const InputCSS = css`
   }
 
   .sender-checkbox {
-    width: calc(100vw - 4rem);
+    width: 90%;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;

@@ -178,14 +178,23 @@ const totalCSS = css`
       }
     }
   }
+
   .mylist {
-    height: calc(100vh - 200px);
+    height: calc(100vh - 300px);
     background-color: white;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
+
   .mylist::-webkit-scrollbar {
-    display: none;
+    width: 3px;
+    background-color: #b1bdbb;
   }
+
+  .mylist::-webkit-scrollbar-thumb {
+    width: 3px;
+    background-color: #16453e;
+  }
+
   .infobox {
     font-size: 30px;
     text-align: center;
