@@ -50,49 +50,14 @@ const PaymentSuccess = () => {
         );
         setPaymentInfo(res.data.response);
       } catch (err: any) {
-        if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
-          MySwal.fire({
-            title: '로그인이 필요합니다!',
-            icon: 'warning',
-            confirmButtonColor: '#16453e',
-            confirmButtonText: '확인',
-          }).then(() => {
-            navigate('/');
-          });
-          setUserState((prev: IuserRecoil) => {
-            const variable = { ...prev };
-            variable.id = 0;
-            variable.userToken = '';
-            variable.nickname = '';
-            variable.points = 0;
-            variable.jwt = '';
-            variable.refresh = '';
-            return variable;
-          });
-        } else {
-          let accessToken: string = err.response.headers.get('x-auth-token');
-          let refreshToken: string = err.response.headers.get('refresh-token');
-          if (accessToken && refreshToken) {
-            accessToken = accessToken.split(' ')[1];
-            refreshToken = refreshToken.split(' ')[1];
-            updateTokens(accessToken, refreshToken, setUserState);
-            const res = await paymentAPI.successPayment(
-              accessToken,
-              refreshToken,
-              reqData,
-            );
-            setPaymentInfo(res.data.response);
-          } else {
-            MySwal.fire({
-              title: '결제 실패!',
-              icon: 'warning',
-              confirmButtonColor: '#16453e',
-              confirmButtonText: '확인',
-            }).then(() => {
-              navigate('/');
-            });
-          }
-        }
+        MySwal.fire({
+          title: '결제 정보 가져오기 실패',
+          icon: 'warning',
+          confirmButtonColor: '#16453e',
+          confirmButtonText: '확인',
+        }).then(() => {
+          navigate('/');
+        });
       }
     };
     getPaymentInfo();
