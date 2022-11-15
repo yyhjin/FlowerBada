@@ -81,14 +81,16 @@ public class MessageServiceImpl implements MessageService {
                 path = "C:\\Temp\\upload\\"+dirname;
                 file = new File(path);
                 path += "\\" + filename;
+                new File("C:\\Temp\\upload").mkdir();
             }
             else if(os.contains("linux")) {
+                System.out.println("-----linux os detected-----");
                 path = "/home/ubuntu/upload/"+dirname;
                 file = new File(path);
                 path += "/" + filename;
             }
-            new File("C:\\Temp\\upload").mkdir();
-            file.mkdir();
+            boolean res = file.mkdirs();
+            System.out.println("result of mkdirs: "+res);
             System.out.println("path:"+path);
 
             String prefix = "data:image/png;base64,";
@@ -111,14 +113,15 @@ public class MessageServiceImpl implements MessageService {
                 path = "C:\\Temp\\upload\\"+dirname;
                 file = new File(path);
                 path += "\\" + filename;
+                new File("C:\\Temp\\upload").mkdir();
             }
             else if(os.contains("linux")) {
                 path = "/home/ubuntu/upload/"+dirname;
                 file = new File(path);
                 path += "/" + filename;
             }
-            new File("C:\\Temp\\upload").mkdir();
-            file.mkdir();
+            boolean res = file.mkdirs();
+            System.out.println("result of mkdirs: "+res);
             System.out.println("path:"+path);
 
             String prefix = "data:image/png;base64,";

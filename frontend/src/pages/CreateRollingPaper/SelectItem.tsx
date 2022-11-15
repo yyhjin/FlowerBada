@@ -504,16 +504,16 @@ const BuyButton = (isSeleceted: boolean) => css`
   margin-bottom: 20px;
   top: 15vw;
   left: 0;
-  border-radius: 8px;
   border: 1px solid transparent;
+  border-radius: 8px;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
   background-color: ${!isSeleceted ? '#16453e' : '#9c9c9c'};
-  width: 90%;
-  height: 50px;
+  height: 7vh;
+  width: 94vw;
   /* margin-bottom: 200px; */
   @media screen and (min-width: 500px) {
     margin-top: 5vw;
