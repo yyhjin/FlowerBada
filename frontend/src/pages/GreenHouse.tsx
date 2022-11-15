@@ -289,8 +289,10 @@ export default function GreenHouse() {
                   >
                     <div className="rolling-items">
                       <img className="rolling_img" src={rolling.imgUrl} />
-                      <div className="rolling_title">{rolling.title}</div>
-                      <div className="rolling_date">({rolling.date})</div>
+                      <div className="rolling-text">
+                        <div className="rolling_title">{rolling.title}</div>
+                        <div className="rolling_date">({rolling.date})</div>
+                      </div>
                     </div>
                   </div>
                 </Grid>
@@ -304,9 +306,13 @@ export default function GreenHouse() {
                     css={GridItem}
                     onClick={() => handleRollingPaper(rolling.url)}
                   >
-                    <img className="rolling_img" src={rolling.imgUrl} />
-                    <div className="rolling_title">{rolling.title}</div>
-                    <div className="rolling_date">({rolling.date})</div>
+                    <div className="rolling-items">
+                      <img className="rolling_img" src={rolling.imgUrl} />
+                      <div className="rolling-text">
+                        <div className="rolling_title">{rolling.title}</div>
+                        <div className="rolling_date">({rolling.date})</div>
+                      </div>
+                    </div>
                   </div>
                 </Grid>
               ))}
@@ -323,18 +329,18 @@ const totalCSS = css`
     height: 70vh;
 
     .gridlist {
-      overflow-y: scroll;
+      overflow-y: auto;
       overflow-x: none;
-    }
 
-    .gridlist::-webkit-scrollbar {
-      width: 3px;
-      background-color: #b1bdbb;
-    }
+      &::-webkit-scrollbar {
+        width: 3px;
+        background-color: #ffffff;
+      }
 
-    .gridlist::-webkit-scrollbar-thumb {
-      width: 3px;
-      background-color: #16453e;
+      &::-webkit-scrollbar-thumb {
+        width: 3px;
+        background-color: rgba(0, 0, 0, 0.25);
+      }
     }
   }
 `;
@@ -419,19 +425,24 @@ const GridItem = css`
   position: relative;
   cursor: pointer;
   padding: 0.5rem;
+  height: 300px;
 
   .rolling-items {
-    &:hover,
-    &:active {
-      transform: scale(1.05, 1.05);
-      transition: all ease 0.2s;
-      cursor: pointer;
-    }
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  &:hover,
+  &:active {
+    transform: scale(1.05, 1.05);
+    transition: all ease 0.2s;
+    cursor: pointer;
   }
 
   .rolling_img {
     width: 80%;
-    padding-top: 20px;
   }
 
   .rolling_title {
