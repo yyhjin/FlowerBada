@@ -304,7 +304,7 @@ const FlowerCss = (props: any) => css`
   .f-imgbox2 img {
     cursor: ${props.valid ? 'pointer' : ''};
     position: absolute;
-    width: 28vw;
+    width: 30vw;
     vertical-align: middle;
     @media screen and (min-width: 500px) {
       width: 150px;
