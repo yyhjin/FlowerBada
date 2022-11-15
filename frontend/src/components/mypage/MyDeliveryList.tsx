@@ -216,11 +216,17 @@ const outerBox = css`
   }
   .mylist {
     position: relative;
-    height: calc(100vh - 132px);
-    overflow-y: scroll;
+    height: calc(100vh - 150px);
+    overflow-y: auto;
   }
   .mylist::-webkit-scrollbar {
-    display: none;
+    width: 3px;
+    background-color: #b1bdbb;
+  }
+
+  .mylist::-webkit-scrollbar-thumb {
+    width: 3px;
+    background-color: #16453e;
   }
   .deliverybox {
     position: relative;
