@@ -13,7 +13,9 @@ api.interceptors.request.use(
   },
   function (error) {
     // 요청 에러 직전 호출됩니다.
-    window.location.href = `/error/${error.response.status}`;
+    if (error.response.status === 404 || error.response.status === 429) {
+      window.location.href = `/error/${error.response.status}`;
+    }
     return Promise.reject(error);
   },
 );
@@ -24,7 +26,9 @@ api.interceptors.response.use(
     return response;
   },
   function (error) {
-    window.location.href = `/error/${error.response.status}`;
+    if (error.response.status === 404 || error.response.status === 429) {
+      window.location.href = `/error/${error.response.status}`;
+    }
     return Promise.reject(error);
   },
 );
