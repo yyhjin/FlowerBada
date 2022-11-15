@@ -129,16 +129,7 @@ const Print = () => {
                       src={'/src/assets/' + message.imgUrl}
                       className="messagebox"
                     ></img>
-                    <span
-                      className="content-box"
-                      // style={{
-                      //   backgroundColor: 'rgb(255,255,255,0.5)',
-                      //   width: '120px',
-                      //   height: '120px',
-                      //   position: 'absolute',
-                      // }}
-                      // css={ContentBox}
-                    >
+                    <span className="content-box">
                       <div css={MsgCSS(message.font)}>
                         {message.content}
                         <br />
@@ -672,7 +663,7 @@ const A4CSS = css`
       &:nth-of-type(7) {
         /* z-index: 5; */
         left: 30px;
-        top: -1640px;
+        top: -1600px;
         transform: rotate(10deg);
       }
       &:nth-of-type(8) {

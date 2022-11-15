@@ -515,8 +515,16 @@ export default function RollingPaper(props: any) {
       { imgUrl: uri },
     );
   };
-  const check = () => {
-    alert('테스트 성공');
+  const captureGo = () => {
+    navigate('/rolling/capture', {
+      state: {
+        // rollingUrl: paramCopy.url,
+        // mainImg: rolling.imgUrl,
+        type,
+        valid,
+        rolling,
+      },
+    });
   };
 
   return (
@@ -526,6 +534,9 @@ export default function RollingPaper(props: any) {
           <div>
             <div css={DetailCss}>
               <div className={`titlezone_${type}`}>
+                <Button style={{ zIndex: '999' }} onClick={captureGo}>
+                  capture
+                </Button>
                 <div className="title">{rolling.title}</div>
                 {bookmark ? (
                   <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
@@ -601,34 +612,35 @@ export default function RollingPaper(props: any) {
             </div>
             {/* <div css={`dot_${type}`}> */}
             <div css={Dot}>
-              <SpeedDial
-                ariaLabel="SpeedDial openIcon example"
-                sx={{ position: 'absolute', bottom: 16, right: 16 }}
-                icon={<SpeedDialIcon />}
-                className="speed-dial-zone"
-              >
-                {rollingDate <= nowDate
-                  ? dateAfterActions.map((action) => (
-                      <SpeedDialAction
-                        key={action.name}
-                        icon={action.icon}
-                        onClick={action.function}
-                      />
-                    ))
-                  : dateBeforeActions.map((action) => (
-                      <SpeedDialAction
-                        key={action.name}
-                        icon={action.icon}
-                        onClick={action.function}
-                      />
-                    ))}
-              </SpeedDial>
-
-              <DotSlice
-                paginationId={paginationId}
-                setPaginationId={setPaginationId}
-                stepNumber={stepNumber}
-              ></DotSlice>
+              <ThemeProvider theme={theme}>
+                <SpeedDial
+                  ariaLabel="SpeedDial openIcon example"
+                  sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                  icon={<SpeedDialIcon />}
+                  className="speed-dial-zone"
+                >
+                  {rollingDate <= nowDate
+                    ? dateAfterActions.map((action) => (
+                        <SpeedDialAction
+                          key={action.name}
+                          icon={action.icon}
+                          onClick={action.function}
+                        />
+                      ))
+                    : dateBeforeActions.map((action) => (
+                        <SpeedDialAction
+                          key={action.name}
+                          icon={action.icon}
+                          onClick={action.function}
+                        />
+                      ))}
+                </SpeedDial>
+                <DotSlice
+                  paginationId={paginationId}
+                  setPaginationId={setPaginationId}
+                  stepNumber={stepNumber}
+                ></DotSlice>
+              </ThemeProvider>
               <DialogCustom open={deliveryModal} left={left}>
                 <DialogTitle id="alert-dialog-title" css={Font}>
                   확인해주세요
@@ -845,6 +857,7 @@ const DetailCss = css`
   .flowerlist {
     /* width: 100%; */
     position: static;
+    /* margin-top: -100px; */
 
     .flowerbox_1 {
       position: relative;
@@ -1298,11 +1311,13 @@ const SaveParent = (color: Boolean, width: number, height: number) => css`
 
   .save-child {
     background-color: ${color ? '#ffffff' : '#f2f0ef'};
-    height: 70vh;
-    /* height: ${height + 50}px; */
+    height: 100vh;
+    /* height: ${height + 100}px; */
     /* width: ${width}px; */
     position: absolute;
-    top: 0;
+    /* top: 0; */
+    /* margin-top: -10vh; */
+    /* padding-top: 300px; */
     z-index: -1;
   }
 `;
