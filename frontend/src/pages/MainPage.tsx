@@ -104,12 +104,17 @@ const TestCSS = css`
   color: black;
   display: flex;
   flex-direction: column;
+  overflow-y: block;
+  height: calc(100vh);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   .main_title {
     font-family: 'GowunDodum-Regular';
-    height: 100%;
-    margin-top: 30%;
-    padding: 4vh;
+    margin-bottom: 50px;
+    margin-top: 100px;
     font-size: 2rem;
     display: flex;
     align-items: center;
@@ -219,9 +224,11 @@ const TestCSS = css`
     background-color: lightgrey;
     border-radius: 15px;
   }
+
   .main_menu::-webkit-scrollbar-track {
     border-radius: 15px;
   }
+
   .only_web {
     display: none;
     margin-bottom: 2rem;
@@ -230,7 +237,7 @@ const TestCSS = css`
     .only_web {
       display: block;
       color: #16453e;
-      text-shadow: 6px 6px 6px gray;
+      text-shadow: 8px 8px 8px gray;
     }
   }
 `;

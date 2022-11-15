@@ -287,9 +287,11 @@ export default function GreenHouse() {
                     css={GridItem}
                     onClick={() => handleRollingPaper(rolling.url)}
                   >
-                    <img className="rolling_img" src={rolling.imgUrl} />
-                    <div className="rolling_title">{rolling.title}</div>
-                    <div className="rolling_date">({rolling.date})</div>
+                    <div className="rolling-items">
+                      <img className="rolling_img" src={rolling.imgUrl} />
+                      <div className="rolling_title">{rolling.title}</div>
+                      <div className="rolling_date">({rolling.date})</div>
+                    </div>
                   </div>
                 </Grid>
               ))}
@@ -319,6 +321,21 @@ export default function GreenHouse() {
 const totalCSS = css`
   .item-box {
     height: 70vh;
+
+    .gridlist {
+      overflow-y: scroll;
+      overflow-x: none;
+    }
+
+    .gridlist::-webkit-scrollbar {
+      width: 3px;
+      background-color: #b1bdbb;
+    }
+
+    .gridlist::-webkit-scrollbar-thumb {
+      width: 3px;
+      background-color: #16453e;
+    }
   }
 `;
 
@@ -338,7 +355,7 @@ const theme = createTheme({
 
 const MainTab = css`
   width: 100vw;
-  margin-top: 5em;
+  margin-top: 4rem;
 
   button {
     border-radius: 8px;
@@ -384,49 +401,37 @@ const MainTab = css`
 
 const GridList = css`
   width: 80%;
-  height: 65%;
-  overflow: scroll;
+  height: 90%;
   margin: auto;
   border-radius: 15px;
   overflow-y: scroll;
   margin-top: 2vh;
 
-  /* &::-webkit-scrollbar {
-    width: 6.5px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #ebebeb;
-    border-radius: 20px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: black;
-    border-radius: 20px;
-  } */
-
   @media screen and (min-height: 800px) {
-    height: 70%;
+    height: 90%;
   }
   @media screen and (min-height: 1000px) {
-    height: 75%;
+    height: 90%;
   }
 `;
 
 const GridItem = css`
   position: relative;
   cursor: pointer;
+  padding: 0.5rem;
 
-  &:hover,
-  &:active {
-    transform: scale(1.05, 1.05);
-    transition: all ease 0.2s;
-    cursor: pointer;
+  .rolling-items {
+    &:hover,
+    &:active {
+      transform: scale(1.05, 1.05);
+      transition: all ease 0.2s;
+      cursor: pointer;
+    }
   }
 
   .rolling_img {
     width: 80%;
-    padding-top: 30px;
+    padding-top: 20px;
   }
 
   .rolling_title {

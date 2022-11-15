@@ -20,9 +20,10 @@ body {
   float: center;
 }
 
-body ::-webkit-scrollbar {
-  display: none;
+body {
+  overflow-y: hidden;
 }
+
 #root {
   /* width: 100%; */
   font-family: 'SeoulNamsanM';

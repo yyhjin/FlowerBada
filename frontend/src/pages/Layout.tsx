@@ -16,5 +16,5 @@ export default function Layout(props: any) {
 
 const OutletCSS = css`
   margin-top: 65px;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 70px);
 `;

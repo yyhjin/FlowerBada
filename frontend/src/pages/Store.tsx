@@ -366,7 +366,7 @@ const modal = css`
 
 const StoreDiv = css`
   width: 100vw;
-  height: 100vw;
+  height: calc(100vh - 80px);
 `;
 
 const points = css`
@@ -444,6 +444,9 @@ const GridContainer = css`
 
 const GridStyle = css`
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 30vw;
 
   .item_image {
@@ -452,15 +455,17 @@ const GridStyle = css`
     margin-top: 3vw;
     margin-left: 3vw;
     z-index: 1;
-    left: 2vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .locked_image {
-    position: absolute;
     z-index: 2;
     width: 25vw;
     opacity: 100%;
-    display: grid;
-    left: 2.5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   @media screen and (min-width: 500px) {
     height: 155px;
@@ -483,7 +488,7 @@ const GridStyle = css`
 
 const tabs = css`
   /* position: absolute; */
-  margin: 0 auto;
+  height: 0px;
 `;
 
 const tabActive = (isActive: boolean) => css`
@@ -505,7 +510,6 @@ const tabActive = (isActive: boolean) => css`
 
 const BuyButton = (isOwned: boolean) => css`
   position: relative;
-  margin: auto;
   margin-bottom: 20px;
   top: 10px;
   left: 0;

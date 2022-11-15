@@ -364,10 +364,22 @@ const GridContainer = css`
   width: 90%;
   aspect-ratio: 1/1;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: hidden;
   margin: 0 auto;
   background-color: white;
   border-radius: 15px;
+
+  &::-webkit-scrollbar {
+    display: block;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: lightgrey;
+    border-radius: 15px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 15px;
+  }
 `;
 
 const GridStyle = css`
