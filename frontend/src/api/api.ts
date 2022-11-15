@@ -9,12 +9,10 @@ const api = axios.create({
 api.interceptors.request.use(
   function (config) {
     // 요청 성공 직전 호출됩니다.
-    // console.log(config);
     return config;
   },
   function (error) {
     // 요청 에러 직전 호출됩니다.
-    // console.log(error);
     if (error.response.status === 404 || error.response.status === 429) {
       window.location.href = `/error/${error.response.status}`;
     }
@@ -25,11 +23,9 @@ api.interceptors.request.use(
 // 응답 인터셉터
 api.interceptors.response.use(
   function (response) {
-    // console.log(response);
     return response;
   },
   function (error) {
-    // console.log(error);
     if (error.response.status === 404 || error.response.status === 429) {
       window.location.href = `/error/${error.response.status}`;
     }
