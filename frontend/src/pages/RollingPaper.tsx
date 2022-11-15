@@ -99,8 +99,8 @@ export default function RollingPaper(props: any) {
   });
 
   let componentRef = useRef<HTMLDivElement>(null);
-  // const root = 'https://k7a405.p.ssafy.io/rolling/';
-  const root = 'http://localhost:5173/rolling/';
+  const root = 'https://k7a405.p.ssafy.io/rolling/';
+  // const root = 'http://localhost:5173/rolling/';
   const VITE_APP_KAKAO_KEY = import.meta.env.VITE_APP_KAKAO_KEY;
 
   function afterGetRolling(res: any) {
