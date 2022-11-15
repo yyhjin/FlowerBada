@@ -390,9 +390,9 @@ const GridList = css`
   border-radius: 15px;
   overflow-y: scroll;
   margin-top: 2vh;
-  /* border: solid 1px;
+  border: solid 1px;
 
-  &::-webkit-scrollbar {
+  /* &::-webkit-scrollbar {
     width: 6.5px;
   }
 
@@ -402,8 +402,8 @@ const GridList = css`
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: black; /* color of the scroll thumb */
-    border-radius: 20px; /* roundness of the scroll thumb */
+    background-color: black;
+    border-radius: 20px;
   } */
 
   @media screen and (min-height: 800px) {
