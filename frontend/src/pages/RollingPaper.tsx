@@ -482,9 +482,6 @@ export default function RollingPaper(props: any) {
           <div>
             <div css={DetailCss}>
               <div className={`titlezone_${type}`}>
-                <Button style={{ zIndex: '999' }} onClick={captureGo}>
-                  capture
-                </Button>
                 <div className="title">{rolling.title}</div>
                 {bookmark ? (
                   <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
