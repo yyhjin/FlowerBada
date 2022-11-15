@@ -81,13 +81,14 @@ public class MessageServiceImpl implements MessageService {
                 path = "C:\\Temp\\upload\\"+dirname;
                 file = new File(path);
                 path += "\\" + filename;
+                new File("C:\\Temp\\upload").mkdir();
             }
             else if(os.contains("linux")) {
                 path = "/home/ubuntu/upload/"+dirname;
                 file = new File(path);
                 path += "/" + filename;
+                new File("/home/ubuntu/upload").mkdir();
             }
-            new File("C:\\Temp\\upload").mkdir();
             file.mkdir();
             System.out.println("path:"+path);
 
@@ -111,13 +112,14 @@ public class MessageServiceImpl implements MessageService {
                 path = "C:\\Temp\\upload\\"+dirname;
                 file = new File(path);
                 path += "\\" + filename;
+                new File("C:\\Temp\\upload").mkdir();
             }
             else if(os.contains("linux")) {
                 path = "/home/ubuntu/upload/"+dirname;
                 file = new File(path);
                 path += "/" + filename;
+                new File("/home/ubuntu/upload").mkdir();
             }
-            new File("C:\\Temp\\upload").mkdir();
             file.mkdir();
             System.out.println("path:"+path);
 
