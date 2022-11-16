@@ -30,6 +30,7 @@ import MySwal from '@components/SweetAlert';
 import { useCallback } from 'react';
 import Login from '@assets/login_btn.png';
 import html2canvas from 'html2canvas';
+// import { useReactToPrint } from 'react-to-print';
 import updateTokens from '@utils/updateTokens';
 
 import SpeedDial from '@mui/material/SpeedDial';
@@ -84,6 +85,8 @@ export default function RollingPaper(props: any) {
   const [color, setColor] = useState<Boolean>(false);
   const [left, setLeft] = useState<string>('0px');
   const [capture, setCapture] = useState<Boolean>(false);
+  const [leng, setLeng] = useState<string>('0pt');
+  const [mediaLeng, setMediaLeng] = useState<string>('0pt');
 
   window.addEventListener('resize', function () {
     if (window.innerWidth >= 500) {
@@ -93,7 +96,9 @@ export default function RollingPaper(props: any) {
     }
   });
 
+  let componentRef = useRef<HTMLDivElement>(null);
   const root = 'https://k7a405.p.ssafy.io/rolling/';
+  // const root = 'http://localhost:5173/rolling/';
   const VITE_APP_KAKAO_KEY = import.meta.env.VITE_APP_KAKAO_KEY;
 
   function afterGetRolling(res: any) {
@@ -156,6 +161,21 @@ export default function RollingPaper(props: any) {
         paginationId,
       );
       afterGetRolling(res);
+
+      let titleLength = res.data.response.title.length;
+      if (titleLength >= 16) {
+        setLeng('12px');
+        setMediaLeng('15px');
+      } else if (titleLength >= 11) {
+        setLeng('15px');
+        setMediaLeng('18px');
+      } else if (titleLength >= 6) {
+        setLeng('20px');
+        setMediaLeng('25px');
+      } else {
+        setLeng('30px');
+        setMediaLeng('37px');
+      }
     } catch (err: any) {
       if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
         MySwal.fire({
@@ -399,10 +419,6 @@ export default function RollingPaper(props: any) {
     }
   }, [color]);
 
-  const shareRolling = () => {
-    navigate('/newroll/link', { state: paramCopy.url });
-  };
-
   const dateBeforeActions = [
     { icon: <EditIcon />, name: '메시지 작성', function: moveMessageWrite },
     { icon: <LinkIcon />, name: '링크 복사', function: linkCopy },
@@ -480,7 +496,14 @@ export default function RollingPaper(props: any) {
       {loading && rolling && rolling.messages && type ? (
         <>
           <div>
-            <div css={DetailCss}>
+            <div css={DetailCss({ leng: leng, mediaLeng: mediaLeng })}>
+              {!valid ? (
+                <div className={`valid_${type}`}>
+                  {rolling.date} 이후로 개봉 가능합니다.
+                </div>
+              ) : (
+                <div className={`valid_${type}`}>꽃을 눌러보세요!</div>
+              )}
               <div className={`titlezone_${type}`}>
                 <div className="title">{rolling.title}</div>
                 {bookmark ? (
@@ -522,39 +545,6 @@ export default function RollingPaper(props: any) {
               <div className={`imgbox_front_${type}`}>
                 <img src={'/src/assets/' + rolling.imgFront}></img>
               </div>
-
-              {/* <div id="to-save" className="save-child">
-                  <div className={`imgbox_${type}`}>
-                    <img src={'/src/assets/' + rolling.imgBack}></img>
-                  </div>
-                  <div className="flowerlist">
-                    {rolling.messages.map((message, index) => {
-                      return (
-                        <div key={index} className={`flowerbox_${type}`}>
-                          <Message
-                            imgUrl={message.imgUrl}
-                            messageId={message.messageId}
-                            writer={message.writer}
-                            valid={valid}
-                            writerDisplay={false}
-                            type={type}
-                          ></Message>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className={`imgbox_front_${type}`}>
-                    <img src={'/src/assets/' + rolling.imgFront}></img>
-                  </div>
-                </div> */}
-              {/* </div> */}
-              {!valid ? (
-                <div className={`valid_${type}`}>
-                  {rolling.date} 이후로 개봉 가능합니다.
-                </div>
-              ) : (
-                <div className={`valid_${type}`}>꽃을 눌러보세요!</div>
-              )}
             </div>
             {/* <div css={`dot_${type}`}> */}
             <div css={Dot}>
@@ -724,91 +714,98 @@ export default function RollingPaper(props: any) {
   );
 }
 
-const DetailCss = css`
+const DetailCss = (props: any) => css`
   width: 100%;
   height: 100%;
   position: relative;
   transform: translate(0%, -15%);
   .valid_1 {
-    justify-content: center;
-  }
-  .valid_2 {
-    margin-top: 20vh;
+    margin-top: 25vh;
     justify-content: center;
     @media screen and (min-width: 1000px) {
-      margin-top: 25vh;
+      margin-top: 30vh;
     }
+  }
+  .valid_2 {
+    margin-top: 30vh;
+    justify-content: center;
+    @media screen and (min-width: 1000px) {
+    }
+  }
+  .valid_3 {
+    margin-top: 35vh;
+    justify-content: center;
   }
   .titlezone_1 {
     justify-content: center;
-    padding-top: 150px;
-    margin-bottom: -10vh;
-    font-size: 7.5vw;
+    padding-top: 50px;
+    margin-bottom: -20vh;
+    font-size: ${props.leng};
     display: flex;
     @media screen and (min-width: 500px) {
-      padding-top: 180px;
-      font-size: 25pt;
-      margin-bottom: -50px;
+      padding-top: 50px;
+      font-size: ${props.mediaLeng};
+      margin-bottom: -100px;
     }
     @media screen and (max-width: 300px) {
       padding-top: 150px;
       margin-bottom: -50px;
     }
     @media screen and (min-height: 700px) {
-      padding-top: 150px;
-      margin-bottom: -50px;
+      padding-top: 50px;
+      margin-bottom: -100px;
     }
     @media screen and (min-width: 1000px) {
-      padding-top: 150px;
-      margin-bottom: -115px;
+      padding-top: 50px;
+      margin-bottom: -150px;
     }
   }
   .titlezone_2 {
     justify-content: center;
-    padding-top: 150px;
-    margin-bottom: 0vh;
-    font-size: 7.5vw;
+    padding-top: 30px;
+    margin-bottom: -50px;
+    font-size: ${props.leng};
     display: flex;
     @media screen and (min-width: 500px) {
-      padding-top: 180px;
-      margin-bottom: -20vh;
-      font-size: 25pt;
+      padding-top: 20px;
+      margin-bottom: -100px;
+      font-size: ${props.mediaLeng};
     }
     @media screen and (max-width: 300px) {
-      padding-top: 150px;
+      padding-top: 20px;
       margin-bottom: -50px;
     }
     @media screen and (min-height: 700px) {
-      padding-top: 180px;
+      padding-top: 20px;
       margin-bottom: -50px;
     }
     @media screen and (min-width: 1000px) {
-      padding-top: 180px;
+      padding-top: 20px;
       margin-bottom: -150px;
     }
   }
   .titlezone_3 {
     justify-content: center;
-    padding-top: 150px;
-    margin-bottom: 0vh;
-    font-size: 7.5vw;
+    padding-top: 50px;
+    margin-bottom: -10vh;
+    font-size: ${props.leng};
     display: flex;
     @media screen and (min-width: 500px) {
-      padding-top: 180px;
-      margin-bottom: -20vh;
-      font-size: 25pt;
+      padding-top: 60px;
+      margin-bottom: -30vh;
+      font-size: ${props.mediaLeng};
     }
     @media screen and (max-width: 300px) {
-      padding-top: 150px;
+      padding-top: 50px;
       margin-bottom: -50px;
     }
     @media screen and (min-height: 700px) {
-      padding-top: 180px;
-      margin-bottom: -50px;
+      padding-top: 60px;
+      margin-bottom: -120px;
     }
     @media screen and (min-width: 1000px) {
-      padding-top: 180px;
-      margin-bottom: -150px;
+      padding-top: 50px;
+      margin-bottom: -200px;
     }
   }
 
