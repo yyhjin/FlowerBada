@@ -106,8 +106,6 @@ function App() {
                 />
               </Route>
               <Route path="/rolling/print" element={<Print />} />
-              <Route path="/rolling/view" element={<View />} />
-              <Route path="/rolling/capture" element={<CaptureRolling />} />
             </>
           )}
         </Routes>
