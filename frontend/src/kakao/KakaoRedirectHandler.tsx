@@ -1,24 +1,27 @@
 import { useEffect } from 'react';
-import axios from 'axios';
 import { useRecoilState } from 'recoil';
-import { IuserRecoil, userReCoil } from '../recoil/userRecoil';
+import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import userAPI from '@src/api/userAPI';
 
 const KakaoRedirectHandler = () => {
   // console.log('KakaoRedirectHandler');
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
   const code = new URL(window.location.href).searchParams.get('code');
   let token: string = '';
+  let refresh: string = '';
   let user: any = null;
   let register: boolean = false;
+  let url = localStorage.getItem('url');
+  let paginationId = localStorage.getItem('paginationId');
 
   useEffect(() => {
-    axios
-      .post('http://localhost:8080/api/v1/user/signin/callback', { code })
+    userAPI
+      .signInCallback({ code })
       .then((res) => {
         token = res.data.response.jwt;
+        refresh = res.data.response.refresh;
         user = res.data.response.user;
         register = res.data.response.register;
-        // console.log(token, user, register);
 
         setUserState((prev: IuserRecoil) => {
           const variable = { ...prev };
@@ -27,10 +30,14 @@ const KakaoRedirectHandler = () => {
           variable.nickname = user.nickname;
           variable.points = user.points;
           variable.jwt = token;
+          variable.refresh = refresh;
           return variable;
         });
-        // alert('login success!!!');
-        window.location.href = '/';
+        if (url && url !== '') {
+          window.location.href = `/rolling/${url}`;
+        } else {
+          window.location.href = '/';
+        }
       })
       .catch((err) => {
         console.log(err);

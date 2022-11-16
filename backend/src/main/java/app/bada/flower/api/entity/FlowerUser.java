@@ -18,10 +18,10 @@ import javax.persistence.*;
         name = "find_pointList",
         query =
                 "select * from (" +
-                " select i.name, i.point, DATE_FORMAT(u.created_date, '%Y.%m.%d') as createdDate from flower_user u join flower_item i on u.flower_id = i.id "+
+                " select i.name, i.point, u.created_date as createdDate from flower_user u join flower_item i on u.flower_id = i.id "+
                 " where u.user_id = :user "+
                 " union all " +
-                " select i.name, i.point,  DATE_FORMAT(u.created_date, '%Y.%m.%d') as createdDate from rolling_user u join rolling_item i on u.item_id = i.id " +
+                " select i.name, i.point,  u.created_date as createdDate from rolling_user u join rolling_item i on u.item_id = i.id " +
                 " where u.user_id = :user " +
                 ") as collect order by createdDate desc ",
         resultSetMapping = "myPointDto"

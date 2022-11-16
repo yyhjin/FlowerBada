@@ -34,10 +34,9 @@ public class UserServiceImpl implements UserService {
     @Value("${jwt.token.access_token_valid_time}")
     private long tokenValidTime;
     @Override
-    public void logout(String token) {
-        final String PREFIX = "LOGOUT";
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        Duration exp = Duration.ofSeconds(tokenValidTime);
-        valueOperations.set(PREFIX + token, token, exp);
+    public void logout(String token, String refresh) {
+        Duration exp = Duration.ofSeconds(tokenValidTime/1000);
+        redisTemplate.opsForValue().set("LOGOUT " + token, token, exp);
+        redisTemplate.delete("REFRESH " + refresh);
     }
 }

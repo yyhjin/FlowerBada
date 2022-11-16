@@ -36,10 +36,8 @@ public class StoreServiceImpl implements StoreService {
 
     /* 꽃 아이템 조회 */
     public List<FlowerResDto> getFlowerList(User user) {
-
         List<FlowerItem> flowers = flowerItemRepository.findAllFlowerItem();
         List<FlowerItem> userPurchasedFlowers = flowerUserRepository.userPurchasedFlower(user.getId());
-
         List<FlowerResDto> resDtos = new ArrayList<>();
 
         for(FlowerItem f : flowers) {
@@ -56,6 +54,30 @@ public class StoreServiceImpl implements StoreService {
                 flowerResDto.setIsOwned(true);
             } else {
                 flowerResDto.setIsOwned(userPurchasedFlowers.contains(f));
+            }
+            resDtos.add(flowerResDto);
+        }
+
+        return resDtos;
+    }
+
+    @Override
+    public List<FlowerResDto> getFlowerList() {
+        List<FlowerItem> flowers = flowerItemRepository.findAllFlowerItem();
+        List<FlowerResDto> resDtos = new ArrayList<>();
+
+        for(FlowerItem f : flowers) {
+            FlowerResDto flowerResDto = new FlowerResDto();
+            flowerResDto.setFlowerId(f.getId());
+            flowerResDto.setName(f.getName());
+            flowerResDto.setPoint(f.getPoint());
+            flowerResDto.setFlowerLanguage(f.getFlowerLanguage());
+            flowerResDto.setSeason(f.getSeason());
+            flowerResDto.setPrice(f.getPrice());
+            flowerResDto.setImgUrl(f.getImgUrl());
+            flowerResDto.setImgBud(f.getImgBud());
+            if(f.getPoint() == 0) {
+                flowerResDto.setIsOwned(true);
             }
             resDtos.add(flowerResDto);
         }
@@ -93,18 +115,22 @@ public class StoreServiceImpl implements StoreService {
     /* 꽃 아이템 구매 */
     @Transactional
     public void buyFlowerItem(User user, FlowerReqDto flowerReqDto) {
-        FlowerItem flowerItem = flowerItemRepository.findById(flowerReqDto.getFlowerId())
-                .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-        user.updatePoint(user.getPoints() - flowerItem.getPoint());
-        flowerUserRepository.save(FlowerUser.addFlowerUser(user, flowerItem));
+        if(!flowerUserRepository.findByUserAndFlowerItem(user,flowerItemRepository.findById(flowerReqDto.getFlowerId()).get()).isPresent()){
+            FlowerItem flowerItem = flowerItemRepository.findById(flowerReqDto.getFlowerId())
+                    .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+            user.updatePoint(user.getPoints() - flowerItem.getPoint());
+            flowerUserRepository.save(FlowerUser.addFlowerUser(user, flowerItem));
+        }
     }
 
     /* 롤링페이퍼 아이템 구매 */
     @Transactional
     public void buyRollingItem(User user, RollingReqDto rollingReqDto) {
-        RollingItem rollingItem = rollingItemRepository.findById(rollingReqDto.getRollingId())
-                .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-        user.updatePoint(user.getPoints() - rollingItem.getPoint());
-        rollingUserRepository.save(RollingUser.addRollingUser(user, rollingItem));
+        if(!rollingUserRepository.findByUserAndRollingItem(user,rollingItemRepository.findById(rollingReqDto.getRollingId()).get()).isPresent()){
+            RollingItem rollingItem = rollingItemRepository.findById(rollingReqDto.getRollingId())
+                    .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+            user.updatePoint(user.getPoints() - rollingItem.getPoint());
+            rollingUserRepository.save(RollingUser.addRollingUser(user, rollingItem));
+        }
     }
 }

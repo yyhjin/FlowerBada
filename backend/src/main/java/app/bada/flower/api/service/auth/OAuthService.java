@@ -15,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -24,7 +26,7 @@ public class OAuthService {
     private final UserRepository userRepository;
     private final KakaoOAuth kakaoOAuth;
     private final JwtTokenUtil jwtTokenUtil;
-//    private final RedisTemplate redisTemplate;
+    private final RedisTemplate redisTemplate;
 
     @Value("${jwt.token.refresh_token_valid_time}")
     private long refreshTokenValidTime;
@@ -59,19 +61,32 @@ public class OAuthService {
                 ResponseEntity<String> userInfoResponse=kakaoOAuth.requestUserInfo(oAuthToken);
                 //다시 JSON 형식의 응답 객체를 자바 객체로 역직렬화한다.
                 KakaoUser kakaoUser= kakaoOAuth.getUserInfo(userInfoResponse);
-                System.out.println(kakaoUser);
+//                System.out.println(kakaoUser);
 
                 String user_id = String.valueOf(kakaoUser.getId());
                 //우리 서버의 db와 대조하여 해당 user가 존재하는 지 확인한다.
                 User user = userRepository.findByKakaoUserId(user_id).orElse(null);
 
                 OAuthRes res = null;
+                String refreshToken = null;
                 if(user != null) {
+                    // 하루에 한 번 로그인 시 10 포인트 지급 - 자정 기준
+                    LocalDateTime lastLoginDate = user.getLastLoginDate();
+                    LocalDateTime nowDate = LocalDateTime.now();
+                    if(lastLoginDate.getYear() != nowDate.getYear() ||
+                            lastLoginDate.getMonth() != nowDate.getMonth() ||
+                            lastLoginDate.getDayOfMonth() != nowDate.getDayOfMonth()) {
+                        user.updatePoint(user.getPoints()+10);
+                    }
+                    user.updateLastLoginDate(LocalDateTime.now());
+                    userRepository.save(user);
                     //서버에 user가 존재하면 앞으로 회원 인가 처리를 위한 jwtToken을 발급한다.
-                    String jwtToken = jwtTokenUtil.createToken(String.valueOf(user.getToken()), user.getRoles());
+                    String jwtToken = jwtTokenUtil.createToken(user.getToken(), user.getRoles());
+                    refreshToken = jwtTokenUtil.createRefreshToken(user.getToken(), user.getRoles());
                     //액세스 토큰과 jwtToken, 이외 정보들이 담긴 자바 객체를 다시 전송한다.
                     res = OAuthRes.builder()
                             .jwtToken(jwtToken)
+                            .refreshToken(refreshToken)
                             .accessToken(oAuthToken.getAccess_token())
                             .registered(true)
                             .user(user)
@@ -81,8 +96,10 @@ public class OAuthService {
                     System.out.println("--------소셜 회원가입--------");
                     user = User.builder()
                             .token(String.valueOf(kakaoUser.getId()))
+                            .points(50) // 회원가입 시에 50포인트 지급
                             .nickname(kakaoUser.getNickname())
                             .roles(Arrays.asList("ROLE_USER"))
+                            .lastLoginDate(LocalDateTime.now())
                             .build();
                     try {
                         userRepository.save(user);
@@ -90,9 +107,11 @@ public class OAuthService {
                         throw new Exception("유저 회원가입 실패 - DB에 save 실패");
                     }
 
-                    String jwtToken = jwtTokenUtil.createToken(String.valueOf(user.getToken()), user.getRoles());
+                    String jwtToken = jwtTokenUtil.createToken(user.getToken(), user.getRoles());
+                    refreshToken = jwtTokenUtil.createRefreshToken(user.getToken(), user.getRoles());
                     res = OAuthRes.builder()
                             .jwtToken(jwtToken)
+                            .refreshToken(refreshToken)
                             .accessToken(oAuthToken.getAccess_token())
                             .registered(false)
                             .user(user)
@@ -100,8 +119,7 @@ public class OAuthService {
                 }
 
                 //refresh token 관련
-//                String refreshToken = jwtTokenUtil.createRefreshToken(user.getToken(), jwtTokenUtil.getUserRoles(user.getToken()));
-//                redisTemplate.opsForValue().set("RT "+refreshToken, refreshToken, refreshTokenValidTime);
+                redisTemplate.opsForValue().set("REFRESH "+refreshToken, refreshToken, Duration.ofSeconds(refreshTokenValidTime/1000));
                 return res;
             }
             default:{

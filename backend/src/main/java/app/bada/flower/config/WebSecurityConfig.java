@@ -46,7 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests() // 요청에 대한 사용권한 체크(roles에따라 접근 제한)
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/rolling/**").hasRole("USER")
+                .antMatchers("/rolling/**", "/greenhouse/**", "/mypage/**",
+                        "/store/buy/**", "/store/rolling", "/payment/request").hasRole("USER")
                 .anyRequest().permitAll() // 그외 나머지 요청은 누구나 접근 가능
                 .and()
                 .exceptionHandling()
@@ -67,6 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("HEAD","PATCH","POST","GET","DELETE","PUT"));
         configuration.setAllowCredentials(true);
+        configuration.setExposedHeaders(Arrays.asList("X-AUTH-TOKEN", "REFRESH-TOKEN"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

@@ -47,6 +47,9 @@ dependencies {
 
 	//AWS S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	// Use Guava in your implementation only:
+	implementation("com.google.guava:guava:31.1-jre")
 }
 
 tasks.named('test') {
@@ -70,4 +73,9 @@ configurations {
 
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
+}
+
+buildScan {
+	termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+	termsOfServiceAgree = 'yes'
 }

@@ -7,8 +7,9 @@ import SideBar from './SideBar';
 import hamburgerBtn from '@assets/hamburger.png';
 import { IuserRecoil, userReCoil } from '@src/recoil/userRecoil';
 import { useRecoilState } from 'recoil';
+import Login from '@assets/login_btn.png';
 
-export default function Header() {
+export default function Header(props: any) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
@@ -17,6 +18,12 @@ export default function Header() {
     setIsOpen(!isOpen);
   };
   const linkToMain = () => {
+    navigate('/');
+  };
+
+  const linkToSignIn = () => {
+    localStorage.setItem('url', props.props.props.url);
+    localStorage.setItem('paginationId', String(props.props.props.pageId));
     navigate('/');
   };
 
@@ -30,16 +37,21 @@ export default function Header() {
         )}
         <span css={LogoName}>
           {loginUser.jwt === '' ? (
-            <a href="#" css={MainLogo}>
-              <h3>꽃바다</h3>
-            </a>
+            <div css={MainLogo}>
+              <h1>꽃바다</h1>
+            </div>
           ) : (
             <a href="#" onClick={linkToMain} css={MainLogo}>
-              <h3>꽃바다</h3>
+              <h1>꽃바다</h1>
             </a>
           )}
         </span>
-        {loginUser.jwt === '' ? null : (
+        {loginUser.jwt === '' ? (
+          <span>
+            <img src={Login} css={hamburger} onClick={linkToSignIn} />
+            <div css={coverUp}></div>
+          </span>
+        ) : (
           <span>
             <img src={hamburgerBtn} css={hamburger} onClick={slideLeft} />
             <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -63,6 +75,10 @@ const HeaderNav = css`
   margin: 0 auto;
   background-color: #f2f0ef;
   z-index: 999;
+
+  nav {
+    height: 60px;
+  }
 
   .dropdown {
     position: relative;
@@ -103,9 +119,9 @@ const HeaderNav = css`
 
   #back {
     position: relative;
-    height: 20px;
-    width: 20px;
-    top: 15px;
+    height: 30px;
+    width: 30px;
+    top: 12px;
     left: 20px;
   }
 `;
@@ -117,10 +133,12 @@ const LogoName = css`
 
 const MainLogo = css`
   text-decoration: none;
+  color: black;
 `;
 
 const BackArrow = css`
   text-decoration: none;
+  cursor: pointer;
   float: left;
 `;
 
@@ -130,6 +148,7 @@ const hamburger = css`
   width: 30px;
   top: 15px;
   right: 20px;
+  cursor: pointer;
 `;
 
 const coverUp = css`

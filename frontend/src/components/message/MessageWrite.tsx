@@ -1,21 +1,27 @@
-import axios from 'axios';
-import React from 'react';
 import { IuserRecoil, userReCoil } from '../../recoil/userRecoil';
 import { useRecoilState } from 'recoil';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
 import Button, { ButtonProps } from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import '@src/index.css';
+import messageAPI from '@src/api/messageAPI';
+import { useNavigate } from 'react-router-dom';
+import MySwal from '@components/SweetAlert';
 
-export default function MessageWrite(props: { flower: number }) {
+export default function MessageWrite(props: {
+  flower: number;
+  rolling: number;
+  rollingUrl: string;
+}) {
   const [loginUser] = useRecoilState<IuserRecoil>(userReCoil);
   let [msgContent, setMsgContent] = useState<string>('');
   let [msgLength, setMsgLength] = useState<number>(0);
   let [msgWriter, setMsgWriter] = useState<string>('');
   let [font, setFont] = useState<string>('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     setMsgContent('');
@@ -23,10 +29,10 @@ export default function MessageWrite(props: { flower: number }) {
     setFont('SeoulNamsanM');
     document.getElementById('content')!.style.fontFamily = 'SeoulNamsanM';
     document.getElementById('writer')!.style.fontFamily = 'SeoulNamsanM';
-    console.log(props.flower);
+    // console.log(props.flower);
   }, []);
 
-  const changeContent = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const changeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMsgContent(e.target.value);
     setMsgLength(e.target.value.length);
   };
@@ -45,31 +51,50 @@ export default function MessageWrite(props: { flower: number }) {
 
   const createMsg = () => {
     if (msgContent == '') {
-      alert('메시지를 입력해주세요');
+      MySwal.fire({
+        title: '메시지를 입력해주세요',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
       document.getElementById('content')?.focus();
     } else if (msgWriter == '') {
-      alert('작성자를 입력해주세요');
+      MySwal.fire({
+        title: '작성자를 입력해주세요',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
       document.getElementById('writer')?.focus();
-    }
-    // else if (fontId == 0) {
-    //   alert('폰트를 선택해주세요');
-    // }
-    else {
-      const url = `http://localhost:8080/api/v1/message`;
-      axios
-        .post(url, {
+    } else {
+      messageAPI
+        .messageWrite({
           content: msgContent,
           writer: msgWriter,
           flowerId: props.flower,
           font: font,
-          rollingId: 2,
+          rollingId: props.rolling,
         })
         .then((res) => {
-          console.log(res.data.response);
-          alert('메시지가 등록되었습니다');
+          // console.log(res.data.response);
+          MySwal.fire({
+            title: '메세지가 등록되었습니다.',
+            icon: 'success',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          }).then(() => {
+            navigate(`/rolling/` + props.rollingUrl);
+          });
         })
         .catch((err) => {
-          console.log(err);
+          MySwal.fire({
+            title: '메세지 등록을 실패하였습니다.',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          }).then(() => {
+            navigate(`/rolling/` + props.rollingUrl);
+          });
         });
     }
   };
@@ -97,12 +122,10 @@ export default function MessageWrite(props: { flower: number }) {
               onChange={changeWriter}
             ></input>
           </span>
-          <div style={{ float: 'right', fontSize: '11px' }}>
-            {msgLength}/200
-          </div>
+          <div css={MsgLimit}>{msgLength}/200</div>
         </div>
       </div>
-      <div style={{ fontSize: '2vh' }}>마음에 드는 글씨체를 선택하세요!</div>
+      <div style={{ fontSize: '16px' }}>마음에 드는 글씨체를 선택하세요!</div>
       <div css={FontBox}>
         <ColorButton
           variant="contained"
@@ -205,6 +228,7 @@ const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   color: '#000000',
   margin: '1vh',
   flex: '0 0 auto',
+  fontSize: '18px',
   '&:hover': {
     backgroundColor: '#B1BDBB',
     borderColor: '#B1BDBB',
@@ -263,6 +287,9 @@ declare module '@mui/material/styles' {
   }
 }
 
+const Background = css`
+  height: 100%;
+`;
 const ButtonBox = css`
   height: 20%;
   position: relative;
@@ -270,29 +297,31 @@ const ButtonBox = css`
 
 const MainButton = css`
   width: 90%;
-  /* margin-top: 0.5vh; */
+  margin-top: -0.5vh;
   margin-bottom: 1vh;
-  padding: 1vh;
+  padding: 1.5vh;
   border-radius: 10px;
-  font-size: 2vh;
+  font-size: 1em;
   transform: translate(0, 50%);
+  font-family: 'SeoulNamsanM';
 `;
 
 const WriteBox = css`
   margin: 0 10vw 2vh 10vw;
-  height: 30%;
+  height: 18em;
   font-size: 1.5vh;
 
   .content-css {
     background-color: white;
-    height: 65%;
+    height: 10em;
     overflow-y: scroll;
+    margin-top: 3vh;
   }
 
   .input-css {
-    font-size: 1.5vh;
+    font-size: 18px;
     width: 85%;
-    height: 70%;
+    height: 3.5em;
     border: 0px;
     margin: 2vh;
     resize: none;
@@ -305,24 +334,30 @@ const WriteBox = css`
     padding: 1vh;
     text-align: left;
     float: left;
+    font-size: 18px;
 
     .writer-input {
       border: 0px;
       width: 50%;
-      font-size: 1.5vh;
+      font-size: 18px;
     }
+  }
+  @media screen and (min-width: 500px) {
+    margin: 2vw;
   }
 `;
 
+const MsgLimit = css`
+  float: right;
+  font-size: 13px;
+`;
 const FontBox = css`
-  height: 7%;
-  margin: 1vh 2.5vh 0 2.5vh;
+  /* height: 7%; */
+  /* margin: 1vh 2.5vh 0 2.5vh; */
+  margin: 2% 5% 0 5%;
+  /* margin-left: 5%; */
+  /* margin-right: 5%; */
   overflow-x: scroll;
   display: flex;
   flex-flow: nowrap;
-`;
-
-const Background = css`
-  width: 100vw;
-  height: 100%;
 `;
