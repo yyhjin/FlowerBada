@@ -20,5 +20,4 @@ public interface MessageService {
 
     void updateRollingImage(String url, String imgUrl) throws IOException;
 
-    List<MessageResDto.MessageDto> getAllMessage(String rollingUrl);
 }
