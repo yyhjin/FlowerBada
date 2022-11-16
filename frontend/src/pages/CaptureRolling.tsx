@@ -47,7 +47,7 @@ export default function CaptureRolling(props: {
     let img = document.getElementById('base-img');
     setTimeout(() => {
       if (img) {
-        console.log(+img?.clientWidth, +img?.clientHeight);
+        // console.log(+img?.clientWidth, +img?.clientHeight);
         setImgHeight(+img?.clientHeight);
       }
     }, 50);
@@ -58,7 +58,7 @@ export default function CaptureRolling(props: {
   }, []);
 
   useEffect(() => {
-    console.log(imgHeight);
+    // console.log(imgHeight);
 
     if (imgHeight != 0) {
       if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
