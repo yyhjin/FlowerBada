@@ -30,7 +30,7 @@ body {
   height: 100vh;
   margin: 0 auto;
   text-align: center;
-  /* overflow-y: hidden; */
+  overflow-y: hidden;
   overflow-x: hidden;
   background-color: #f2f0ef;
 }
