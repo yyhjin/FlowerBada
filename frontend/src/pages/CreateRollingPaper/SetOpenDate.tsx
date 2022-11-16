@@ -159,7 +159,7 @@ export default function SetOpenDate() {
           onChange={(date: Date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
           // onFocus={datePickerFocus}
           // onBlur={datePickerFocusOut}
-          onFocus={(e) => e.target.blur()}
+          onFocus={(e) => e.currentTarget.blur()}
         />
       </div>
       <button onClick={handleRollingLink} css={CreateButton}>
