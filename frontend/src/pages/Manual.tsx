@@ -211,8 +211,9 @@ export default function Manual() {
 
 const totalCSS = css`
   width: 100vw;
+  height: 100%;
   position: relative;
-  overflow-y: scroll;
+  overflow-y: auto;
   text-align: left;
 
   .imgBox {
@@ -224,5 +225,15 @@ const totalCSS = css`
       margin-top: 10px;
       margin-left: 100px;
     }
+  }
+
+  &::-webkit-scrollbar {
+    width: 3px;
+    background-color: #ffffff;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 3px;
+    background-color: rgba(0, 0, 0, 0.25);
   }
 `;

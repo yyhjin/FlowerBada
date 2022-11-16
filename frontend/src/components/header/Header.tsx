@@ -32,7 +32,7 @@ export default function Header(props: any) {
       <nav>
         {loginUser.jwt === '' ? null : (
           <a onClick={() => navigate(-1)} css={BackArrow}>
-            <img id="back" src={backArrow}></img>
+            <img id="back" src={backArrow} className="back-btn"></img>
           </a>
         )}
         <span css={LogoName}>
@@ -121,8 +121,15 @@ const HeaderNav = css`
     position: relative;
     height: 30px;
     width: 30px;
-    top: 12px;
+    top: 15px;
     left: 20px;
+  }
+
+  .back-btn:hover,
+  .back-btn:active {
+    transform: scale(1.05, 1.05);
+    transition: all ease 0.2s;
+    cursor: pointer;
   }
 `;
 
@@ -134,6 +141,12 @@ const LogoName = css`
 const MainLogo = css`
   text-decoration: none;
   color: black;
+
+  h1:hover,
+  h1:active {
+    transform: scale(1.05, 1.05);
+    transition: all ease 0.2s;
+  }
 `;
 
 const BackArrow = css`
@@ -146,9 +159,15 @@ const hamburger = css`
   position: relative;
   float: right;
   width: 30px;
-  top: 15px;
+  top: 20px;
   right: 20px;
   cursor: pointer;
+
+  &:hover,
+  &:active {
+    transform: scale(1.05, 1.05);
+    transition: all ease 0.2s;
+  }
 `;
 
 const coverUp = css`
