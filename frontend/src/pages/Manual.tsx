@@ -205,6 +205,14 @@ export default function Manual() {
           </div>
         </AccordionDetails>
       </Accordion>
+      <div className="footer">
+        <p style={{ color: 'gray', textAlign: 'right', marginRight: '1rem' }}>
+          {' '}
+          Copyright © 2022 꽃보다싸피
+          <br />
+          Email: flowerbada405@naver.com
+        </p>
+      </div>
     </div>
   );
 }
