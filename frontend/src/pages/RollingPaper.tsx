@@ -45,6 +45,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Kakao from '@assets/kakaoTalk2.png';
 import { Edit } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
+import '@components/SweetAlert.css';
 
 export interface IRolling {
   rollingId?: number;
