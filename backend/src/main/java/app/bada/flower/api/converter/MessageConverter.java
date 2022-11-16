@@ -16,6 +16,8 @@ public class MessageConverter {
         response.setWriter(message.getWriter());
         response.setImgUrl(message.getFlowerItem().getImgUrl());
         response.setPrice(message.getFlowerItem().getPrice());
+        response.setContent(message.getContent());
+        response.setFont(message.getFont());
         return response;
     }
 }
