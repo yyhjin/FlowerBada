@@ -440,7 +440,7 @@ const GridContainer = css`
   width: 90%;
   aspect-ratio: 1/1;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   margin: 0 auto;
   background-color: white;
   border-radius: 0 0 15px 15px;

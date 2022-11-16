@@ -364,19 +364,19 @@ const GridContainer = css`
   width: 90%;
   aspect-ratio: 1/1;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
   margin: 0 auto;
   background-color: white;
   border-radius: 15px;
 
   &::-webkit-scrollbar {
     width: 3px;
-    background-color: #b1bdbb;
+    background-color: #ffffff;
   }
 
   &::-webkit-scrollbar-thumb {
     width: 3px;
-    background-color: #16453e;
+    background-color: rgba(0, 0, 0, 0.25);
   }
 `;
 
