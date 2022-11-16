@@ -56,6 +56,7 @@ export default function SetOpenDate() {
       day = '0' + day;
     }
     let localDateTime = year + '-' + month + '-' + day + 'T00:00';
+
     try {
       const res: any = await rollingAPI.makeRolling(
         userState.jwt,

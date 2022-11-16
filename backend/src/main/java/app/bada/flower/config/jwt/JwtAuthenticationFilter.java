@@ -2,7 +2,6 @@ package app.bada.flower.config.jwt;
 
 import app.bada.flower.api.dto.auth.JwtCode;
 import app.bada.flower.api.service.jwt.JwtTokenUtil;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

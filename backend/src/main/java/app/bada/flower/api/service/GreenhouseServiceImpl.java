@@ -2,7 +2,6 @@ package app.bada.flower.api.service;
 
 import app.bada.flower.api.dto.greenhouse.GreenhouseResDto;
 import app.bada.flower.api.entity.Bookmark;
-import app.bada.flower.api.entity.Delivery;
 import app.bada.flower.api.entity.RollingPaper;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.BookmarkRepository;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
