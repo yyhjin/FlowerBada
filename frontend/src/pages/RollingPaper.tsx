@@ -328,16 +328,17 @@ export default function RollingPaper(props: any) {
   };
 
   const closePrintModal = () => {
-    if (userState.jwt === '') {
-      MySwal.fire({
-        title: '로그인 후<br/>사용 가능합니다!',
-        icon: 'warning',
-        confirmButtonColor: '#16453e',
-        confirmButtonText: '확인',
-      });
-    } else {
-      setColor(false);
-    }
+    setColor(false);
+    // if (userState.jwt === '') {
+    //   MySwal.fire({
+    //     title: '로그인 후<br/>사용 가능합니다!',
+    //     icon: 'warning',
+    //     confirmButtonColor: '#16453e',
+    //     confirmButtonText: '확인',
+    //   });
+    // } else {
+    //   setColor(false);
+    // }
   };
 
   const sendDelivery = () => {
@@ -745,7 +746,7 @@ export default function RollingPaper(props: any) {
           ) : null}
         </>
       ) : (
-        <div css={Loading}>로딩중</div>
+        <div css={Loading}></div>
       )}
     </>
   );
@@ -1235,6 +1236,9 @@ const Dot = css`
 // `;
 
 const Loading = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100vw;
 `;
 
