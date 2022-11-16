@@ -45,7 +45,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import Kakao from '@assets/kakaoTalk2.png';
 import { Edit } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
-import '@components/SweetAlert.css';
 
 export interface IRolling {
   rollingId?: number;
@@ -150,6 +149,11 @@ export default function RollingPaper(props: any) {
     if (userState.jwt === '') {
       props.Setters.setUrl(paramCopy.url);
       props.Setters.setPageId(paginationId);
+    }
+    if (window.innerWidth >= 500) {
+      setLeft((window.innerWidth - 500) / 2 + 'px');
+    } else {
+      setLeft('0px');
     }
 
     setLoading(false);
@@ -306,11 +310,6 @@ export default function RollingPaper(props: any) {
         confirmButtonText: '확인',
       });
     } else {
-      if (window.innerWidth >= 500) {
-        setLeft((window.innerWidth - 500) / 2 + 'px');
-      } else {
-        setLeft('0px');
-      }
       setDeliveryModal(true);
     }
   };
