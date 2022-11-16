@@ -327,6 +327,19 @@ export default function RollingPaper(props: any) {
     }
   };
 
+  const closePrintModal = () => {
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setColor(false);
+    }
+  };
+
   const sendDelivery = () => {
     // 로컬스토리지에 담기
     localStorage.setItem('url', paramCopy.url);
@@ -405,18 +418,18 @@ export default function RollingPaper(props: any) {
   }, []);
 
   useEffect(() => {
-    if (color) {
-      // 캡쳐
-      // 프린트 페이지로 이동
-      navigate('/rolling/print', {
-        state: {
-          rollingUrl: paramCopy.url,
-          mainImg: rolling.imgUrl,
-          type,
-          rolling,
-        },
-      });
-    }
+    // if (color) {
+    //   // 캡쳐
+    //   // 프린트 페이지로 이동
+    //   navigate('/rolling/print', {
+    //     state: {
+    //       rollingUrl: paramCopy.url,
+    //       mainImg: rolling.imgUrl,
+    //       type,
+    //       rolling,
+    //     },
+    //   });
+    // }
   }, [color]);
 
   const dateBeforeActions = [
@@ -609,6 +622,30 @@ export default function RollingPaper(props: any) {
                       id="no"
                     >
                       취소
+                    </Button>
+                  </ThemeProvider>
+                </DialogActions>
+              </DialogCustom>
+              <DialogCustom open={color} left={left}>
+                <DialogTitle id="alert-dialog-title" css={Font}>
+                  안내
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText css={Font}>
+                    다음 업데이트를 기대해주세요 (●&apos;◡&apos;●)
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions css={ActionCss}>
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="contained"
+                      color="neutral"
+                      size="small"
+                      onClick={closePrintModal}
+                      css={Font}
+                      id="no"
+                    >
+                      돌아가기
                     </Button>
                   </ThemeProvider>
                 </DialogActions>

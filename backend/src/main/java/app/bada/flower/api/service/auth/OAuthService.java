@@ -94,7 +94,7 @@ public class OAuthService {
                     System.out.println("--------소셜 회원가입--------");
                     user = User.builder()
                             .token(String.valueOf(kakaoUser.getId()))
-                            .points(50) // 회원가입 시에 50포인트 지급
+                            .points(200) // 회원가입 시에 200포인트 지급
                             .nickname(kakaoUser.getNickname())
                             .roles(Arrays.asList("ROLE_USER"))
                             .lastLoginDate(LocalDateTime.now())
