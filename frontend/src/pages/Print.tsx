@@ -28,7 +28,7 @@ const Print = () => {
     setTimeout(() => {
       navigate(-1);
       onClickPrint();
-    }, 1000);
+    }, 5000);
   }, []);
 
   // useEffect(() => {
