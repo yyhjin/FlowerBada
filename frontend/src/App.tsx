@@ -22,6 +22,7 @@ import Print from '@pages/Print';
 import Error from '@pages/error/Error';
 import Manual from '@pages/Manual';
 import Loading from './pages/Loading';
+import '@components/SweetAlert.css';
 
 const RollingPaperLazy = lazy(() => import('@pages/RollingPaper'));
 const StoreLazy = lazy(() => import('@pages/Store'));
