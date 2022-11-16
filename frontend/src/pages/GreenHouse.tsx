@@ -411,7 +411,7 @@ const GridList = css`
   margin: auto;
   border-radius: 15px;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   margin-top: 2vh;
 
   @media screen and (min-height: 800px) {
