@@ -370,7 +370,9 @@ const modal = css`
 `;
 
 const StoreDiv = css`
+  position: relative;
   width: 100vw;
+  height: 100%;
   min-height: -webkit-fill-available;
   max-height: -webkit-fill-available;
 
@@ -522,8 +524,8 @@ const BuyButton = (isOwned: boolean) => css`
   width: 90%;
   height: 50px;
   @media screen and (min-width: 500px) {
-    margin-top: 80px;
-    margin-bottom: 30px;
+    margin-top: 70px;
+    margin-bottom: 45px;
     width: 450px;
     height: 60px;
   }

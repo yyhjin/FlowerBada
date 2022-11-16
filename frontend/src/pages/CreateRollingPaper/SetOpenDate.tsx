@@ -168,7 +168,10 @@ export default function SetOpenDate() {
 }
 
 const Background = css`
+  position: relative;
+  max-width: 500px;
   width: 100vw;
+  height: 100%;
 `;
 
 const Info = css`
@@ -209,11 +212,9 @@ const Calendar = css`
 `;
 
 const CreateButton = css`
-  position: relative;
+  position: absolute;
+  bottom: 30px;
   margin: auto;
-  margin-top: 40vh;
-  top: 15vw;
-  left: 0;
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 0.6em 1.2em;
@@ -223,12 +224,13 @@ const CreateButton = css`
   cursor: pointer;
   color: white;
   background-color: #16453e;
-  height: 7vh;
-  width: 94vw;
+  height: 60px;
+  left: 5%;
+  width: 90%;
   @media screen and (min-width: 500px) {
-    margin-top: 33vh;
-    top: 120px;
-    width: 450px;
+    bottom: 30px;
+    left: 5%;
+    width: 90%;
     height: 60px;
   }
 `;
