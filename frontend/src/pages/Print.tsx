@@ -31,24 +31,6 @@ const Print = () => {
     }, 5000);
   }, []);
 
-  // useEffect(() => {
-  //   // console.log(messages);
-  //   // console.log('mainImg URI제발', mainImg);
-  //   // onClickPrint();
-  // }, [messages]);
-
-  // const getMessages = () => {
-  //   messageAPI
-  //     .getAllMessage(rollingUrl)
-  //     .then((res) => {
-  //       console.log(res.data.response);
-  //       setMessages(res.data.response);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
   const onClickPrint = () => {
     if (printRef.current) {
       // let printContents = printRef.current.innerHTML;
