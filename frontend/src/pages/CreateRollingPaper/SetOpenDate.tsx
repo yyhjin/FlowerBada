@@ -133,11 +133,11 @@ export default function SetOpenDate() {
   };
 
   const datePickerFocus = (e: any) => {
-    // console.log((e.target.readOnly = true));
+    e.target.readOnly = true;
   };
 
   const datePickerFocusOut = (e: any) => {
-    // console.log((e.target.readOnly = false));
+    e.target.readOnly = false;
   };
 
   return (
