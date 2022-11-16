@@ -96,12 +96,6 @@ export default function RollingPaper(props: any) {
     }
   });
 
-  if (window.innerWidth >= 500) {
-    setLeft((window.innerWidth - 500) / 2 + 'px');
-  } else {
-    setLeft('0px');
-  }
-
   let componentRef = useRef<HTMLDivElement>(null);
   const root = 'https://k7a405.p.ssafy.io/rolling/';
   // const root = 'http://localhost:5173/rolling/';
@@ -155,6 +149,12 @@ export default function RollingPaper(props: any) {
     if (userState.jwt === '') {
       props.Setters.setUrl(paramCopy.url);
       props.Setters.setPageId(paginationId);
+    }
+
+    if (window.innerWidth >= 500) {
+      setLeft((window.innerWidth - 500) / 2 + 'px');
+    } else {
+      setLeft('0px');
     }
 
     setLoading(false);
