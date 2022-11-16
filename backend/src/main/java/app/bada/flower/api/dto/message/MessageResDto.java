@@ -2,7 +2,6 @@ package app.bada.flower.api.dto.message;
 
 import app.bada.flower.api.entity.Message;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 public class MessageResDto {

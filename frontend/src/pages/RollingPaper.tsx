@@ -153,6 +153,12 @@ export default function RollingPaper(props: any) {
       props.Setters.setPageId(paginationId);
     }
 
+    if (window.innerWidth >= 500) {
+      setLeft((window.innerWidth - 500) / 2 + 'px');
+    } else {
+      setLeft('0px');
+    }
+
     setLoading(false);
     setDeliveryModal(false);
     try {
@@ -307,11 +313,6 @@ export default function RollingPaper(props: any) {
         confirmButtonText: '확인',
       });
     } else {
-      if (window.innerWidth >= 500) {
-        setLeft((window.innerWidth - 500) / 2 + 'px');
-      } else {
-        setLeft('0px');
-      }
       setDeliveryModal(true);
     }
   };
@@ -327,6 +328,20 @@ export default function RollingPaper(props: any) {
     } else {
       setDeliveryModal(false);
     }
+  };
+
+  const closePrintModal = () => {
+    setColor(false);
+    // if (userState.jwt === '') {
+    //   MySwal.fire({
+    //     title: '로그인 후<br/>사용 가능합니다!',
+    //     icon: 'warning',
+    //     confirmButtonColor: '#16453e',
+    //     confirmButtonText: '확인',
+    //   });
+    // } else {
+    //   setColor(false);
+    // }
   };
 
   const sendDelivery = () => {
@@ -612,6 +627,30 @@ export default function RollingPaper(props: any) {
                   </ThemeProvider>
                 </DialogActions>
               </DialogCustom>
+              <DialogCustom open={color} left={left}>
+                <DialogTitle id="alert-dialog-title" css={Font}>
+                  안내
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText css={Font}>
+                    다음 업데이트를 기대해주세요 (●&apos;◡&apos;●)
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions css={ActionCss}>
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="contained"
+                      color="neutral"
+                      size="small"
+                      onClick={closePrintModal}
+                      css={Font}
+                      id="no"
+                    >
+                      돌아가기
+                    </Button>
+                  </ThemeProvider>
+                </DialogActions>
+              </DialogCustom>
             </div>
             {/* {rollingDate <= nowDate ? (
               <>
@@ -706,7 +745,7 @@ export default function RollingPaper(props: any) {
           </div>
         </>
       ) : (
-        <div css={Loading}>로딩중</div>
+        <div css={Loading}></div>
       )}
     </>
   );
@@ -1196,6 +1235,9 @@ const Dot = css`
 // `;
 
 const Loading = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100vw;
 `;
 

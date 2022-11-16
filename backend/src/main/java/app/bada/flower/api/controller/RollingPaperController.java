@@ -2,13 +2,9 @@ package app.bada.flower.api.controller;
 
 
 import app.bada.flower.api.dto.ResponseDto;
-import app.bada.flower.api.dto.message.MessageResDto;
 import app.bada.flower.api.dto.rollingpaper.BookmarkResDto;
 import app.bada.flower.api.dto.rollingpaper.RollingPaperReqDto;
-import app.bada.flower.api.dto.rollingpaper.RollingPaperResDto;
 import app.bada.flower.api.entity.RollingPaper;
-import app.bada.flower.api.repository.MessageRepository;
-import app.bada.flower.api.service.MessageService;
 import app.bada.flower.api.service.RollingPaperService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

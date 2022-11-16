@@ -332,7 +332,7 @@ export default function SelectItem() {
         </Grid>
       </div>
 
-      <div>
+      <div className="button-div">
         {isOwned(selectIdx) ? (
           <button
             css={BuyButton(selectedImg === '')}
@@ -370,10 +370,15 @@ const modal = css`
 `;
 
 const StoreDiv = css`
+  position: relative;
   width: 100vw;
-  height: 100vw;
+  height: 100%;
   min-height: -webkit-fill-available;
   max-height: -webkit-fill-available;
+
+  .button-div {
+    height: 100px;
+  }
 `;
 
 const points = css`
@@ -432,7 +437,7 @@ const empty = css`
 
 const selectBox = css`
   position: relative;
-  top: 10vw;
+  top: 50px;
 `;
 
 const GridContainer = css`
@@ -463,6 +468,7 @@ const GridStyle = css`
   height: 30vw;
 
   .item_image {
+    cursor: pointer;
     width: 20vw;
     position: absolute;
     margin-top: 3vw;
@@ -471,14 +477,17 @@ const GridStyle = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
   }
   .locked_image {
+    cursor: pointer;
     z-index: 2;
     width: 25vw;
     opacity: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
   }
   @media screen and (min-width: 500px) {
     height: 155px;
@@ -487,6 +496,7 @@ const GridStyle = css`
       margin-left: 0px;
       z-index: 1;
       width: 80%;
+      cursor: pointer;
     }
     .locked_image {
       z-index: 2;
@@ -494,30 +504,31 @@ const GridStyle = css`
       opacity: 100%;
       display: grid;
       left: 25px;
+      cursor: pointer;
     }
   }
 `;
 
-const BuyButton = (isSeleceted: boolean) => css`
+const BuyButton = (isOwned: boolean) => css`
   position: relative;
-  margin: auto;
+  margin-top: 70px;
   margin-bottom: 20px;
-  top: 15vw;
+  top: 10px;
   left: 0;
-  border: 1px solid transparent;
   border-radius: 8px;
+  border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
-  background-color: ${!isSeleceted ? '#16453e' : '#9c9c9c'};
-  height: 7vh;
-  width: 94vw;
-  margin-bottom: 150px;
+  /* transition: border-color 0.25s; */
+  background-color: ${!isOwned ? '#16453e' : '#9c9c9c'};
+  width: 90%;
+  height: 50px;
   @media screen and (min-width: 500px) {
-    margin-top: 5vw;
-    top: 140px;
+    margin-top: 70px;
+    margin-bottom: 45px;
     width: 450px;
     height: 60px;
   }

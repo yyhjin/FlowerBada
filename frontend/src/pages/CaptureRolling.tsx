@@ -61,7 +61,7 @@ const CaptureRolling = forwardRef(
           // console.log(+img?.clientWidth, +img?.clientHeight);
           setImgHeight(+img?.clientHeight);
         }
-      }, 500);
+      }, 50);
     };
 
     useEffect(() => {

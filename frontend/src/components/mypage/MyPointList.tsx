@@ -232,16 +232,17 @@ const totalCSS = css`
     text-overflow: ellipsis;
   }
   .datebox {
-    width: 20vw;
+    width: 20%;
     min-width: 60px;
   }
   .contentbox {
+    width: 65%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .pointbox {
-    width: 15vw;
+    width: 15%;
     min-width: 30px;
   }
 `;

@@ -21,7 +21,7 @@ export default function SetOpenDate() {
 
   const today = new Date(utc + KR_TIME_DIFF);
   const tomorrow = new Date(utc + KR_TIME_DIFF);
-  console.log(today);
+  // console.log(today);
 
   tomorrow.setDate(today.getDate() + 1);
   const navigate = useNavigate();
@@ -56,6 +56,7 @@ export default function SetOpenDate() {
       day = '0' + day;
     }
     let localDateTime = year + '-' + month + '-' + day + 'T00:00';
+
     try {
       const res: any = await rollingAPI.makeRolling(
         userState.jwt,
@@ -132,11 +133,11 @@ export default function SetOpenDate() {
   };
 
   const datePickerFocus = (e: any) => {
-    // console.log((e.target.readOnly = true));
+    e.target.readOnly = true;
   };
 
   const datePickerFocusOut = (e: any) => {
-    // console.log((e.target.readOnly = false));
+    e.target.readOnly = false;
   };
 
   return (
@@ -156,19 +157,23 @@ export default function SetOpenDate() {
           placeholderText="롤링페이퍼 개봉 날짜 선택" // placeholder
           selected={date} // value
           onChange={(date: Date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
-          onFocus={datePickerFocus}
-          onBlur={datePickerFocusOut}
+          // onFocus={datePickerFocus}
+          // onBlur={datePickerFocusOut}
+          onFocus={(e) => e.currentTarget.blur()}
         />
       </div>
       <button onClick={handleRollingLink} css={CreateButton}>
-        롤페 생성
+        롤링페이퍼 생성
       </button>
     </div>
   );
 }
 
 const Background = css`
+  position: relative;
+  max-width: 500px;
   width: 100vw;
+  height: 100%;
 `;
 
 const Info = css`
@@ -177,6 +182,7 @@ const Info = css`
   @media screen and (max-width: 300px) {
     font-size: 20px;
   }
+  margin-bottom: 2rem;
 `;
 
 const Writing = css`
@@ -192,14 +198,25 @@ const Calendar = css`
   @media screen and (min-width: 500px) {
     margin: 0 auto;
   }
+
+  .react-datepicker-wrapper {
+    margin-top: 2rem;
+    input {
+      height: 36px;
+      text-align: center;
+      border: solid 2px;
+      border-radius: 5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
 `;
 
 const CreateButton = css`
-  position: relative;
+  position: absolute;
+  bottom: 30px;
   margin: auto;
-  margin-top: 40vh;
-  top: 15vw;
-  left: 0;
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 0.6em 1.2em;
@@ -209,12 +226,13 @@ const CreateButton = css`
   cursor: pointer;
   color: white;
   background-color: #16453e;
-  height: 7vh;
-  width: 94vw;
+  height: 60px;
+  left: 5%;
+  width: 90%;
   @media screen and (min-width: 500px) {
-    margin-top: 33vh;
-    top: 140px;
-    width: 450px;
+    bottom: 30px;
+    left: 5%;
+    width: 90%;
     height: 60px;
   }
 `;

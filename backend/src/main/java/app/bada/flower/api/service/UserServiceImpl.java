@@ -1,6 +1,5 @@
 package app.bada.flower.api.service;
 
-import app.bada.flower.api.dto.user.SignInResDto;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.UserRepository;
 import app.bada.flower.api.service.jwt.JwtTokenUtil;
@@ -8,12 +7,10 @@ import app.bada.flower.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 
-import static app.bada.flower.exception.ErrorCode.POSTS_NOT_FOUND;
 import static app.bada.flower.exception.ErrorCode.USER_NOT_FOUND;
 
 @Service

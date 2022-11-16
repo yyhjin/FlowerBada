@@ -2,7 +2,6 @@ package app.bada.flower.api.converter;
 
 import app.bada.flower.api.dto.message.MessageResDto;
 import app.bada.flower.api.entity.Message;
-import app.bada.flower.api.repository.FlowerItemRepository;
 import org.springframework.stereotype.Component;
 
 @Component

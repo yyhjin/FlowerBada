@@ -8,7 +8,6 @@ import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.UserRepository;
 import app.bada.flower.api.service.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -96,7 +94,7 @@ public class OAuthService {
                     System.out.println("--------소셜 회원가입--------");
                     user = User.builder()
                             .token(String.valueOf(kakaoUser.getId()))
-                            .points(50) // 회원가입 시에 50포인트 지급
+                            .points(200) // 회원가입 시에 200포인트 지급
                             .nickname(kakaoUser.getNickname())
                             .roles(Arrays.asList("ROLE_USER"))
                             .lastLoginDate(LocalDateTime.now())
