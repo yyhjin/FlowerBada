@@ -161,6 +161,8 @@ export default function SetOpenDate() {
           // onBlur={datePickerFocusOut}
           onFocus={(e) => e.currentTarget.blur()}
         />
+
+        <div className="infor">Safari Browser의 경우 날짜를 꾹 눌러주세요!</div>
       </div>
       <button onClick={handleRollingLink} css={CreateButton}>
         롤링페이퍼 생성
@@ -210,6 +212,11 @@ const Calendar = css`
       font-weight: bold;
       cursor: pointer;
     }
+  }
+
+  .infor {
+    margin-top: 15px;
+    color: orangered;
   }
 `;
 

@@ -88,6 +88,8 @@ export default function RollingPaper(props: any) {
   const [leng, setLeng] = useState<string>('0pt');
   const [mediaLeng, setMediaLeng] = useState<string>('0pt');
 
+  const captureRef = useRef<any>(null);
+
   window.addEventListener('resize', function () {
     if (window.innerWidth >= 500) {
       setLeft((window.innerWidth - 500) / 2 + 'px');
@@ -408,10 +410,6 @@ export default function RollingPaper(props: any) {
     }
   };
 
-  const saveRolling = () => {
-    setColor(true);
-  };
-
   useEffect(() => {
     const paginationCheck = localStorage.getItem('paginationId');
     if (paginationCheck) setPaginationId(+paginationCheck);
@@ -419,19 +417,28 @@ export default function RollingPaper(props: any) {
     localStorage.removeItem('paginationId');
   }, []);
 
+  const saveRolling = () => {
+    setColor(true);
+  };
+
   useEffect(() => {
-    // if (color) {
-    //   // 캡쳐
-    //   // 프린트 페이지로 이동
-    //   navigate('/rolling/print', {
-    //     state: {
-    //       rollingUrl: paramCopy.url,
-    //       mainImg: rolling.imgUrl,
-    //       type,
-    //       rolling,
-    //     },
-    //   });
-    // }
+    const goPrintAsync = async () => {
+      if (color) {
+        // 캡쳐
+        await captureRef.current.captureToPrint();
+        setColor(false);
+        // 프린트 페이지로 이동
+        // navigate('/rolling/print', {
+        //   state: {
+        //     rollingUrl: paramCopy.url,
+        //     mainImg: rolling.imgUrl,
+        //     type,
+        //     rolling,
+        //   },
+        // });
+      }
+    };
+    goPrintAsync();
   }, [color]);
 
   const dateBeforeActions = [
@@ -483,14 +490,6 @@ export default function RollingPaper(props: any) {
   useEffect(() => {
     getRolling();
   }, [paginationId]);
-
-  useEffect(() => {
-    if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
-      setCapture(true);
-    } else {
-      setCapture(false);
-    }
-  }, [rolling.imgUrl]);
 
   const captureGo = () => {
     navigate('/rolling/capture', {
@@ -733,18 +732,17 @@ export default function RollingPaper(props: any) {
               </div>
             )} */}
           </div>
-          {capture ? (
-            <div css={CapturePage}>
-              <CaptureRolling
-                type={type}
-                rolling={rolling}
-                nowDate={nowDate}
-                rollingDate={rollingDate}
-                url={paramCopy.url}
-                color={false}
-              />
-            </div>
-          ) : null}
+          <div css={CapturePage}>
+            <CaptureRolling
+              ref={captureRef}
+              type={type}
+              rolling={rolling}
+              nowDate={nowDate}
+              rollingDate={rollingDate}
+              url={paramCopy.url}
+              color={color}
+            />
+          </div>
         </>
       ) : (
         <div css={Loading}></div>
