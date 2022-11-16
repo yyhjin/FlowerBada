@@ -9,6 +9,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CaptureRolling from '@pages/CaptureRolling';
 
 import {
   Dialog,
@@ -22,7 +23,6 @@ import {
 import rollingAPI from '@api/rollingAPI';
 import Star from '@assets/Star.png';
 import EmptyStar from '@assets/EmptyStar.png';
-import Delivery from '@assets/Delivery.png';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
@@ -32,10 +32,6 @@ import Login from '@assets/login_btn.png';
 import html2canvas from 'html2canvas';
 // import { useReactToPrint } from 'react-to-print';
 import updateTokens from '@utils/updateTokens';
-
-import Print from '@pages/Print';
-import Main from '@pages/MainPage';
-import View from '@pages/View';
 
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
@@ -86,7 +82,11 @@ export default function RollingPaper(props: any) {
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
   const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
+  const [color, setColor] = useState<Boolean>(false);
   const [left, setLeft] = useState<string>('0px');
+  const [capture, setCapture] = useState<Boolean>(false);
+  const [leng, setLeng] = useState<string>('0pt');
+  const [mediaLeng, setMediaLeng] = useState<string>('0pt');
 
   window.addEventListener('resize', function () {
     if (window.innerWidth >= 500) {
@@ -98,6 +98,7 @@ export default function RollingPaper(props: any) {
 
   let componentRef = useRef<HTMLDivElement>(null);
   const root = 'https://k7a405.p.ssafy.io/rolling/';
+  // const root = 'http://localhost:5173/rolling/';
   const VITE_APP_KAKAO_KEY = import.meta.env.VITE_APP_KAKAO_KEY;
 
   function afterGetRolling(res: any) {
@@ -160,6 +161,21 @@ export default function RollingPaper(props: any) {
         paginationId,
       );
       afterGetRolling(res);
+
+      let titleLength = res.data.response.title.length;
+      if (titleLength >= 16) {
+        setLeng('12px');
+        setMediaLeng('15px');
+      } else if (titleLength >= 11) {
+        setLeng('15px');
+        setMediaLeng('18px');
+      } else if (titleLength >= 6) {
+        setLeng('20px');
+        setMediaLeng('25px');
+      } else {
+        setLeng('30px');
+        setMediaLeng('37px');
+      }
     } catch (err: any) {
       if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
         MySwal.fire({
@@ -377,8 +393,8 @@ export default function RollingPaper(props: any) {
     }
   };
 
-  const print = () => {
-    alert('프린트 만들고 연결하면 됨!');
+  const saveRolling = () => {
+    setColor(true);
   };
 
   useEffect(() => {
@@ -388,20 +404,20 @@ export default function RollingPaper(props: any) {
     localStorage.removeItem('paginationId');
   }, []);
 
-  const saveRolling = () => {
-    navigate('/rolling/print', {
-      state: {
-        rolling,
-        type,
-        valid,
-        mainImg: rolling.imgUrl,
-      },
-    });
-  };
-
-  const shareRolling = () => {
-    navigate('/newroll/link', { state: paramCopy.url });
-  };
+  useEffect(() => {
+    if (color) {
+      // 캡쳐
+      // 프린트 페이지로 이동
+      navigate('/rolling/print', {
+        state: {
+          rollingUrl: paramCopy.url,
+          mainImg: rolling.imgUrl,
+          type,
+          rolling,
+        },
+      });
+    }
+  }, [color]);
 
   const dateBeforeActions = [
     { icon: <EditIcon />, name: '메시지 작성', function: moveMessageWrite },
@@ -428,7 +444,7 @@ export default function RollingPaper(props: any) {
 
   const dateAfterActions = [
     { icon: <LocalShippingIcon />, name: '배송', function: openDeliveryModal },
-    { icon: <PrintIcon />, name: '프린트', function: print },
+    { icon: <PrintIcon />, name: '프린트', function: saveRolling },
     {
       icon: (
         <img
@@ -455,35 +471,24 @@ export default function RollingPaper(props: any) {
 
   useEffect(() => {
     if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
-      // 캡쳐 및 DB 저장
-      const el = document.getElementById('to-save');
-      if (el) {
-        html2canvas(el).then((canvas: any) => {
-          onSaveAs(
-            canvas.toDataURL('image/png'),
-            `final-image-` + paramCopy.url + `.png`,
-          );
-        });
-      }
+      setCapture(true);
+    } else {
+      setCapture(false);
     }
-  }, [rolling]);
+  }, [rolling.imgUrl]);
 
-  const onSaveAs = (uri: string, filename: string): void => {
-    let link: any = document.createElement('a');
-    document.body.appendChild(link);
-    link.href = uri;
-    // link.download = filename;
-    // link.click();
-    document.body.removeChild(link);
-    messageAPI.updateRollingImg(
-      userState.jwt,
-      userState.refresh,
-      paramCopy.url,
-      { imgUrl: uri },
-    );
-  };
-  const check = () => {
-    alert('테스트 성공');
+  const captureGo = () => {
+    navigate('/rolling/capture', {
+      state: {
+        // rollingUrl: paramCopy.url,
+        // mainImg: rolling.imgUrl,
+        type,
+        valid,
+        rolling,
+        nowDate,
+        rollingDate,
+      },
+    });
   };
 
   return (
@@ -491,7 +496,14 @@ export default function RollingPaper(props: any) {
       {loading && rolling && rolling.messages && type ? (
         <>
           <div>
-            <div css={DetailCss}>
+            <div css={DetailCss({ leng: leng, mediaLeng: mediaLeng })}>
+              {!valid ? (
+                <div className={`valid_${type}`}>
+                  {rolling.date} 이후로 개봉 가능합니다.
+                </div>
+              ) : (
+                <div className={`valid_${type}`}>꽃을 눌러보세요!</div>
+              )}
               <div className={`titlezone_${type}`}>
                 <div className="title">{rolling.title}</div>
                 {bookmark ? (
@@ -505,94 +517,66 @@ export default function RollingPaper(props: any) {
                 )}
               </div>
 
-              <div css={SaveParent}>
-                <div>
-                  <div className={`imgbox_${type}`}>
-                    <img src={'/src/assets/' + rolling.imgBack}></img>
-                  </div>
-                  <div className="flowerlist">
-                    {rolling.messages.map((message, index) => {
-                      return (
-                        <div key={index} className={`flowerbox_${type}`}>
-                          <Message
-                            imgUrl={message.imgUrl}
-                            messageId={message.messageId}
-                            writer={message.writer}
-                            valid={valid}
-                            writerDisplay={true}
-                            type={type}
-                          ></Message>
-                        </div>
-                      );
-                    })}
-                  </div>
+              {/* <div css={SaveParent(color, imgWidth, imgHeight)}> */}
+              <div>
+                <div className={`imgbox_${type}`}>
+                  <img
+                    id="base-img"
+                    src={'/src/assets/' + rolling.imgBack}
+                  ></img>
                 </div>
-                <div className={`imgbox_front_${type}`}>
-                  <img src={'/src/assets/' + rolling.imgFront}></img>
-                </div>
-                <div id="to-save" className="save-child">
-                  <div className={`imgbox_${type}`}>
-                    <img src={'/src/assets/' + rolling.imgBack}></img>
-                  </div>
-                  <div className="flowerlist">
-                    {rolling.messages.map((message, index) => {
-                      return (
-                        <div key={index} className={`flowerbox_${type}`}>
-                          <Message
-                            imgUrl={message.imgUrl}
-                            messageId={message.messageId}
-                            writer={message.writer}
-                            valid={valid}
-                            writerDisplay={false}
-                            type={type}
-                          ></Message>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className={`imgbox_front_${type}`}>
-                    <img src={'/src/assets/' + rolling.imgFront}></img>
-                  </div>
+                <div className="flowerlist">
+                  {rolling.messages.map((message, index) => {
+                    return (
+                      <div key={index} className={`flowerbox_${type}`}>
+                        <Message
+                          imgUrl={message.imgUrl}
+                          messageId={message.messageId}
+                          writer={message.writer}
+                          valid={valid}
+                          writerDisplay={true}
+                          type={type}
+                        ></Message>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-              {!valid ? (
-                <div className={`valid_${type}`}>
-                  {rolling.date} 이후로 개봉 가능합니다.
-                </div>
-              ) : (
-                <div className={`valid_${type}`}>꽃을 눌러보세요!</div>
-              )}
+              <div className={`imgbox_front_${type}`}>
+                <img src={'/src/assets/' + rolling.imgFront}></img>
+              </div>
             </div>
             {/* <div css={`dot_${type}`}> */}
             <div css={Dot}>
-              <SpeedDial
-                ariaLabel="SpeedDial openIcon example"
-                sx={{ position: 'absolute', bottom: 16, right: 16 }}
-                icon={<SpeedDialIcon />}
-                className="speed-dial-zone"
-              >
-                {rollingDate <= nowDate
-                  ? dateAfterActions.map((action) => (
-                      <SpeedDialAction
-                        key={action.name}
-                        icon={action.icon}
-                        onClick={action.function}
-                      />
-                    ))
-                  : dateBeforeActions.map((action) => (
-                      <SpeedDialAction
-                        key={action.name}
-                        icon={action.icon}
-                        onClick={action.function}
-                      />
-                    ))}
-              </SpeedDial>
-
-              <DotSlice
-                paginationId={paginationId}
-                setPaginationId={setPaginationId}
-                stepNumber={stepNumber}
-              ></DotSlice>
+              <ThemeProvider theme={theme}>
+                <SpeedDial
+                  ariaLabel="SpeedDial openIcon example"
+                  sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                  icon={<SpeedDialIcon />}
+                  className="speed-dial-zone"
+                >
+                  {rollingDate <= nowDate
+                    ? dateAfterActions.map((action) => (
+                        <SpeedDialAction
+                          key={action.name}
+                          icon={action.icon}
+                          onClick={action.function}
+                        />
+                      ))
+                    : dateBeforeActions.map((action) => (
+                        <SpeedDialAction
+                          key={action.name}
+                          icon={action.icon}
+                          onClick={action.function}
+                        />
+                      ))}
+                </SpeedDial>
+                <DotSlice
+                  paginationId={paginationId}
+                  setPaginationId={setPaginationId}
+                  stepNumber={stepNumber}
+                ></DotSlice>
+              </ThemeProvider>
               <DialogCustom open={deliveryModal} left={left}>
                 <DialogTitle id="alert-dialog-title" css={Font}>
                   확인해주세요
@@ -638,6 +622,7 @@ export default function RollingPaper(props: any) {
                       size="large"
                       color="primary"
                       className="share-btn"
+                      onClick={saveRolling}
                     >
                       <SaveAltIcon fontSize="large" />
                     </IconButton>
@@ -709,6 +694,18 @@ export default function RollingPaper(props: any) {
               </div>
             )} */}
           </div>
+          {capture ? (
+            <div css={CapturePage}>
+              <CaptureRolling
+                type={type}
+                rolling={rolling}
+                nowDate={nowDate}
+                rollingDate={rollingDate}
+                url={paramCopy.url}
+                color={false}
+              />
+            </div>
+          ) : null}
         </>
       ) : (
         <div css={Loading}>로딩중</div>
@@ -717,97 +714,105 @@ export default function RollingPaper(props: any) {
   );
 }
 
-const DetailCss = css`
+const DetailCss = (props: any) => css`
   width: 100%;
   height: 100%;
   position: relative;
   transform: translate(0%, -15%);
   .valid_1 {
-    justify-content: center;
-  }
-  .valid_2 {
-    margin-top: 20vh;
+    margin-top: 25vh;
     justify-content: center;
     @media screen and (min-width: 1000px) {
-      margin-top: 25vh;
+      margin-top: 30vh;
     }
+  }
+  .valid_2 {
+    margin-top: 30vh;
+    justify-content: center;
+    @media screen and (min-width: 1000px) {
+    }
+  }
+  .valid_3 {
+    margin-top: 35vh;
+    justify-content: center;
   }
   .titlezone_1 {
     justify-content: center;
-    padding-top: 150px;
-    margin-bottom: -10vh;
-    font-size: 7.5vw;
+    padding-top: 50px;
+    margin-bottom: -20vh;
+    font-size: ${props.leng};
     display: flex;
     @media screen and (min-width: 500px) {
-      padding-top: 180px;
-      font-size: 25pt;
-      margin-bottom: -50px;
+      padding-top: 50px;
+      font-size: ${props.mediaLeng};
+      margin-bottom: -100px;
     }
     @media screen and (max-width: 300px) {
       padding-top: 150px;
       margin-bottom: -50px;
     }
     @media screen and (min-height: 700px) {
-      padding-top: 150px;
-      margin-bottom: -50px;
+      padding-top: 50px;
+      margin-bottom: -100px;
     }
     @media screen and (min-width: 1000px) {
-      padding-top: 150px;
-      margin-bottom: -115px;
+      padding-top: 50px;
+      margin-bottom: -150px;
     }
   }
   .titlezone_2 {
     justify-content: center;
-    padding-top: 150px;
-    margin-bottom: 0vh;
-    font-size: 7.5vw;
+    padding-top: 30px;
+    margin-bottom: -50px;
+    font-size: ${props.leng};
     display: flex;
     @media screen and (min-width: 500px) {
-      padding-top: 180px;
-      margin-bottom: -20vh;
-      font-size: 25pt;
+      padding-top: 20px;
+      margin-bottom: -100px;
+      font-size: ${props.mediaLeng};
     }
     @media screen and (max-width: 300px) {
-      padding-top: 150px;
+      padding-top: 20px;
       margin-bottom: -50px;
     }
     @media screen and (min-height: 700px) {
-      padding-top: 180px;
+      padding-top: 20px;
       margin-bottom: -50px;
     }
     @media screen and (min-width: 1000px) {
-      padding-top: 180px;
+      padding-top: 20px;
       margin-bottom: -150px;
     }
   }
   .titlezone_3 {
     justify-content: center;
-    padding-top: 150px;
-    margin-bottom: 0vh;
-    font-size: 7.5vw;
+    padding-top: 50px;
+    margin-bottom: -10vh;
+    font-size: ${props.leng};
     display: flex;
     @media screen and (min-width: 500px) {
-      padding-top: 180px;
-      margin-bottom: -20vh;
-      font-size: 25pt;
+      padding-top: 60px;
+      margin-bottom: -30vh;
+      font-size: ${props.mediaLeng};
     }
     @media screen and (max-width: 300px) {
-      padding-top: 150px;
+      padding-top: 50px;
       margin-bottom: -50px;
     }
     @media screen and (min-height: 700px) {
-      padding-top: 180px;
-      margin-bottom: -50px;
+      padding-top: 60px;
+      margin-bottom: -120px;
     }
     @media screen and (min-width: 1000px) {
-      padding-top: 180px;
-      margin-bottom: -150px;
+      padding-top: 50px;
+      margin-bottom: -200px;
     }
   }
 
   .flowerlist {
     /* width: 100%; */
     position: static;
+    /* margin-top: -100px; */
 
     .flowerbox_1 {
       position: relative;
@@ -1236,18 +1241,6 @@ const ActionCss = css`
   }
 `;
 
-const SaveParent = css`
-  position: relative;
-
-  .save-child {
-    background-color: #f2f0ef;
-    height: 70vh;
-    position: absolute;
-    top: 0;
-    z-index: -1;
-  }
-`;
-
 const DialogCustom: any = styled(Dialog)((props: any) => ({
   '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
     boxShadow: 'none',
@@ -1265,3 +1258,9 @@ const DialogCustom: any = styled(Dialog)((props: any) => ({
     left: `${props.left}`,
   },
 }));
+
+const CapturePage = css`
+  position: absolute;
+  top: 0;
+  z-index: -2;
+`;
