@@ -20,7 +20,7 @@ import {
   IconButton,
 } from '@mui/material';
 
-interface IMsg {
+export interface IMsg {
   messageId?: number;
   flowerId?: number;
   content?: string;
@@ -46,16 +46,16 @@ export default function Message(props: {
   const [left, setLeft] = useState<string>('0px');
 
   window.addEventListener('resize', function () {
-    if (window.innerWidth >= 500) {
-      setLeft((window.innerWidth - 500) / 2 + 'px');
+    if (window.outerWidth >= 500) {
+      setLeft((window.outerWidth - 500) / 2 + 'px');
     } else {
       setLeft('0px');
     }
   });
 
   async function getMessage() {
-    if (window.innerWidth >= 500) {
-      setLeft((window.innerWidth - 500) / 2 + 'px');
+    if (window.outerWidth >= 500) {
+      setLeft((window.outerWidth - 500) / 2 + 'px');
     } else {
       setLeft('0px');
     }

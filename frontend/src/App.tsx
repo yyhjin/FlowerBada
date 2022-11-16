@@ -25,9 +25,11 @@ import SignIn from '@pages/SignIn';
 import MessageCreate from '@pages/MessageCreate';
 import CaptureTest from '@pages/CaptureTest';
 import Print from '@pages/Print';
-import View from '@pages/View';
 import Error from '@pages/error/Error';
 import Manual from '@pages/Manual';
+import View from '@pages/View';
+import CaptureRolling from '@pages/CaptureRolling';
+
 function App() {
   const [loginUser] = useRecoilState(userReCoil);
   const [url, setUrl] = useState<string>('');
@@ -105,6 +107,7 @@ function App() {
               </Route>
               <Route path="/rolling/print" element={<Print />} />
               <Route path="/rolling/view" element={<View />} />
+              <Route path="/rolling/capture" element={<CaptureRolling />} />
             </>
           )}
         </Routes>
