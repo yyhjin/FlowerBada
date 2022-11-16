@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
 import {
@@ -10,9 +9,14 @@ import MainGreenHouse from '@assets/main_menu/main_greenhouse.png';
 import MainMyPage from '@assets/main_menu/main_mypage.png';
 import MainNewRoll from '@assets/main_menu/main_newroll.png';
 import MainStore from '@assets/main_menu/main_store.png';
-import LogoutBtn from '@assets/logout_btn.png';
-import { useEffect } from 'react';
+import LogoutBtn from '@assets/logout.png';
 import userAPI from '@src/api/userAPI';
+import SpeedDial from '@mui/material/SpeedDial';
+import PersonIcon from '@mui/icons-material/Person';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import MyPageIcon from '@assets/mypageicon.png';
 
 const Mainpage = () => {
   const navigate = useNavigate();
@@ -64,14 +68,74 @@ const Mainpage = () => {
   const moveNewRoll = () => {
     navigate('/newroll/item');
   };
+  const moveManual = () => {
+    navigate('/manual');
+  };
   const moveMyPage = () => {
     navigate('/mypage');
   };
 
+  const userMenuActions = [
+    {
+      icon: (
+        <img
+          src={MyPageIcon}
+          style={{
+            userSelect: 'none',
+            width: '0.8em',
+            height: '0.8em',
+            display: 'inline-block',
+            fill: 'currentColor',
+            flexShrink: '0',
+            fontSize: '1.5rem',
+          }}
+        />
+      ),
+      name: '마이페이지',
+      function: moveMyPage,
+    },
+    {
+      icon: (
+        <img
+          src={LogoutBtn}
+          style={{
+            userSelect: 'none',
+            width: '0.8em',
+            height: '0.8em',
+            display: 'inline-block',
+            fill: 'currentColor',
+            flexShrink: '0',
+            fontSize: '1.5rem',
+          }}
+        />
+      ),
+      name: '로그아웃',
+      function: signOut,
+    },
+  ];
+
   return (
     <div css={TestCSS}>
+      <div css={Dot}>
+        <SpeedDial
+          ariaLabel="유저 메뉴"
+          sx={{ position: 'absolute', bottom: 16, right: 16 }}
+          // icon={<PersonIcon openIcon={<SpeedDialIcon />} />}
+          // icon={<SpeedDialIcon openIcon={<PersonIcon />} />}
+          icon={<PersonIcon />}
+          className="speed-dial-zone"
+          direction="down"
+        >
+          {userMenuActions.map((action) => (
+            <SpeedDialAction
+              key={action.name}
+              icon={action.icon}
+              onClick={action.function}
+            />
+          ))}
+        </SpeedDial>
+      </div>
       <h2 className="main_title">꽃바다</h2>
-      <img src={LogoutBtn} className="logout_btn" onClick={signOut} />
       <div className="only_web">꽃바다는 모바일 환경에 최적화되어있습니다.</div>
       <div className="main_menu">
         <div className="first_row">
@@ -89,9 +153,9 @@ const Mainpage = () => {
             <img src={MainNewRoll} alt="롤링페이퍼 생성버튼" />
             <p>새로만들기</p>
           </div>
-          <div className="mypage" onClick={moveMyPage}>
+          <div className="mypage" onClick={moveManual}>
             <img src={MainMyPage} alt="마이페이지 버튼" />
-            <p>마이페이지</p>
+            <p>이용가이드</p>
           </div>
         </div>
       </div>
@@ -125,14 +189,18 @@ const TestCSS = css`
     position: absolute;
     top: 1rem;
     right: 1rem;
-    width: 2rem;
+    /* width: 2rem; */
+    border: none;
+    color: gray;
+    font-size: 10px;
   }
 
   .logout_btn:hover,
   .logout_btn:active {
-    transform: scale(1.05, 1.05);
-    transition: all ease 0.2s;
+    /* transform: scale(1.05, 1.05); */
+    /* transition: all ease 0.2s; */
     cursor: pointer;
+    color: darkgray;
   }
 
   .main_menu {
@@ -238,6 +306,29 @@ const TestCSS = css`
       display: block;
       color: #16453e;
       text-shadow: 8px 8px 8px gray;
+    }
+  }
+`;
+
+const Dot = css`
+  position: absolute;
+  z-index: 20;
+  width: 100%;
+  bottom: 70vh;
+  /* right: 100px; */
+  margin: 0;
+  padding: 0;
+  /* margin-top: 0vh; */ /* top: 100vw; */
+  .speed-dial-zone {
+    /* padding-bottom: 50px; */
+    .MuiButtonBase-root {
+      width: 10vw;
+      height: 10vw;
+      background-color: lightgray;
+      @media screen and (min-width: 500px) {
+        width: 50px;
+        height: 50px;
+      }
     }
   }
 `;

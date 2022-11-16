@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 @Api(value = "메시지 API", tags = {"메시지"})
 @CrossOrigin("*")
@@ -67,7 +70,6 @@ public class MessageController {
         }else{
             return new ResponseEntity<>(new ResponseDto("아직 개봉날짜 전입니다."), HttpStatus.FORBIDDEN);
         }
-
     }
 
 
@@ -120,6 +122,21 @@ public class MessageController {
             return new ResponseEntity("해당 롤링페이퍼가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+
+    @GetMapping("/getall/{url}")
+    @ApiOperation(value = "메시지 전체 조회", notes = "선택한 롤링페이퍼의 모든 메시지를 조회한다.")
+    public ResponseEntity<ResponseDto> getAllMsg(@PathVariable("url") String url) {
+
+        List<MessageResDto.MessageDto> messages = messageService.getAllMessage(url);
+
+        if(messages.size() > 0) {
+            return new ResponseEntity<>(new ResponseDto(messages), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(new ResponseDto("message get fail"), HttpStatus.FORBIDDEN);
+        }
     }
 
     @PostMapping("/getimgurl/{rollingUrl}")

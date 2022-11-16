@@ -30,9 +30,15 @@ body {
   height: 100vh;
   margin: 0 auto;
   text-align: center;
-  /* overflow-y: hidden; */
+  overflow-y: hidden;
   overflow-x: hidden;
+  overflow-y: scroll;
   background-color: #f2f0ef;
+  -ms-overflow-style: none;
+}
+
+#root::-webkit-scrollbar {
+  display: none;
 }
 
 button:focus {

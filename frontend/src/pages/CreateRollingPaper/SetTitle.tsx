@@ -56,7 +56,9 @@ export default function SetTitle() {
 }
 
 const Background = css`
+  position: relative;
   width: 100vw;
+  height: 100%;
   .maxlength {
     margin-top: 1vh;
     margin-right: 17vw;
@@ -97,11 +99,9 @@ const SelectImage = css`
 `;
 
 const NextButton = css`
-  position: relative;
+  position: absolute;
+  bottom: 30px;
   margin: auto;
-  margin-bottom: 20px;
-  top: 15vw;
-  left: 0;
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 0.6em 1.2em;
@@ -111,13 +111,14 @@ const NextButton = css`
   cursor: pointer;
   color: white;
   background-color: #16453e;
-  height: 7vh;
-  width: 94vw;
+  height: 60px;
+  left: 5%;
+  width: 90%;
   /* margin-bottom: 200px; */
   @media screen and (min-width: 500px) {
-    margin-top: 5vw;
-    top: 140px;
-    width: 450px;
+    bottom: 30px;
+    left: 5%;
+    width: 90%;
     height: 60px;
   }
 `;
