@@ -426,6 +426,7 @@ const empty = css`
   .tooltip {
     display: flex;
     justify-content: end;
+    margin-bottom: 20px;
   }
   @media screen and (min-width: 500px) {
     padding: 0vh;
