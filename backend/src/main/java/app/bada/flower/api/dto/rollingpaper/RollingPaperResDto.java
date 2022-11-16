@@ -1,7 +1,6 @@
 package app.bada.flower.api.dto.rollingpaper;
 
 import app.bada.flower.api.dto.message.MessageResDto;
-import app.bada.flower.api.entity.Message;
 import lombok.Getter;
 import lombok.Setter;
 
