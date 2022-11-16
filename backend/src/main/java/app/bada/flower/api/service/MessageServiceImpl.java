@@ -21,11 +21,11 @@ import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
-
     private final MessageRepository messageRepository;
     private final FlowerItemRepository flowerItemRepository;
     private final RollingPaperRepository rollingPaperRepository;
@@ -145,5 +145,18 @@ public class MessageServiceImpl implements MessageService {
                 .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         rollingPaper.imgUrlUpdate(imgUrl);
         rollingPaperRepository.save(rollingPaper);
+    }
+
+    @Override
+    public List<MessageResDto.MessageDto> getAllMessage(String rollingUrl) {
+        List<Message> messages = rollingPaperRepository.findByUrl(rollingUrl).get().getMessages();
+        List<MessageResDto.MessageDto> messageDtos = new ArrayList<>();
+
+        for (int i = 0; i < messages.size(); i++) {
+            MessageResDto.MessageDto messageDto = new MessageResDto.MessageDto(messages.get(i));
+            messageDtos.add(messageDto);
+        }
+
+        return messageDtos;
     }
 }

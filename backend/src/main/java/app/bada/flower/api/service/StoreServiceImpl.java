@@ -1,24 +1,19 @@
 package app.bada.flower.api.service;
 
-import app.bada.flower.api.dto.flower.FlowerDto;
 import app.bada.flower.api.dto.flower.FlowerReqDto;
 import app.bada.flower.api.dto.flower.FlowerResDto;
-import app.bada.flower.api.dto.rolling.RollingDto;
 import app.bada.flower.api.dto.rolling.RollingReqDto;
 import app.bada.flower.api.dto.rolling.RollingResDto;
 import app.bada.flower.api.entity.*;
 import app.bada.flower.api.repository.*;
-import app.bada.flower.api.util.S3FileUpload;
 import app.bada.flower.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static app.bada.flower.exception.ErrorCode.ITEM_NOT_FOUND;
 
