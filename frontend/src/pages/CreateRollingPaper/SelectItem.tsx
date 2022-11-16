@@ -514,7 +514,7 @@ const BuyButton = (isSeleceted: boolean) => css`
   background-color: ${!isSeleceted ? '#16453e' : '#9c9c9c'};
   height: 7vh;
   width: 94vw;
-  /* margin-bottom: 200px; */
+  margin-bottom: 150px;
   @media screen and (min-width: 500px) {
     margin-top: 5vw;
     top: 140px;
