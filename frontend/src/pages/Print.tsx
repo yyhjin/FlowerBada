@@ -1,8 +1,6 @@
 import { css } from '@emotion/react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Message from '@components/message/Message';
 import type { IRolling, IMessage } from '@pages/RollingPaper';
-import type { IMsg } from '@components/message/Message';
 import {
   Button,
   createTheme,
@@ -11,9 +9,7 @@ import {
   ThemeProvider,
 } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
-import messageAPI from '@src/api/messageAPI';
-import { ReactDOM } from 'react';
-import { WindowSharp } from '@mui/icons-material';
+import Loading from './Loading';
 
 const Print = () => {
   const location = useLocation();
@@ -30,8 +26,8 @@ const Print = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      // navigate(-1);
-      // onClickPrint();
+      navigate(-1);
+      onClickPrint();
     }, 1000);
   }, []);
 
@@ -84,9 +80,7 @@ const Print = () => {
         Print
       </Button> */}
       <div css={Cover}>
-        <br />
-        <br />
-        프린트 로딩중..
+        <Loading />
       </div>
       <div ref={printRef}>
         <div css={A4CSS}>
