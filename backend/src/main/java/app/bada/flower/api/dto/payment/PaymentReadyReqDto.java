@@ -17,5 +17,6 @@ public class PaymentReadyReqDto {
     private String receiverAddress;
     private String senderName;
     private String senderPhone;
+    private String senderMsg;
     private boolean isAnonymous;
 }

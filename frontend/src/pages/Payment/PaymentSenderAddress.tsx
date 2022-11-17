@@ -12,6 +12,7 @@ const PaymentSenderAddress = () => {
     useRecoilState<IPaymentRecoil>(paymentRecoil);
   const [senderName, setSenderName] = useState<string>('');
   const [senderPhone, setSenderPhone] = useState<string>('');
+  const [senderMsg, setSenderMsg] = useState<string>('');
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
   const navigate = useNavigate();
   const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
@@ -22,6 +23,10 @@ const PaymentSenderAddress = () => {
 
   const onChangeSenderPhone = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSenderPhone(e.target.value);
+  };
+
+  const onChangeSenderMsg = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setSenderMsg(e.target.value);
   };
 
   const onChangeIsAnonymous = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +42,7 @@ const PaymentSenderAddress = () => {
       const data = { ...prev };
       data.senderName = senderName;
       data.senderPhone = senderPhone;
+      data.senderMsg = senderMsg;
       data.isAnonymous = isAnonymous;
       return data;
     });
@@ -52,6 +58,7 @@ const PaymentSenderAddress = () => {
   useEffect(() => {
     setSenderName(paymentState.senderName);
     setSenderPhone(paymentState.senderPhone);
+    setSenderMsg(paymentState.senderMsg);
     setIsAnonymous(paymentState.isAnonymous);
   }, []);
 
@@ -81,6 +88,10 @@ const PaymentSenderAddress = () => {
             onChange={onChangeIsAnonymous}
             checked={isAnonymous}
           />
+        </div>
+        <div className="sender-msg">
+          <p>요청 사항</p>
+          <textarea onChange={onChangeSenderMsg} />
         </div>
       </div>
       <div>
@@ -121,12 +132,33 @@ const InputCSS = css`
   width: 100vw;
 
   .sender-name,
-  .sender-phone {
+  .sender-phone,
+  .sender-msg {
     width: 90%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+    input {
+      width: 50%;
+    }
+
+    textarea {
+      width: 50%;
+      height: 3rem;
+      resize: none;
+
+      &::-webkit-scrollbar {
+        width: 3px;
+        background-color: #ffffff;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        width: 3px;
+        background-color: rgba(0, 0, 0, 0.25);
+      }
+    }
   }
 
   .sender-checkbox {
