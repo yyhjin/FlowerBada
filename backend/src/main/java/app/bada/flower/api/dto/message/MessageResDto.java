@@ -31,8 +31,10 @@ public class MessageResDto {
     public static class rollingMsgDto {
         private int messageId;
         private int flowerId;
+        private String content;
         private String writer;
         private String imgUrl;
+        private String font;
         private int price;
     }
 
