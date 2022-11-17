@@ -119,6 +119,7 @@ export default function MessageWrite(props: {
               className="writer-input"
               type={'text'}
               placeholder="작성자"
+              maxLength={10}
               onChange={changeWriter}
             ></input>
           </span>

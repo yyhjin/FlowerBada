@@ -133,11 +133,11 @@ export default function SetOpenDate() {
   };
 
   const datePickerFocus = (e: any) => {
-    // console.log((e.target.readOnly = true));
+    e.target.readOnly = true;
   };
 
   const datePickerFocusOut = (e: any) => {
-    // console.log((e.target.readOnly = false));
+    e.target.readOnly = false;
   };
 
   return (
@@ -157,9 +157,12 @@ export default function SetOpenDate() {
           placeholderText="롤링페이퍼 개봉 날짜 선택" // placeholder
           selected={date} // value
           onChange={(date: Date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
-          onFocus={datePickerFocus}
-          onBlur={datePickerFocusOut}
+          // onFocus={datePickerFocus}
+          // onBlur={datePickerFocusOut}
+          onFocus={(e) => e.currentTarget.blur()}
         />
+
+        <div className="infor">Safari Browser의 경우 날짜를 꾹 눌러주세요!</div>
       </div>
       <button onClick={handleRollingLink} css={CreateButton}>
         롤링페이퍼 생성
@@ -209,6 +212,11 @@ const Calendar = css`
       font-weight: bold;
       cursor: pointer;
     }
+  }
+
+  .infor {
+    margin-top: 15px;
+    color: orangered;
   }
 `;
 

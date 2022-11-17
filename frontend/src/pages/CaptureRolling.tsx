@@ -1,4 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  Ref,
+  useImperativeHandle,
+  forwardRef,
+} from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import Message from '@src/components/message/Message';
@@ -10,59 +17,111 @@ import updateTokens from '@utils/updateTokens';
 import messageAPI from '@api/messageAPI';
 import type { IMessage, IRolling } from './RollingPaper';
 
-export default function CaptureRolling(props: {
-  type: number;
-  rolling: IRolling;
-  nowDate: Date;
-  rollingDate: Date;
-  url: string;
-  color: Boolean;
-}) {
-  const navigate = useNavigate();
-  const [imgHeight, setImgHeight] = useState<number>(0);
-  const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
+const CaptureRolling = forwardRef(
+  (
+    props: {
+      type: number;
+      rolling: IRolling;
+      nowDate: Date;
+      rollingDate: Date;
+      url: string;
+      color: Boolean;
+    },
+    ref: any,
+  ) => {
+    const navigate = useNavigate();
+    const [imgHeight, setImgHeight] = useState<number>(0);
+    const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
 
-  const location = useLocation();
-  // location.state as {
-  //   type: number;
-  //   valid: Boolean;
-  //   rolling: IRolling;
-  //   nowDate: Date;
-  //   rollingDate: Date;
-  // };
-  // const { type, valid, rolling, nowDate, rollingDate } = location.state;
+    const location = useLocation();
+    // location.state as {
+    //   type: number;
+    //   valid: Boolean;
+    //   rolling: IRolling;
+    //   nowDate: Date;
+    //   rollingDate: Date;
+    // };
+    // const { type, valid, rolling, nowDate, rollingDate } = location.state;
 
-  // window.addEventListener('resize', function () {
-  //   get();
-  // });
+    // window.addEventListener('resize', function () {
+    //   get();
+    // });
 
-  const type = props.type;
-  const rolling = props.rolling;
-  const nowDate = props.nowDate;
-  const rollingDate = props.rollingDate;
-  const url = props.url;
-  const color = props.color;
+    const type = props.type;
+    const rolling = props.rolling;
+    const nowDate = props.nowDate;
+    const rollingDate = props.rollingDate;
+    const url = props.url;
+    const color = props.color;
 
-  const get = () => {
-    let img = document.getElementById('base-img');
-    setTimeout(() => {
-      if (img) {
-        // console.log(+img?.clientWidth, +img?.clientHeight);
-        setImgHeight(+img?.clientHeight);
+    const get = () => {
+      let img = document.getElementById('base-img');
+      setTimeout(() => {
+        if (img) {
+          // console.log(+img?.clientWidth, +img?.clientHeight);
+          setImgHeight(+img?.clientHeight);
+        }
+      }, 50);
+    };
+
+    useEffect(() => {
+      get();
+    }, []);
+
+    useEffect(() => {
+      // console.log(imgHeight);
+      if (imgHeight != 0) {
+        if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
+          // 캡쳐 및 DB 저장
+          const el = document.getElementById('capture-box');
+          if (el) {
+            html2canvas(el).then((canvas: any) => {
+              onSaveAs(
+                canvas.toDataURL('image/png'),
+                `final-image-` + url + `.png`,
+              );
+
+              // 이미지 갱신
+              messageAPI.updateRollingImg(
+                userState.jwt,
+                userState.refresh,
+                url,
+                {
+                  imgUrl: canvas.toDataURL('image/png'),
+                },
+              );
+            });
+          }
+        }
       }
-    }, 50);
-  };
+    }, [imgHeight]);
 
-  useEffect(() => {
-    get();
-  }, []);
+    const onSaveAs = (uri: string, filename: string): void => {
+      let link: any = document.createElement('a');
+      document.body.appendChild(link);
+      link.href = uri;
+      // link.download = filename;
+      // link.click();
+      document.body.removeChild(link);
 
-  useEffect(() => {
-    // console.log(imgHeight);
+      // console.log('onSaveAs 끝');
 
-    if (imgHeight != 0) {
-      if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
-        // 캡쳐 및 DB 저장
+      // 이미지 갱신
+      // messageAPI.updateRollingImg(userState.jwt, userState.refresh, url, {
+      //   imgUrl: uri,
+      // });
+
+      // 프린트 이미지
+    };
+
+    useImperativeHandle(ref, () => ({
+      captureToPrint,
+      imgHeight,
+    }));
+
+    const captureToPrint = () => {
+      const captureToPrintAsync = async () => {
+        // 캡쳐
         const el = document.getElementById('capture-box');
         if (el) {
           html2canvas(el).then((canvas: any) => {
@@ -70,61 +129,59 @@ export default function CaptureRolling(props: {
               canvas.toDataURL('image/png'),
               `final-image-` + url + `.png`,
             );
+
+            // 프린트 페이지로 이동
+            navigate('/rolling/print', {
+              state: {
+                rollingUrl: url,
+                mainImg: canvas.toDataURL('image/png'),
+                type,
+                rolling,
+              },
+            });
           });
         }
-      }
-    }
-  }, [imgHeight]);
+      };
+      captureToPrintAsync();
+    };
 
-  const onSaveAs = (uri: string, filename: string): void => {
-    let link: any = document.createElement('a');
-    document.body.appendChild(link);
-    link.href = uri;
-    // link.download = filename;
-    // link.click();
-    document.body.removeChild(link);
-
-    messageAPI.updateRollingImg(userState.jwt, userState.refresh, url, {
-      imgUrl: uri,
-    });
-  };
-
-  return (
-    <>
-      <div
-        css={DetailCss({
-          height: imgHeight,
-          color: color,
-        })}
-      >
-        <div id="capture-box" className={`DetailBox_${type}`}>
-          <div className={`imgbox_${type}`}>
-            <img id="base-img" src={'/src/assets/' + rolling.imgBack} />
-          </div>
-          <div className="flowerlist">
-            {rolling.messages?.map((message: IMessage, index: number) => {
-              return (
-                <div key={index} className={`flowerbox_${type}`}>
-                  <Message
-                    imgUrl={message.imgUrl}
-                    messageId={message.messageId}
-                    writer={message.writer}
-                    valid={true}
-                    writerDisplay={false}
-                    type={type}
-                  ></Message>
-                </div>
-              );
-            })}
-          </div>
-          <div className={`imgbox_front_${type}`}>
-            <img src={'/src/assets/' + rolling.imgFront}></img>
+    return (
+      <>
+        <div
+          css={DetailCss({
+            height: imgHeight,
+            color: color,
+          })}
+        >
+          <div id="capture-box" className={`DetailBox_${type}`}>
+            <div className={`imgbox_${type}`}>
+              <img id="base-img" src={'/src/assets/' + rolling.imgBack} />
+            </div>
+            <div className="flowerlist">
+              {rolling.messages?.map((message: IMessage, index: number) => {
+                return (
+                  <div key={index} className={`flowerbox_${type}`}>
+                    <Message
+                      imgUrl={message.imgUrl}
+                      messageId={message.messageId}
+                      writer={message.writer}
+                      valid={true}
+                      writerDisplay={false}
+                      type={type}
+                    ></Message>
+                  </div>
+                );
+              })}
+            </div>
+            <div className={`imgbox_front_${type}`}>
+              <img src={'/src/assets/' + rolling.imgFront}></img>
+            </div>
           </div>
         </div>
-      </div>
-    </>
-  );
-}
+      </>
+    );
+  },
+);
 
 const DetailCss = (props: any) => css`
   /* height: 100%; */
@@ -518,3 +575,6 @@ const DetailCss = (props: any) => css`
     }
   }
 `;
+
+CaptureRolling.displayName = 'CaptureRolling';
+export default CaptureRolling;
