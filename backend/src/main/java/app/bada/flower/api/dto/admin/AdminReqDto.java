@@ -1,6 +1,5 @@
 package app.bada.flower.api.dto.admin;
 
-import lombok.Data;
 import lombok.Getter;
 
 public class AdminReqDto {

@@ -13,6 +13,7 @@ export interface IPaymentRecoil {
   receiverAddress: string;
   senderName: string;
   senderPhone: string;
+  senderMsg: string;
   isAnonymous: boolean;
   imgUrl: string;
 }
@@ -32,6 +33,7 @@ export const paymentRecoil = atom<IPaymentRecoil>({
     receiverAddress: '',
     senderName: '',
     senderPhone: '',
+    senderMsg: '',
     isAnonymous: false,
     imgUrl: '',
   },

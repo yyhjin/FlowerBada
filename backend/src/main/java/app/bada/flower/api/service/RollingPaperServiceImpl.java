@@ -10,7 +10,6 @@ import app.bada.flower.api.entity.Message;
 import app.bada.flower.api.entity.RollingPaper;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.*;
-import app.bada.flower.api.service.jwt.JwtTokenUtil;
 import app.bada.flower.exception.CustomException;
 import app.bada.flower.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +35,6 @@ public class RollingPaperServiceImpl implements RollingPaperService {
 
     private final BookmarkRepository bookmarkRepository;
 
-    private final UserRepository userRepository;
-    private final JwtTokenUtil jwtTokenUtil;
     private final UserService userService;
 
     @Override

@@ -142,7 +142,7 @@ export default function MyDeliveryList() {
               id="demo-select-small"
               value={String(sortNumber)}
               onChange={handleChange}
-              css={Font}
+              css={SelectCSS}
               variant="standard"
               disableUnderline
             >
@@ -217,23 +217,31 @@ const outerBox = css`
   position: absolute;
   .dropdownBox {
     position: relative;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    width: calc(100vw - 12px);
+    margin: 6px;
   }
   .mylist {
     position: relative;
     height: calc(100vh - 150px);
     overflow-y: auto;
+    overflow-x: hidden;
   }
   .mylist::-webkit-scrollbar {
     width: 3px;
-    background-color: #b1bdbb;
+    background-color: #ffffff;
   }
 
   .mylist::-webkit-scrollbar-thumb {
     width: 3px;
-    background-color: #16453e;
+    background-color: rgba(0, 0, 0, 0.25);
   }
   .deliverybox {
     position: relative;
+    width: 90%;
+    margin-left: 5%;
   }
   .imgbox {
     width: 80px;
@@ -246,8 +254,13 @@ const outerBox = css`
   .dateAndTitle {
     position: relative;
     display: inline-block;
-    width: calc(100vw - 100px);
+    width: calc(100% - 30px);
     height: 100px;
+    padding: 0 15px 0 15px;
+
+    ul {
+      margin: 0px;
+    }
   }
   .dateAndTitle > ul {
     margin: 5px 0 0 5px;
@@ -258,7 +271,7 @@ const outerBox = css`
     color: #699877;
     float: right;
     font-size: 12px;
-    margin-right: 10px;
+    margin-right: 20px;
     width: 100px;
     text-align: end;
   }
@@ -271,7 +284,7 @@ const outerBox = css`
   .descAndPrice {
     display: flex;
     justify-content: space-between;
-    margin: 5px 10px 0 5px;
+    margin: 5px;
     font-size: 12px;
   }
   .frombox {
@@ -281,7 +294,7 @@ const outerBox = css`
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 12px;
-    width: calc(100vw - 130px);
+    width: 120px;
   }
 `;
 
@@ -309,5 +322,10 @@ const title = css`
 const Font = css`
   font-family: 'SeoulNamsanM';
   height: 20px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+`;
+
+const SelectCSS = css`
   padding-bottom: 10px;
 `;

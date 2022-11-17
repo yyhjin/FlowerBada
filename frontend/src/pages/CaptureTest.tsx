@@ -16,7 +16,7 @@ export default function CaptureTest() {
   };
 
   const onSaveAs = (uri: string, filename: string): void => {
-    console.log(uri);
+    // console.log(uri);
     let link: any = document.createElement('a');
     document.body.appendChild(link);
     link.href = uri;

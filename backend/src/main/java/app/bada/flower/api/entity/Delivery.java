@@ -34,6 +34,9 @@ public class Delivery extends BaseEntity{
     @Column(nullable = false)
     private String senderPhone;
 
+    @Column(nullable = false)
+    private String senderMsg;
+
     private int price;
 
     @OneToOne
