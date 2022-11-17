@@ -28,7 +28,7 @@ const Print = () => {
     setTimeout(() => {
       navigate(-1);
       onClickPrint();
-    }, 5000);
+    }, 3000);
   }, []);
 
   const onClickPrint = () => {
