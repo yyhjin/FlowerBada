@@ -56,20 +56,30 @@ public class MessageController {
     public ResponseEntity<ResponseDto> getMsg(@PathVariable Integer msgId) {
 
         Message message = messageService.getMessage(msgId);
-        Date nowDate = Date.valueOf(LocalDateTime.now().toLocalDate());
-        Date openDate = Date.valueOf(message.getRollingPaper().getOpenDate().toLocalDate());
-        if(nowDate.compareTo(openDate)>=0){
-            MessageResDto.MessageDto messageResDto = new MessageResDto.MessageDto(message);
 
-            if(messageResDto.getMessageId() != 0) {
-                return new ResponseEntity<>(new ResponseDto(messageResDto), HttpStatus.OK);
-            }
-            else {
-                return new ResponseEntity<>(new ResponseDto("message get fail"), HttpStatus.FORBIDDEN);
-            }
-        }else{
-            return new ResponseEntity<>(new ResponseDto("아직 개봉날짜 전입니다."), HttpStatus.FORBIDDEN);
+        MessageResDto.MessageDto messageResDto = new MessageResDto.MessageDto(message);
+
+        if(messageResDto.getMessageId() != 0) {
+            return new ResponseEntity<>(new ResponseDto(messageResDto), HttpStatus.OK);
         }
+        else {
+            return new ResponseEntity<>(new ResponseDto("message get fail"), HttpStatus.FORBIDDEN);
+        }
+
+//        Date nowDate = Date.valueOf(LocalDateTime.now().toLocalDate());
+//        Date openDate = Date.valueOf(message.getRollingPaper().getOpenDate().toLocalDate());
+//        if(nowDate.compareTo(openDate)>=0){
+//            MessageResDto.MessageDto messageResDto = new MessageResDto.MessageDto(message);
+//
+//            if(messageResDto.getMessageId() != 0) {
+//                return new ResponseEntity<>(new ResponseDto(messageResDto), HttpStatus.OK);
+//            }
+//            else {
+//                return new ResponseEntity<>(new ResponseDto("message get fail"), HttpStatus.FORBIDDEN);
+//            }
+//        }else{
+//            return new ResponseEntity<>(new ResponseDto("아직 개봉날짜 전입니다."), HttpStatus.FORBIDDEN);
+//        }
     }
 
 
