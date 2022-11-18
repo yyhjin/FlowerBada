@@ -715,7 +715,7 @@ export default function RollingPaper(props: any) {
                   <>
                     <DialogContent>
                       <DialogContentText css={Font}>
-                        PC에서 접속해주세요!
+                        프린트 기능은 PC에서 지원합니다.
                       </DialogContentText>
                     </DialogContent>
                     <DialogActions css={ActionCss}>
