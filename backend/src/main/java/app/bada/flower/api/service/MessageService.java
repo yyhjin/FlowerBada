@@ -19,4 +19,5 @@ public interface MessageService {
     String uploadRollingImage(String url, String img, String option) throws IOException;
 
     void updateRollingImage(String url, String imgUrl) throws IOException;
+
 }

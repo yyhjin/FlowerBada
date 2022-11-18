@@ -20,7 +20,7 @@ import {
   IconButton,
 } from '@mui/material';
 
-interface IMsg {
+export interface IMsg {
   messageId?: number;
   flowerId?: number;
   content?: string;
@@ -84,7 +84,7 @@ export default function Message(props: {
   };
 
   const sendReport = () => {
-    if (reportContent == '') {
+    if (reportContent === '') {
       MySwal.fire({
         title: '내용을 입력해주세요',
         icon: 'warning',
@@ -93,30 +93,41 @@ export default function Message(props: {
       });
     } else {
       if (msg.messageId) {
-        messageAPI
-          .report({
-            messageId: msg.messageId,
-            userId: loginUser.id,
-            content: reportContent,
-          })
-          .then((res) => {
-            setMsg(res.data.response);
-            // console.log(res.data.response);
-            MySwal.fire({
-              title: '신고가 접수되었습니다',
-              icon: 'success',
-              confirmButtonColor: '#16453e',
-              confirmButtonText: '확인',
+        if (loginUser.jwt !== '') {
+          messageAPI
+            .report({
+              messageId: msg.messageId,
+              userId: loginUser.id,
+              content: reportContent,
+            })
+            .then((res) => {
+              setMsg(res.data.response);
+              // console.log(res.data.response);
+              MySwal.fire({
+                title: '신고가 접수되었습니다',
+                icon: 'success',
+                confirmButtonColor: '#16453e',
+                confirmButtonText: '확인',
+              });
+            })
+            .catch((err) => {
+              MySwal.fire({
+                title: '신고 접수를 실패하였습니다.',
+                html: `고객센터에 문의하세요 😨`,
+                icon: 'warning',
+                confirmButtonColor: '#16453e',
+                confirmButtonText: '확인',
+              });
             });
-          })
-          .catch((err) => {
-            MySwal.fire({
-              title: '신고 접수를 실패하였습니다.',
-              icon: 'warning',
-              confirmButtonColor: '#16453e',
-              confirmButtonText: '확인',
-            });
+        } else {
+          MySwal.fire({
+            title: '신고 접수를 실패하였습니다.',
+            html: `로그인이 되어있는지 확인하세요 😥`,
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
           });
+        }
         changeReportModal(false);
         changeModal(false);
       }

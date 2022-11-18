@@ -231,12 +231,12 @@ const outerBox = css`
   }
   .mylist::-webkit-scrollbar {
     width: 3px;
-    background-color: #b1bdbb;
+    background-color: #ffffff;
   }
 
   .mylist::-webkit-scrollbar-thumb {
     width: 3px;
-    background-color: #16453e;
+    background-color: rgba(0, 0, 0, 0.25);
   }
   .deliverybox {
     position: relative;

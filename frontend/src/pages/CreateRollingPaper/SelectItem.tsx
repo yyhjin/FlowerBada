@@ -370,7 +370,12 @@ const modal = css`
 `;
 
 const StoreDiv = css`
+  position: relative;
   width: 100vw;
+<<<<<<< HEAD
+=======
+  height: 100%;
+>>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
   min-height: -webkit-fill-available;
   max-height: -webkit-fill-available;
 
@@ -466,6 +471,7 @@ const GridStyle = css`
   height: 30vw;
 
   .item_image {
+    cursor: pointer;
     width: 20vw;
     position: absolute;
     margin-top: 3vw;
@@ -477,6 +483,7 @@ const GridStyle = css`
     cursor: pointer;
   }
   .locked_image {
+    cursor: pointer;
     z-index: 2;
     width: 25vw;
     opacity: 100%;
@@ -507,6 +514,10 @@ const GridStyle = css`
 
 const BuyButton = (isOwned: boolean) => css`
   position: relative;
+<<<<<<< HEAD
+=======
+  margin-top: 70px;
+>>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
   margin-bottom: 20px;
   top: 10px;
   left: 0;
@@ -522,8 +533,13 @@ const BuyButton = (isOwned: boolean) => css`
   width: 90%;
   height: 50px;
   @media screen and (min-width: 500px) {
+<<<<<<< HEAD
     margin-top: 80px;
     margin-bottom: 30px;
+=======
+    margin-top: 70px;
+    margin-bottom: 45px;
+>>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
     width: 450px;
     height: 60px;
   }

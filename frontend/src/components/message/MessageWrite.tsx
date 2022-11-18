@@ -107,7 +107,7 @@ export default function MessageWrite(props: {
             id="content"
             className="input-css"
             placeholder="메시지를 작성해주세요"
-            maxLength={200}
+            maxLength={120}
             onChange={changeContent}
           ></textarea>
         </div>
@@ -119,10 +119,11 @@ export default function MessageWrite(props: {
               className="writer-input"
               type={'text'}
               placeholder="작성자"
+              maxLength={10}
               onChange={changeWriter}
             ></input>
           </span>
-          <div css={MsgLimit}>{msgLength}/200</div>
+          <div css={MsgLimit}>{msgLength}/120</div>
         </div>
       </div>
       <div style={{ fontSize: '16px' }}>마음에 드는 글씨체를 선택하세요!</div>

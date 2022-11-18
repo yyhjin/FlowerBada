@@ -94,6 +94,7 @@ public class PaymentServiceImpl implements PaymentService{
                     .imgUrl(paymentReadyReqDto.getImgUrl())
                     .senderName(paymentReadyReqDto.getSenderName())
                     .senderPhone(paymentReadyReqDto.getSenderPhone())
+                    .senderMsg(paymentReadyReqDto.getSenderMsg())
                     .price(paymentReadyReqDto.getPrice())
                     .deliveryState(deliveryState)
                     .receiverName(paymentReadyReqDto.getReceiverName())

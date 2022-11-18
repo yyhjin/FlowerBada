@@ -426,6 +426,7 @@ const empty = css`
   .tooltip {
     display: flex;
     justify-content: end;
+    margin-bottom: 20px;
   }
   @media screen and (min-width: 500px) {
     padding: 0vh;
@@ -440,7 +441,7 @@ const GridContainer = css`
   width: 90%;
   aspect-ratio: 1/1;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   margin: 0 auto;
   background-color: white;
   border-radius: 0 0 15px 15px;
@@ -475,10 +476,13 @@ const GridStyle = css`
     cursor: pointer;
   }
 
+<<<<<<< HEAD
   .item_image:hover {
     background-color: #cbe9cd;
   }
 
+=======
+>>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
   .locked_image {
     z-index: 2;
     width: 25vw;

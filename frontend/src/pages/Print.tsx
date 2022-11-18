@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { useLocation, useNavigate } from 'react-router-dom';
-// import Message from '@components/mypage/Message';
 import type { IRolling, IMessage } from '@pages/RollingPaper';
 import {
   Button,
@@ -10,126 +9,107 @@ import {
   ThemeProvider,
 } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
+import Loading from './Loading';
 
 const Print = () => {
   const location = useLocation();
   const printRef = useRef<HTMLDivElement>(null);
-  // const componentRef = props.printRef;
-  // const rolling = props.rolling;
-  // const type = props.type;
-  // const valid = props.valid;
+  const navigate = useNavigate();
 
   location.state as {
-    rolling: IRolling;
-    type: number;
-    valid: Boolean;
+    rollingUrl: string;
     mainImg: string;
+    type: number;
+    rolling: IRolling;
   };
-  const { rolling, mainImg } = location.state;
-  // const imgUrl = '/src/assets/' + rolling.messages[0].imgUrl;
+  const { rollingUrl, mainImg, type, rolling } = location.state;
 
   useEffect(() => {
-    console.log(rolling.messages[0]);
-    console.log(mainImg);
-    onClickPrint();
-  }, [rolling]);
+    setTimeout(() => {
+      navigate(-1);
+      onClickPrint();
+    }, 3000);
+  }, []);
+
   const onClickPrint = () => {
     if (printRef.current) {
-      let printContents = printRef.current.innerHTML;
-      let windowObject = window.open(
-        '',
-        'PrintWindow',
-        'width=1000, height=800, top=100, left=300, toolbars=no, scrollbars=no, status=no, resizale=no',
-      );
-      if (windowObject) {
-        windowObject.document.writeln(printContents);
-        windowObject.document.close();
-        windowObject.focus();
-        windowObject.print();
-        windowObject.close();
-      }
+      // let printContents = printRef.current.innerHTML;
+      // let windowObject = window.open(
+      //   '',
+      //   'PrintWindow',
+      //   'width=1000, height=800, top=100, left=300, toolbars=no, scrollbars=no, status=no, resizale=no',
+      // );
+      // if (windowObject) {
+      //   windowObject.document.writeln(printContents);
+      //   windowObject.document.close();
+      //   windowObject.focus();
+      //   windowObject.print();
+      //   windowObject.close();
+      // }
+      let printContent = printRef.current.innerHTML;
+      let originalContent = document.body.innerHTML;
+      // console.log(printContent, originalContent);
+      document.body.innerHTML = printContent;
+      window.print();
+      document.body.innerHTML = originalContent;
+      history.go(0);
     }
   };
 
   return (
-    <div css={A4CSS}>
-      <Button onClick={onClickPrint}>Print</Button>
-      {/* <h1>{rolling.messages[0].content}</h1> */}
-      <div ref={printRef} className="page">
-        <img
-          // className="main-img"
-          style={{
-            width: '250px',
-            transform: 'translate(150%, 40%)',
-          }}
-          src={
-            'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/' +
-            mainImg
-          }
-        />
-        {/* <div style={{ position: 'relative' }}> */}
-        <div
-          style={{
-            position: 'relative',
-            width: '100px',
-            height: '100px',
-            backgroundColor: 'rgb(242, 240, 239, 10)',
-          }}
-        >
-          <div
-            style={{
-              width: '100px',
-              height: '100px',
-              color: '#000000',
-              fontSize: '50px',
-            }}
-          >
-            {rolling.messages[0].writer}
-          </div>
-          <img
-            src={
-              'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/' +
-              rolling.messages[0].imgUrl
-            }
-            style={{
-              position: 'absolute',
-              width: '150px',
-              height: '150px',
-              transform: 'translate(10%, -120%)',
-            }}
-          />
-        </div>
-        <img
-          src={
-            'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/' +
-            rolling.messages[1].imgUrl
-          }
-          style={{
-            width: '150px',
-            transform: 'translate(50%, 70%)',
-          }}
-        />
-
-        {rolling.messages[0].content}
+    <>
+      {/* <Button onClick={onClickPrint} style={{ zIndex: '998' }}>
+        Print
+      </Button> */}
+      <div css={Cover}>
+        <Loading />
       </div>
-      {/* </div> */}
-    </div>
+      <div ref={printRef}>
+        <div css={A4CSS}>
+          <div className="page">
+            <img className="main-flower" src={mainImg} />
+            <div className="title-box">{rolling.title}</div>
+
+            <div className="messagelist">
+              {rolling.messages.map((message: any, index: number) => {
+                return (
+                  <div key={index} className="messagebox">
+                    <img src={'/src/assets/' + message.imgUrl}></img>
+                    <span className="content-box">
+                      <div css={MsgCSS(message.font)}>
+                        {message.content}
+                        <br />
+                        <br />
+                        <span className="writer-box">
+                          from. {message.writer}
+                        </span>
+                      </div>
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
 const A4CSS = css`
-  /* transform: translate(0%, 30%); */
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   background-color: white;
-  z-index: -1;
+  width: 100%;
+
+  /* z-index: -1; */
   /* margin: 100px; */
   /* padding: 0; */
 
-  body {
+  /* body {
     margin: 0;
     padding: 0;
-  }
+  } */
 
   .page {
     width: 21cm;
@@ -140,29 +120,19 @@ const A4CSS = css`
   @page {
     size: A4 landscape;
     margin: 0;
-
-    .flowerlist {
-      /* width: 100%; */
-      position: static;
-
-      .flowerbox {
-        position: relative;
-        &:first-of-type {
-          /* z-index: 10; */
-          left: 100px;
-          top: -200px;
-          width: 500px;
-          transform: rotate(0deg);
-          @media screen and (max-height: 700px) {
-            left: -12vw;
-            top: 68vw;
-          }
-        }
-      }
-    }
+    position: relative;
   }
 
   @media print {
+    position: relative;
+
+    html,
+    body {
+      -webkit-print-color-adjust: exact;
+      width: 210mm;
+      height: 297mm;
+    }
+
     .page {
       margin: 0;
       border: initial;
@@ -176,9 +146,11 @@ const A4CSS = css`
   }
 
   .main-flower {
-    width: 250px;
+    width: 270px;
+    height: 500px;
+    object-fit: contain;
     margin: auto;
-    transform: translate(0%, 30%);
+    transform: translate(0%, 20%);
   }
 
   .img-box {
@@ -202,114 +174,106 @@ const A4CSS = css`
     flex-direction: column;
   }
 
-  .flowerlist {
+  .messagelist {
     /* width: 100%; */
-    position: static;
+    height: 10px;
+    /* position: static; */
 
-    .flowerbox {
+    .messagebox {
       position: relative;
+      /* border: solid 1px; */
+      width: 180px;
+      height: 180px;
+
+      img {
+        /* position: relative; */
+        width: 180px;
+        height: 180px;
+      }
       &:first-of-type {
+        /* position: relative; */
         /* z-index: 10; */
-        left: 100px;
-        top: -200px;
-        width: 50px;
+        left: 480px;
+        top: -400px;
+        /* width: 180px;
+        height: 180px; */
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 68vw;
-        }
       }
       &:nth-of-type(2) {
-        z-index: 9;
-        left: -2vw;
-        top: 80vw;
+        /* z-index: 9; */
+        left: -165px;
+        top: -740px;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -1.5vw;
-          top: 68vw;
-        }
       }
       &:nth-of-type(3) {
-        z-index: 8;
-        left: -34vw;
-        top: 83vw;
+        /* z-index: 8; */
+        left: -370px;
+        top: -810px;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -28vw;
-          top: 70vw;
-        }
       }
       &:nth-of-type(4) {
-        z-index: 7;
-        left: 15vw;
-        top: 75vw;
-        transform: rotate(15deg);
-        @media screen and (max-height: 700px) {
-          left: 13.5vw;
-          top: 63vw;
-        }
+        /* z-index: 7; */
+        left: -210px;
+        top: -830px;
+        transform: rotate(13deg);
       }
       &:nth-of-type(5) {
-        z-index: 6;
-        left: -45vw;
-        top: 80vw;
+        /* z-index: 6; */
+        left: -380px;
+        top: -840px;
         transform: rotate(-5deg);
-        @media screen and (max-height: 700px) {
-          left: -36vw;
-          top: 68vw;
-        }
       }
       &:nth-of-type(6) {
-        z-index: 5;
-        left: -15vw;
-        top: 65vw;
+        /* z-index: 5; */
+        left: -150px;
+        top: -1020px;
         transform: rotate(-5deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 55vw;
-        }
       }
       &:nth-of-type(7) {
-        z-index: 5;
-        left: -32vw;
-        top: 68vw;
-        transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -27vw;
-          top: 57vw;
-        }
+        /* z-index: 5; */
+        left: 280px;
+        top: -1700px;
+        transform: rotate(10deg);
       }
       &:nth-of-type(8) {
-        z-index: 5;
-        left: 2vw;
-        top: 65vw;
+        /* z-index: 5; */
+        left: 300px;
+        top: -1620px;
         transform: rotate(5deg);
-        @media screen and (max-height: 700px) {
-          left: 2vw;
-          top: 55vw;
-        }
       }
       &:nth-of-type(9) {
-        z-index: 2;
-        left: -45vw;
-        top: 70vw;
-        transform: rotate(-20deg);
-        @media screen and (max-height: 700px) {
-          left: -40vw;
-          top: 60vw;
-        }
+        /* z-index: 2; */
+        left: 470px;
+        top: -1670px;
+        transform: rotate(-13deg);
       }
       &:nth-of-type(10) {
-        z-index: 1;
-        left: 15vw;
-        top: 65vw;
+        /* z-index: 1; */
+        left: 250px;
+        top: -1810px;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: 13vw;
-          top: 55vw;
-        }
       }
     }
+    .content-box {
+      width: 200px;
+      height: 200px;
+      position: absolute;
+      left: -10px;
+      top: -10px;
+      background-color: rgb(255, 255, 255, 0.5);
+    }
+  }
+  .title-box {
+    position: absolute;
+    margin-top: -450px;
+    margin-left: 67px;
+    width: 150px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 25px;
+    font-family: 'SeoulNamsanM';
+    word-break: keep-all;
+    line-height: 1.5;
   }
 `;
 
@@ -346,6 +310,31 @@ const a4 = css`
       page-break-after: always;
     }
   }
+`;
+
+const MsgCSS = (font: string) => css`
+  margin-top: 30px;
+  margin-left: 50px;
+  /* left: 100px; */
+  /* top: 25px; */
+  width: 100px;
+  height: 100px;
+  font-family: ${font};
+  line-height: 1.2;
+  font-size: 13px;
+  /* background-color: white; */
+
+  .writer-box {
+    float: right;
+    margin-top: -5px;
+  }
+`;
+
+const Cover = css`
+  width: 100vh;
+  height: 150vh;
+  background-color: #f2f0ef;
+  z-index: 999;
 `;
 
 export default Print;
