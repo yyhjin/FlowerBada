@@ -213,14 +213,11 @@ const Calendar = css`
       cursor: pointer;
     }
   }
-<<<<<<< HEAD
-=======
 
   .infor {
     margin-top: 15px;
     color: orangered;
   }
->>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
 `;
 
 const CreateButton = css`
@@ -240,15 +237,9 @@ const CreateButton = css`
   left: 5%;
   width: 90%;
   @media screen and (min-width: 500px) {
-<<<<<<< HEAD
-    margin-top: 33vh;
-    top: 120px;
-    width: 450px;
-=======
     bottom: 30px;
     left: 5%;
     width: 90%;
->>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
     height: 60px;
   }
 `;

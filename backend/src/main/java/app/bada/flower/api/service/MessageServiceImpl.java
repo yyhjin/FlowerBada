@@ -94,8 +94,6 @@ public class MessageServiceImpl implements MessageService {
 //          s3FileUpload.deleteFile(dirname+"/"+filename);
             fileUrl = s3FileUpload.upload2(file, "paymentitem");
         }
-<<<<<<< HEAD
-=======
 
         else if (option.equals("printUpload")) {
             final String dirname = "print";
@@ -134,17 +132,12 @@ public class MessageServiceImpl implements MessageService {
         try(FileOutputStream fos = new FileOutputStream(path)){
             fos.write(imgByte);
         }
->>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
 
         return new File(path);
     }
 
     @Override
     public void updateRollingImage(String url, String imgUrl) {
-<<<<<<< HEAD
-
-=======
->>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
         // 롤링페이퍼 imgUrl 컬럼 수정
         RollingPaper rollingPaper = rollingPaperRepository.findByUrl(url)
                 .orElseThrow(() -> new CustomException(ErrorCode.POSTS_NOT_FOUND));

@@ -9,10 +9,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-<<<<<<< HEAD
-=======
 import CaptureRolling from '@pages/CaptureRolling';
->>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
 
 import {
   Dialog,
@@ -431,11 +428,6 @@ export default function RollingPaper(props: any) {
     setColor(true);
   };
 
-<<<<<<< HEAD
-  const shareRolling = () => {
-    navigate('/newroll/link', { state: paramCopy.url });
-  };
-=======
   useEffect(() => {
     const goPrintAsync = async () => {
       if (color) {
@@ -455,7 +447,6 @@ export default function RollingPaper(props: any) {
     };
     goPrintAsync();
   }, [color]);
->>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
 
   const dateBeforeActions = [
     { icon: <EditIcon />, name: '메시지 작성', function: moveMessageWrite },
@@ -507,39 +498,6 @@ export default function RollingPaper(props: any) {
     getRolling();
   }, [paginationId]);
 
-<<<<<<< HEAD
-  useEffect(() => {
-    if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
-      // 캡쳐 및 DB 저장
-      const el = document.getElementById('to-save');
-      if (el) {
-        html2canvas(el).then((canvas: any) => {
-          onSaveAs(
-            canvas.toDataURL('image/png'),
-            `final-image-` + paramCopy.url + `.png`,
-          );
-        });
-      }
-    }
-  }, [rolling]);
-
-  const onSaveAs = (uri: string, filename: string): void => {
-    let link: any = document.createElement('a');
-    document.body.appendChild(link);
-    link.href = uri;
-    // link.download = filename;
-    // link.click();
-    document.body.removeChild(link);
-    messageAPI.updateRollingImg(
-      userState.jwt,
-      userState.refresh,
-      paramCopy.url,
-      { imgUrl: uri },
-    );
-  };
-  const check = () => {
-    alert('테스트 성공');
-=======
   const captureGo = () => {
     navigate('/rolling/capture', {
       state: {
@@ -552,7 +510,6 @@ export default function RollingPaper(props: any) {
         rollingDate,
       },
     });
->>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
   };
 
   return (
@@ -581,96 +538,6 @@ export default function RollingPaper(props: any) {
                 )}
               </div>
 
-<<<<<<< HEAD
-              <div css={SaveParent}>
-                <div>
-                  <div className={`imgbox_${type}`}>
-                    <img src={'/src/assets/' + rolling.imgBack}></img>
-                  </div>
-                  <div className="flowerlist">
-                    {rolling.messages.map((message, index) => {
-                      return (
-                        <div key={index} className={`flowerbox_${type}`}>
-                          <Message
-                            imgUrl={message.imgUrl}
-                            messageId={message.messageId}
-                            writer={message.writer}
-                            valid={valid}
-                            writerDisplay={true}
-                            type={type}
-                          ></Message>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-                <div className={`imgbox_front_${type}`}>
-                  <img src={'/src/assets/' + rolling.imgFront}></img>
-                </div>
-                <div id="to-save" className="save-child">
-                  <div className={`imgbox_${type}`}>
-                    <img src={'/src/assets/' + rolling.imgBack}></img>
-                  </div>
-                  <div className="flowerlist">
-                    {rolling.messages.map((message, index) => {
-                      return (
-                        <div key={index} className={`flowerbox_${type}`}>
-                          <Message
-                            imgUrl={message.imgUrl}
-                            messageId={message.messageId}
-                            writer={message.writer}
-                            valid={valid}
-                            writerDisplay={false}
-                            type={type}
-                          ></Message>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className={`imgbox_front_${type}`}>
-                    <img src={'/src/assets/' + rolling.imgFront}></img>
-                  </div>
-                </div>
-              </div>
-              {!valid ? (
-                <div className={`valid_${type}`}>
-                  {rolling.date} 이후로 개봉 가능합니다.
-                </div>
-              ) : (
-                <div className={`valid_${type}`}>꽃을 눌러보세요!</div>
-              )}
-            </div>
-            {/* <div css={`dot_${type}`}> */}
-            <div css={Dot}>
-              <SpeedDial
-                ariaLabel="SpeedDial openIcon example"
-                sx={{ position: 'absolute', bottom: 16, right: 16 }}
-                icon={<SpeedDialIcon />}
-                className="speed-dial-zone"
-              >
-                {rollingDate <= nowDate
-                  ? dateAfterActions.map((action) => (
-                      <SpeedDialAction
-                        key={action.name}
-                        icon={action.icon}
-                        onClick={action.function}
-                      />
-                    ))
-                  : dateBeforeActions.map((action) => (
-                      <SpeedDialAction
-                        key={action.name}
-                        icon={action.icon}
-                        onClick={action.function}
-                      />
-                    ))}
-              </SpeedDial>
-
-              <DotSlice
-                paginationId={paginationId}
-                setPaginationId={setPaginationId}
-                stepNumber={stepNumber}
-              ></DotSlice>
-=======
               {/* <div css={SaveParent(color, imgWidth, imgHeight)}> */}
               <div>
                 <div className={`imgbox_${type}`}>
@@ -731,7 +598,6 @@ export default function RollingPaper(props: any) {
                   stepNumber={stepNumber}
                 ></DotSlice>
               </ThemeProvider>
->>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
               <DialogCustom open={deliveryModal} left={left}>
                 <DialogTitle id="alert-dialog-title" css={Font}>
                   확인해주세요
@@ -969,15 +835,9 @@ const DetailCss = (props: any) => css`
     font-size: ${props.leng};
     display: flex;
     @media screen and (min-width: 500px) {
-<<<<<<< HEAD
-      padding-top: 180px;
-      margin-bottom: -20vh;
-      font-size: 25pt;
-=======
       padding-top: 60px;
       margin-bottom: -30vh;
       font-size: ${props.mediaLeng};
->>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
     }
     @media screen and (max-width: 300px) {
       padding-top: 50px;
@@ -1428,21 +1288,6 @@ const ActionCss = css`
   }
 `;
 
-<<<<<<< HEAD
-const SaveParent = css`
-  position: relative;
-
-  .save-child {
-    background-color: #f2f0ef;
-    height: 70vh;
-    position: absolute;
-    top: 0;
-    z-index: -1;
-  }
-`;
-
-=======
->>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
 const DialogCustom: any = styled(Dialog)((props: any) => ({
   '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
     boxShadow: 'none',
@@ -1460,12 +1305,9 @@ const DialogCustom: any = styled(Dialog)((props: any) => ({
     left: `${props.left}`,
   },
 }));
-<<<<<<< HEAD
-=======
 
 const CapturePage = css`
   position: absolute;
   top: 0;
   z-index: -2;
 `;
->>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
