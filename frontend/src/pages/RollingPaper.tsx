@@ -477,10 +477,10 @@ export default function RollingPaper(props: any) {
     // 접속한 디바이스 환경
     if (navigator.platform) {
       if (pcDevice.indexOf(navigator.platform.toLowerCase()) < 0) {
-        console.log('MOBILE');
+        // console.log('MOBILE');
         setDevice(false);
       } else {
-        console.log('PC');
+        // console.log('PC');
         setDevice(true);
       }
     }
