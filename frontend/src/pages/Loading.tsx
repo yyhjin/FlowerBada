@@ -11,7 +11,7 @@ const Loading = () => {
 
 const LoadingBox = css`
   max-width: 500px;
-  width: 500px;
+  width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
