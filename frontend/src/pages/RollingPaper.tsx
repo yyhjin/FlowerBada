@@ -1,13 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import Message from '@src/components/message/Message';
 import DotSlice from '@components/paging/DotSlice';
 import messageAPI from '@api/messageAPI';
-import IosShareIcon from '@mui/icons-material/IosShare';
-import CreateIcon from '@mui/icons-material/Create';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CaptureRolling from '@pages/CaptureRolling';
 
@@ -18,39 +15,24 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
-  IconButton,
 } from '@mui/material';
 import rollingAPI from '@api/rollingAPI';
 import Star from '@assets/Star.png';
 import EmptyStar from '@assets/EmptyStar.png';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
-import { IPaymentRecoil, paymentRecoil } from '@recoil/paymentRecoil';
+import { paymentRecoil } from '@recoil/paymentRecoil';
 import MySwal from '@components/SweetAlert';
-import { useCallback } from 'react';
-import Login from '@assets/login_btn.png';
-import html2canvas from 'html2canvas';
-// import { useReactToPrint } from 'react-to-print';
 import updateTokens from '@utils/updateTokens';
-<<<<<<< HEAD
-
-import Print from '@pages/Print';
-import Main from '@pages/MainPage';
-import View from '@pages/View';
-=======
->>>>>>> 2080c0d29509f535cac260c0044b137a7aac82a8
 
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import LinkIcon from '@mui/icons-material/Link';
-import SaveIcon from '@mui/icons-material/Save';
 import PrintIcon from '@mui/icons-material/Print';
-import ShareIcon from '@mui/icons-material/Share';
 import EditIcon from '@mui/icons-material/Edit';
 
 import Kakao from '@assets/kakaoTalk2.png';
-import { Edit } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 
 export interface IRolling {
@@ -1307,7 +1289,8 @@ const DialogCustom: any = styled(Dialog)((props: any) => ({
 }));
 
 const CapturePage = css`
-  position: absolute;
+  width: 100%;
+  position: fixed;
   top: 0;
   z-index: -2;
 `;
