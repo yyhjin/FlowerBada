@@ -184,6 +184,7 @@ const CaptureRolling = forwardRef(
 );
 
 const DetailCss = (props: any) => css`
+  width: 100%;
   /* height: 100%; */
   .DetailBox_1 {
     margin-top: 200px;
