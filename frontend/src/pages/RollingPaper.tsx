@@ -87,6 +87,8 @@ export default function RollingPaper(props: any) {
   const [capture, setCapture] = useState<Boolean>(false);
   const [leng, setLeng] = useState<string>('0pt');
   const [mediaLeng, setMediaLeng] = useState<string>('0pt');
+  const [printModal, setPrintModal] = useState<boolean>(false);
+  const [device, setDevice] = useState<boolean>(false);
 
   const captureRef = useRef<any>(null);
 
@@ -330,18 +332,44 @@ export default function RollingPaper(props: any) {
     }
   };
 
+  // const closePrintModal = () => {
+  //   setColor(false);
+  //   // if (userState.jwt === '') {
+  //   //   MySwal.fire({
+  //   //     title: '로그인 후<br/>사용 가능합니다!',
+  //   //     icon: 'warning',
+  //   //     confirmButtonColor: '#16453e',
+  //   //     confirmButtonText: '확인',
+  //   //   });
+  //   // } else {
+  //   //   setColor(false);
+  //   // }
+  // };
+
+  const openPrintModal = () => {
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setPrintModal(true);
+    }
+  };
+
   const closePrintModal = () => {
-    setColor(false);
-    // if (userState.jwt === '') {
-    //   MySwal.fire({
-    //     title: '로그인 후<br/>사용 가능합니다!',
-    //     icon: 'warning',
-    //     confirmButtonColor: '#16453e',
-    //     confirmButtonText: '확인',
-    //   });
-    // } else {
-    //   setColor(false);
-    // }
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setPrintModal(false);
+    }
   };
 
   const sendDelivery = () => {
@@ -419,6 +447,7 @@ export default function RollingPaper(props: any) {
 
   const saveRolling = () => {
     setColor(true);
+    closePrintModal();
   };
 
   useEffect(() => {
@@ -440,6 +469,26 @@ export default function RollingPaper(props: any) {
     };
     goPrintAsync();
   }, [color]);
+
+  const deviceCheck = () => {
+    var pcDevice =
+      'win16|win32|win64|windows|mac|macintel|linux|freebsd|openbsd|sunos';
+
+    // 접속한 디바이스 환경
+    if (navigator.platform) {
+      if (pcDevice.indexOf(navigator.platform.toLowerCase()) < 0) {
+        console.log('MOBILE');
+        setDevice(false);
+      } else {
+        console.log('PC');
+        setDevice(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    deviceCheck();
+  }, []);
 
   const dateBeforeActions = [
     { icon: <EditIcon />, name: '메시지 작성', function: moveMessageWrite },
@@ -466,7 +515,7 @@ export default function RollingPaper(props: any) {
 
   const dateAfterActions = [
     { icon: <LocalShippingIcon />, name: '배송', function: openDeliveryModal },
-    { icon: <PrintIcon />, name: '프린트', function: saveRolling },
+    { icon: <PrintIcon />, name: '프린트', function: openPrintModal },
     {
       icon: (
         <img
@@ -627,29 +676,63 @@ export default function RollingPaper(props: any) {
                   </ThemeProvider>
                 </DialogActions>
               </DialogCustom>
-              <DialogCustom open={color} left={left}>
+              <DialogCustom open={printModal} left={left}>
                 <DialogTitle id="alert-dialog-title" css={Font}>
                   안내
                 </DialogTitle>
-                <DialogContent>
-                  <DialogContentText css={Font}>
-                    다음 업데이트를 기대해주세요 (●&apos;◡&apos;●)
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions css={ActionCss}>
-                  <ThemeProvider theme={theme}>
-                    <Button
-                      variant="contained"
-                      color="neutral"
-                      size="small"
-                      onClick={closePrintModal}
-                      css={Font}
-                      id="no"
-                    >
-                      돌아가기
-                    </Button>
-                  </ThemeProvider>
-                </DialogActions>
+                {device ? (
+                  <>
+                    <DialogContent>
+                      <DialogContentText css={Font}>
+                        프린트 창이 뜨면 설정 더보기 - 배경그래픽 옵션을 꼭
+                        체크해주세요!
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions css={ActionCss}>
+                      <ThemeProvider theme={theme}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={saveRolling}
+                          css={Font}
+                        >
+                          확인
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="neutral"
+                          size="small"
+                          onClick={closePrintModal}
+                          css={Font}
+                        >
+                          취소
+                        </Button>
+                      </ThemeProvider>
+                    </DialogActions>
+                  </>
+                ) : (
+                  <>
+                    <DialogContent>
+                      <DialogContentText css={Font}>
+                        PC에서 접속해주세요!
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions css={ActionCss}>
+                      <ThemeProvider theme={theme}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={closePrintModal}
+                          css={Font}
+                        >
+                          확인
+                        </Button>
+                      </ThemeProvider>
+                    </DialogActions>
+                  </>
+                )}
               </DialogCustom>
             </div>
             {/* {rollingDate <= nowDate ? (
