@@ -132,6 +132,46 @@ export default function Manual() {
           aria-controls="panel3a-content"
           id="panel3a-header"
         >
+          <Typography>롤링페이퍼 출력하기</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <div>
+            1. 작성 기간이 종료된 롤링페이퍼에서 더하기 버튼을 눌러 프린트
+            아이콘을 선택합니다.
+          </div>
+          <div>
+            <img
+              src="https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/manual/6-1.png"
+              className="imgBox"
+            ></img>
+          </div>
+          <hr />
+          <div>2. 안내창을 확인하고 확인 버튼을 누릅니다.</div>
+          <div>
+            <img
+              src="https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/manual/6-2.png"
+              className="imgBox"
+            ></img>
+          </div>
+          <hr />
+          <div>
+            3. 출력창이 뜨면 배경 그래픽 옵션을 선택하고 PDF로 저장하거나
+            프린트를 선택하여 출력합니다.
+          </div>
+          <div>
+            <img
+              src="https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/manual/6-3.png"
+              className="imgBoxWide"
+            ></img>
+          </div>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel3a-content"
+          id="panel3a-header"
+        >
           <Typography>그린하우스</Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -232,6 +272,15 @@ const totalCSS = css`
     @media screen and (min-height: 500px) {
       margin-top: 10px;
       margin-left: 100px;
+    }
+  }
+  .imgBoxWide {
+    width: 90%;
+    margin-top: 2vw;
+    margin-left: 20vw;
+    @media screen and (min-height: 500px) {
+      margin-top: 10px;
+      margin-left: 30px;
     }
   }
 

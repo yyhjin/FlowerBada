@@ -6,7 +6,6 @@
 html {
   display: table;
   margin: auto;
-  /* background-color: #f2f0ef; */
 }
 
 body {
@@ -15,8 +14,6 @@ body {
   width: 100%;
   overflow-y: hidden;
   overflow-x: hidden;
-  /* margin: 0; */
-  /* margin-left: 100%; */
   float: center;
 }
 
@@ -25,20 +22,14 @@ body {
 }
 
 #root {
-  /* width: 100%; */
   font-family: 'SeoulNamsanM';
   height: 100vh;
   margin: 0 auto;
   text-align: center;
-  overflow-y: hidden;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   background-color: #f2f0ef;
   -ms-overflow-style: none;
-}
-
-#root::-webkit-scrollbar {
-  display: none;
 }
 
 button:focus {
