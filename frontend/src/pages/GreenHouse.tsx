@@ -287,13 +287,33 @@ export default function GreenHouse() {
                     css={GridItem}
                     onClick={() => handleRollingPaper(rolling.url)}
                   >
-                    <div className="rolling-items">
-                      <img className="rolling_img" src={rolling.imgUrl} />
-                      <div className="rolling-text">
-                        <div className="rolling_title">{rolling.title}</div>
-                        <div className="rolling_date">({rolling.date})</div>
+                    {rolling.imgUrl.charAt(67) === 'r' ? (
+                      <div className="rolling-items">
+                        <div className="rolling_img_zone">
+                          <img
+                            className="rolling_img_after"
+                            src={rolling.imgUrl}
+                          />
+                        </div>
+                        <div className="rolling-text">
+                          <div className="rolling_title">{rolling.title}</div>
+                          <div className="rolling_date">({rolling.date})</div>
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="rolling-items">
+                        <div className="rolling_img_zone">
+                          <img
+                            className="rolling_img_before"
+                            src={rolling.imgUrl}
+                          />
+                        </div>
+                        <div className="rolling-text">
+                          <div className="rolling_title">{rolling.title}</div>
+                          <div className="rolling_date">({rolling.date})</div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </Grid>
               ))}
@@ -306,13 +326,33 @@ export default function GreenHouse() {
                     css={GridItem}
                     onClick={() => handleRollingPaper(rolling.url)}
                   >
-                    <div className="rolling-items">
-                      <img className="rolling_img" src={rolling.imgUrl} />
-                      <div className="rolling-text">
-                        <div className="rolling_title">{rolling.title}</div>
-                        <div className="rolling_date">({rolling.date})</div>
+                    {rolling.imgUrl.charAt(67) === 'r' ? (
+                      <div className="rolling-items">
+                        <div className="rolling_img_zone">
+                          <img
+                            className="rolling_img_after"
+                            src={rolling.imgUrl}
+                          />
+                        </div>
+                        <div className="rolling-text">
+                          <div className="rolling_title">{rolling.title}</div>
+                          <div className="rolling_date">({rolling.date})</div>
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="rolling-items">
+                        <div className="rolling_img_zone">
+                          <img
+                            className="rolling_img_before"
+                            src={rolling.imgUrl}
+                          />
+                        </div>
+                        <div className="rolling-text">
+                          <div className="rolling_title">{rolling.title}</div>
+                          <div className="rolling_date">({rolling.date})</div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </Grid>
               ))}
@@ -426,13 +466,35 @@ const GridItem = css`
   position: relative;
   cursor: pointer;
   padding: 0.5rem;
-  height: 300px;
+  height: 40vw;
+  @media screen and (min-width: 500px) {
+    height: 200px;
+  }
 
   .rolling-items {
-    height: 300px;
+    /* height: 300px; */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
+  }
+  .rolling_img_zone {
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    height: auto;
+    overflow: hidden;
+  }
+  .rolling_img_before {
+    margin-top: 5%;
+    left: 0;
+    width: 90%;
+  }
+  .rolling_img_after {
+    margin-top: -35%;
+    /* position: absolute; */
+    left: 0;
+    width: 85%;
   }
 
   &:hover,
@@ -442,12 +504,16 @@ const GridItem = css`
     cursor: pointer;
   }
 
-  .rolling_img {
-    width: 80%;
+  .rolling-text {
+    position: absolute;
+    bottom: 0;
+    align-items: center;
+    z-index: 500;
   }
 
   .rolling_title {
     font-size: 15px;
+    float: center;
     font-family: 'SeoulNamsanM';
   }
   .rolling_date {
