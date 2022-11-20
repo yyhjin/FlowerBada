@@ -1,19 +1,10 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  Ref,
-  useImperativeHandle,
-  forwardRef,
-} from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import Message from '@src/components/message/Message';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
-import MySwal from '@components/SweetAlert';
 import html2canvas from 'html2canvas';
-import updateTokens from '@utils/updateTokens';
 import messageAPI from '@api/messageAPI';
 import type { IMessage, IRolling } from './RollingPaper';
 
@@ -34,18 +25,6 @@ const CaptureRolling = forwardRef(
     const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
 
     const location = useLocation();
-    // location.state as {
-    //   type: number;
-    //   valid: Boolean;
-    //   rolling: IRolling;
-    //   nowDate: Date;
-    //   rollingDate: Date;
-    // };
-    // const { type, valid, rolling, nowDate, rollingDate } = location.state;
-
-    // window.addEventListener('resize', function () {
-    //   get();
-    // });
 
     const type = props.type;
     const rolling = props.rolling;
@@ -58,7 +37,6 @@ const CaptureRolling = forwardRef(
       let img = document.getElementById('base-img');
       setTimeout(() => {
         if (img) {
-          // console.log(+img?.clientWidth, +img?.clientHeight);
           setImgHeight(+img?.clientHeight);
         }
       }, 50);
@@ -69,7 +47,6 @@ const CaptureRolling = forwardRef(
     }, []);
 
     useEffect(() => {
-      // console.log(imgHeight);
       if (imgHeight != 0) {
         if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
           // 캡쳐 및 DB 저장

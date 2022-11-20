@@ -1,14 +1,7 @@
 import { css } from '@emotion/react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { IRolling, IMessage } from '@pages/RollingPaper';
-import {
-  Button,
-  createTheme,
-  Grid,
-  MenuItem,
-  ThemeProvider,
-} from '@mui/material';
-import { useState, useEffect, useRef } from 'react';
+import type { IRolling } from '@pages/RollingPaper';
+import { useEffect, useRef } from 'react';
 import Loading from './Loading';
 
 const Print = () => {
