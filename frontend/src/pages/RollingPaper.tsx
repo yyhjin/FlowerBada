@@ -445,15 +445,6 @@ export default function RollingPaper(props: any) {
         // 캡쳐
         await captureRef.current.captureToPrint();
         setColor(false);
-        // 프린트 페이지로 이동
-        // navigate('/rolling/print', {
-        //   state: {
-        //     rollingUrl: paramCopy.url,
-        //     mainImg: rolling.imgUrl,
-        //     type,
-        //     rolling,
-        //   },
-        // });
       }
     };
     goPrintAsync();
@@ -465,7 +456,10 @@ export default function RollingPaper(props: any) {
 
     // 접속한 디바이스 환경
     if (navigator.platform) {
-      if (pcDevice.indexOf(navigator.platform.toLowerCase()) < 0) {
+      if (
+        pcDevice.indexOf(navigator.platform.toLowerCase()) < 0 ||
+        navigator.maxTouchPoints === 5
+      ) {
         // console.log('MOBILE');
         setDevice(false);
       } else {
