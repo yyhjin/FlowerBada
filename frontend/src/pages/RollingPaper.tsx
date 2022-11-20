@@ -456,11 +456,14 @@ export default function RollingPaper(props: any) {
 
     // 접속한 디바이스 환경
     if (navigator.platform) {
-      if (
-        pcDevice.indexOf(navigator.platform.toLowerCase()) < 0 ||
-        navigator.maxTouchPoints === 5
-      ) {
+      if (pcDevice.indexOf(navigator.platform.toLowerCase()) < 0) {
         // console.log('MOBILE');
+        setDevice(false);
+      } else if (
+        navigator.platform === 'MacIntel' &&
+        navigator.maxTouchPoints > 1
+      ) {
+        // console.log('IPAD');
         setDevice(false);
       } else {
         // console.log('PC');
