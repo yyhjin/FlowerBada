@@ -4,18 +4,14 @@ package app.bada.flower.api.controller;
 import app.bada.flower.api.dto.ResponseDto;
 import app.bada.flower.api.dto.auth.OAuthRes;
 import app.bada.flower.api.dto.type.SocialLoginType;
-import app.bada.flower.api.dto.user.SignInResDto;
-import app.bada.flower.api.dto.user.UserInfo;
 import app.bada.flower.api.entity.User;
 import app.bada.flower.api.service.UserService;
 import app.bada.flower.api.service.auth.OAuthService;
-import app.bada.flower.api.service.jwt.JwtTokenUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;

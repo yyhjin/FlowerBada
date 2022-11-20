@@ -15,8 +15,14 @@ import updateTokens from '@src/utils/updateTokens';
 import MySwal from '@components/SweetAlert';
 
 export default function SetOpenDate() {
-  const today = new Date();
-  const tomorrow = new Date(today);
+  const curr = new Date();
+  const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+  const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+
+  const today = new Date(utc + KR_TIME_DIFF);
+  const tomorrow = new Date(utc + KR_TIME_DIFF);
+  // console.log(today);
+
   tomorrow.setDate(today.getDate() + 1);
   const navigate = useNavigate();
   const [userState, setUserState] = useRecoilState<IuserRecoil>(userReCoil);
@@ -49,7 +55,8 @@ export default function SetOpenDate() {
     if (String(day).length === 1) {
       day = '0' + day;
     }
-    let localDateTime = year + '-' + month + '-' + day + 'T10:00';
+    let localDateTime = year + '-' + month + '-' + day + 'T00:00';
+
     try {
       const res: any = await rollingAPI.makeRolling(
         userState.jwt,
@@ -126,18 +133,18 @@ export default function SetOpenDate() {
   };
 
   const datePickerFocus = (e: any) => {
-    console.log((e.target.readOnly = true));
+    e.target.readOnly = true;
   };
 
   const datePickerFocusOut = (e: any) => {
-    console.log((e.target.readOnly = false));
+    e.target.readOnly = false;
   };
 
   return (
     <div css={Background}>
       <div css={Info}>
         <div css={Writing}>롤링페이퍼 개봉 날짜를</div>
-        <div css={Writing}> 선택해주세요</div>
+        <div css={Writing}>선택해주세요.</div>
       </div>
       <div css={Calendar}>
         <DatePicker
@@ -150,50 +157,89 @@ export default function SetOpenDate() {
           placeholderText="롤링페이퍼 개봉 날짜 선택" // placeholder
           selected={date} // value
           onChange={(date: Date) => changeDate(date)} // 날짜를 선택하였을 때 실행될 함수
-          onFocus={datePickerFocus}
-          onBlur={datePickerFocusOut}
+          // onFocus={datePickerFocus}
+          // onBlur={datePickerFocusOut}
+          onFocus={(e) => e.currentTarget.blur()}
         />
+
+        <div className="infor">Safari Browser의 경우 날짜를 꾹 눌러주세요!</div>
       </div>
       <button onClick={handleRollingLink} css={CreateButton}>
-        롤페 생성
+        롤링페이퍼 생성
       </button>
     </div>
   );
 }
 
 const Background = css`
+  position: relative;
+  max-width: 500px;
   width: 100vw;
+  height: 100%;
 `;
 
 const Info = css`
-  padding-top: 10vh;
-  font-weight: bold;
-  font-size: 200%;
+  padding-top: 15vh;
+  font-size: 30px;
+  @media screen and (max-width: 300px) {
+    font-size: 20px;
+  }
+  margin-bottom: 2rem;
 `;
 
 const Writing = css`
   margin-top: 1vh;
   padding: 1vw;
+  font-size: 1em;
 `;
 
 const Calendar = css`
+  position: relative;
   margin-top: 5vh;
   text-align: center;
   @media screen and (min-width: 500px) {
-    position: absolute;
-    left: 44vw;
+    margin: 0 auto;
+  }
+
+  .react-datepicker-wrapper {
+    margin-top: 2rem;
+    input {
+      height: 36px;
+      text-align: center;
+      border: solid 2px;
+      border-radius: 5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+
+  .infor {
+    margin-top: 15px;
+    color: orangered;
   }
 `;
 
 const CreateButton = css`
-  margin-top: 53vh;
-  height: 7vh;
-  width: 94vw;
-  border-radius: 3vw;
+  position: absolute;
+  bottom: 30px;
+  margin: auto;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
   color: white;
-  font-size: 100%;
   background-color: #16453e;
+  height: 60px;
+  left: 5%;
+  width: 90%;
   @media screen and (min-width: 500px) {
-    width: 80%;
+    bottom: 30px;
+    left: 5%;
+    width: 90%;
+    height: 60px;
   }
 `;

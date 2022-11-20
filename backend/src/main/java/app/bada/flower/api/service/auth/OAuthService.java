@@ -8,7 +8,6 @@ import app.bada.flower.api.entity.User;
 import app.bada.flower.api.repository.UserRepository;
 import app.bada.flower.api.service.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -68,7 +66,7 @@ public class OAuthService {
                 User user = userRepository.findByKakaoUserId(user_id).orElse(null);
 
                 OAuthRes res = null;
-                String refreshToken = jwtTokenUtil.createRefreshToken(user.getToken(), user.getRoles());
+                String refreshToken = null;
                 if(user != null) {
                     // 하루에 한 번 로그인 시 10 포인트 지급 - 자정 기준
                     LocalDateTime lastLoginDate = user.getLastLoginDate();
@@ -82,6 +80,7 @@ public class OAuthService {
                     userRepository.save(user);
                     //서버에 user가 존재하면 앞으로 회원 인가 처리를 위한 jwtToken을 발급한다.
                     String jwtToken = jwtTokenUtil.createToken(user.getToken(), user.getRoles());
+                    refreshToken = jwtTokenUtil.createRefreshToken(user.getToken(), user.getRoles());
                     //액세스 토큰과 jwtToken, 이외 정보들이 담긴 자바 객체를 다시 전송한다.
                     res = OAuthRes.builder()
                             .jwtToken(jwtToken)
@@ -95,7 +94,7 @@ public class OAuthService {
                     System.out.println("--------소셜 회원가입--------");
                     user = User.builder()
                             .token(String.valueOf(kakaoUser.getId()))
-                            .points(50) // 회원가입 시에 50포인트 지급
+                            .points(200) // 회원가입 시에 200포인트 지급
                             .nickname(kakaoUser.getNickname())
                             .roles(Arrays.asList("ROLE_USER"))
                             .lastLoginDate(LocalDateTime.now())
@@ -107,6 +106,7 @@ public class OAuthService {
                     }
 
                     String jwtToken = jwtTokenUtil.createToken(user.getToken(), user.getRoles());
+                    refreshToken = jwtTokenUtil.createRefreshToken(user.getToken(), user.getRoles());
                     res = OAuthRes.builder()
                             .jwtToken(jwtToken)
                             .refreshToken(refreshToken)

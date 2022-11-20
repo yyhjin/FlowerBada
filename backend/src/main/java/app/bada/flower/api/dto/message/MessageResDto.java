@@ -2,7 +2,6 @@ package app.bada.flower.api.dto.message;
 
 import app.bada.flower.api.entity.Message;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 public class MessageResDto {
@@ -25,26 +24,18 @@ public class MessageResDto {
             this.writer = message.getWriter();
             this.font = message.getFont();
         }
-
-        // QueryDSL에서 사용하는 생성자
-        public MessageDto(int messageId, int flowerId, String imgUrl, String content, String writer, String font) {
-            this.messageId = messageId;
-            this.flowerId = flowerId;
-            this.imgUrl = imgUrl;
-            this.content = content;
-            this.writer = writer;
-            this.font = font;
-        }
     }
-
 
     @Getter
     @Setter
     public static class rollingMsgDto {
         private int messageId;
         private int flowerId;
+        private String content;
         private String writer;
         private String imgUrl;
+        private String font;
+        private int price;
     }
 
 }

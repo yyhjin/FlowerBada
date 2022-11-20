@@ -1,15 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
-import Message from '@src/components/mypage/Message';
+import Message from '@src/components/message/Message';
 import DotSlice from '@components/paging/DotSlice';
 import messageAPI from '@api/messageAPI';
-import IosShareIcon from '@mui/icons-material/IosShare';
-import CreateIcon from '@mui/icons-material/Create';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
+import CaptureRolling from '@pages/CaptureRolling';
 
 import {
   Dialog,
@@ -18,24 +15,25 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
-  IconButton,
 } from '@mui/material';
 import rollingAPI from '@api/rollingAPI';
 import Star from '@assets/Star.png';
 import EmptyStar from '@assets/EmptyStar.png';
-import Delivery from '@assets/Delivery.png';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import { IuserRecoil, userReCoil } from '@recoil/userRecoil';
+import { paymentRecoil } from '@recoil/paymentRecoil';
 import MySwal from '@components/SweetAlert';
-import { useCallback } from 'react';
-import Login from '@assets/login_btn.png';
-import html2canvas from 'html2canvas';
-import { useReactToPrint } from 'react-to-print';
 import updateTokens from '@utils/updateTokens';
 
-import Print from '@pages/Print';
-import Main from '@pages/MainPage';
-import View from '@pages/View';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import LinkIcon from '@mui/icons-material/Link';
+import PrintIcon from '@mui/icons-material/Print';
+import EditIcon from '@mui/icons-material/Edit';
+
+import Kakao from '@assets/kakaoTalk2.png';
+import { styled } from '@mui/material/styles';
 
 export interface IRolling {
   rollingId?: number;
@@ -53,9 +51,10 @@ export interface IMessage {
   writer: string;
   flowerId: number;
   messageId: number;
+  price: number;
 }
 
-export default function RollingPaper() {
+export default function RollingPaper(props: any) {
   const [loading, setLoading] = useState<Boolean>(false);
   const [rolling, setRolling] = useState<IRolling>({});
   const [paginationId, setPaginationId] = useState<number>(1);
@@ -71,7 +70,29 @@ export default function RollingPaper() {
   const [rollingDate, setRollingDate] = useState<Date>(new Date());
   const navigate = useNavigate();
   const [deliveryModal, setDeliveryModal] = useState<boolean>(false);
+  const resetPaymentRecoil = useResetRecoilState(paymentRecoil);
+  const [color, setColor] = useState<Boolean>(false);
+  const [left, setLeft] = useState<string>('0px');
+  const [capture, setCapture] = useState<Boolean>(false);
+  const [leng, setLeng] = useState<string>('0pt');
+  const [mediaLeng, setMediaLeng] = useState<string>('0pt');
+  const [printModal, setPrintModal] = useState<boolean>(false);
+  const [device, setDevice] = useState<boolean>(false);
+
+  const captureRef = useRef<any>(null);
+
+  window.addEventListener('resize', function () {
+    if (window.innerWidth >= 500) {
+      setLeft((window.innerWidth - 500) / 2 + 'px');
+    } else {
+      setLeft('0px');
+    }
+  });
+
   let componentRef = useRef<HTMLDivElement>(null);
+  const root = 'https://k7a405.p.ssafy.io/rolling/';
+  // const root = 'http://localhost:5173/rolling/';
+  const VITE_APP_KAKAO_KEY = import.meta.env.VITE_APP_KAKAO_KEY;
 
   function afterGetRolling(res: any) {
     const curr = new Date();
@@ -89,12 +110,6 @@ export default function RollingPaper() {
     if (rollingDate <= nowDate) {
       setValid(true);
     } else {
-      MySwal.fire({
-        title: `${res.data.response.date} 일 이후 개봉 가능`,
-        icon: 'info',
-        confirmButtonColor: '#16453e',
-        confirmButtonText: '확인',
-      });
       setValid(false);
     }
 
@@ -124,6 +139,17 @@ export default function RollingPaper() {
 
   async function getRolling() {
     url = paramCopy.url;
+    if (userState.jwt === '') {
+      props.Setters.setUrl(paramCopy.url);
+      props.Setters.setPageId(paginationId);
+    }
+
+    if (window.innerWidth >= 500) {
+      setLeft((window.innerWidth - 500) / 2 + 'px');
+    } else {
+      setLeft('0px');
+    }
+
     setLoading(false);
     setDeliveryModal(false);
     try {
@@ -134,6 +160,21 @@ export default function RollingPaper() {
         paginationId,
       );
       afterGetRolling(res);
+
+      let titleLength = res.data.response.title.length;
+      if (titleLength >= 16) {
+        setLeng('12px');
+        setMediaLeng('15px');
+      } else if (titleLength >= 11) {
+        setLeng('15px');
+        setMediaLeng('18px');
+      } else if (titleLength >= 6) {
+        setLeng('20px');
+        setMediaLeng('25px');
+      } else {
+        setLeng('30px');
+        setMediaLeng('37px');
+      }
     } catch (err: any) {
       if (err.response.headers.get('x-auth-token') === 'EXPIRED') {
         MySwal.fire({
@@ -254,7 +295,7 @@ export default function RollingPaper() {
     });
   };
 
-  const changeDelivery = (param: boolean) => {
+  const openDeliveryModal = () => {
     if (userState.jwt === '') {
       MySwal.fire({
         title: '로그인 후<br/>사용 가능합니다!',
@@ -263,7 +304,60 @@ export default function RollingPaper() {
         confirmButtonText: '확인',
       });
     } else {
-      setDeliveryModal(param);
+      setDeliveryModal(true);
+    }
+  };
+
+  const closeDeliveryModal = () => {
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setDeliveryModal(false);
+    }
+  };
+
+  // const closePrintModal = () => {
+  //   setColor(false);
+  //   // if (userState.jwt === '') {
+  //   //   MySwal.fire({
+  //   //     title: '로그인 후<br/>사용 가능합니다!',
+  //   //     icon: 'warning',
+  //   //     confirmButtonColor: '#16453e',
+  //   //     confirmButtonText: '확인',
+  //   //   });
+  //   // } else {
+  //   //   setColor(false);
+  //   // }
+  // };
+
+  const openPrintModal = () => {
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setPrintModal(true);
+    }
+  };
+
+  const closePrintModal = () => {
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      setPrintModal(false);
     }
   };
 
@@ -271,13 +365,66 @@ export default function RollingPaper() {
     // 로컬스토리지에 담기
     localStorage.setItem('url', paramCopy.url);
     localStorage.setItem('paginationId', paginationId.toString());
-    navigate('/payment');
+    navigate('/payment/option', {
+      state: {
+        rolling,
+        type,
+        valid,
+        stepNumber,
+        userToken: userState.userToken,
+        paginationId,
+      },
+    });
   };
 
-  const linkToSignIn = () => {
-    localStorage.setItem('url', paramCopy.url);
-    localStorage.setItem('paginationId', String(paginationId));
-    navigate('/');
+  const linkCopy = () => {
+    navigator.clipboard.writeText(root + paramCopy.url);
+    MySwal.fire({
+      title: '링크가 복사되었습니다.',
+      icon: 'success',
+      confirmButtonColor: '#16453e',
+      confirmButtonText: '확인',
+    });
+  };
+
+  const kakaoShare = () => {
+    if (userState.jwt === '') {
+      MySwal.fire({
+        title: '로그인 후<br/>사용 가능합니다!',
+        icon: 'warning',
+        confirmButtonColor: '#16453e',
+        confirmButtonText: '확인',
+      });
+    } else {
+      if (window.Kakao) {
+        const kakao = window.Kakao;
+        if (!kakao.isInitialized()) {
+          kakao.init(VITE_APP_KAKAO_KEY);
+        }
+      }
+      window.Kakao.Link.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: '꽃바다 - 우리들의 이야기를 꽃에 담아',
+          description: `${rolling.title}`,
+          imageUrl:
+            'https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/rollingpaper/03LO7T.png',
+          link: {
+            mobileWebUrl: `${root}${paramCopy.url}`,
+            webUrl: `${root}${paramCopy.url}`,
+          },
+        },
+        buttons: [
+          {
+            title: '롤링페이퍼 작성하기',
+            link: {
+              mobileWebUrl: `${root}${paramCopy.url}`,
+              webUrl: `${root}${paramCopy.url}`,
+            },
+          },
+        ],
+      });
+    }
   };
 
   useEffect(() => {
@@ -287,90 +434,145 @@ export default function RollingPaper() {
     localStorage.removeItem('paginationId');
   }, []);
 
-  const shareRolling = () => {
-    navigate('/newroll/link', {
-      state: { url: paramCopy.url, title: rolling.title },
-    });
+  const saveRolling = () => {
+    setColor(true);
+    closePrintModal();
   };
 
-  const saveRolling = () => {
-    navigate('/rolling/print', {
-      state: {
-        rolling,
-        type,
-        valid,
-        mainImg: rolling.imgUrl,
-      },
-    });
+  useEffect(() => {
+    const goPrintAsync = async () => {
+      if (color) {
+        // 캡쳐
+        await captureRef.current.captureToPrint();
+        setColor(false);
+      }
+    };
+    goPrintAsync();
+  }, [color]);
+
+  const deviceCheck = () => {
+    var pcDevice =
+      'win16|win32|win64|windows|mac|macintel|linux|freebsd|openbsd|sunos';
+
+    // 접속한 디바이스 환경
+    if (navigator.platform) {
+      if (pcDevice.indexOf(navigator.platform.toLowerCase()) < 0) {
+        // console.log('MOBILE');
+        setDevice(false);
+      } else if (
+        navigator.platform === 'MacIntel' &&
+        navigator.maxTouchPoints > 1
+      ) {
+        // console.log('IPAD');
+        setDevice(false);
+      } else {
+        // console.log('PC');
+        setDevice(true);
+      }
+    }
   };
+
+  useEffect(() => {
+    deviceCheck();
+  }, []);
+
+  const dateBeforeActions = [
+    { icon: <EditIcon />, name: '메시지 작성', function: moveMessageWrite },
+    { icon: <LinkIcon />, name: '링크 복사', function: linkCopy },
+    {
+      icon: (
+        <img
+          src={Kakao}
+          style={{
+            userSelect: 'none',
+            width: '1em',
+            height: '1em',
+            display: 'inline-block',
+            fill: 'currentColor',
+            flexShrink: '0',
+            fontSize: '1.5rem',
+          }}
+        />
+      ),
+      name: '카카오톡 공유',
+      function: kakaoShare,
+    },
+  ];
+
+  const dateAfterActions = [
+    { icon: <LocalShippingIcon />, name: '배송', function: openDeliveryModal },
+    { icon: <PrintIcon />, name: '프린트', function: openPrintModal },
+    {
+      icon: (
+        <img
+          src={Kakao}
+          style={{
+            userSelect: 'none',
+            width: '1em',
+            height: '1em',
+            display: 'inline-block',
+            fill: 'currentColor',
+            flexShrink: '0',
+            fontSize: '1.5rem',
+          }}
+        />
+      ),
+      name: '카카오톡 공유',
+      function: kakaoShare,
+    },
+  ];
 
   useEffect(() => {
     getRolling();
   }, [paginationId]);
 
-  useEffect(() => {
-    if (rollingDate <= nowDate && rolling.imgUrl?.startsWith('fixed')) {
-      // 캡쳐 및 DB 저장
-      const el = document.getElementById('to-save');
-      if (el) {
-        html2canvas(el).then((canvas) => {
-          onSaveAs(
-            canvas.toDataURL('image/png'),
-            `final-image-` + paramCopy.url + `.png`,
-          );
-        });
-      }
-    }
-  }, [rolling]);
-
-  const onSaveAs = (uri: string, filename: string): void => {
-    console.log(uri);
-    let link: any = document.createElement('a');
-    document.body.appendChild(link);
-    link.href = uri;
-    // link.download = filename;
-    // link.click();
-    document.body.removeChild(link);
-    axios.put(
-      `http://localhost:8080/api/v1/message/updateimg/${paramCopy.url}`,
-      {
-        imgUrl: uri,
+  const captureGo = () => {
+    navigate('/rolling/capture', {
+      state: {
+        // rollingUrl: paramCopy.url,
+        // mainImg: rolling.imgUrl,
+        type,
+        valid,
+        rolling,
+        nowDate,
+        rollingDate,
       },
-    );
+    });
   };
 
   return (
     <>
-      {userState.jwt === '' ? (
-        <img src={Login} css={LoginBtn} onClick={linkToSignIn} />
-      ) : null}
       {loading && rolling && rolling.messages && type ? (
         <>
-          <div css={DetailCss}>
-            <div className={`titlezone_${type}`}>
-              <div className="title">{rolling.title}</div>
-              {bookmark ? (
-                <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
+          <div>
+            <div css={DetailCss({ leng: leng, mediaLeng: mediaLeng })}>
+              {!valid ? (
+                <div className={`valid_${type}`}>
+                  {rolling.date} 이후로 개봉 가능합니다.
+                </div>
               ) : (
-                <img
-                  src={EmptyStar}
-                  css={BookmarkImg}
-                  onClick={bookmarkSwitch}
-                />
+                <div className={`valid_${type}`}>꽃을 눌러보세요!</div>
               )}
-            </div>
-            {!valid ? (
-              <div className="valid">
-                {rolling.date} 이후로 개봉 가능합니다.
+              <div className={`titlezone_${type}`}>
+                <div className="title">{rolling.title}</div>
+                {bookmark ? (
+                  <img src={Star} css={BookmarkImg} onClick={bookmarkSwitch} />
+                ) : (
+                  <img
+                    src={EmptyStar}
+                    css={BookmarkImg}
+                    onClick={bookmarkSwitch}
+                  />
+                )}
               </div>
-            ) : (
-              <div className="valid">꽃을 눌러보세요!</div>
-            )}
 
-            <div css={SaveParent}>
+              {/* <div css={SaveParent(color, imgWidth, imgHeight)}> */}
               <div>
                 <div className={`imgbox_${type}`}>
-                  <img src={'/src/assets/' + rolling.imgBack}></img>
+                  <img
+                    id="base-img"
+                    src={'/src/assets/' + rolling.imgBack}
+                  ></img>
                 </div>
                 <div className="flowerlist">
                   {rolling.messages.map((message, index) => {
@@ -382,6 +584,7 @@ export default function RollingPaper() {
                           writer={message.writer}
                           valid={valid}
                           writerDisplay={true}
+                          type={type}
                         ></Message>
                       </div>
                     );
@@ -391,45 +594,142 @@ export default function RollingPaper() {
               <div className={`imgbox_front_${type}`}>
                 <img src={'/src/assets/' + rolling.imgFront}></img>
               </div>
-              <div id="to-save" className="save-child">
-                <div className={`imgbox_${type}`}>
-                  <img src={'/src/assets/' + rolling.imgBack}></img>
-                </div>
-                <div className="flowerlist">
-                  {rolling.messages.map((message, index) => {
-                    return (
-                      <div key={index} className={`flowerbox_${type}`}>
-                        <Message
-                          imgUrl={message.imgUrl}
-                          messageId={message.messageId}
-                          writer={message.writer}
-                          valid={valid}
-                          writerDisplay={false}
-                        ></Message>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className={`imgbox_front_${type}`}>
-                  <img src={'/src/assets/' + rolling.imgFront}></img>
-                </div>
-              </div>
             </div>
-            <div className={`dot_${type}`}>
-              <DotSlice
-                paginationId={paginationId}
-                setPaginationId={setPaginationId}
-                stepNumber={stepNumber}
-              ></DotSlice>
+            {/* <div css={`dot_${type}`}> */}
+            <div css={Dot}>
+              <ThemeProvider theme={theme}>
+                <SpeedDial
+                  ariaLabel="SpeedDial openIcon example"
+                  sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                  icon={<SpeedDialIcon />}
+                  className="speed-dial-zone"
+                >
+                  {rollingDate <= nowDate
+                    ? dateAfterActions.map((action) => (
+                        <SpeedDialAction
+                          key={action.name}
+                          icon={action.icon}
+                          onClick={action.function}
+                        />
+                      ))
+                    : dateBeforeActions.map((action) => (
+                        <SpeedDialAction
+                          key={action.name}
+                          icon={action.icon}
+                          onClick={action.function}
+                        />
+                      ))}
+                </SpeedDial>
+                <DotSlice
+                  paginationId={paginationId}
+                  setPaginationId={setPaginationId}
+                  stepNumber={stepNumber}
+                ></DotSlice>
+              </ThemeProvider>
+              <DialogCustom open={deliveryModal} left={left}>
+                <DialogTitle id="alert-dialog-title" css={Font}>
+                  확인해주세요
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText css={Font}>
+                    현재 선택하신 페이지의 꽃들로 주문을 진행합니다.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions css={ActionCss}>
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      onClick={sendDelivery}
+                      css={Font}
+                      id="yes"
+                    >
+                      확인
+                    </Button>
+                  </ThemeProvider>
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="contained"
+                      color="neutral"
+                      size="small"
+                      onClick={closeDeliveryModal}
+                      css={Font}
+                      id="no"
+                    >
+                      취소
+                    </Button>
+                  </ThemeProvider>
+                </DialogActions>
+              </DialogCustom>
+              <DialogCustom open={printModal} left={left}>
+                <DialogTitle id="alert-dialog-title" css={Font}>
+                  안내
+                </DialogTitle>
+                {device ? (
+                  <>
+                    <DialogContent>
+                      <DialogContentText css={Font}>
+                        프린트 창이 뜨면 설정 더보기 - 배경그래픽 옵션을 꼭
+                        체크해주세요!
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions css={ActionCss}>
+                      <ThemeProvider theme={theme}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={saveRolling}
+                          css={Font}
+                        >
+                          확인
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="neutral"
+                          size="small"
+                          onClick={closePrintModal}
+                          css={Font}
+                        >
+                          취소
+                        </Button>
+                      </ThemeProvider>
+                    </DialogActions>
+                  </>
+                ) : (
+                  <>
+                    <DialogContent>
+                      <DialogContentText css={Font}>
+                        프린트 기능은 PC에서 지원합니다.
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions css={ActionCss}>
+                      <ThemeProvider theme={theme}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={closePrintModal}
+                          css={Font}
+                        >
+                          확인
+                        </Button>
+                      </ThemeProvider>
+                    </DialogActions>
+                  </>
+                )}
+              </DialogCustom>
             </div>
-            {rollingDate <= nowDate ? (
+            {/* {rollingDate <= nowDate ? (
               <>
-                <div className="bottom-bar">
+                <div css={BottomBar}>
                   <ThemeProvider theme={theme}>
                     <IconButton
                       size="large"
                       color="primary"
                       className="share-btn"
+                      onClick={saveRolling}
                     >
                       <SaveAltIcon fontSize="large" />
                     </IconButton>
@@ -479,7 +779,7 @@ export default function RollingPaper() {
                 </Dialog>
               </>
             ) : (
-              <div className="bottom-bar">
+              <div css={BottomBar}>
                 <ThemeProvider theme={theme}>
                   <IconButton
                     size="large"
@@ -499,227 +799,240 @@ export default function RollingPaper() {
                   </IconButton>
                 </ThemeProvider>
               </div>
-            )}
+            )} */}
+          </div>
+          <div css={CapturePage}>
+            <CaptureRolling
+              ref={captureRef}
+              type={type}
+              rolling={rolling}
+              nowDate={nowDate}
+              rollingDate={rollingDate}
+              url={paramCopy.url}
+              color={color}
+            />
           </div>
         </>
       ) : (
-        <div css={Loading}>로딩중</div>
+        <div css={Loading}></div>
       )}
     </>
   );
 }
 
-const LoginBtn = css`
-  position: absolute;
-  width: 35px;
-  top: 2%;
-  right: 5%;
-  z-index: 999999;
-`;
-
-const DetailCss = css`
+const DetailCss = (props: any) => css`
   width: 100%;
-  height: 115%;
+  height: 100%;
   position: relative;
   transform: translate(0%, -15%);
-
-  .titlezone_1 {
-    padding-top: 20vh;
-    margin-bottom: -30vw;
+  .valid_1 {
+    margin-top: 25vh;
     justify-content: center;
-    font-size: 7.5vw;
+    @media screen and (min-width: 1000px) {
+      margin-top: 30vh;
+    }
+  }
+  .valid_2 {
+    margin-top: 30vh;
+    justify-content: center;
+    @media screen and (min-width: 1000px) {
+    }
+  }
+  .valid_3 {
+    margin-top: 35vh;
+    justify-content: center;
+  }
+  .titlezone_1 {
+    justify-content: center;
+    padding-top: 50px;
+    margin-bottom: -20vh;
+    font-size: ${props.leng};
     display: flex;
-
+    @media screen and (min-width: 500px) {
+      padding-top: 50px;
+      font-size: ${props.mediaLeng};
+      margin-bottom: -100px;
+    }
+    @media screen and (max-width: 300px) {
+      padding-top: 150px;
+      margin-bottom: -50px;
+    }
     @media screen and (min-height: 700px) {
-      padding-top: 22vh;
-      margin-bottom: -15vh;
+      padding-top: 50px;
+      margin-bottom: -100px;
     }
-    @media screen and (min-height: 800px) {
-      padding-top: 22vh;
-      margin-bottom: -12vh;
-    }
-    @media screen and (min-height: 900px) {
-      padding-top: 22vh;
-      margin-bottom: -10vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      padding-top: 22vh;
-      margin-bottom: -25vw;
+    @media screen and (min-width: 1000px) {
+      padding-top: 50px;
+      margin-bottom: -150px;
     }
   }
   .titlezone_2 {
-    padding-top: 20vh;
-    margin-bottom: -10vw;
     justify-content: center;
-    font-size: 7.5vw;
+    padding-top: 30px;
+    margin-bottom: -50px;
+    font-size: ${props.leng};
     display: flex;
-
+    @media screen and (min-width: 500px) {
+      padding-top: 20px;
+      margin-bottom: -100px;
+      font-size: ${props.mediaLeng};
+    }
+    @media screen and (max-width: 300px) {
+      padding-top: 20px;
+      margin-bottom: -50px;
+    }
     @media screen and (min-height: 700px) {
-      padding-top: 22vh;
-      margin-bottom: -7vh;
+      padding-top: 20px;
+      margin-bottom: -50px;
     }
-    @media screen and (min-height: 800px) {
-      padding-top: 22vh;
-      margin-bottom: -5vh;
-    }
-    @media screen and (min-height: 900px) {
-      padding-top: 22vh;
-      margin-bottom: -7vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      padding-top: 22vh;
-      margin-bottom: -8vw;
+    @media screen and (min-width: 1000px) {
+      padding-top: 20px;
+      margin-bottom: -150px;
     }
   }
   .titlezone_3 {
-    padding-top: 20vh;
-    margin-bottom: -10vw;
     justify-content: center;
-    font-size: 7.5vw;
+    padding-top: 50px;
+    margin-bottom: -10vh;
+    font-size: ${props.leng};
     display: flex;
-
+    @media screen and (min-width: 500px) {
+      padding-top: 60px;
+      margin-bottom: -30vh;
+      font-size: ${props.mediaLeng};
+    }
+    @media screen and (max-width: 300px) {
+      padding-top: 50px;
+      margin-bottom: -50px;
+    }
     @media screen and (min-height: 700px) {
-      padding-top: 22vh;
-      margin-bottom: -12vh;
+      padding-top: 60px;
+      margin-bottom: -120px;
     }
-    @media screen and (min-height: 800px) {
-      padding-top: 22vh;
-      margin-bottom: -10vh;
-    }
-    @media screen and (min-height: 900px) {
-      padding-top: 22vh;
-      margin-bottom: -7vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      padding-top: 22vh;
-      margin-bottom: -8vw;
+    @media screen and (min-width: 1000px) {
+      padding-top: 50px;
+      margin-bottom: -200px;
     }
   }
-  .imgbox_1,
-  .imgbox_2 {
-    /* width: 50vh; */
-    /* height: 70vh; */
-    position: absolute;
-  }
-  .imgbox_3 {
-    position: absolute;
-  }
-  .imgbox_1 img {
-    position: relative;
-    z-index: 0;
-    width: 75%;
-    left: 0vw;
-    top: 10vw;
-  }
-  .imgbox_2 img {
-    position: relative;
-    z-index: 0;
-    width: 75%;
-    left: 0vw;
-    top: 10vw;
-    @media screen and (max-height: 700px) {
-      width: 62.5%;
-    }
-  }
-  .imgbox_3 img {
-    position: relative;
-    z-index: 0;
-    width: 90%;
-    left: 0vw;
-    top: 10vw;
-    @media screen and (max-height: 700px) {
-      width: 75%;
-    }
-  }
+
   .flowerlist {
     /* width: 100%; */
     position: static;
+    /* margin-top: -100px; */
 
     .flowerbox_1 {
       position: relative;
       &:first-of-type {
         z-index: 10;
-        left: -10vw;
+        left: -5vw;
         top: 46vw;
         transform: rotate(0deg);
+        @media screen and (min-width: 500px) {
+          left: -25px;
+          top: 230px;
+        }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: 9vw;
-        top: 44vw;
+        left: 16vw;
+        top: 45vw;
         transform: rotate(5deg);
+        @media screen and (min-width: 500px) {
+          left: 75px;
+          top: 230px;
+        }
       }
       &:nth-of-type(3) {
         z-index: 8;
-        left: -25vw;
+        left: -16vw;
         top: 40vw;
         transform: rotate(20deg);
+        @media screen and (min-width: 500px) {
+          left: -90px;
+          top: 200px;
+        }
       }
       &:nth-of-type(4) {
         z-index: 7;
         left: -40vw;
         top: 50vw;
         transform: rotate(-10deg);
+        @media screen and (min-width: 500px) {
+          left: -220px;
+          top: 250px;
+        }
       }
       &:nth-of-type(5) {
         z-index: 6;
-        left: 5vw;
+        left: 12vw;
         top: 27vw;
         transform: rotate(25deg);
+        @media screen and (min-width: 500px) {
+          left: 70px;
+          top: 120px;
+        }
       }
       &:nth-of-type(6) {
         z-index: 5;
-        left: -21vw;
+        left: -15vw;
         top: 36vw;
         transform: rotate(-20deg);
+        @media screen and (min-width: 500px) {
+          left: -80px;
+          top: 165px;
+        }
       }
       &:nth-of-type(7) {
         z-index: 4;
-        left: -36vw;
-        top: 33vw;
+        left: -31vw;
+        top: 32vw;
         transform: rotate(0deg);
+        @media screen and (min-width: 500px) {
+          left: -170px;
+          top: 140px;
+        }
       }
     }
     .flowerbox_2 {
       position: relative;
       &:first-of-type {
         z-index: 10;
-        left: -15vw;
+        left: -12vw;
         top: 60vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 52vw;
+        @media screen and (min-width: 500px) {
+          left: -70px;
+          top: 400px;
         }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: -2vw;
-        top: 54vw;
+        left: 3vw;
+        top: 56vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -1vw;
-          top: 48vw;
+        @media screen and (min-width: 500px) {
+          left: 0px;
+          top: 390px;
         }
       }
       &:nth-of-type(3) {
         z-index: 8;
         left: -32vw;
-        top: 57vw;
+        top: 61vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -28vw;
-          top: 50vw;
+        @media screen and (min-width: 500px) {
+          left: -170px;
+          top: 400px;
         }
       }
       &:nth-of-type(4) {
         z-index: 7;
-        left: -12vw;
-        top: 40vw;
+        left: -11vw;
+        top: 42vw;
         transform: rotate(10deg);
-        @media screen and (max-height: 700px) {
-          left: -10vw;
-          top: 35vw;
+        @media screen and (min-width: 500px) {
+          left: -60px;
+          top: 305px;
         }
       }
       &:nth-of-type(5) {
@@ -727,19 +1040,19 @@ const DetailCss = css`
         left: 16vw;
         top: 37vw;
         transform: rotate(25deg);
-        @media screen and (max-height: 700px) {
-          left: 13vw;
-          top: 32vw;
+        @media screen and (min-width: 500px) {
+          left: 70px;
+          top: 290px;
         }
       }
       &:nth-of-type(6) {
         z-index: 5;
-        left: -40vw;
-        top: 45vw;
+        left: -38vw;
+        top: 47vw;
         transform: rotate(-20deg);
-        @media screen and (max-height: 700px) {
-          left: -35vw;
-          top: 39vw;
+        @media screen and (min-width: 500px) {
+          left: -190px;
+          top: 335px;
         }
       }
       &:nth-of-type(7) {
@@ -747,9 +1060,9 @@ const DetailCss = css`
         left: -24vw;
         top: 32vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -20vw;
-          top: 28vw;
+        @media screen and (min-width: 500px) {
+          left: -120px;
+          top: 255px;
         }
       }
       &:nth-of-type(8) {
@@ -757,9 +1070,9 @@ const DetailCss = css`
         left: -4vw;
         top: 29vw;
         transform: rotate(5deg);
-        @media screen and (max-height: 700px) {
-          left: -2vw;
-          top: 25vw;
+        @media screen and (min-width: 500px) {
+          left: -15px;
+          top: 240px;
         }
       }
     }
@@ -770,19 +1083,19 @@ const DetailCss = css`
         left: -15vw;
         top: 80vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 68vw;
+        @media screen and (min-width: 500px) {
+          left: -65px;
+          top: 510px;
         }
       }
       &:nth-of-type(2) {
         z-index: 9;
-        left: -2vw;
+        left: -1vw;
         top: 80vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: -1.5vw;
-          top: 68vw;
+        @media screen and (min-width: 500px) {
+          left: 0px;
+          top: 510px;
         }
       }
       &:nth-of-type(3) {
@@ -790,19 +1103,19 @@ const DetailCss = css`
         left: -34vw;
         top: 83vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -28vw;
-          top: 70vw;
+        @media screen and (min-width: 500px) {
+          left: -150px;
+          top: 525px;
         }
       }
       &:nth-of-type(4) {
         z-index: 7;
-        left: 15vw;
+        left: 17vw;
         top: 75vw;
         transform: rotate(15deg);
-        @media screen and (max-height: 700px) {
-          left: 13.5vw;
-          top: 63vw;
+        @media screen and (min-width: 500px) {
+          left: 90px;
+          top: 485px;
         }
       }
       &:nth-of-type(5) {
@@ -810,9 +1123,9 @@ const DetailCss = css`
         left: -45vw;
         top: 80vw;
         transform: rotate(-5deg);
-        @media screen and (max-height: 700px) {
-          left: -36vw;
-          top: 68vw;
+        @media screen and (min-width: 500px) {
+          left: -220px;
+          top: 505px;
         }
       }
       &:nth-of-type(6) {
@@ -820,29 +1133,29 @@ const DetailCss = css`
         left: -15vw;
         top: 65vw;
         transform: rotate(-5deg);
-        @media screen and (max-height: 700px) {
-          left: -12vw;
-          top: 55vw;
+        @media screen and (min-width: 500px) {
+          left: -70px;
+          top: 430px;
         }
       }
       &:nth-of-type(7) {
-        z-index: 5;
+        z-index: 4;
         left: -32vw;
         top: 68vw;
         transform: rotate(-10deg);
-        @media screen and (max-height: 700px) {
-          left: -27vw;
-          top: 57vw;
+        @media screen and (min-width: 500px) {
+          left: -150px;
+          top: 440px;
         }
       }
       &:nth-of-type(8) {
-        z-index: 5;
+        z-index: 3;
         left: 2vw;
         top: 65vw;
         transform: rotate(5deg);
-        @media screen and (max-height: 700px) {
-          left: 2vw;
-          top: 55vw;
+        @media screen and (min-width: 500px) {
+          left: 10px;
+          top: 425px;
         }
       }
       &:nth-of-type(9) {
@@ -850,9 +1163,9 @@ const DetailCss = css`
         left: -45vw;
         top: 70vw;
         transform: rotate(-20deg);
-        @media screen and (max-height: 700px) {
-          left: -40vw;
-          top: 60vw;
+        @media screen and (min-width: 500px) {
+          left: -230px;
+          top: 450px;
         }
       }
       &:nth-of-type(10) {
@@ -860,44 +1173,56 @@ const DetailCss = css`
         left: 15vw;
         top: 65vw;
         transform: rotate(0deg);
-        @media screen and (max-height: 700px) {
-          left: 13vw;
-          top: 55vw;
+        @media screen and (min-width: 500px) {
+          left: 80px;
+          top: 430px;
         }
       }
     }
   }
-  .dot_1,
-  .dot_2 {
-    margin-top: 2vh;
-    bottom: 0%;
-    @media screen and (min-height: 700px) {
-      margin-top: 2vh;
-    }
-    @media screen and (min-height: 800px) {
-      margin-top: 2vh;
-    }
-    @media screen and (min-height: 900px) {
-      margin-top: 4vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      margin-top: 4vh;
+
+  .imgbox_1,
+  .imgbox_2,
+  .imgbox_3 {
+    position: absolute;
+  }
+
+  .imgbox_1 img {
+    position: relative;
+    z-index: 0;
+    width: 75%;
+    left: 0vw;
+    right: 0vw;
+    top: 10vw;
+    bottom: 10vw;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 60px;
     }
   }
-  .dot_3 {
-    margin-top: -8vh;
-    bottom: 0%;
-    @media screen and (min-height: 700px) {
-      margin-top: -9vh;
+  .imgbox_2 img {
+    position: relative;
+    z-index: 0;
+    width: 75%;
+    left: 0vw;
+    right: 0vw;
+    top: 10vw;
+    bottom: 10vw;
+    pointer-events: none;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
     }
-    @media screen and (min-height: 800px) {
-      margin-top: -8vh;
-    }
-    @media screen and (min-height: 900px) {
-      margin-top: -9vh;
-    }
-    @media screen and (max-height: 660px) and (max-width: 290px) {
-      margin-top: -6vh;
+  }
+  .imgbox_3 img {
+    position: relative;
+    z-index: 0;
+    width: 90%;
+    left: 0vw;
+    top: 10vw;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
     }
   }
 
@@ -910,9 +1235,10 @@ const DetailCss = css`
     top: 10vw;
     bottom: 10vw;
     pointer-events: none;
-  }
-  .imgbox_front_2 {
-    height: 65vh;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 60px;
+    }
   }
   .imgbox_front_2 img {
     z-index: 12;
@@ -923,8 +1249,9 @@ const DetailCss = css`
     top: 10vw;
     bottom: 10vw;
     pointer-events: none;
-    @media screen and (max-height: 700px) {
-      width: 62.5%;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
     }
   }
   .imgbox_front_3 img {
@@ -936,41 +1263,62 @@ const DetailCss = css`
     top: 10vw;
     bottom: 10vw;
     pointer-events: none;
-    @media screen and (max-height: 700px) {
-      width: 75%;
-    }
-  }
-
-  .bottom-bar {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    bottom: 0;
-    .share-btn {
-      float: left;
-      margin-left: 1em;
-    }
-    .write-btn {
-      float: right;
-      margin-right: 1em;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+      top: 150px;
     }
   }
 `;
 
+const Dot = css`
+  position: absolute;
+  z-index: 20;
+  width: 100%;
+  margin-top: 0vh;
+  bottom: 0%;
+  .speed-dial-zone {
+    padding-bottom: 50px;
+    .MuiButtonBase-root {
+      width: 10vw;
+      height: 10vw;
+      @media screen and (min-width: 500px) {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  }
+`;
+
+// const BottomBar = css`
+//   position: absolute;
+//   width: 100%;
+//   bottom: 0;
+//   .share-btn {
+//     float: left;
+//     margin-left: 1em;
+//   }
+//   .write-btn {
+//     float: right;
+//     margin-right: 1em;
+//   }
+// `;
+
 const Loading = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100vw;
 `;
 
-const DeliveryIcon = css`
-  width: 10vw;
-  margin-left: 75vw;
-`;
-
 const BookmarkImg = css`
+  cursor: pointer;
   position: absolute;
   left: 85%;
   width: 10vw;
   z-index: 1;
+  @media screen and (min-width: 500px) {
+    width: 45px;
+  }
 `;
 
 const theme = createTheme({
@@ -995,16 +1343,34 @@ const Font = css`
 const ActionCss = css`
   width: 90%;
   float: right;
+  justify-content: center;
+  * {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
 `;
 
-const SaveParent = css`
-  position: relative;
+const DialogCustom: any = styled(Dialog)((props: any) => ({
+  '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
+    boxShadow: 'none',
+    width: '100%',
+    left: `${props.left}`,
+  },
+  '& .css-ypiqx9-MuiDialogContent-root': {
+    margin: 'auto',
+    width: '70%',
+    left: `${props.left}`,
+  },
 
-  .save-child {
-    background-color: #f2f0ef;
-    height: 70vh;
-    position: absolute;
-    top: 0;
-    z-index: -1;
-  }
+  '& .css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop': {
+    backgroundColor: 'rgb(0 0 0 / 80%)',
+    left: `${props.left}`,
+  },
+}));
+
+const CapturePage = css`
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: -2;
 `;

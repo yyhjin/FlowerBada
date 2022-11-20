@@ -1,24 +1,15 @@
-import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import copy from '@assets/copy.png';
 import MySwal from '@components/SweetAlert';
 
-{
-  /* <script
-  src="https://t1.kakaocdn.net/kakao_js_sdk/2.0.1/kakao.min.js"
-  integrity="sha384-eKjgHJ9+vwU/FCSUG3nV1RKFolUXLsc6nLQ2R1tD0t4YFPCvRmkcF8saIfOZNWf/"
-  crossOrigin="anonymous"
-></script>; */
-}
-
 export default function RollingLink() {
   const VITE_APP_KAKAO_KEY = import.meta.env.VITE_APP_KAKAO_KEY;
-  console.log(VITE_APP_KAKAO_KEY);
 
   const url = useLocation().state.url;
   const title = useLocation().state.title;
   const root = 'https://k7a405.p.ssafy.io/rolling/';
+  // const root = 'http://localhost:5173/rolling/';
   const navigate = useNavigate();
   const handleRollingPaper = (): void => {
     navigate(`/rolling/${url}`);
@@ -41,7 +32,7 @@ export default function RollingLink() {
         kakao.init(VITE_APP_KAKAO_KEY);
       }
     }
-    console.log(root + url);
+
     window.Kakao.Link.sendDefault({
       objectType: 'feed',
       content: {
@@ -66,18 +57,12 @@ export default function RollingLink() {
     });
   }
 
-  // const Explain = useEffect(() => {
-  //   if (!Window.Kakao.init) {
-  //     Kakao.init('a452135df47a8eef043c1b08491c2c34');
-  //   }
-  // }, []);
-
   return (
     <>
       <div css={Background}>
         <div css={Info}>
           <div css={Writing}>링크를 복사해</div>
-          <div css={Writing}>롤링페이퍼를 공유하세요</div>
+          <div css={Writing}>롤링페이퍼를 공유하세요.</div>
         </div>
         <div css={Link}>
           <div css={Url}>
@@ -107,7 +92,9 @@ export default function RollingLink() {
 }
 
 const Background = css`
+  position: relative;
   width: 100vw;
+  height: 100%;
 `;
 
 const Info = css`
@@ -132,8 +119,8 @@ const Url = css`
   font-size: 20px;
   background-color: white;
   padding: 10px 10px 10px 20px;
-  border-radius: 2vw;
-  overflow: scroll;
+  border-radius: 8px;
+  overflow-x: scroll;
   display: flex;
 `;
 
@@ -168,21 +155,27 @@ const KakaoButton = css`
 `;
 
 const GoRollingButton = css`
-  margin-top: 20vh;
-  height: 7vh;
-  width: 94%;
-  border-radius: 3vw;
+  position: absolute;
+  margin: auto;
+  bottom: 30px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
   color: white;
-  font-size: 20px;
   background-color: #16453e;
-  @media screen and (max-height: 500px) {
-    margin-top: 5vh;
-  }
-  @media screen and (max-height: 600px) {
-    margin-top: 7vh;
-  }
-  @media screen and (max-height: 700px) {
-    margin-top: 10vh;
+  height: 60px;
+  left: 5%;
+  width: 90%;
+  @media screen and (min-width: 500px) {
+    /* margin-top: 5vh; */
+    bottom: 30px;
+    left: 5%;
+    width: 90%;
+    height: 60px;
   }
 `;
 

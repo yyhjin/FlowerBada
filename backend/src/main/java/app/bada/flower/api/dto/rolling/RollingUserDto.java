@@ -1,6 +1,5 @@
 package app.bada.flower.api.dto.rolling;
 
-import app.bada.flower.api.entity.FlowerUser;
 import app.bada.flower.api.entity.RollingUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;

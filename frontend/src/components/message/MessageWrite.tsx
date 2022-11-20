@@ -29,7 +29,7 @@ export default function MessageWrite(props: {
     setFont('SeoulNamsanM');
     document.getElementById('content')!.style.fontFamily = 'SeoulNamsanM';
     document.getElementById('writer')!.style.fontFamily = 'SeoulNamsanM';
-    console.log(props.flower);
+    // console.log(props.flower);
   }, []);
 
   const changeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -76,9 +76,9 @@ export default function MessageWrite(props: {
           rollingId: props.rolling,
         })
         .then((res) => {
-          console.log(res.data.response);
+          // console.log(res.data.response);
           MySwal.fire({
-            title: '메세지가 등록되었습니다',
+            title: '메세지가 등록되었습니다.',
             icon: 'success',
             confirmButtonColor: '#16453e',
             confirmButtonText: '확인',
@@ -87,7 +87,14 @@ export default function MessageWrite(props: {
           });
         })
         .catch((err) => {
-          console.log(err);
+          MySwal.fire({
+            title: '메세지 등록을 실패하였습니다.',
+            icon: 'warning',
+            confirmButtonColor: '#16453e',
+            confirmButtonText: '확인',
+          }).then(() => {
+            navigate(`/rolling/` + props.rollingUrl);
+          });
         });
     }
   };
@@ -100,7 +107,7 @@ export default function MessageWrite(props: {
             id="content"
             className="input-css"
             placeholder="메시지를 작성해주세요"
-            maxLength={200}
+            maxLength={120}
             onChange={changeContent}
           ></textarea>
         </div>
@@ -112,10 +119,11 @@ export default function MessageWrite(props: {
               className="writer-input"
               type={'text'}
               placeholder="작성자"
+              maxLength={10}
               onChange={changeWriter}
             ></input>
           </span>
-          <div css={MsgLimit}>{msgLength}/200</div>
+          <div css={MsgLimit}>{msgLength}/120</div>
         </div>
       </div>
       <div style={{ fontSize: '16px' }}>마음에 드는 글씨체를 선택하세요!</div>
@@ -280,6 +288,9 @@ declare module '@mui/material/styles' {
   }
 }
 
+const Background = css`
+  height: 100%;
+`;
 const ButtonBox = css`
   height: 20%;
   position: relative;
@@ -332,6 +343,9 @@ const WriteBox = css`
       font-size: 18px;
     }
   }
+  @media screen and (min-width: 500px) {
+    margin: 2vw;
+  }
 `;
 
 const MsgLimit = css`
@@ -347,9 +361,4 @@ const FontBox = css`
   overflow-x: scroll;
   display: flex;
   flex-flow: nowrap;
-`;
-
-const Background = css`
-  /* width: 100vw; */
-  height: 100vw;
 `;

@@ -63,10 +63,12 @@ const totalCSS = css`
     float: left;
     background-color: #16453e;
     color: white;
+    cursor: pointer;
   }
   .active_btn {
     float: left;
     background-color: white;
+    cursor: pointer;
   }
 
   .delivery_list {

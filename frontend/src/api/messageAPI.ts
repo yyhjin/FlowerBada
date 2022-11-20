@@ -16,6 +16,10 @@ interface IMessageWriteData {
   writer: string;
 }
 
+interface IImgUrl {
+  imgUrl: string;
+}
+
 const messageAPI = {
   messageCreate(messageId: number) {
     return api({
@@ -47,6 +51,13 @@ const messageAPI = {
       },
     });
   },
+
+  getAllMessage(rollingUrl: string) {
+    return api({
+      method: 'get',
+      url: `${END_POINT}/getall/${rollingUrl}`,
+    });
+  },
   // loginGetRolling(jwt: string, url: string, paginationId: number) {
   //   return api({
   //     method: 'get',
@@ -56,6 +67,30 @@ const messageAPI = {
   //     },
   //   });
   // },
+
+  updateRollingImg(jwt: string, refresh: string, url: string, data: IImgUrl) {
+    return api({
+      method: 'put',
+      url: `${END_POINT}/updateimg/${url}`,
+      headers: {
+        'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
+      },
+      data: data,
+    });
+  },
+
+  getRollingImgUrl(jwt: string, refresh: string, url: string, data: IImgUrl) {
+    return api({
+      method: 'post',
+      url: `${END_POINT}/getimgurl/${url}`,
+      headers: {
+        'X-AUTH-TOKEN': `Bearer ` + jwt,
+        'REFRESH-TOKEN': 'Bearer ' + refresh,
+      },
+      data: data,
+    });
+  },
 };
 
 export default messageAPI;

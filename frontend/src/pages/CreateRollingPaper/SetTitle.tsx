@@ -56,7 +56,9 @@ export default function SetTitle() {
 }
 
 const Background = css`
+  position: relative;
   width: 100vw;
+  height: 100%;
   .maxlength {
     margin-top: 1vh;
     margin-right: 17vw;
@@ -76,7 +78,7 @@ const TitleInput = css`
   font-size: 100%;
   margin-top: 10vh;
   width: 50vw;
-  border-radius: 2vw;
+  border-radius: 8px;
   border: 0;
   height: 5vh;
   text-align: center;
@@ -97,16 +99,26 @@ const SelectImage = css`
 `;
 
 const NextButton = css`
-  margin-top: 20vh;
-  height: 7vh;
-  width: 94vw;
-  border-radius: 3vw;
+  position: absolute;
+  bottom: 30px;
+  margin: auto;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
   color: white;
-  font-size: 100%;
   background-color: #16453e;
+  height: 60px;
+  left: 5%;
+  width: 90%;
+  /* margin-bottom: 200px; */
   @media screen and (min-width: 500px) {
-    padding-left: 20px;
-    padding-right: 20px;
-    width: 80%;
+    bottom: 30px;
+    left: 5%;
+    width: 90%;
+    height: 60px;
   }
 `;
