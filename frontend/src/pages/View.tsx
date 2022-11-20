@@ -1,5 +1,5 @@
 import { Button, css } from '@mui/material';
-import React, { useRef, useState, ReactDOM, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 
 const View = () => {
   const printRef = useRef<HTMLDivElement>(null);
@@ -9,30 +9,6 @@ const View = () => {
   }, []);
 
   const onClickPrint = () => {
-    // 현재창에서 바로 열기 => 새로고침 필요
-    // if (printRef.current) {
-    //   let printContent = printRef.current.innerHTML;
-    //   let originalContent = document.body.innerHTML;
-    //   console.log(printContent, originalContent);
-    //   document.body.innerHTML = printContent;
-    //   window.print();
-    //   document.body.innerHTML = originalContent;
-    //   history.go(0);
-    // }
-    // 새창에서 열기 => 새로고침 필요X
-    // let printContent = printRef.current;
-    // let windowObj = window.open(
-    //   '',
-    //   'Print',
-    //   'width=1350, height=800, toolbars=no, scrollbars=no, status=no, resizable=no',
-    // );
-    // if (windowObj && printRef.current) {
-    //   windowObj.document.writeln(printRef.current.innerHTML);
-    //   windowObj.document.close();
-    //   windowObj.focus();
-    //   windowObj.print();
-    //   windowObj.close();
-    // }
     if (printRef.current) {
       let printContents = printRef.current.innerHTML;
       let windowObject = window.open(
@@ -51,21 +27,6 @@ const View = () => {
   };
   const onClickDownload = () => {};
   return (
-    // <>
-    //   {/* <Button onClick={onClickPrint}>Print</Button> */}
-    //   <div css={A4CSS} ref={printRef}>
-    //     <div className="page">
-    //       {/* <button>버튼버튼</button> */}
-    //       <div className="img-box">
-    //         <img
-    //           style={{ width: '250px' }}
-    //           src="https://s3.ap-northeast-2.amazonaws.com/hongjoo.flowerbada.project/rollingpaper/Q9c2mT.png"
-    //         />
-    //       </div>
-    //     </div>
-    //   </div>
-    // </>
-
     <>
       <Button onClick={onClickPrint}>Print</Button>
       <div ref={printRef} css={newA4}>

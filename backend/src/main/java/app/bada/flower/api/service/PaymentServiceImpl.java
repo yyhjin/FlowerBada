@@ -27,10 +27,6 @@ import java.net.URISyntaxException;
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService{
-<<<<<<< HEAD
-
-}
-=======
     private static final String HOST = "https://kapi.kakao.com";
     private final TransactionRepository transactionRepository;
     private final DeliveryRepository deliveryRepository;
@@ -162,4 +158,3 @@ public class PaymentServiceImpl implements PaymentService{
         return null;
     }
 }
->>>>>>> f047ad8766d3b3610f47073ac2b2dd6bbd182261

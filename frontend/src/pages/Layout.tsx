@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
 import { Outlet } from 'react-router-dom';
 import { css } from '@emotion/react';
 import Header from '@components/header/Header';

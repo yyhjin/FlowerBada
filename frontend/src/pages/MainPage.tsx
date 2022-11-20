@@ -14,8 +14,8 @@ import userAPI from '@src/api/userAPI';
 import SpeedDial from '@mui/material/SpeedDial';
 import PersonIcon from '@mui/icons-material/Person';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MyPageIcon from '@assets/mypageicon.png';
 
 const Mainpage = () => {
