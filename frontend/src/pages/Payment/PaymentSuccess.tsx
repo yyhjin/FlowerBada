@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import dateFormatter from '@utils/dateFormatter';
 import paymentAPI from '@api/paymentAPI';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { paymentRecoil } from '@recoil/paymentRecoil';
@@ -10,7 +9,6 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { Button } from '@mui/material';
 import Congrats from '@assets/congrats2.gif';
 import MySwal from '@components/SweetAlert';
-import updateTokens from '@src/utils/updateTokens';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
