@@ -237,16 +237,16 @@
       <a href="https://www.figma.com/file/XxOANlEWwO4zf7QE3J7RDB/%EA%BD%83%EB%B0%94%EB%8B%A4?node-id=863%3A6396&t=eQZQErTZ8o8z6nmn-0">🎨 WireFrame</a>
     </td>
     <td align="center">
-      <a href="https://www.notion.so/chayoo/360f839382aa4eb582f84598c0a26e78">📕 Ground Rule</a>
+      <a href="https://chayoo.notion.site/360f839382aa4eb582f84598c0a26e78">📕 Ground Rule</a>
     </td>
     <td align="center">
       <a href="https://www.erdcloud.com/d/ebxeLni8Wezm8A3PT">💾 ERD</a>
     </td>
     <td align="center">
-      <a href="https://www.notion.so/chayoo/be4ff676b5f34c0baeeabcb214913c32">🧶 Backlog</a>
+      <a href="https://chayoo.notion.site/be4ff676b5f34c0baeeabcb214913c32">🧶 Backlog</a>
     </td>
     <td align="center">
-      <a href="https://www.notion.so/chayoo/3fc499e80cf145528a5562676d5e79d8?v=c0a80f4f620f4f9f8670460af1f30824">⚙ API Specification</a>
+      <a href="https://chayoo.notion.site/3fc499e80cf145528a5562676d5e79d8?v=c0a80f4f620f4f9f8670460af1f30824">⚙ API Specification</a>
     </td>
 </tbody>
 <table>
