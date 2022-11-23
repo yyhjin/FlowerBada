@@ -88,6 +88,7 @@
   <tr>
     <td align="center" width="165"><strong>Back-end 기술 스택</strong></td>
     <td>
+        <img src="https://img.shields.io/badge/Java-D24939?style=flat-square&logo=Java&logoColor=white"/>
         <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat-square&logo=springboot&logoColor=white"/>
         <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white"/>
         <img src="https://img.shields.io/badge/JPA-212121?style=flat-square&logo=jpa&logoColor=white"/>
