@@ -166,18 +166,26 @@ const DetailCss = (props: any) => css`
   .DetailBox_1 {
     margin-top: 200px;
     background-color: ${props.color ? '#ffffff' : '#f2f0ef'};
-    height: ${props.height == 0 ? '100%' : props.height + 110 + 'px'};
+    height: ${props.height == 0 ? '100%' : props.height - 30 + 'px'};
     position: relative;
     transform: translate(0%, -15%);
+    @media screen and (min-width: 400px) {
+      height: ${props.height == 0 ? '100%' : props.height - 20 + 'px'};
+      margin-top: 200px;
+    }
+    @media screen and (min-width: 450px) {
+      height: ${props.height == 0 ? '100%' : props.height - 10 + 'px'};
+      margin-top: 200px;
+    }
   }
   .DetailBox_2 {
     margin-top: 200px;
     background-color: ${props.color ? '#ffffff' : '#f2f0ef'};
-    height: ${props.height == 0 ? '100%' : props.height + 120 + 'px'};
+    height: ${props.height == 0 ? '100%' : props.height + 'px'};
     position: relative;
     transform: translate(0%, -15%);
     @media screen and (min-width: 500px) {
-      height: 980px;
+      /* height: 980px; */
       margin-top: 200px;
     }
   }
@@ -203,71 +211,71 @@ const DetailCss = (props: any) => css`
       &:first-of-type {
         z-index: 10;
         left: -5vw;
-        top: 46vw;
+        top: 36vw;
         transform: rotate(0deg);
         @media screen and (min-width: 500px) {
           left: -25px;
-          top: 230px;
+          top: 170px;
         }
       }
       &:nth-of-type(2) {
         z-index: 9;
         left: 16vw;
-        top: 45vw;
+        top: 35vw;
         transform: rotate(5deg);
         @media screen and (min-width: 500px) {
           left: 75px;
-          top: 230px;
+          top: 170px;
         }
       }
       &:nth-of-type(3) {
         z-index: 8;
         left: -16vw;
-        top: 40vw;
+        top: 30vw;
         transform: rotate(20deg);
         @media screen and (min-width: 500px) {
           left: -90px;
-          top: 200px;
+          top: 140px;
         }
       }
       &:nth-of-type(4) {
         z-index: 7;
         left: -40vw;
-        top: 50vw;
+        top: 40vw;
         transform: rotate(-10deg);
         @media screen and (min-width: 500px) {
           left: -220px;
-          top: 250px;
+          top: 170px;
         }
       }
       &:nth-of-type(5) {
         z-index: 6;
         left: 12vw;
-        top: 27vw;
+        top: 17vw;
         transform: rotate(25deg);
         @media screen and (min-width: 500px) {
           left: 70px;
-          top: 120px;
+          top: 60px;
         }
       }
       &:nth-of-type(6) {
         z-index: 5;
         left: -15vw;
-        top: 36vw;
+        top: 24vw;
         transform: rotate(-20deg);
         @media screen and (min-width: 500px) {
           left: -80px;
-          top: 165px;
+          top: 105px;
         }
       }
       &:nth-of-type(7) {
         z-index: 4;
         left: -31vw;
-        top: 32vw;
+        top: 22vw;
         transform: rotate(0deg);
         @media screen and (min-width: 500px) {
           left: -170px;
-          top: 140px;
+          top: 80px;
         }
       }
     }
@@ -277,81 +285,81 @@ const DetailCss = (props: any) => css`
       &:first-of-type {
         z-index: 10;
         left: -12vw;
-        top: 60vw;
+        top: 50vw;
         transform: rotate(0deg);
         @media screen and (min-width: 500px) {
           left: -70px;
-          top: 400px;
+          top: 250px;
         }
       }
       &:nth-of-type(2) {
         z-index: 9;
         left: 3vw;
-        top: 56vw;
+        top: 46vw;
         transform: rotate(0deg);
         @media screen and (min-width: 500px) {
           left: 0px;
-          top: 390px;
+          top: 240px;
         }
       }
       &:nth-of-type(3) {
         z-index: 8;
         left: -32vw;
-        top: 61vw;
+        top: 51vw;
         transform: rotate(-10deg);
         @media screen and (min-width: 500px) {
           left: -170px;
-          top: 400px;
+          top: 250px;
         }
       }
       &:nth-of-type(4) {
         z-index: 7;
         left: -11vw;
-        top: 42vw;
+        top: 32vw;
         transform: rotate(10deg);
         @media screen and (min-width: 500px) {
           left: -60px;
-          top: 305px;
+          top: 155px;
         }
       }
       &:nth-of-type(5) {
         z-index: 6;
         left: 16vw;
-        top: 37vw;
+        top: 27vw;
         transform: rotate(25deg);
         @media screen and (min-width: 500px) {
           left: 70px;
-          top: 290px;
+          top: 140px;
         }
       }
       &:nth-of-type(6) {
         z-index: 5;
         left: -38vw;
-        top: 47vw;
+        top: 37vw;
         transform: rotate(-20deg);
         @media screen and (min-width: 500px) {
           left: -190px;
-          top: 335px;
+          top: 185px;
         }
       }
       &:nth-of-type(7) {
         z-index: 4;
         left: -24vw;
-        top: 32vw;
+        top: 22vw;
         transform: rotate(-10deg);
         @media screen and (min-width: 500px) {
           left: -120px;
-          top: 255px;
+          top: 105px;
         }
       }
       &:nth-of-type(8) {
         z-index: 3;
         left: -4vw;
-        top: 29vw;
+        top: 19vw;
         transform: rotate(5deg);
         @media screen and (min-width: 500px) {
           left: -15px;
-          top: 240px;
+          top: 190px;
         }
       }
     }
@@ -470,13 +478,13 @@ const DetailCss = (props: any) => css`
     position: relative;
     z-index: 0;
     width: 75%;
-    left: 0vw;
-    right: 0vw;
-    top: 10vw;
+    /* left: 0vw;
+    right: 0vw; */
+    top: 0vw;
     bottom: 10vw;
     @media screen and (min-width: 500px) {
       left: 0px;
-      top: 60px;
+      top: 0px;
     }
   }
 
@@ -486,12 +494,12 @@ const DetailCss = (props: any) => css`
     width: 75%;
     left: 0vw;
     right: 0vw;
-    top: 10vw;
+    top: 0vw;
     bottom: 10vw;
     pointer-events: none;
     @media screen and (min-width: 500px) {
       left: 0px;
-      top: 60px;
+      top: 0px;
     }
   }
 
@@ -499,14 +507,14 @@ const DetailCss = (props: any) => css`
     position: relative;
     z-index: 0;
     width: 75%;
-    left: 0vw;
-    right: 0vw;
-    top: 10vw;
-    bottom: 10vw;
+    /* left: 0vw; */
+    /* right: 0vw; */
+    /* top: 0vw; */
+    /* bottom: 10vw; */
     pointer-events: none;
     @media screen and (min-width: 500px) {
       left: 0px;
-      top: 150px;
+      top: 0px;
     }
   }
 
@@ -514,14 +522,14 @@ const DetailCss = (props: any) => css`
     z-index: 12;
     position: relative;
     width: 75%;
-    left: 0vw;
-    right: 0vw;
-    top: 10vw;
-    bottom: 10vw;
+    /* left: 0vw; */
+    /* right: 0vw; */
+    /* top: 0vw; */
+    /* bottom: 10vw; */
     pointer-events: none;
     @media screen and (min-width: 500px) {
       left: 0px;
-      top: 150px;
+      top: 0px;
     }
   }
 
