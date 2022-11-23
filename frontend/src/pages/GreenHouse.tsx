@@ -295,10 +295,10 @@ export default function GreenHouse() {
                             src={rolling.imgUrl}
                           />
                         </div>
-                        <div className="rolling-text">
-                          <div className="rolling_title">{rolling.title}</div>
-                          <div className="rolling_date">({rolling.date})</div>
-                        </div>
+                        {/* <div className="rolling-text"> */}
+                        <div className="rolling_title">{rolling.title}</div>
+                        <div className="rolling_date">({rolling.date})</div>
+                        {/* </div> */}
                       </div>
                     ) : (
                       <div className="rolling-items">
@@ -334,10 +334,10 @@ export default function GreenHouse() {
                             src={rolling.imgUrl}
                           />
                         </div>
-                        <div className="rolling-text">
-                          <div className="rolling_title">{rolling.title}</div>
-                          <div className="rolling_date">({rolling.date})</div>
-                        </div>
+                        {/* <div className="rolling-text"> */}
+                        <div className="rolling_title">{rolling.title}</div>
+                        <div className="rolling_date">({rolling.date})</div>
+                        {/* </div> */}
                       </div>
                     ) : (
                       <div className="rolling-items">
@@ -347,10 +347,10 @@ export default function GreenHouse() {
                             src={rolling.imgUrl}
                           />
                         </div>
-                        <div className="rolling-text">
-                          <div className="rolling_title">{rolling.title}</div>
-                          <div className="rolling_date">({rolling.date})</div>
-                        </div>
+                        {/* <div className="rolling-text"> */}
+                        <div className="rolling_title">{rolling.title}</div>
+                        <div className="rolling_date">({rolling.date})</div>
+                        {/* </div> */}
                       </div>
                     )}
                   </div>
@@ -466,35 +466,44 @@ const GridItem = css`
   position: relative;
   cursor: pointer;
   padding: 0.5rem;
-  height: 40vw;
+  height: 25vh;
+  /* width: 30vw; */
   @media screen and (min-width: 500px) {
-    height: 200px;
+    height: 250px;
   }
 
   .rolling-items {
     /* height: 300px; */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-rows: 8fr 0.5fr 0.5fr;
+    /* flex-direction: column; */
+    /* justify-content: space-between; */
+    /* align-items: center; */
+    height: 100%;
+    /* width: 50vw; */
   }
   .rolling_img_zone {
-    display: flex;
-    justify-content: center;
-    width: 80%;
-    height: auto;
+    /* display: grid; */
+
+    /* justify-content: center; */
+    /* width: 80%; */
+    height: 100%;
     overflow: hidden;
   }
   .rolling_img_before {
-    margin-top: 5%;
+    /* margin-top: 35%; */
     left: 0;
-    width: 90%;
+    width: 13vh;
+    margin-top: 20%;
+    @media screen and (min-width: 500px) {
+      width: 130px;
+      margin-top: 45px;
+    }
   }
   .rolling_img_after {
-    margin-top: -35%;
+    /* margin-top: -35%; */
     /* position: absolute; */
-    left: 0;
-    width: 85%;
+    height: 100%;
   }
 
   &:hover,
@@ -505,7 +514,7 @@ const GridItem = css`
   }
 
   .rolling-text {
-    position: absolute;
+    /* position: absolute; */
     bottom: 0;
     align-items: center;
     z-index: 500;
