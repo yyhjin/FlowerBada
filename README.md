@@ -116,7 +116,7 @@
   <tr>
     <td align="center"><strong>노션</strong></td>
     <td>
-      <a href="https://www.notion.so/A403-75f0aa54961d45a1b453932d54a8a982">
+      <a href="https://www.notion.so/chayoo/A405-c4a0221b87764f6698ec4d472a9a9820">
         👉 노션 바로가기
       </a>
     </td>
