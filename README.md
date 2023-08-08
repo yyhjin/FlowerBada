@@ -42,7 +42,7 @@
         <img src="https://user-images.githubusercontent.com/14370441/203455341-3725a1f2-a49f-4e43-ac2c-10ddc7496865.png" width="200"/>
     </td>
     <td>
-        <img src="https://user-images.githubusercontent.com/14370441/203455362-bd779517-ab21-4e55-b5c8-100fbed9c33e.png" width="200"/>
+        <img src="https://github.com/yyhjin/FlowerBada/assets/99111030/b96a1d7a-af64-4d13-90a0-4d50048d7a76" width="200"/>
     </td>
     <td>
         <img src="https://user-images.githubusercontent.com/14370441/203455401-dcc4ebb0-c34f-401c-809a-c75bcb432d2c.png" width="200"/>
@@ -128,25 +128,6 @@
 ## 📡 아키텍쳐
 
 <img src="https://user-images.githubusercontent.com/14370441/203459598-d667c9ef-e629-4f07-9cfc-d9ccb886ed82.png">
-
-## 🎥 영상
-
-<table align="center">
-<thead>
-  <tr>
-    <td align="center"><strong>UCC</strong></th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td>
-      <a href="https://www.youtube.com/watch?v=zky1e_cJ9jg">
-        <img src="https://user-images.githubusercontent.com/14370441/203456766-cd5ae5b8-c2be-49e7-ad45-cfb9a4e0945d.png" width=400 height=240/>
-      </a>
-    </td>
-  </tr>
-  </tbody>
-<table>
 
 <br/>
 
